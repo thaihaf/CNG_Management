@@ -1,0 +1,17 @@
+@import "styles/colors";
+@import "styles/variables";
+
+.container {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+     background-color: $bg-color;
+		 gap: 4rem;
+
+     &.isFullScreen {
+          height: -webkit-fill-available;
+          height: -moz-available;
+          height: 100vh;
+     }
+}
