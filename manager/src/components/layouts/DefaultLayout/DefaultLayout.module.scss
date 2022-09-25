@@ -1,0 +1,25 @@
+@import "styles/colors";
+@import "styles/variables";
+
+$layout-spacing: $spacing-3;
+
+.defaultLayout {
+     background-color: $bg-color !important;
+     height: 100vh;
+}
+.container {
+     margin: auto;
+     // min-height: 600px;
+     width: 300px;
+     height: max-content;
+     // max-width: 960px;
+     padding-top: 40px;
+     position: relative;
+     flex: none !important;
+}
+
+.content {
+     // min-height: calc(100vh - #{$layout-spacing * 2} - #{$navbar-height});
+     // padding-top: 40px;
+     height: fit-content;
+}
