@@ -2,7 +2,9 @@ import { Suspense } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { LoadingSpinner } from "components";
-import Routes from "routes/Routes";
+import RoutesApp from "routes/Routes";
+
+import "antd/dist/antd.css";
 
 function App() {
      const loadingTranslation = false;
@@ -14,9 +16,16 @@ function App() {
      }
 
      return (
-          <Suspense fallback={<div>loading...</div>}>
+          <Suspense
+               fallback={
+                    <LoadingSpinner
+                         isFullScreen={true}
+                         text="Loading Admin Panel"
+                    />
+               }
+          >
                <Router>
-                    <Routes />
+                    <RoutesApp />
                </Router>
           </Suspense>
      );
