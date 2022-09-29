@@ -1,14 +1,16 @@
+import { AuthLayout } from "components";
 import React from "react";
 import { AuthPaths } from "../constants/auth.paths";
 
 const LoginScreen = React.lazy(() => import("../screens/LoginScreen"));
 
 const LOGIN_SCREEN = {
-  id: "login",
-  path: AuthPaths.LOGIN,
-  component: LoginScreen,
-  isAuthRoute: true,
-  pageTitle: "CNG Login",
+     id: "login",
+     path: AuthPaths.LOGIN,
+     component: LoginScreen,
+     isAuthRoute: true,
+     pageTitle: "CNG Login",
+     layout: AuthLayout,
 };
 
 const AUTH_ROUTES = [LOGIN_SCREEN];

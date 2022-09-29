@@ -5,21 +5,39 @@ $layout-spacing: $spacing-3;
 
 .defaultLayout {
      background-color: $bg-color !important;
-     height: 100vh;
+     min-height: 100vh;
 }
-.container {
-     margin: auto;
-     // min-height: 600px;
-     width: 300px;
-     height: max-content;
-     // max-width: 960px;
-     padding-top: 40px;
-     position: relative;
-     flex: none !important;
+// .container {
+//      margin: auto;
+//      // min-height: 600px;
+//      width: 300px;
+//      height: max-content;
+//      // max-width: 960px;
+//      padding-top: 40px;
+//      position: relative;
+//      flex: none !important;
+// }
+
+// .content {
+//      // min-height: calc(100vh - #{$layout-spacing * 2} - #{$navbar-height});
+//      // padding-top: 40px;
+//      height: fit-content;
+// }
+
+.logo {
+     float: left;
+     width: 120px;
+     height: 31px;
+     margin: 16px 24px;
+     background: rgba(255, 255, 255, 0.3);
 }
 
-.content {
-     // min-height: calc(100vh - #{$layout-spacing * 2} - #{$navbar-height});
-     // padding-top: 40px;
-     height: fit-content;
+.ant-row-rtl .logo {
+     float: right;
+     margin: 16px 0 16px 24px;
+}
+
+.siteLayoutBackground {
+     background: #fff;
+    //  overflow-y: auto;
 }
