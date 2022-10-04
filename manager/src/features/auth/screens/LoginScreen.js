@@ -7,7 +7,7 @@ import styles from "./LoginScreen.module.scss";
 import cx from "classnames";
 export default function LoginScreen() {
      const onFinish = (values) => {
-          console.log("Received values of form: ", values);
+          
      };
 
      return (
@@ -34,6 +34,7 @@ export default function LoginScreen() {
                               prefix={
                                    <UserOutlined className="site-form-item-icon" />
                               }
+															
                               placeholder="Your Username"
 															className={styles.login_input}
                          />
@@ -66,7 +67,7 @@ export default function LoginScreen() {
                               <Checkbox>Remember me</Checkbox>
                          </Form.Item>
 
-                         <a className="/login-form-forgot" href="/forgot">
+                         <a className={cx("/login-form-forgot", styles.forgot)} href="/forgot">
                               Forgot password
                          </a>
                     </Form.Item>
@@ -75,11 +76,10 @@ export default function LoginScreen() {
                          <Button
                               type="primary"
                               htmlType="submit"
-                              className="login-form-button"
+                              className={cx("login-form-button=", styles.btn_signUp)}
                          >
-                              Log in
+                              Sign in
                          </Button>
-                         Or <a href="/register">register now!</a>
                     </Form.Item>
                </Form>
           </div>

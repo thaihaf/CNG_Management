@@ -1,3 +1,6 @@
+@import "styles/colors";
+@import "styles/variables";
+
 .login {
      padding: 5rem 8rem;
      height: 100vh;
@@ -8,15 +11,34 @@
 
      .form {
           width: 30%;
+					min-width: 25rem;
 
           &_item {
-						.login_input{
-							border-radius: 2rem;
-							padding: 1rem;
-						}
+               margin-bottom: 4rem;
+
+               .login_input {
+                    border-radius: 5rem;
+                    padding: 1rem;
+                    padding-right: 2rem;
+                    display: flex;
+                    gap: 1rem;
+               }
+
+               .forgot {
+                    margin-left: auto;
+               }
+
+               .btn_signUp {
+                    text-transform: uppercase;
+                    font-size: 1.5rem;
+                    color: $white-color;
+                    border-radius: 3rem;
+										height: 4.5rem;
+										width : 100%;
+               }
           }
 
-          &_item.flex {
+          .flex {
                display: flex;
                justify-content: space-between;
           }
