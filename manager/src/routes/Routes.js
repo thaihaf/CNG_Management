@@ -10,11 +10,12 @@ import { ROUTE_LIST } from "./routes.config";
 import { DefaultLayout } from "components";
 import NotFound from "./components/NotFound/NotFound";
 import NestedRouteWrapper from "./NestedRouteWrapper";
+import { DashboardPaths } from "features/dashboard/dashboard";
 
 const Routes = () => {
      return (
           <Switch>
-               <Redirect exact from="/" to={AuthPaths.LOGIN} />
+               <Redirect exact from="/" to={DashboardPaths.DASHBOARD} />
 
                <NestedRouteWrapper routesWithComponents={ROUTE_LIST} />
 

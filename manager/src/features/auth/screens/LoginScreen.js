@@ -4,17 +4,17 @@ import { Button, Checkbox, Form, Input } from "antd";
 
 import "antd/dist/antd.css";
 import styles from "./LoginScreen.module.scss";
-
+import cx from "classnames";
 export default function LoginScreen() {
      const onFinish = (values) => {
           console.log("Received values of form: ", values);
      };
 
      return (
-          <div className={styles.container}>
+          <div className={styles.login}>
                <Form
                     name="normal_login"
-                    className="login-form"
+                    className={styles.form}
                     initialValues={{
                          remember: true,
                     }}
@@ -28,12 +28,14 @@ export default function LoginScreen() {
                                    message: "Please input your Username!",
                               },
                          ]}
+												 className={styles.form_item}
                     >
                          <Input
                               prefix={
                                    <UserOutlined className="site-form-item-icon" />
                               }
-                              placeholder="Username"
+                              placeholder="Your Username"
+															className={styles.login_input}
                          />
                     </Form.Item>
                     <Form.Item
@@ -44,16 +46,18 @@ export default function LoginScreen() {
                                    message: "Please input your Password!",
                               },
                          ]}
+												 className={styles.form_item}
                     >
                          <Input
                               prefix={
                                    <LockOutlined className="site-form-item-icon" />
                               }
                               type="password"
-                              placeholder="Password"
+                              placeholder="Your Password"
+															className={styles.login_input}
                          />
                     </Form.Item>
-                    <Form.Item>
+                    <Form.Item className={cx(styles.form_item,styles.flex)}>
                          <Form.Item
                               name="remember"
                               valuePropName="checked"
@@ -67,7 +71,7 @@ export default function LoginScreen() {
                          </a>
                     </Form.Item>
 
-                    <Form.Item>
+                    <Form.Item className={styles.form_item}>
                          <Button
                               type="primary"
                               htmlType="submit"

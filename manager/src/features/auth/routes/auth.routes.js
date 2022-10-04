@@ -10,7 +10,6 @@ const LOGIN_SCREEN = {
      component: LoginScreen,
      isAuthRoute: true,
      pageTitle: "CNG Login",
-     layout: AuthLayout,
 };
 
 const AUTH_ROUTES = [LOGIN_SCREEN];

@@ -1,19 +1,24 @@
-.login-form {
-     max-width: 300px !important;
-}
-.login-form-forgot {
-     float: left !important;
-}
-.ant-col-rtl .login-form-forgot {
-     float: left !important;
-}
-.login-form-button {
-     width: 100% !important;
-}
+.login {
+     padding: 5rem 8rem;
+     height: 100vh;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
 
+     .form {
+          width: 30%;
 
-.container {
-     width: 45rem;
-		 height: 100%;
-     margin: auto;
+          &_item {
+						.login_input{
+							border-radius: 2rem;
+							padding: 1rem;
+						}
+          }
+
+          &_item.flex {
+               display: flex;
+               justify-content: space-between;
+          }
+     }
 }

@@ -1,4 +1,4 @@
-import { DefaultLayout } from "components";
+import { AuthLayout, DefaultLayout } from "components";
 import { AuthPaths } from "features/auth/auth";
 import { Helmet } from "react-helmet";
 import { Redirect, Route } from "react-router-dom";
@@ -16,10 +16,11 @@ const NestedRouteWrapper = ({ routesWithComponents }) => {
                          component,
                          pageTitle,
                          isPrivateRoute,
-                         layout, //
                          permissions, //
                     }) => {
-                         const Layout = layout || DefaultLayout;
+                         const Layout = isPrivateRoute
+                              ? DefaultLayout
+                              : AuthLayout;
 
                          return (
                               <Route
@@ -45,15 +46,15 @@ const NestedRouteWrapper = ({ routesWithComponents }) => {
                                         );
 
                                         //  const isLogin = localStorage.getItem("isLogin");
-                                         const isLogin = true;
-                                         if (isPrivateRoute && !isLogin) {
-                                              return (
-                                                   <Redirect
-                                                        key="AUTH_ROUTE"
-                                                        to={AuthPaths.LOGIN}
-                                                   />
-                                              );
-                                         }
+                                        const isLogin = true;
+                                        if (isPrivateRoute && !isLogin) {
+                                             return (
+                                                  <Redirect
+                                                       key="AUTH_ROUTE"
+                                                       to={AuthPaths.LOGIN}
+                                                  />
+                                             );
+                                        }
 
                                         return (
                                              //  (permissions && (
