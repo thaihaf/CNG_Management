@@ -1,4 +1,4 @@
-import { api } from "@app/api/api";
+import { api } from "api/api";
 
 import { AuthEndPoint } from "../constants/auth.endpoints";
 
