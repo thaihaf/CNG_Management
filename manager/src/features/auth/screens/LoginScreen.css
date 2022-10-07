@@ -1,0 +1,36 @@
+.login {
+  padding: 5rem 8rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.login .form {
+  width: 30rem;
+}
+.login .form_item {
+  margin-bottom: 4rem;
+}
+.login .form_item .login_input {
+  border-radius: 5rem;
+  padding: 1rem;
+  padding-right: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+.login .form_item .forgot {
+  margin-left: auto;
+}
+.login .form_item .btn_signUp {
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  color: #fff;
+  border-radius: 3rem;
+  height: 4.5rem;
+  width: 100%;
+}
+.login .form .flex {
+  display: flex;
+  justify-content: space-between;
+}/*# sourceMappingURL=LoginScreen.css.map */

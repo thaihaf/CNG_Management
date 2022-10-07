@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Alert, Button, Checkbox, Form, Input, notification } from "antd";
 
-import styles from "./LoginScreen.module.scss";
 import cx from "classnames";
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
@@ -67,10 +66,10 @@ export default function LoginScreen() {
      };
 
      return (
-          <div className={styles.login}>
+          <div className="login">
                <Form
                     name="login"
-                    className={styles.form}
+                    className="form"
                     initialValues={{
                          remember: true,
                     }}
@@ -106,14 +105,14 @@ export default function LoginScreen() {
                                    ),
                               },
                          ]}
-                         className={styles.form_item}
+                         className="form_item"
                     >
                          <Input
                               prefix={
                                    <UserOutlined className="site-form-item-icon" />
                               }
                               placeholder="username"
-                              className={styles.login_input}
+                              className="login_input"
                          />
                     </Form.Item>
                     <Form.Item
@@ -146,7 +145,7 @@ export default function LoginScreen() {
                                    ),
                               },
                          ]}
-                         className={styles.form_item}
+                         className="form_item"
                     >
                          <Input
                               prefix={
@@ -154,10 +153,10 @@ export default function LoginScreen() {
                               }
                               type="password"
                               placeholder="●●●●●●●●●"
-                              className={styles.login_input}
+                              className="login_input"
                          />
                     </Form.Item>
-                    <Form.Item className={cx(styles.form_item, styles.flex)}>
+                    <Form.Item className="form_item flex">
                          <Form.Item
                               name="remember"
                               valuePropName="checked"
@@ -167,24 +166,18 @@ export default function LoginScreen() {
                          </Form.Item>
 
                          <a
-                              className={cx(
-                                   "/login-form-forgot",
-                                   styles.forgot
-                              )}
+                              className="/login-form-forgot forgot"
                               href="/forgot"
                          >
                               Forgot password
                          </a>
                     </Form.Item>
 
-                    <Form.Item className={styles.form_item}>
+                    <Form.Item className="form_item">
                          <Button
                               type="primary"
                               htmlType="submit"
-                              className={cx(
-                                   "login-form-button=",
-                                   styles.btn_signUp
-                              )}
+                              className="login-form-button= btn_signUp"
                          >
                               Sign in
                          </Button>

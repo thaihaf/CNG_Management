@@ -1,7 +1,5 @@
-@import "styles/colors";
-@import "styles/variables";
-
-$layout-spacing: $spacing-3;
+@import "../../../styles/colors.scss";
+@import "../../../styles/colors.scss";
 
 .defaultLayout {
      background-color: $bg-color !important;

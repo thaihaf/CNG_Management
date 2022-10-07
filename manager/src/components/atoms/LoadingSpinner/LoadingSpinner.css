@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #4E76B3;
+  gap: 4rem;
+}
+.container.isFullScreen {
+  height: -webkit-fill-available;
+  height: -moz-available;
+  height: 100vh;
+}/*# sourceMappingURL=LoadingSpinner.css.map */
