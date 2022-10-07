@@ -1,1 +1,1 @@
-export const AUTH_ACCESS_TOKEN = 'Cng'
+export const AUTHEN_ACCESS_TOKEN = 'auth'

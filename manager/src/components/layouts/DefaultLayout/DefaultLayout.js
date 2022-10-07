@@ -28,6 +28,9 @@ import {
      siderBarEmployeeItems,
 } from "constants/items.constants";
 
+import logo5 from "assets/images/logo5.png";
+import logo3 from "assets/images/logo3.png";
+
 const { Header, Content, Sider } = Layout;
 
 const items1 = ["1", "2", "3"].map((key) => ({
@@ -43,53 +46,33 @@ const DefaultLayout = ({ children }) => {
      });
      return (
           <Layout className={styles.defaultLayout}>
-               <Header className="header">
-                    {
-                         <span
-                              onClick={() => setCollapsed(!collapsed)}
-                              style={{ float: "left", cursor: "pointer" }}
-                         >
+               <Sider
+                    className={styles.siteLayoutBackground}
+                    width={200}
+                    trigger={null}
+                    collapsible
+                    collapsed={collapsed}
+                    onCollapse={(value) => setCollapsed(value)}
+               >
+                    <div className={styles.sidebar_children}>
+                         <div className={styles.logo}>
                               {collapsed ? (
-                                   <MenuUnfoldOutlined
-                                        style={{
-                                             fontSize: "16px",
-                                             color: "#fff",
-                                        }}
+                                   <img
+                                        src={logo3}
+                                        alt="logo"
+                                        className={styles.logo3_img}
                                    />
                               ) : (
-                                   <MenuFoldOutlined
-                                        style={{
-                                             fontSize: "16px",
-                                             color: "#fff",
-                                        }}
+                                   <img
+                                        src={logo5}
+                                        alt="logo"
+                                        className={styles.logo5_img}
                                    />
                               )}
-                         </span>
-                    }
+                         </div>
 
-                    <div className={styles.logo} />
-                    <Menu
-                         theme="dark"
-                         mode="horizontal"
-                         defaultSelectedKeys={["2"]}
-                         items={items1}
-                    />
-               </Header>
-               {/* <Navigation />
-               <Content className={styles.container}>
-                    <Menu />
-                    <div className={styles.content}>{children}</div>
-               </Content> */}
-
-               <Layout>
-                    <Sider
-                         className={styles.siteLayoutBackground}
-                         width={200}
-                         trigger={null}
-                         collapsible
-                         collapsed={collapsed}
-                    >
                          <Menu
+                              className={styles.sidebarMenu}
                               mode="inline"
                               defaultSelectedKeys={siderBarAdminItems[0].key}
                               defaultOpenKeys={["sub1"]}
@@ -111,7 +94,48 @@ const DefaultLayout = ({ children }) => {
                                    };
                               })}
                          />
-                    </Sider>
+
+                         <span className={styles.toggleSidebar}>
+                              {collapsed ? (
+                                   <MenuUnfoldOutlined
+                                        style={{
+                                             fontSize: "22px",
+                                             color: "#fff",
+                                        }}
+                                        onClick={() => setCollapsed(!collapsed)}
+                                   />
+                              ) : (
+                                   <MenuFoldOutlined
+                                        style={{
+                                             fontSize: "22px",
+                                             color: "#fff",
+                                        }}
+                                        onClick={() => setCollapsed(!collapsed)}
+                                   />
+                              )}
+                         </span>
+                    </div>
+               </Sider>
+
+               <Layout>
+                    <Header className={styles.header}>
+                         <div className={styles.info}>
+                              <div className={styles.info_avt}>
+                                   <img
+                                        src={logo5}
+                                        alt=""
+                                        className={styles.info_avt_img}
+                                   />
+                              </div>
+
+                              <div className={styles.info_detail}>
+                                   <div className={styles.info_fullname}>
+                                        Nguyen Thai Ha
+                                   </div>
+                                   <div className={styles.info_role}>Admin</div>
+                              </div>
+                         </div>
+                    </Header>
 
                     <Layout
                          style={{
@@ -129,13 +153,11 @@ const DefaultLayout = ({ children }) => {
                               <Breadcrumb.Item href="/employee/list">
                                    Employee List
                               </Breadcrumb.Item>
-                              <Breadcrumb.Item href="/employee/detail/id=4">
-                                   App
-                              </Breadcrumb.Item>
+                              <Breadcrumb.Item>App</Breadcrumb.Item>
                          </Breadcrumb>
 
                          <Content
-                              className={styles.siteLayoutBackground}
+                              className={styles.content}
                               style={{
                                    padding: 24,
                                    margin: 0,

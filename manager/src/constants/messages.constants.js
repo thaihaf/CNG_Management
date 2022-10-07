@@ -1,10 +1,8 @@
 export const MESSAGE_ERROR = {
-	"1001": "Incorrect employee code or password",
-  "1002": "An error occurred while processing.",
+	"1001": "Incorrect username or password",
+  "1002": "An error occurred while processing upload.",
   "1003": "An error occurred while processing.",
-  "1004": "An error occurred while processing.",
-  "1005": "Please upload a CSV file.",
-  "1006": "Please upload a file no larger than 300KB.",
+  "1004": "An error occurred while processing create.",
   "0001": "Please enter %field%.",
   "0101": "Please enter in email address format.",
   "0100": "%field% must be a string",

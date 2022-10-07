@@ -24,10 +24,13 @@ code {
      color: #fff !important;
 }
 
-a{
-	color : white !important;
-	outline: none !important;
+a {
+     color: white !important;
+     outline: none !important;
 }
-img{
-	width: 100%;
+img {
+     width: 100%;
+}
+.ant-breadcrumb a {
+     color: black !important;
 }

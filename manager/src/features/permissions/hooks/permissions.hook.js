@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@app/redux/store";
+import { useSelector } from "react-redux";
 
 function usePermissions(requiredPermissions, hasAll) {
      const [allowed, setAllowed] = useState();
-     const { permissions } = useAppSelector((state) => ({
+     const { permissions } = useSelector((state) => ({
           permissions: state.permissions.permissions,
      }));
 

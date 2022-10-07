@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Redirect } from "react-router-dom";
 
-import usePermissions from "../hooks/permissions.hook";
+import usePermissions from "../../hooks/permissions.hook";
 
 /**
  * The permission component allows you to only display

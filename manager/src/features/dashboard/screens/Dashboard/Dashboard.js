@@ -2,7 +2,6 @@ import React from "react";
 
 import "antd/dist/antd.css";
 import styles from "./Dashboard.module.scss";
-import cx from "classnames";
 import { LogoFacebook, LogoTwitter, LogoInstagram } from "react-ionicons";
 
 import bg from "assets/images/bg-dashboard.png";
@@ -16,18 +15,18 @@ export default function Dashboard() {
                style={{ backgroundImage: "url(" + bg + ")" }}
           >
                <div className={styles.header}>
-                    <a href="#" className={styles.header_logo}>
+                    <a href="/" className={styles.header_logo}>
                          <img src={logo} alt="logo" />
                     </a>
 
                     <div className={styles.header_links}>
-                         <a href="#" className={styles.header_link}>
+                         <a href="/" className={styles.header_link}>
                               Home
                          </a>
-                         <a href="#" className={styles.header_link}>
+                         <a href="/product" className={styles.header_link}>
                               Product
                          </a>
-                         <a href="#" className={styles.header_link}>
+                         <a href="/support" className={styles.header_link}>
                               Support
                          </a>
                     </div>
@@ -63,21 +62,21 @@ export default function Dashboard() {
                </div>
 
                <div className={styles.contact_links}>
-                    <a href="#">
+                    <a href="/fb">
                          <LogoFacebook
                               color={"#fff"}
                               height="30px"
                               width="30px"
                          />
                     </a>
-                    <a href="#">
+                    <a href="/ins">
                          <LogoInstagram
                               color={"#fff"}
                               height="30px"
                               width="30px"
                          />
                     </a>
-                    <a href="#">
+                    <a href="/tw">
                          <LogoTwitter
                               color={"#fff"}
                               height="30px"
