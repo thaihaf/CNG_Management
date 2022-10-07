@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "./CreateSupplier.css"
 const CreateSupplier = () => {
     return (
         <div>

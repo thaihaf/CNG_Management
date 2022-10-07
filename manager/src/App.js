@@ -5,7 +5,7 @@ import { LoadingSpinner } from "components";
 import RoutesApp from "routes/Routes";
 
 import "antd/dist/antd.css";
-
+import "./App.css";
 function App() {
      const loadingTranslation = false;
 

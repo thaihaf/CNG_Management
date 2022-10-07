@@ -1,21 +1,24 @@
 import React, { useEffect } from "react";
+import cx from "classnames";
+import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { unwrapResult } from "@reduxjs/toolkit";
+
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Alert, Button, Checkbox, Form, Input, notification } from "antd";
 
-import cx from "classnames";
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
-import { useHistory } from "react-router-dom";
-import { EmployeeManagerPaths } from "features/employee-manager/employeeManager";
-import { unwrapResult } from "@reduxjs/toolkit";
 import {
-     updateAccessToken,
-     postLogin,
-     updateError,
-     updateUserName,
+	updateAccessToken,
+	postLogin,
+	updateError,
+	updateUserName,
 } from "../auth";
-import { useSelector, useDispatch } from "react-redux";
+import { EmployeeManagerPaths } from "features/employee-manager/employeeManager";
+
+import "./LoginScreen.css";
 
 export default function LoginScreen() {
      const dispatch = useDispatch();
