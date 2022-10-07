@@ -1,4 +1,5 @@
 import { EMPLOYEE_MANAGER_ROUTES } from "features/employee-manager/employeeManager";
+import { SUPPLIER_MANAGER_ROUTES } from "features/supplier-manager/supplierManager";
 import { AUTH_ROUTES } from "features/auth/auth";
 import { DASHBOARD_ROUTES } from "features/dashboard/dashboard";
 // import { NOTICE_ROUTES } from "features/notice/notice";
@@ -10,4 +11,5 @@ export const ROUTE_LIST = [
      ...DASHBOARD_ROUTES,
      ...AUTH_ROUTES,
      ...EMPLOYEE_MANAGER_ROUTES,
+     ...SUPPLIER_MANAGER_ROUTES,
 ];
