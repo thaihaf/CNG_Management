@@ -5,7 +5,7 @@ import { DASHBOARD_ROUTES } from "features/dashboard/dashboard";
 // import { NOTICE_ROUTES } from "features/notice/notice";
 // import { UPLOAD_ROUTES } from "features/uploadCSV/upload";
 
-export const ROOT_ROUTE = "/";
+export const ROOT_ROUTE = "/admin/";
 
 export const ROUTE_LIST = [
      ...DASHBOARD_ROUTES,

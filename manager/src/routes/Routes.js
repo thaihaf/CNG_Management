@@ -16,7 +16,7 @@ import { DashboardPaths } from "features/dashboard/dashboard";
 const Routes = () => {
      return (
           <Switch>
-               <Redirect exact from="/" to={EmployeeManagerPaths.EMPLOYEE_LIST} />
+               <Redirect exact from="/" to={AuthPaths.LOGIN} />
 
                <NestedRouteWrapper routesWithComponents={ROUTE_LIST} />
 

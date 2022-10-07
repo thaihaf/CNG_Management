@@ -6,12 +6,6 @@
      min-height: 100vh;
 }
 
-.header {
-     padding: 1rem 2.1rem;
-     padding-left: 2.1rem;
-     height: max-content;
-}
-
 .logo {
      float: left;
      width: 100%;
@@ -60,6 +54,9 @@
 }
 
 .header {
+     padding: 1rem 2.1rem;
+     padding-left: 2.1rem;
+     height: max-content !important;
      display: flex;
      align-items: center;
      justify-content: space-between;
@@ -69,21 +66,38 @@
      margin-left: auto;
      display: flex;
      align-items: center;
-     gap: 3rem;
+     gap: 2rem;
 }
 .info_avt {
-     width: 10rem;
+     width: 4.5rem;
+     height: 4.5rem;
+     overflow: hidden;
      object-fit: contain;
+     border-radius: 50%;
+     margin: 2rem 0;
+		 display: flex;
+		 align-items: center;
+		 justify-content: center;
 }
-.info_detail{
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content:center;
+.info_detail {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     color: $white-color;
+		 gap: 0.5rem;
 }
 .info_avt_img {
      width: 100%;
 }
-.info_fullname, .info_role{
-	height: 3rem;
+.info_fullname,
+.info_role {
+     line-height: 24px;
+}
+
+.info_role{
+	background-color: $primary-color;
+	width: 100%;
+	text-align: center;
+	border-radius: 0.5rem;
 }

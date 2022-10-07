@@ -1,57 +1,33 @@
 import React from 'react';
-import { AuditOutlined } from "@ant-design/icons/";
+import { TeamOutlined, FileDoneOutlined, ReconciliationOutlined } from "@ant-design/icons/";
 
 export const siderBarAdminItems = [
      {
           key: "1",
-          icon: <AuditOutlined />,
-          label: `1`,
+          icon: <TeamOutlined style={{ fontSize: '1.6rem' }}/>,
+          label: `Account`,
           children: [
-               { key: "employee", label: "Employee" },
-               { key: "supplier", label: "Supplier" },
-               { key: "customer", label: "Customer" },
-               { key: "account", label: "Account" },
+               { key: "employee-list", label: "Employee" },
+               { key: "supplier-list", label: "Supplier" },
+               { key: "customer-list", label: "Customer" },
           ],
      },
      {
           key: "2",
-          icon: <AuditOutlined />,
-          label: `2`,
+          icon: <FileDoneOutlined style={{ fontSize: '1.6rem' }}/>,
+          label: `Items`,
           children: [
-               { key: "product", label: "Product" },
-               { key: "brand", label: "Brand" },
+               { key: "product-list", label: "Product" },
+               { key: "brand-list", label: "Brand" },
           ],
      },
      {
           key: "3",
-          icon: <AuditOutlined />,
-          label: `3`,
+          icon: <ReconciliationOutlined style={{ fontSize: '1.6rem' }} />,
+          label: `Actions`,
           children: [
                { key: "import-product", label: "Import Product" },
                { key: "export-product", label: "Export Product" },
           ],
-     },
-];
-
-export const siderBarEmployeeItems = [
-     {
-          key: "product",
-          icon: <AuditOutlined />,
-          label: `Product`,
-     },
-     {
-          key: "brand",
-          icon: <AuditOutlined />,
-          label: `Brand`,
-     },
-     {
-          key: "customer",
-          icon: <AuditOutlined />,
-          label: `Customer`,
-     },
-     {
-          key: "supplier",
-          icon: <AuditOutlined />,
-          label: `Supplier`,
      },
 ];

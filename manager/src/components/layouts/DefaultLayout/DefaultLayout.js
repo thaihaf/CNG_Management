@@ -1,27 +1,16 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import {
-     LaptopOutlined,
-     NotificationOutlined,
-     UserOutlined,
      MenuFoldOutlined,
      MenuUnfoldOutlined,
-     VideoCameraOutlined,
-     UploadOutlined,
-     BarChartOutlined,
-     CloudOutlined,
-     AppstoreOutlined,
-     TeamOutlined,
-     ShopOutlined,
      HomeOutlined,
 } from "@ant-design/icons";
+
 import { Breadcrumb, Layout, Menu } from "antd";
 import { Footer } from "components";
 
-// import Menu from "@app/components/molecules/Menu/Menu";
-// import Navigation from "@app/components/molecules/Navigation/Navigation";
+import "./DefaultLayout.css";
 
-import "antd/dist/antd.css";
 import {
      siderBarAdminItems,
      siderBarEmployeeItems,
@@ -29,20 +18,27 @@ import {
 
 import logo5 from "assets/images/logo5.png";
 import logo3 from "assets/images/logo3.png";
+import avt from "assets/images/avt.jpg";
+import { useHistory } from "react-router-dom";
 
 const { Header, Content, Sider } = Layout;
 
-const items1 = ["1", "2", "3"].map((key) => ({
-     key,
-     label: `nav ${key}`,
-}));
-
 const DefaultLayout = ({ children }) => {
-     const [collapsed, setCollapsed] = useState(false);
+     const [collapsed, setCollapsed] = useState(true);
+     const [selectedItem, setSelectedItem] = useState("employee-list");
+
+     const history = useHistory();
 
      useEffect(() => {
           window.scrollTo(0, 0);
      });
+
+     const getSelect = ({ key }) => {
+          let arr = key.toString().trim().split("-");
+          setSelectedItem(key);
+          history.push(`/${arr[0]}/${key}`);
+     };
+
      return (
           <Layout className="defaultLayout">
                <Sider
@@ -73,8 +69,7 @@ const DefaultLayout = ({ children }) => {
                          <Menu
                               className="sidebarMenu"
                               mode="inline"
-                              defaultSelectedKeys={siderBarAdminItems[0].key}
-                              defaultOpenKeys={["sub1"]}
+                              selectedKeys={[selectedItem]}
                               style={{ height: "100%" }}
                               theme={"dark"}
                               items={siderBarAdminItems.map((item) => {
@@ -92,6 +87,7 @@ const DefaultLayout = ({ children }) => {
                                              }),
                                    };
                               })}
+                              onClick={(item) => getSelect(item)}
                          />
 
                          <span className="toggleSidebar">
@@ -121,7 +117,7 @@ const DefaultLayout = ({ children }) => {
                          <div className="info">
                               <div className="info_avt">
                                    <img
-                                        src={logo5}
+                                        src={avt}
                                         alt=""
                                         className="info_avt_img"
                                    />
@@ -147,7 +143,7 @@ const DefaultLayout = ({ children }) => {
                               }}
                          >
                               <Breadcrumb.Item href="/">
-                                   <HomeOutlined />
+                                   <HomeOutlined /> Home
                               </Breadcrumb.Item>
                               <Breadcrumb.Item href="/employee/list">
                                    Employee List
