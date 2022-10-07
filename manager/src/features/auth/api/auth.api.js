@@ -1,10 +1,12 @@
 import { api } from "api/api";
-
-import { AuthEndPoint } from "../constants/auth.endpoints";
+import { AuthPaths } from "../auth";
 
 const loginApi = (data) => {
-  const url = AuthEndPoint.LOGIN;
-  return api.post(url, data);
+     console.log(typeof data);
+     const url = AuthPaths.LOGIN;
+     const rp = api.post(url, data);
+     console.log(rp);
+     return rp;
 };
 
 const authApi = { loginApi };

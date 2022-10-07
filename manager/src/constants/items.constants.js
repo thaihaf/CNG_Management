@@ -27,6 +27,17 @@ export const siderBarAdminItems = [
           ],
      },
      {
+          key: "5",
+          icon: <HomeOutlined />,
+          label: `1`,
+          children: [
+               { key: "sdf", label: "Employee" },
+               { key: "dsf", label: "Supplier" },
+               { key: "sdf", label: "Customer" },
+               { key: "sdf", label: "Account" },
+          ],
+     },
+     {
           key: "2",
           icon: <HomeOutlined />,
           label: `2`,

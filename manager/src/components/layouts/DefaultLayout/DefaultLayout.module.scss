@@ -7,37 +7,85 @@ $layout-spacing: $spacing-3;
      background-color: $bg-color !important;
      min-height: 100vh;
 }
-// .container {
-//      margin: auto;
-//      // min-height: 600px;
-//      width: 300px;
-//      height: max-content;
-//      // max-width: 960px;
-//      padding-top: 40px;
-//      position: relative;
-//      flex: none !important;
-// }
 
-// .content {
-//      // min-height: calc(100vh - #{$layout-spacing * 2} - #{$navbar-height});
-//      // padding-top: 40px;
-//      height: fit-content;
-// }
+.header {
+     padding: 1rem 2.1rem;
+     padding-left: 2.1rem;
+     height: max-content;
+}
 
 .logo {
      float: left;
-     width: 120px;
-     height: 31px;
-     margin: 16px 24px;
-     background: rgba(255, 255, 255, 0.3);
+     width: 100%;
+     height: 10.9rem;
+     object-fit: contain;
+     display: flex;
+     align-items: center;
+     justify-content: center;
 }
-
+.logo3_img {
+     transition: none;
+     width: 4rem;
+}
+.logo5_img {
+     transition: all 1s ease;
+     width: 12rem;
+}
 .ant-row-rtl .logo {
      float: right;
      margin: 16px 0 16px 24px;
 }
-
-.siteLayoutBackground {
+.content {
      background: #fff;
-    //  overflow-y: auto;
+}
+.siteLayoutBackground {
+     background: #001529;
+     height: 100vh;
+}
+.sidebar_children {
+     height: 100%;
+     display: flex;
+     flex-direction: column;
+}
+.toggleSidebar {
+     margin-top: auto;
+     width: 100%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     padding: 2rem;
+     background-color: #002140;
+}
+.sidebarMenu {
+     overflow-y: auto;
+     height: none !important;
+}
+
+.header {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     color: $white-color;
+}
+.info {
+     margin-left: auto;
+     display: flex;
+     align-items: center;
+     gap: 3rem;
+}
+.info_avt {
+     width: 10rem;
+     object-fit: contain;
+}
+.info_detail{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content:center;
+}
+.info_avt_img {
+     width: 100%;
+}
+.info_fullname, .info_role{
+	height: 3rem;
 }

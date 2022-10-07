@@ -1,68 +1,77 @@
 import axios from "axios";
-import createAuthRefreshInterceptor from "axios-auth-refresh";
-import Cookies from "js-cookie";
-
-import store from "redux/store";
-
-import toCamelCase from "helpers/toCamelCase.helper";
-import toSnakeCase from "helpers/toSnakeCase.helper";
-import { trimValue } from "helpers/trim-values.helper";
 
 import { ENV } from "constants/env";
 import { AuthPaths, updateAccessToken } from "features/auth/auth";
-import { refreshTokenCognito } from "helpers/auth.helpers";
+import { notification } from "antd";
+import {
+     getAccessToken,
+     getRefreshToken,
+     setToken,
+} from "helpers/auth.helpers";
 
 /**
  * All the endpoint that do not require an access token
  */
-
-const authInterceptor = async (request) => {
-     const requestConfig = trimValue(request);
-     requestConfig.params = toSnakeCase(requestConfig.params);
-     requestConfig.data = toSnakeCase(requestConfig.data);
-     const { accessToken } = store.getState().auth;
-
-     if (accessToken) {
-          requestConfig.headers.Authorization = `Bearer ${accessToken}`;
-          return requestConfig;
-     }
-
-     if (!accessToken) {
-          // TODO: handle when UNAUTHORIZED;
-          // return Promise.reject(ApiStatusCodes.UNAUTHORIZED);
-          return requestConfig;
-     }
-
-     return requestConfig;
-};
-
-const responseInterceptor = (response) => {
-     response.data = toCamelCase(response.data);
-     return response;
-};
-
-const errorInterceptor = async (axiosError) => {
-     return Promise.reject(axiosError);
+const openNotificationWithIcon = (type, mess, des) => {
+     notification[type]({
+          message: "Notification Title",
+          description:
+               "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+     });
 };
 
 /** Setup an API instance */
 export const api = axios.create({
      baseURL: ENV.API_HOST,
-     headers: { "Content-Type": "application/json" },
+     headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+     },
+     mode: "no-cors",
 });
 
-const refreshAuthLogic = async () => {
-     const refreshToken = await refreshTokenCognito();
-     if (refreshToken) {
-          await store.dispatch(updateAccessToken(refreshToken));
-          return Promise.resolve();
+api.interceptors.request.use(
+     (config) => {
+          const token = getAccessToken();
+          if (token) {
+               config.headers["Authorization"] = "Bearer " + token;
+          }
+          return config;
+     },
+     (error) => {
+          Promise.reject(error);
      }
-     localStorage.clear();
-     Cookies.remove("refreshToken");
-     window.location.href = AuthPaths.LOGIN;
-     return Promise.resolve();
-};
-createAuthRefreshInterceptor(api, refreshAuthLogic);
+);
 
-api.interceptors.request.use(authInterceptor);
-api.interceptors.response.use(responseInterceptor, errorInterceptor);
+api.interceptors.response.use(
+     (response) => {
+          return response;
+     },
+     function (error) {
+          // const originalRequest = error.config;
+
+          if (error.response.status === 401) {
+               window.location.href = AuthPaths.LOGIN;
+               return Promise.reject(error);
+          }
+
+          // if (error.response.status === 401 && !originalRequest._retry) {
+          //      originalRequest._retry = true;
+          //      const refreshToken = getRefreshToken();
+          //      return axios
+          //           .post("/auth/token", {
+          //                refresh_token: refreshToken,
+          //           })
+          //           .then((res) => {
+          //                if (res.status === 201) {
+          //                     setToken(res.data);
+          //                     axios.defaults.headers.common["Authorization"] =
+          //                          "Bearer " +
+          //                          getAccessToken();
+          //                     return axios(originalRequest);
+          //                }
+          //           });
+          // }
+          return Promise.reject(error);
+     }
+);

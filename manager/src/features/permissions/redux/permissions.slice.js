@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { PERMISSIONS_KEY } from "../contansts/permissions.key";
 
-export const PERMISSIONS_FEATURE_KEY = "permissions";
+export const PERMISSIONS_FEATURE_KEY = PERMISSIONS_KEY;
 
 const initialState = {
   permissions: [],

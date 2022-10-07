@@ -1,4 +1,4 @@
 export const AuthEndPoint = {
-     LOGIN: "/login",
-     LOGOUT: "/logout",
+     LOGIN: "login",
+     LOGOUT: "logout",
 };
