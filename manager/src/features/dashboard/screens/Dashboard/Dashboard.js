@@ -5,6 +5,7 @@ import "antd/dist/antd.css";
 import bg from "assets/images/bg-dashboard.png";
 import logo from "assets/images/logo3.png";
 import { Button } from "@mui/material";
+import { FacebookFilled, InstagramFilled, TwitterCircleFilled } from "@ant-design/icons";
 
 export default function Dashboard() {
      return (
@@ -61,21 +62,21 @@ export default function Dashboard() {
 
                <div className="contact_links">
                     <a href="/fb">
-                         <LogoFacebook
+                         <FacebookFilled
                               color={"#fff"}
                               height="30px"
                               width="30px"
                          />
                     </a>
                     <a href="/ins">
-                         <LogoInstagram
+                         <InstagramFilled
                               color={"#fff"}
                               height="30px"
                               width="30px"
                          />
                     </a>
                     <a href="/tw">
-                         <LogoTwitter
+                         <TwitterCircleFilled
                               color={"#fff"}
                               height="30px"
                               width="30px"

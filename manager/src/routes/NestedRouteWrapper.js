@@ -1,3 +1,4 @@
+import React from "react";
 import { AuthLayout, DefaultLayout } from "components";
 import { AuthPaths } from "features/auth/auth";
 import { Helmet } from "react-helmet";
