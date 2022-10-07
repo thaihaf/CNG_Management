@@ -1,23 +1,9 @@
-import {
-     LaptopOutlined,
-     NotificationOutlined,
-     UserOutlined,
-     MenuFoldOutlined,
-     MenuUnfoldOutlined,
-     VideoCameraOutlined,
-     UploadOutlined,
-     BarChartOutlined,
-     CloudOutlined,
-     AppstoreOutlined,
-     TeamOutlined,
-     ShopOutlined,
-     HomeOutlined,
-} from "@ant-design/icons";
+import { AuditOutlined } from "@ant-design/icons/";
 
 export const siderBarAdminItems = [
      {
           key: "1",
-          icon: <HomeOutlined />,
+          icon: <AuditOutlined />,
           label: `1`,
           children: [
                { key: "employee", label: "Employee" },
@@ -27,19 +13,8 @@ export const siderBarAdminItems = [
           ],
      },
      {
-          key: "5",
-          icon: <HomeOutlined />,
-          label: `1`,
-          children: [
-               { key: "sdf", label: "Employee" },
-               { key: "dsf", label: "Supplier" },
-               { key: "sdf", label: "Customer" },
-               { key: "sdf", label: "Account" },
-          ],
-     },
-     {
           key: "2",
-          icon: <HomeOutlined />,
+          icon: <AuditOutlined />,
           label: `2`,
           children: [
                { key: "product", label: "Product" },
@@ -48,7 +23,7 @@ export const siderBarAdminItems = [
      },
      {
           key: "3",
-          icon: <HomeOutlined />,
+          icon: <AuditOutlined />,
           label: `3`,
           children: [
                { key: "import-product", label: "Import Product" },
@@ -60,22 +35,22 @@ export const siderBarAdminItems = [
 export const siderBarEmployeeItems = [
      {
           key: "product",
-          icon: <HomeOutlined />,
+          icon: <AuditOutlined />,
           label: `Product`,
      },
      {
           key: "brand",
-          icon: <HomeOutlined />,
+          icon: <AuditOutlined />,
           label: `Brand`,
      },
      {
           key: "customer",
-          icon: <HomeOutlined />,
+          icon: <AuditOutlined />,
           label: `Customer`,
      },
      {
           key: "supplier",
-          icon: <HomeOutlined />,
+          icon: <AuditOutlined />,
           label: `Supplier`,
      },
 ];

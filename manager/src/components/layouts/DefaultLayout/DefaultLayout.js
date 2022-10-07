@@ -22,7 +22,6 @@ import { Footer } from "components";
 // import Navigation from "@app/components/molecules/Navigation/Navigation";
 
 import "antd/dist/antd.css";
-import styles from "./DefaultLayout.module.scss";
 import {
      siderBarAdminItems,
      siderBarEmployeeItems,
@@ -45,34 +44,34 @@ const DefaultLayout = ({ children }) => {
           window.scrollTo(0, 0);
      });
      return (
-          <Layout className={styles.defaultLayout}>
+          <Layout className="defaultLayout">
                <Sider
-                    className={styles.siteLayoutBackground}
+                    className="siteLayoutBackground"
                     width={200}
                     trigger={null}
                     collapsible
                     collapsed={collapsed}
                     onCollapse={(value) => setCollapsed(value)}
                >
-                    <div className={styles.sidebar_children}>
-                         <div className={styles.logo}>
+                    <div className="sidebar_children">
+                         <div className="logo">
                               {collapsed ? (
                                    <img
                                         src={logo3}
                                         alt="logo"
-                                        className={styles.logo3_img}
+                                        className="logo3_img"
                                    />
                               ) : (
                                    <img
                                         src={logo5}
                                         alt="logo"
-                                        className={styles.logo5_img}
+                                        className="logo5_img"
                                    />
                               )}
                          </div>
 
                          <Menu
-                              className={styles.sidebarMenu}
+                              className="sidebarMenu"
                               mode="inline"
                               defaultSelectedKeys={siderBarAdminItems[0].key}
                               defaultOpenKeys={["sub1"]}
@@ -95,7 +94,7 @@ const DefaultLayout = ({ children }) => {
                               })}
                          />
 
-                         <span className={styles.toggleSidebar}>
+                         <span className="toggleSidebar">
                               {collapsed ? (
                                    <MenuUnfoldOutlined
                                         style={{
@@ -118,21 +117,21 @@ const DefaultLayout = ({ children }) => {
                </Sider>
 
                <Layout>
-                    <Header className={styles.header}>
-                         <div className={styles.info}>
-                              <div className={styles.info_avt}>
+                    <Header className="header">
+                         <div className="info">
+                              <div className="info_avt">
                                    <img
                                         src={logo5}
                                         alt=""
-                                        className={styles.info_avt_img}
+                                        className="info_avt_img"
                                    />
                               </div>
 
-                              <div className={styles.info_detail}>
-                                   <div className={styles.info_fullname}>
+                              <div className="info_detail">
+                                   <div className="info_fullname">
                                         Nguyen Thai Ha
                                    </div>
-                                   <div className={styles.info_role}>Admin</div>
+                                   <div className="info_role">Admin</div>
                               </div>
                          </div>
                     </Header>
@@ -157,7 +156,7 @@ const DefaultLayout = ({ children }) => {
                          </Breadcrumb>
 
                          <Content
-                              className={styles.content}
+                              className="content"
                               style={{
                                    padding: 24,
                                    margin: 0,
