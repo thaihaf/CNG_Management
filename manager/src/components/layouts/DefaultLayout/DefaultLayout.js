@@ -20,12 +20,14 @@ import logo5 from "assets/images/logo5.png";
 import logo3 from "assets/images/logo3.png";
 import avt from "assets/images/avt.jpg";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const { Header, Content, Sider } = Layout;
 
 const DefaultLayout = ({ children }) => {
-     const [collapsed, setCollapsed] = useState(true);
+     const [collapsed, setCollapsed] = useState(false);
      const [selectedItem, setSelectedItem] = useState("employee-list");
+     const auth = useSelector((state) => state.auth);
 
      const history = useHistory();
 
@@ -125,9 +127,11 @@ const DefaultLayout = ({ children }) => {
 
                               <div className="info_detail">
                                    <div className="info_fullname">
-                                        Nguyen Thai Ha
+                                        {auth.userName}
                                    </div>
-                                   <div className="info_role">Admin</div>
+                                   <div className="info_role">
+                                        {auth.role && auth.role.split("_")[1]}
+                                   </div>
                               </div>
                          </div>
                     </Header>

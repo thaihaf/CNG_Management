@@ -25,9 +25,7 @@ export const api = axios.create({
      baseURL: ENV.API_HOST,
      headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
      },
-     mode: "no-cors",
 });
 
 api.interceptors.request.use(
@@ -39,6 +37,7 @@ api.interceptors.request.use(
           return config;
      },
      (error) => {
+          console.log("error api");
           Promise.reject(error);
      }
 );
@@ -48,6 +47,7 @@ api.interceptors.response.use(
           return response;
      },
      function (error) {
+          console.log("reponse");
           // const originalRequest = error.config;
 
           if (error.response.status === 401) {

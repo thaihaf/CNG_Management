@@ -11,10 +11,10 @@ import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import {
-	updateAccessToken,
-	postLogin,
-	updateError,
-	updateUserName,
+     updateAccessToken,
+     postLogin,
+     updateError,
+     updateUserName,
 } from "../auth";
 import { EmployeeManagerPaths } from "features/employee-manager/employeeManager";
 
@@ -49,14 +49,12 @@ export default function LoginScreen() {
           dispatch(postLogin({ data: authenticationData }))
                .then(unwrapResult)
                .then((res) => {
-                    if (res.success) {
-                         console.log(res);
-                         openNotificationWithIcon(
-                              "success",
-                              "Status : 200",
-                              "Login successfull"
-                         );
-                    }
+                    openNotificationWithIcon(
+                         "success",
+                         "Status : 200",
+                         "Login successfull"
+                    );
+                    history.push(EmployeeManagerPaths.EMPLOYEE_LIST);
                })
                .catch(() => {
                     dispatch(updateError(CODE_ERROR.ERROR_LOGIN));

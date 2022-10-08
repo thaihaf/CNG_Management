@@ -13,10 +13,8 @@ export const postLogin = createAsyncThunk(
      async ({ data }, { rejectWithValue }) => {
           try {
                const response = await api.loginApi(data);
-               console.log(response.data);
                return response.data;
           } catch (error) {
-               console.log("object");
                throw rejectWithValue(error);
           }
      }
@@ -27,6 +25,7 @@ const initialState = {
      errorLogin: "",
      isSignedIn: false,
      userName: null,
+     role: null,
 };
 
 const authenSlice = createSlice({
@@ -44,12 +43,17 @@ const authenSlice = createSlice({
           },
      },
      extraReducers: (builder) => {
-          builder.addCase(postLogin.fulfilled, (state) => {
+          builder.addCase(postLogin.fulfilled, (state, action) => {
                state.errorLogin = null;
                state.isSignedIn = true;
+               state.accessToken = action.payload.token;
+               state.userName = action.payload.username;
+               state.role = action.payload.role;
           });
-          builder.addCase(postLogin.rejected, (state) => {
+          builder.addCase(postLogin.rejected, (state, action) => {
                state.errorLogin = CODE_ERROR.ERROR_LOGIN;
+               state.isSignedIn = false;
+               state.accessToken = "";
           });
      },
 });

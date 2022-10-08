@@ -82,7 +82,6 @@
 .info_detail {
      display: flex;
      flex-direction: column;
-     align-items: center;
      justify-content: center;
      color: $white-color;
 		 gap: 0.5rem;
@@ -100,4 +99,5 @@
 	width: 100%;
 	text-align: center;
 	border-radius: 0.5rem;
+	padding: 0 2rem;
 }
