@@ -5,9 +5,14 @@ import "antd/dist/antd.css";
 import bg from "assets/images/bg-dashboard.png";
 import logo from "assets/images/logo3.png";
 import { Button } from "@mui/material";
-import { FacebookFilled, InstagramFilled, TwitterCircleFilled } from "@ant-design/icons";
-import "./Dashboard.css"
+import {
+     FacebookFilled,
+     InstagramFilled,
+     TwitterCircleFilled,
+} from "@ant-design/icons";
+import "./Dashboard.css";
 export default function Dashboard() {
+
      return (
           <div
                className="dashboard"
