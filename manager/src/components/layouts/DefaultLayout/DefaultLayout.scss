@@ -78,6 +78,7 @@
 		 display: flex;
 		 align-items: center;
 		 justify-content: center;
+		 cursor: pointer;
 }
 .info_detail {
      display: flex;
@@ -100,4 +101,10 @@
 	text-align: center;
 	border-radius: 0.5rem;
 	padding: 0 2rem;
+}
+
+.menu-item{
+	display: flex;
+	gap: 2rem;
+	color: $black-color;
 }

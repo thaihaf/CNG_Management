@@ -89,6 +89,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .info_detail {
@@ -114,4 +115,10 @@
   text-align: center;
   border-radius: 0.5rem;
   padding: 0 2rem;
+}
+
+.menu-item {
+  display: flex;
+  gap: 2rem;
+  color: #000;
 }/*# sourceMappingURL=DefaultLayout.css.map */

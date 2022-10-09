@@ -9,3 +9,8 @@ export const getRefreshToken = () => {
 export const setAuthLocal = (auth) => {
      localStorage.setItem("persist:auth", auth);
 };
+
+export const getIsLogin = () => {
+	const auth = JSON.parse(localStorage.getItem("persist:auth"));
+	return auth.isSignedIn;
+};

@@ -6,24 +6,16 @@ import RoutesApp from "routes/Routes";
 
 import "antd/dist/antd.css";
 import "./App.css";
+import { Spin } from "antd";
 function App() {
      const loadingTranslation = false;
 
      if (loadingTranslation) {
-          return (
-               <LoadingSpinner isFullScreen={true} text="Loading Admin Panel" />
-          );
+          return <Spin spinning={true} />;
      }
 
      return (
-          <Suspense
-               fallback={
-                    <LoadingSpinner
-                         isFullScreen={true}
-                         text="Loading Admin Panel"
-                    />
-               }
-          >
+          <Suspense fallback={<Spin spinning={true} delay={50}/>}>
                <Router>
                     <RoutesApp />
                </Router>
