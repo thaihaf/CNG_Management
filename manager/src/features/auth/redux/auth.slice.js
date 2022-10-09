@@ -64,7 +64,7 @@ export const { updateAccessToken, updateError, updateUserName } =
 const authConfig = {
      key: "auth",
      storage,
-     whitelist: ["accessToken", "isSignedIn", "userName"],
+     whitelist: ["accessToken", "isSignedIn", "userName", "role"],
 };
 
 export const LOCAL_STORAGE_AUTH_KEY = "persist:auth";

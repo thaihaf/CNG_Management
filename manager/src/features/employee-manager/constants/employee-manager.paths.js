@@ -1,6 +1,6 @@
 export const EmployeeManagerPaths = {
-     EMPLOYEE_LIST: "/employee/employee-list",
-     EMPLOYEE_DETAIL: "/employee/detail/:employeeId",
+     EMPLOYEE_LIST: "/employee",
+     EMPLOYEE_DETAILS: "/employee/:employeeId",
      CREATE_EMPLOYEE: "/employee/new",
      EDIT_EMPLOYEE: "/employee/update/:employeeId",
      CONFIRM: "/employee/complete",

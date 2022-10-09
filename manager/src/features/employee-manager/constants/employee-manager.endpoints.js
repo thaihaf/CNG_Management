@@ -1,7 +1,7 @@
-export const ClientsEndPoints = {
-     EMPLOYEE_MANAGER: "employee-list",
+export const EmployeeEndPoints = {
+     EMPLOYEE_MANAGER: "employee",
+     EMPLOYEE_DETAILS: "/employee/:employeeId",
      CREATE_EMPLOYEE: "create-employee",
-     EMPLOYEE_DETAIL: "employee-detail",
      GET_BY_ID: "employee-detail",
      EDIT_EMPLOYEE: "edit-employee",
 };

@@ -4,9 +4,12 @@ import {
      MenuFoldOutlined,
      MenuUnfoldOutlined,
      HomeOutlined,
+     LogoutOutlined,
+     ProfileTwoTone,
+     SettingTwoTone,
 } from "@ant-design/icons";
 
-import { Breadcrumb, Layout, Menu } from "antd";
+import { Breadcrumb, Dropdown, Layout, Menu } from "antd";
 import { Footer } from "components";
 
 import "./DefaultLayout.css";
@@ -21,6 +24,7 @@ import logo3 from "assets/images/logo3.png";
 import avt from "assets/images/avt.jpg";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { AuthPaths } from "features/auth/auth";
 
 const { Header, Content, Sider } = Layout;
 
@@ -40,6 +44,42 @@ const DefaultLayout = ({ children }) => {
           setSelectedItem(key);
           history.push(`/${arr[0]}/${key}`);
      };
+
+     const menu = (
+          <Menu
+               items={[
+                    {
+                         key: "1",
+                         label: (
+                              <a href="https://www.antgroup.com" className="menu-item">
+                                   <ProfileTwoTone />
+                                   <span>Profile</span>
+                              </a>
+                         ),
+                    },
+                    {
+                         key: "2",
+                         label: (
+                              <a href="https://www.aliyun.com" className="menu-item">
+                                   <SettingTwoTone />
+                                   <span>Setting</span>
+                              </a>
+                         ),
+                    },
+                    {
+                         key: "3",
+                         label: (
+                              <a href={AuthPaths.LOGOUT} className="menu-item">
+                                   <LogoutOutlined
+                                        style={{ color: "#52c41a" }}
+                                   />
+                                   <span>Logout</span>
+                              </a>
+                         ),
+                    },
+               ]}
+          />
+     );
 
      return (
           <Layout className="defaultLayout">
@@ -116,24 +156,27 @@ const DefaultLayout = ({ children }) => {
 
                <Layout>
                     <Header className="header">
-                         <div className="info">
-                              <div className="info_avt">
-                                   <img
-                                        src={avt}
-                                        alt=""
-                                        className="info_avt_img"
-                                   />
-                              </div>
+                         <Dropdown overlay={menu} placement="bottomLeft" arrow>
+                              <div className="info">
+                                   <div className="info_avt">
+                                        <img
+                                             src={avt}
+                                             alt=""
+                                             className="info_avt_img"
+                                        />
+                                   </div>
 
-                              <div className="info_detail">
-                                   <div className="info_fullname">
-                                        {auth.userName}
-                                   </div>
-                                   <div className="info_role">
-                                        {auth.role && auth.role.split("_")[1]}
+                                   <div className="info_detail">
+                                        <div className="info_fullname">
+                                             {auth.userName}
+                                        </div>
+                                        <div className="info_role">
+                                             {auth.role &&
+                                                  auth.role.split("_")[1]}
+                                        </div>
                                    </div>
                               </div>
-                         </div>
+                         </Dropdown>
                     </Header>
 
                     <Layout

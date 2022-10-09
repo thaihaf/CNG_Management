@@ -44,14 +44,17 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
      (response) => {
+          console.log("reponse");
           return response;
      },
      function (error) {
-          console.log("reponse");
+          const res = error.response;
           // const originalRequest = error.config;
 
-          if (error.response.status === 401) {
-               window.location.href = AuthPaths.LOGIN;
+          if (res.status === 401) {
+              //  if (res.config.url !== "/login") {
+              //       window.location.href = AuthPaths.LOGIN;
+              //  }
                return Promise.reject(error);
           }
 
