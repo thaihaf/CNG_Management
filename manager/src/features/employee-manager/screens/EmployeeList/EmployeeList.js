@@ -28,12 +28,11 @@ export default function EmployeeList() {
      const searchInput = useRef(null);
 
      useEffect(() => {
-          console.log("first");
           const query = queryString.parse(location.search);
           setIsLoading(true);
           dispatch(getEmployees())
                .then(unwrapResult)
-               .then(() => setIsLoading(false));
+               .then(() => setIsLoading(false))
      }, [dispatch, location]);
 
      const handleSearch = (selectedKeys, confirm, dataIndex) => {

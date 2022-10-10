@@ -31,11 +31,16 @@
 
 .content {
   background: #fff;
+  padding: 24px;
+  margin: 0px;
+  min-height: 280px;
+  border-radius: 2rem;
 }
 
 .siteLayoutBackground {
   background: #001529;
   height: 100vh;
+  position: fixed !important;
 }
 
 .sidebar_children {
@@ -52,6 +57,7 @@
   justify-content: center;
   padding: 2rem;
   background-color: #002140;
+  border-radius: 2rem 2rem 0 0;
 }
 
 .sidebarMenu {
@@ -59,16 +65,21 @@
   height: none !important;
 }
 
+.wrapper_layout {
+  padding-left: 200px;
+}
+
 .header {
   padding: 1rem 2.1rem;
   padding-left: 2.1rem;
-  height: -webkit-max-content !important;
-  height: -moz-max-content !important;
-  height: max-content !important;
+  height: 10rem !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: #fff;
+  position: fixed !important;
+  width: calc(100% - 200px);
+  z-index: 100;
 }
 
 .info {

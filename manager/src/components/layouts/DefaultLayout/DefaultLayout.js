@@ -51,7 +51,10 @@ const DefaultLayout = ({ children }) => {
                     {
                          key: "1",
                          label: (
-                              <a href="https://www.antgroup.com" className="menu-item">
+                              <a
+                                   href="https://www.antgroup.com"
+                                   className="menu-item"
+                              >
                                    <ProfileTwoTone />
                                    <span>Profile</span>
                               </a>
@@ -60,7 +63,10 @@ const DefaultLayout = ({ children }) => {
                     {
                          key: "2",
                          label: (
-                              <a href="https://www.aliyun.com" className="menu-item">
+                              <a
+                                   href="https://www.aliyun.com"
+                                   className="menu-item"
+                              >
                                    <SettingTwoTone />
                                    <span>Setting</span>
                               </a>
@@ -154,7 +160,7 @@ const DefaultLayout = ({ children }) => {
                     </div>
                </Sider>
 
-               <Layout>
+               <Layout className="wrapper_layout">
                     <Header className="header">
                          <Dropdown overlay={menu} placement="bottomLeft" arrow>
                               <div className="info">
@@ -181,7 +187,8 @@ const DefaultLayout = ({ children }) => {
 
                     <Layout
                          style={{
-                              padding: "0 24px 24px",
+                              padding: "0px 24px 24px",
+                              marginTop: "10rem",
                          }}
                     >
                          <Breadcrumb
@@ -198,16 +205,7 @@ const DefaultLayout = ({ children }) => {
                               <Breadcrumb.Item>App</Breadcrumb.Item>
                          </Breadcrumb>
 
-                         <Content
-                              className="content"
-                              style={{
-                                   padding: 24,
-                                   margin: 0,
-                                   minHeight: 280,
-                              }}
-                         >
-                              {children}
-                         </Content>
+                         <Content className="content">{children}</Content>
 
                          <Footer />
                     </Layout>

@@ -29,10 +29,15 @@
 }
 .content {
      background: #fff;
+     padding: 24px;
+     margin: 0px;
+     min-height: 280px;
+     border-radius: 2rem;
 }
 .siteLayoutBackground {
      background: #001529;
      height: 100vh;
+     position: fixed !important;
 }
 .sidebar_children {
      height: 100%;
@@ -47,20 +52,27 @@
      justify-content: center;
      padding: 2rem;
      background-color: #002140;
+		 border-radius: 2rem 2rem 0 0;
 }
 .sidebarMenu {
      overflow-y: auto;
      height: none !important;
 }
 
+.wrapper_layout {
+     padding-left: 200px;
+}
 .header {
      padding: 1rem 2.1rem;
      padding-left: 2.1rem;
-     height: max-content !important;
+     height: 10rem !important;
      display: flex;
      align-items: center;
      justify-content: space-between;
      color: $white-color;
+     position: fixed !important;
+     width: calc(100% - 200px);
+     z-index: 100;
 }
 .info {
      margin-left: auto;
@@ -75,17 +87,17 @@
      object-fit: contain;
      border-radius: 50%;
      margin: 2rem 0;
-		 display: flex;
-		 align-items: center;
-		 justify-content: center;
-		 cursor: pointer;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     cursor: pointer;
 }
 .info_detail {
      display: flex;
      flex-direction: column;
      justify-content: center;
      color: $white-color;
-		 gap: 0.5rem;
+     gap: 0.5rem;
 }
 .info_avt_img {
      width: 100%;
@@ -95,16 +107,16 @@
      line-height: 24px;
 }
 
-.info_role{
-	background-color: $primary-color;
-	width: 100%;
-	text-align: center;
-	border-radius: 0.5rem;
-	padding: 0 2rem;
+.info_role {
+     background-color: $primary-color;
+     width: 100%;
+     text-align: center;
+     border-radius: 0.5rem;
+     padding: 0 2rem;
 }
 
-.menu-item{
-	display: flex;
-	gap: 2rem;
-	color: $black-color;
+.menu-item {
+     display: flex;
+     gap: 2rem;
+     color: $black-color;
 }
