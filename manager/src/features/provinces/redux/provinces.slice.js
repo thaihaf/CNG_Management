@@ -15,15 +15,17 @@ export const getProvinces = createAsyncThunk(
 );
 export const getProvince = createAsyncThunk(
      "provinces/getProvince",
-     async () => {
-          const response = await api.getProvince();
+     async (value) => {
+          const response = await api.getProvince(value);
+					console.log(response)
           return response;
      }
 );
 export const getDistrict = createAsyncThunk(
      "provinces/getDistrict",
-     async () => {
-          const response = await api.getDistrict();
+     async (value) => {
+          const response = await api.getDistrict(value);
+					console.log(response)
           return response;
      }
 );
@@ -43,10 +45,10 @@ const provincesSlice = createSlice({
                state.provinces = action.payload;
           },
           [getProvince.fulfilled]: (state, action) => {
-               state.districts = action.payload;
+               state.districts = action.payload.districts;
           },
           [getDistrict.fulfilled]: (state, action) => {
-               state.wards = action.payload;
+               state.wards = action.payload.wards;
           },
      },
 });

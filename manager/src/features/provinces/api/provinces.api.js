@@ -1,17 +1,18 @@
 import { api } from "api/api";
 import { ProvincesEndPoint } from "../provinces";
 
-const getProvinces = () => {
+const getProvinces = async () => {
      const url = ProvincesEndPoint.LIST_PROVINCES;
-     return api.get(url);
+
+     return fetch(url).then((response) => response.json());
 };
-const getProvince = (id) => {
+const getProvince = async (id) => {
      const url = ProvincesEndPoint.GET_PROVINCE.replace(":code", id || "");
-     return api.get(url);
+     return fetch(url).then((response) => response.json());
 };
-const getDistrict = (id) => {
+const getDistrict = async (id) => {
      const url = ProvincesEndPoint.GET_DISTRICT.replace(":code", id || "");
-     return api.get(url);
+     return fetch(url).then((response) => response.json());
 };
 const provincesApi = { getProvinces, getProvince, getDistrict };
 export default provincesApi;
