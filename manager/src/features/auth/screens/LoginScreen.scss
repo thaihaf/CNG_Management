@@ -13,8 +13,6 @@
           width: 30rem;
 
           &_item {
-               margin-bottom: 4rem;
-
                .login_input {
                     border-radius: 5rem;
                     padding: 1rem;
@@ -32,15 +30,18 @@
                     font-size: 1.5rem;
                     color: $white-color;
                     border-radius: 3rem;
-										height: 4.5rem;
-										width : 100%;
+                    height: 4.5rem;
+                    width: 100%;
                }
 
-          }
+               .ant-form-item-explain-error {
+                    padding: 0.3rem 1rem 1.5rem 2rem;
+               }
 
-          .flex {
-               display: flex;
-               justify-content: space-between;
+               .ant-form-item-control-input-content {
+                    display: flex;
+                    justify-content: space-between;
+               }
           }
      }
 }

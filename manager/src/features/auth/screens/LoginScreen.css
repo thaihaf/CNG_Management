@@ -9,9 +9,6 @@
 .login .form {
   width: 30rem;
 }
-.login .form_item {
-  margin-bottom: 4rem;
-}
 .login .form_item .login_input {
   border-radius: 5rem;
   padding: 1rem;
@@ -30,7 +27,10 @@
   height: 4.5rem;
   width: 100%;
 }
-.login .form .flex {
+.login .form_item .ant-form-item-explain-error {
+  padding: 0.3rem 1rem 1.5rem 2rem;
+}
+.login .form_item .ant-form-item-control-input-content {
   display: flex;
   justify-content: space-between;
 }/*# sourceMappingURL=LoginScreen.css.map */

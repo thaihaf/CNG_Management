@@ -37,14 +37,12 @@ api.interceptors.request.use(
           return config;
      },
      (error) => {
-          console.log("error api");
           Promise.reject(error);
      }
 );
 
 api.interceptors.response.use(
      (response) => {
-          console.log("reponse");
           return response;
      },
      function (error) {
@@ -52,9 +50,9 @@ api.interceptors.response.use(
           // const originalRequest = error.config;
 
           if (res.status === 401) {
-              //  if (res.config.url !== "/login") {
-              //       window.location.href = AuthPaths.LOGIN;
-              //  }
+               if (res.config.url !== AuthPaths.LOGIN) {
+                    window.location.href = AuthPaths.LOGIN;
+               }
                return Promise.reject(error);
           }
 
