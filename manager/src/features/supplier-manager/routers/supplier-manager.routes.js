@@ -7,6 +7,9 @@ const SupplierList = React.lazy(() =>
 const CreateSupplier = React.lazy(() =>
   import("../screens/CreateSupplier/CreateSupplier")
 );
+const SupplierDetailsScreen = React.lazy(() =>
+  import("../screens/SupplierDetails/SupplierDetails")
+);
 
 const SUPPLIER_LIST_SCREEN = {
   id: "supplier-list",
@@ -22,7 +25,18 @@ const SUPPLIER_CREATE_SCREEN = {
   isPrivateRoute: true,
   pageTitle: "Supplier Create",
 };
+const SUPPLIER_DETAILS_SCREEN = {
+  id: "supplier_id",
+  path: SupplierManagerPaths.SUPPLIER_DETAIL,
+  component: SupplierDetailsScreen,
+  isPrivateRoute: true,
+  pageTitle: "Supplier Detail",
+};
 
-const SUPPLIER_MANAGER_ROUTES = [SUPPLIER_LIST_SCREEN, SUPPLIER_CREATE_SCREEN];
+const SUPPLIER_MANAGER_ROUTES = [
+  SUPPLIER_LIST_SCREEN, 
+  SUPPLIER_CREATE_SCREEN,
+  SUPPLIER_DETAILS_SCREEN,
+];
 
 export default SUPPLIER_MANAGER_ROUTES;
