@@ -67,11 +67,11 @@ function EmployeeDetailsForm(props) {
      const onFinish = async (value) => {
           console.log(value);
      };
-		 
+
      useEffect(() => {
           dispatch(getProvinces());
      }, []);
-		 
+
      const defaultValues = {
           status: 0,
           gender: true,
