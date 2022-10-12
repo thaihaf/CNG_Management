@@ -8,9 +8,7 @@ const EmployeeListScreen = React.lazy(() =>
 const EmployeeDetailsScreen = React.lazy(() =>
      import("../screens/EmployeeDetails/EmployeeDetails")
 );
-// const CreateScreen = React.lazy(() =>
-//      import("../screens/CreateMaster/CreateMasterScreen")
-// );
+const ProfileScreen = React.lazy(() => import("../screens/Profile/Profile"));
 // const EditScreen = React.lazy(() =>
 //      import("../screens/EditClientMaster/EditScreen")
 // );
@@ -20,18 +18,18 @@ const EmployeeDetailsScreen = React.lazy(() =>
 
 const EMPLOYEE_LIST_SCREEN = {
      id: "employee-list",
-     path: EmployeeManagerPaths.EMPLOYEE_LIST,
+     path: EmployeeManagerPaths.EMPLOYEE_MANAGER,
      component: EmployeeListScreen,
      isPrivateRoute: true,
      pageTitle: "Employe Manager",
 };
-// const CREATE_SCREEN = {
-//      id: "create",
-//      path: EmployeeManagerPaths.CREATE_EMPLOYEE,
-//      component: CreateScreen,
-//      isPrivateRoute: true,
-//      pageTitle: "Create Screen",
-// };
+const PROFILE_SCREEN = {
+     id: "profile",
+     path: EmployeeManagerPaths.EMPLOYEE_PROFILE,
+     component: ProfileScreen,
+     isPrivateRoute: true,
+     pageTitle: "Profile",
+};
 // const CONFIRM_SCREEN = {
 //      id: "confirm",
 //      path: EmployeeManagerPaths.CONFIRM,
@@ -57,7 +55,7 @@ const EMPLOYEE_DETAILS_SCREEN = {
 const EMPLOYEE_MANAGER_ROUTES = [
      EMPLOYEE_LIST_SCREEN,
      EMPLOYEE_DETAILS_SCREEN,
-     //  CREATE_SCREEN,
+     PROFILE_SCREEN,
      //  EDIT_SCREEN,
      //  CONFIRM_SCREEN,
 ];

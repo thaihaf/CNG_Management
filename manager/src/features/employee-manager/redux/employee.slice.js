@@ -10,6 +10,7 @@ export const getEmployees = createAsyncThunk(
      "employee/getEmployees",
      async () => {
           const response = await api.getEmployees();
+          console.log(response);
           return response.data;
      }
 );
@@ -32,6 +33,32 @@ export const getEmployeeDetails = createAsyncThunk(
      }
 );
 
+export const updateDetails = createAsyncThunk(
+     "employee/updateDetails",
+     async ({ id, data }, { rejectWithValue }) => {
+          console.log(id);
+          console.log(data);
+          try {
+               const response = await api.updateDetails(id, data);
+               return response;
+          } catch (error) {
+               throw rejectWithValue(error);
+          }
+     }
+);
+
+export const createDetails = createAsyncThunk(
+     "employee/createDetails",
+     async ({ data }, { rejectWithValue }) => {
+          try {
+               const response = await api.createDetails(data);
+               return response;
+          } catch (error) {
+               throw rejectWithValue(error);
+          }
+     }
+);
+
 const initialState = {
      listEmployees: [],
      totalElements: 0,
@@ -39,6 +66,7 @@ const initialState = {
      size: 0,
      dataDetails: null,
      errorProcess: "",
+     createMode: false,
 };
 
 const employeesSlice = createSlice({
@@ -62,13 +90,14 @@ const employeesSlice = createSlice({
           [getEmployeeDetails.fulfilled]: (state, action) => {
                state.dataDetails = action.payload;
                state.errorProcess = "";
+               state.createMode = false;
           },
           [getEmployeeDetails.rejected]: (state, action) => {
-               state.dataDetails = null;
+               state.createMode = true;
           },
      },
 });
 
-export const { updateErrorProcess } = employeesSlice.actions;
+export const { updateErrorProcess, updateDataDetails } = employeesSlice.actions;
 
 export const employeesReducer = employeesSlice.reducer;

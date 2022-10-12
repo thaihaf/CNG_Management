@@ -28,5 +28,5 @@ export default function EmployeeDetails() {
      if (isLoading) {
           return <LoadingSpinner isFullscreen />;
      }
-     return <EmployeeDetailsForm />;
+     return <EmployeeDetailsForm isCreateMode={false}/>;
 }
