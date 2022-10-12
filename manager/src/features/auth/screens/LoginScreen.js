@@ -58,9 +58,9 @@ export default function LoginScreen() {
                .then(unwrapResult)
                .then((res) => {
                     message.success("Login success!");
-                    switch (res.role) {
+                    switch (res.role.substring(1, res.role.length - 1)) {
                          case "ROLE_ADMIN":
-                              history.push(EmployeeManagerPaths.EMPLOYEE_LIST);
+                              history.push(EmployeeManagerPaths.EMPLOYEE_MANAGER);
                               break;
                          case "ROLE_EMPLOYEE":
                               history.push(SupplierManagerPaths.SUPPLIER_LIST);
