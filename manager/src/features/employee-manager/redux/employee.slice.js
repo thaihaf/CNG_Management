@@ -13,6 +13,17 @@ export const getEmployees = createAsyncThunk(
           return response.data;
      }
 );
+export const createAccEmployee = createAsyncThunk(
+     "employee/createAccEmployee",
+     async ({ data }, { rejectWithValue }) => {
+          try {
+               const response = await api.createAccEmployee(data);
+               return response;
+          } catch (error) {
+               throw rejectWithValue(error);
+          }
+     }
+);
 export const getEmployeeDetails = createAsyncThunk(
      "employee/getEmployeeDetails",
      async (id) => {
@@ -33,7 +44,11 @@ const initialState = {
 const employeesSlice = createSlice({
      name: EMPLOYEES_FEATURE_KEY,
      initialState,
-     reducers: {},
+     reducers: {
+          updateErrorProcess: (state, action) => {
+               state.errorProcess = action.payload;
+          },
+     },
      extraReducers: {
           [getEmployees.fulfilled]: (state, action) => {
                state.listEmployees = action.payload.content;
@@ -41,9 +56,12 @@ const employeesSlice = createSlice({
                state.totalPages = action.payload.totalPages;
                state.size = action.payload.size;
           },
+          [createAccEmployee.fulfilled]: (state, action) => {
+               state.errorProcess = "";
+          },
           [getEmployeeDetails.fulfilled]: (state, action) => {
                state.dataDetails = action.payload;
-							 state.errorProcess = ""
+               state.errorProcess = "";
           },
           [getEmployeeDetails.rejected]: (state, action) => {
                state.dataDetails = null;
@@ -51,6 +69,6 @@ const employeesSlice = createSlice({
      },
 });
 
-export const { setEmployees, clearEmployees } = employeesSlice.actions;
+export const { updateErrorProcess } = employeesSlice.actions;
 
 export const employeesReducer = employeesSlice.reducer;
