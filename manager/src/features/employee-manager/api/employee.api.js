@@ -1,16 +1,20 @@
 import { api } from "api/api";
-import { EmployeeManagerPaths } from "../employeeManager";
+import { EmployeeEndPoints } from "../employeeManager";
 
 const getEmployees = () => {
-     const url = EmployeeManagerPaths.EMPLOYEE_LIST;
+     const url = EmployeeEndPoints.EMPLOYEE_MANAGER;
      return api.get(url);
 };
+const createAccEmployee = (data) => {
+     const url = EmployeeEndPoints.CREATE_EMPLOYEE;
+     return api.post(url, data);
+};
 const getEmployeeDetails = (id) => {
-     const url = EmployeeManagerPaths.EMPLOYEE_DETAILS.replace(
+     const url = EmployeeEndPoints.EMPLOYEE_DETAILS.replace(
           ":employeeId",
           id || ""
      );
      return api.get(url);
 };
-const employeeApi = { getEmployees, getEmployeeDetails };
+const employeeApi = { getEmployees, getEmployeeDetails, createAccEmployee };
 export default employeeApi;
