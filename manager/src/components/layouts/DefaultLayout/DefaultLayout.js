@@ -19,7 +19,7 @@ import { siderBarItems } from "constants/items.constants";
 import logo5 from "assets/images/logo5.png";
 import logo3 from "assets/images/logo3.png";
 import avt from "assets/images/avt.jpg";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AuthPaths } from "features/auth/auth";
 
@@ -27,17 +27,18 @@ const { Header, Content, Sider } = Layout;
 
 const DefaultLayout = ({ children }) => {
      const [collapsed, setCollapsed] = useState(false);
-     const [selectedItem, setSelectedItem] = useState("employee");
      const { userName, role } = useSelector((state) => state.auth);
 
      const history = useHistory();
+     const location = useLocation();
+
+     const pathname = location.pathname.split("/")[1];
 
      useEffect(() => {
           window.scrollTo(0, 0);
      });
 
      const getSelect = ({ key }) => {
-          setSelectedItem(key);
           history.push(`/${key}`);
      };
 
@@ -113,7 +114,7 @@ const DefaultLayout = ({ children }) => {
                          <Menu
                               className="sidebarMenu"
                               mode="inline"
-                              selectedKeys={[selectedItem]}
+                              selectedKeys={[pathname]}
                               style={{ height: "100%" }}
                               items={siderBarItems.map((item) => {
                                    if (item.role.includes(role)) {
@@ -175,9 +176,7 @@ const DefaultLayout = ({ children }) => {
                               minHeight: "100vh",
                          }}
                     >
-                         <Breadcrumb
-                              className="breadcrumb"
-                         >
+                         <Breadcrumb className="breadcrumb">
                               <Breadcrumb.Item href="/">
                                    <HomeOutlined /> Home
                               </Breadcrumb.Item>
