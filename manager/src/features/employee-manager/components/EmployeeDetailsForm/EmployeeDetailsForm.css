@@ -1,5 +1,6 @@
 .details {
   display: flex;
+  justify-content: center;
 }
 .details .details__left {
   width: 40%;
