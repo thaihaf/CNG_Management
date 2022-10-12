@@ -1,11 +1,11 @@
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar, Image } from 'antd';
 import React from 'react';
-import "./CreateSupplier.css"
-const CreateSupplier = () => {
-    return (
-        <div>
-            CreateSupplier
-        </div>
-    );
-};
 
-export default CreateSupplier;
+const App = () => (
+  <>
+    Create Supplier
+  </>
+);
+
+export default App;
