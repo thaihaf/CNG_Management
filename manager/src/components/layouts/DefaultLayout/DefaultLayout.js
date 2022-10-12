@@ -14,10 +14,7 @@ import { Footer } from "components";
 
 import "./DefaultLayout.css";
 
-import {
-     siderBarAdminItems,
-     siderBarEmployeeItems,
-} from "constants/items.constants";
+import { siderBarItems } from "constants/items.constants";
 
 import logo5 from "assets/images/logo5.png";
 import logo3 from "assets/images/logo3.png";
@@ -30,8 +27,8 @@ const { Header, Content, Sider } = Layout;
 
 const DefaultLayout = ({ children }) => {
      const [collapsed, setCollapsed] = useState(false);
-     const [selectedItem, setSelectedItem] = useState("employee-list");
-     const auth = useSelector((state) => state.auth);
+     const [selectedItem, setSelectedItem] = useState("employee");
+     const { userName, role } = useSelector((state) => state.auth);
 
      const history = useHistory();
 
@@ -40,9 +37,8 @@ const DefaultLayout = ({ children }) => {
      });
 
      const getSelect = ({ key }) => {
-          let arr = key.toString().trim().split("-");
           setSelectedItem(key);
-          history.push(`/${arr[0]}/${key}`);
+          history.push(`/${key}`);
      };
 
      const menu = (
@@ -119,21 +115,14 @@ const DefaultLayout = ({ children }) => {
                               mode="inline"
                               selectedKeys={[selectedItem]}
                               style={{ height: "100%" }}
-                              theme={"dark"}
-                              items={siderBarAdminItems.map((item) => {
-                                   return {
-                                        key: item.key,
-                                        icon: item.icon,
-                                        label: item.label,
-                                        children:
-                                             item.children &&
-                                             item.children.map((child) => {
-                                                  return {
-                                                       key: child.key,
-                                                       label: child.label,
-                                                  };
-                                             }),
-                                   };
+                              items={siderBarItems.map((item) => {
+                                   if (item.role.includes(role)) {
+                                        return {
+                                             key: item.key,
+                                             icon: item.icon,
+                                             label: item.label,
+                                        };
+                                   }
                               })}
                               onClick={(item) => getSelect(item)}
                          />
@@ -143,7 +132,6 @@ const DefaultLayout = ({ children }) => {
                                    <MenuUnfoldOutlined
                                         style={{
                                              fontSize: "22px",
-                                             color: "#fff",
                                         }}
                                         onClick={() => setCollapsed(!collapsed)}
                                    />
@@ -151,7 +139,6 @@ const DefaultLayout = ({ children }) => {
                                    <MenuFoldOutlined
                                         style={{
                                              fontSize: "22px",
-                                             color: "#fff",
                                         }}
                                         onClick={() => setCollapsed(!collapsed)}
                                    />
@@ -161,7 +148,7 @@ const DefaultLayout = ({ children }) => {
                </Sider>
 
                <Layout className="wrapper_layout">
-                    <Header className="header">
+                    {/* <Header className="header">
                          <Dropdown overlay={menu} placement="bottomLeft" arrow>
                               <div className="info">
                                    <div className="info_avt">
@@ -174,32 +161,27 @@ const DefaultLayout = ({ children }) => {
 
                                    <div className="info_detail">
                                         <div className="info_fullname">
-                                             {auth.userName}
+                                             {userName}
                                         </div>
-                                        <div className="info_role">
-                                             {auth.role &&
-                                                  auth.role.split("_")[1]}
-                                        </div>
+                                        <div className="info_role">{role}</div>
                                    </div>
                               </div>
                          </Dropdown>
-                    </Header>
+                    </Header> */}
 
                     <Layout
                          style={{
-                              padding: "0px 24px 24px",
-                              marginTop: "10rem",
+                              padding: "3rem 24px 24px",
+                              minHeight: "100vh",
                          }}
                     >
                          <Breadcrumb
-                              style={{
-                                   margin: "16px 0",
-                              }}
+                              className="breadcrumb"
                          >
                               <Breadcrumb.Item href="/">
                                    <HomeOutlined /> Home
                               </Breadcrumb.Item>
-                              <Breadcrumb.Item href="/employee/list">
+                              <Breadcrumb.Item href="/employee">
                                    Employee List
                               </Breadcrumb.Item>
                               <Breadcrumb.Item>App</Breadcrumb.Item>
@@ -207,7 +189,7 @@ const DefaultLayout = ({ children }) => {
 
                          <Content className="content">{children}</Content>
 
-                         <Footer />
+                         <Footer className="footer" />
                     </Layout>
                </Layout>
           </Layout>

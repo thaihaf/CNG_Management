@@ -1,5 +1,5 @@
 .defaultLayout {
-  background-color: #4E76B3 !important;
+  background-color: #f0f2f5 !important;
   min-height: 100vh;
 }
 
@@ -35,12 +35,16 @@
   margin: 0px;
   min-height: 280px;
   border-radius: 2rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .siteLayoutBackground {
-  background: #001529;
-  height: 100vh;
+  height: calc(100vh - 6rem);
   position: fixed !important;
+  background-color: #fff !important;
+  margin: 3rem;
+  border-radius: 3rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .sidebar_children {
@@ -56,17 +60,15 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background-color: #002140;
   border-radius: 2rem 2rem 0 0;
 }
 
 .sidebarMenu {
-  overflow-y: auto;
   height: none !important;
 }
 
 .wrapper_layout {
-  padding-left: 200px;
+  padding-left: 230px;
 }
 
 .header {
@@ -76,10 +78,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #fff;
+  background-color: #fff !important;
   position: fixed !important;
-  width: calc(100% - 200px);
+  width: calc(100% - 278px);
   z-index: 100;
+  border-radius: 3rem;
+  right: 24px;
+  top: 3rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .info {
@@ -115,6 +121,10 @@
   width: 100%;
 }
 
+.info_fullname {
+  color: black;
+}
+
 .info_fullname,
 .info_role {
   line-height: 24px;
@@ -132,4 +142,22 @@
   display: flex;
   gap: 2rem;
   color: #000;
+}
+
+.ant-layout-footer {
+  padding: 24px 50px;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 14px;
+  background: white !important;
+  margin-top: 3rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 2rem;
+}
+
+.breadcrumb {
+  padding: 16px 3rem !important;
+  background: white;
+  margin-bottom: 2rem !important;
+  border-radius: 2rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }/*# sourceMappingURL=DefaultLayout.css.map */

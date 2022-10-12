@@ -1,1 +1,32 @@
-/*# sourceMappingURL=EmployeeList.css.map */
+.employee-list .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.details__group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.details__group .item-sm {
+  margin: 0;
+}
+.details__group .ant-col {
+  max-width: 100% !important;
+  flex: none !important;
+}
+.details__group .ant-row {
+  display: block;
+}
+.details__group .ant-input {
+  border-radius: 2rem !important;
+  padding: 1rem 2rem;
+  margin-top: 0.7rem;
+}
+.details__group .ant-select-selector,
+.details__group .ant-picker.ant-picker-disabled {
+  border-radius: 2rem !important;
+}/*# sourceMappingURL=EmployeeList.css.map */

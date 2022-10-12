@@ -71,6 +71,7 @@ function EmployeeDetailsForm(props) {
      useEffect(() => {
           dispatch(getProvinces());
      }, []);
+
      const defaultValues = {
           status: 0,
           gender: true,
