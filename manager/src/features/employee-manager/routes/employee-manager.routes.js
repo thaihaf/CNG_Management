@@ -20,7 +20,7 @@ const EmployeeDetailsScreen = React.lazy(() =>
 
 const EMPLOYEE_LIST_SCREEN = {
      id: "employee-list",
-     path: EmployeeManagerPaths.EMPLOYEE_LIST,
+     path: EmployeeManagerPaths.EMPLOYEE_MANAGER,
      component: EmployeeListScreen,
      isPrivateRoute: true,
      pageTitle: "Employe Manager",
