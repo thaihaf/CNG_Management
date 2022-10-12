@@ -60,6 +60,13 @@ function EmployeeDetailsForm(props) {
           console.log(value);
      };
 
+<<<<<<< Updated upstream
+=======
+     useEffect(() => {
+          dispatch(getProvinces());
+     }, []);
+		 
+>>>>>>> Stashed changes
      const defaultValues = {
           status: 0,
           gender: true,

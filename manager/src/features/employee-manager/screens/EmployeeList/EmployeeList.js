@@ -5,14 +5,32 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Space, Table, Tag } from "antd";
+import {
+     DownloadOutlined,
+     LockOutlined,
+     SearchOutlined,
+} from "@ant-design/icons";
+import {
+     Button,
+     Form,
+     Input,
+     Modal,
+     Space,
+     Table,
+     Tag,
+     Typography,
+} from "antd";
 import {
      EmployeeManagerPaths,
      getEmployees,
 } from "features/employee-manager/employeeManager";
 
 import "./EmployeeList.css";
+import { CODE_ERROR } from "constants/errors.constants";
+import { MESSAGE_ERROR } from "constants/messages.constants";
+import { getMessage } from "helpers/util.helper";
+
+const { Title, Text } = Typography;
 
 export default function EmployeeList() {
      const { listEmployees, totalElements, totalPages, size } = useSelector(
@@ -22,6 +40,7 @@ export default function EmployeeList() {
      const location = useLocation();
      const dispatch = useDispatch();
 
+     const [modal1Open, setModal1Open] = useState(false);
      const [isLoading, setIsLoading] = useState(false);
      const [searchText, setSearchText] = useState("");
      const [searchedColumn, setSearchedColumn] = useState("");
@@ -32,7 +51,7 @@ export default function EmployeeList() {
           setIsLoading(true);
           dispatch(getEmployees())
                .then(unwrapResult)
-               .then(() => setIsLoading(false))
+               .then(() => setIsLoading(false));
      }, [dispatch, location]);
 
      const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -243,6 +262,11 @@ export default function EmployeeList() {
                sorter: (a, b) => a.status - b.status,
                sortDirections: ["descend", "ascend"],
           },
+          // {
+          //      title: "Account",
+          // 		 render: (s) => {reutrn<>View</>},
+          //      key: "account",
+          // },
      ];
 
      const onRowClick = (record) => {
@@ -255,31 +279,246 @@ export default function EmployeeList() {
      };
 
      return (
-          <Table
-               rowKey="id"
-               columns={columns}
-               dataSource={listEmployees}
-               onRow={(record) => ({
-                    onClick: () => {
-                         onRowClick(record);
-                    },
-               })}
-               pagination={
-                    listEmployees.length !== 0
-                         ? {
-                                showSizeChanger: true,
-                                position: ["bottomCenter"],
-                                size: "default",
-                                pageSize: 10,
-                                // current: getPageUrl || pageHead,
-                                totalElements,
-                                // onChange: (page, size) =>
-                                // 	onHandlePagination(page, size),
-                                pageSizeOptions: ["10", "15", "20", "25"],
-                           }
-                         : false
-               }
-               loading={isLoading}
-          />
+          <div className="employee-list">
+               <div className="top">
+                    <Title level={2}>Employee List</Title>
+                    <Button
+                         type="primary"
+                         shape={"round"}
+                         size={"large"}
+                         onClick={() => setModal1Open(true)}
+                    >
+                         Create New
+                    </Button>
+
+                    <Modal
+                         title="Create New Employee"
+                         style={{ top: 20 }}
+                         open={modal1Open}
+                         onOk={() => setModal1Open(false)}
+                         onCancel={() => setModal1Open(false)}
+                         footer={[
+                              <Button
+                                   key="back"
+                                   shape={"round"}
+                                   onClick={() => setModal1Open(false)}
+                              >
+                                   Cancel
+                              </Button>,
+                              <Button
+                                   key="submit"
+                                   shape={"round"}
+                                   type="primary"
+                                   //  loading={loading}
+                                   onClick={() => setModal1Open(false)}
+                              >
+                                   Submit
+                              </Button>,
+                         ]}
+                    >
+                         <Form
+                              // form={form}
+                              labelCol={{
+                                   span: 4,
+                              }}
+                              wrapperCol={{
+                                   span: 14,
+                              }}
+                              layout="horizontal"
+                              // onValuesChange={onFormLayoutChange}
+                              name="form"
+                              // initialValues={initialValues}
+                              // onFinish={onFinish}
+                              colon={false}
+                         >
+                              <div className="details__group">
+                                   <Form.Item
+                                        name="username"
+                                        label={<Text>Username</Text>}
+                                        className="details__item"
+                                        rules={[
+                                             {
+                                                  required: true,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_REQUIRED,
+                                                       MESSAGE_ERROR,
+                                                       "Password"
+                                                  ),
+                                             },
+                                             {
+                                                  max: 20,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_NUMBER_MAX,
+                                                       MESSAGE_ERROR,
+                                                       "Password",
+                                                       20
+                                                  ),
+                                             },
+                                             {
+                                                  min: 3,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_NUMBER_MIN,
+                                                       MESSAGE_ERROR,
+                                                       "Password",
+                                                       3
+                                                  ),
+                                             },
+                                        ]}
+                                   >
+                                        <Input placeholder="username" />
+                                   </Form.Item>
+                                   <Form.Item
+                                        name="email"
+                                        label={<Text>Email</Text>}
+                                        className="details__item"
+                                        rules={[
+                                             {
+                                                  required: true,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_REQUIRED,
+                                                       MESSAGE_ERROR,
+                                                       "Password"
+                                                  ),
+                                             },
+                                             {
+                                                  max: 20,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_NUMBER_MAX,
+                                                       MESSAGE_ERROR,
+                                                       "Password",
+                                                       20
+                                                  ),
+                                             },
+                                             {
+                                                  min: 3,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_NUMBER_MIN,
+                                                       MESSAGE_ERROR,
+                                                       "Password",
+                                                       3
+                                                  ),
+                                             },
+                                        ]}
+                                   >
+                                        <Input placeholder="username" />
+                                   </Form.Item>
+                              </div>
+
+                              <div className="details__group">
+                                   <Form.Item
+                                        name="password"
+                                        label={<Text>Password</Text>}
+                                        className="details__item"
+                                        rules={[
+                                             {
+                                                  required: true,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_REQUIRED,
+                                                       MESSAGE_ERROR,
+                                                       "Password"
+                                                  ),
+                                             },
+                                             {
+                                                  max: 20,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_NUMBER_MAX,
+                                                       MESSAGE_ERROR,
+                                                       "Password",
+                                                       20
+                                                  ),
+                                             },
+                                             {
+                                                  min: 3,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_NUMBER_MIN,
+                                                       MESSAGE_ERROR,
+                                                       "Password",
+                                                       3
+                                                  ),
+                                             },
+                                        ]}
+                                   >
+                                        <Input.Password
+                                             prefix={
+                                                  <LockOutlined className="site-form-item-icon" />
+                                             }
+                                             type="password"
+                                             placeholder="●●●●●●●●●"
+                                             className="login_input"
+                                        />
+                                   </Form.Item>
+                                   <Form.Item
+                                        name="rePassword"
+                                        label={<Text>Re-password</Text>}
+                                        className="details__item"
+                                        rules={[
+                                             {
+                                                  required: true,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_REQUIRED,
+                                                       MESSAGE_ERROR,
+                                                       "Password"
+                                                  ),
+                                             },
+                                             {
+                                                  max: 20,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_NUMBER_MAX,
+                                                       MESSAGE_ERROR,
+                                                       "Password",
+                                                       20
+                                                  ),
+                                             },
+                                             {
+                                                  min: 3,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_NUMBER_MIN,
+                                                       MESSAGE_ERROR,
+                                                       "Password",
+                                                       3
+                                                  ),
+                                             },
+                                        ]}
+                                   >
+                                        <Input.Password
+                                             prefix={
+                                                  <LockOutlined className="site-form-item-icon" />
+                                             }
+                                             type="password"
+                                             placeholder="●●●●●●●●●"
+                                             className="login_input"
+                                        />
+                                   </Form.Item>
+                              </div>
+                         </Form>
+                    </Modal>
+               </div>
+               <Table
+                    rowKey="id"
+                    columns={columns}
+                    dataSource={listEmployees}
+                    onRow={(record) => ({
+                         onClick: () => {
+                              onRowClick(record);
+                         },
+                    })}
+                    pagination={
+                         listEmployees.length !== 0
+                              ? {
+                                     showSizeChanger: true,
+                                     position: ["bottomCenter"],
+                                     size: "default",
+                                     pageSize: 10,
+                                     // current: getPageUrl || pageHead,
+                                     totalElements,
+                                     // onChange: (page, size) =>
+                                     // 	onHandlePagination(page, size),
+                                     pageSizeOptions: ["10", "15", "20", "25"],
+                                }
+                              : false
+                    }
+                    loading={isLoading}
+               />
+          </div>
      );
 }

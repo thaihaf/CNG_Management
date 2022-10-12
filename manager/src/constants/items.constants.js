@@ -1,33 +1,39 @@
-import React from 'react';
-import { TeamOutlined, FileDoneOutlined, ReconciliationOutlined } from "@ant-design/icons/";
+import React from "react";
+import {
+     TeamOutlined,
+     FileDoneOutlined,
+     ReconciliationOutlined,
+} from "@ant-design/icons/";
 
-export const siderBarAdminItems = [
+export const siderBarItems = [
      {
-          key: "1",
-          icon: <TeamOutlined style={{ fontSize: '1.6rem' }}/>,
-          label: `Account`,
-          children: [
-               { key: "employee-list", label: "Employee" },
-               { key: "supplier-list", label: "Supplier" },
-               { key: "customer-list", label: "Customer" },
-          ],
+          key: "product",
+          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Product`,
+          role: "admin employee",
      },
      {
-          key: "2",
-          icon: <FileDoneOutlined style={{ fontSize: '1.6rem' }}/>,
-          label: `Items`,
-          children: [
-               { key: "product-list", label: "Product" },
-               { key: "brand-list", label: "Brand" },
-          ],
+          key: "brand",
+          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Brand`,
+          role: "admin employee",
      },
      {
-          key: "3",
-          icon: <ReconciliationOutlined style={{ fontSize: '1.6rem' }} />,
-          label: `Actions`,
-          children: [
-               { key: "import-product", label: "Import Product" },
-               { key: "export-product", label: "Export Product" },
-          ],
+          key: "employee",
+          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Employee`,
+          role: "admin",
+     },
+     {
+          key: "supplier",
+          icon: <FileDoneOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Supplier`,
+          role: "admin employee",
+     },
+     {
+          key: "customer",
+          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Customer`,
+          role: "admin employee",
      },
 ];
