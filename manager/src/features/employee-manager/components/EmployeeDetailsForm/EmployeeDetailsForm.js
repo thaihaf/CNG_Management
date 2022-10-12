@@ -35,6 +35,11 @@ import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 import queryString from "query-string";
 import { getUserName } from "helpers/auth.helpers";
+import {
+     getDistrict,
+     getProvince,
+     getProvinces,
+} from "features/provinces/provinces";
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -42,6 +47,9 @@ const { Paragraph, Text } = Typography;
 
 function EmployeeDetailsForm(props) {
      const { dataDetails } = useSelector((state) => state.employee);
+     const { provinces, districts, wards } = useSelector(
+          (state) => state.provinces
+     );
 
      const history = useHistory();
      const location = useLocation();
@@ -60,13 +68,10 @@ function EmployeeDetailsForm(props) {
           console.log(value);
      };
 
-<<<<<<< Updated upstream
-=======
      useEffect(() => {
           dispatch(getProvinces());
      }, []);
-		 
->>>>>>> Stashed changes
+
      const defaultValues = {
           status: 0,
           gender: true,
@@ -304,9 +309,17 @@ function EmployeeDetailsForm(props) {
                                              className="details__item"
                                         >
                                              <Select
+                                                  labelInValue
                                                   showSearch
                                                   style={{
                                                        width: 200,
+                                                  }}
+                                                  onChange={(value) => {
+                                                       dispatch(
+                                                            getProvince(
+                                                                 value.key
+                                                            )
+                                                       );
                                                   }}
                                                   placeholder="Search to Select"
                                                   optionFilterProp="children"
@@ -329,24 +342,16 @@ function EmployeeDetailsForm(props) {
                                                             )
                                                   }
                                              >
-                                                  <Option value="1">
-                                                       Not Identified
-                                                  </Option>
-                                                  <Option value="2">
-                                                       Closed
-                                                  </Option>
-                                                  <Option value="3">
-                                                       Communicated
-                                                  </Option>
-                                                  <Option value="4">
-                                                       Identified
-                                                  </Option>
-                                                  <Option value="5">
-                                                       Resolved
-                                                  </Option>
-                                                  <Option value="6">
-                                                       Cancelled
-                                                  </Option>
+                                                  {provinces?.map((p) => {
+                                                       return (
+                                                            <Option
+                                                                 value={p.name}
+                                                                 key={p.code}
+                                                            >
+                                                                 {`${p.name}`}
+                                                            </Option>
+                                                       );
+                                                  })}
                                              </Select>
                                         </Form.Item>
 
@@ -369,9 +374,17 @@ function EmployeeDetailsForm(props) {
                                              className="details__item"
                                         >
                                              <Select
+                                                  labelInValue
                                                   showSearch
                                                   style={{
                                                        width: 200,
+                                                  }}
+                                                  onChange={(value, e) => {
+                                                       dispatch(
+                                                            getDistrict(
+                                                                 value.key
+                                                            )
+                                                       );
                                                   }}
                                                   placeholder="Search to Select"
                                                   optionFilterProp="children"
@@ -394,24 +407,16 @@ function EmployeeDetailsForm(props) {
                                                             )
                                                   }
                                              >
-                                                  <Option value="1">
-                                                       Not Identified
-                                                  </Option>
-                                                  <Option value="2">
-                                                       Closed
-                                                  </Option>
-                                                  <Option value="3">
-                                                       Communicated
-                                                  </Option>
-                                                  <Option value="4">
-                                                       Identified
-                                                  </Option>
-                                                  <Option value="5">
-                                                       Resolved
-                                                  </Option>
-                                                  <Option value="6">
-                                                       Cancelled
-                                                  </Option>
+                                                  {districts?.map((d) => {
+                                                       return (
+                                                            <Option
+                                                                 value={d.name}
+                                                                 key={d.code}
+                                                            >
+                                                                 {`${d.name}`}
+                                                            </Option>
+                                                       );
+                                                  })}
                                              </Select>
                                         </Form.Item>
 
@@ -421,9 +426,16 @@ function EmployeeDetailsForm(props) {
                                              className="details__item"
                                         >
                                              <Select
+                                                  labelInValue
                                                   showSearch
                                                   style={{
                                                        width: 200,
+                                                  }}
+                                                  onChange={(value, e) => {
+                                                       console.log(value.value);
+                                                       // dispatch(
+                                                       // 		 getDistrict(value.key)
+                                                       // );
                                                   }}
                                                   placeholder="Search to Select"
                                                   optionFilterProp="children"
@@ -446,24 +458,16 @@ function EmployeeDetailsForm(props) {
                                                             )
                                                   }
                                              >
-                                                  <Option value="1">
-                                                       Not Identified
-                                                  </Option>
-                                                  <Option value="2">
-                                                       Closed
-                                                  </Option>
-                                                  <Option value="3">
-                                                       Communicated
-                                                  </Option>
-                                                  <Option value="4">
-                                                       Identified
-                                                  </Option>
-                                                  <Option value="5">
-                                                       Resolved
-                                                  </Option>
-                                                  <Option value="6">
-                                                       Cancelled
-                                                  </Option>
+                                                  {wards?.map((w) => {
+                                                       return (
+                                                            <Option
+                                                                 value={w.name}
+                                                                 key={w.code}
+                                                            >
+                                                                 {`${w.name}`}
+                                                            </Option>
+                                                       );
+                                                  })}
                                              </Select>
                                         </Form.Item>
                                    </div>
