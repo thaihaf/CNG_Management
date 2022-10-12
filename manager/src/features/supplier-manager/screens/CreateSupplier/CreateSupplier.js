@@ -4,7 +4,7 @@ import React from 'react';
 
 const App = () => (
   <>
-    <Avatar src="https://resources.premierleague.com/premierleague/photos/players/250x250/p95658.png" />
+    Create Supplier
   </>
 );
 

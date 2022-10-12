@@ -1,7 +1,7 @@
 export const SupplierManagerPaths = {
-     SUPPLIER_LIST: "/supplier/supplier-list",
-     SUPPLIER_DETAIL: "/supplier/detail/:supplierId",
-     CREATE_SUPPLIER: "/supplier/create",
-     EDIT_SUPPLIER: "/supplier/update/:supplierId",
-     CONFIRM: "/supplier/complete",
+     SUPPLIER_LIST: "/supplier",
+     SUPPLIER_DETAIL: "/supplier/:supplierId",
+     CREATE_SUPPLIER: "/supplier/add",
+     EDIT_SUPPLIER: "/supplier/:supplierId",
+     CONFIRM: "/supplier",
 };

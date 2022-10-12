@@ -1,7 +1,7 @@
 import { api } from "api/api";
 import { SupplierManagerPaths } from "../supplierManager";
 
-const getSupplier = () => {
+const getSuppliers = () => {
      const url = SupplierManagerPaths.SUPPLIER_LIST;
      return api.get(url);
 };
@@ -12,5 +12,5 @@ const getSupplierDetails = (id) => {
      );
      return api.get(url);
 };
-const supplierApi = { getSupplier, getSupplierDetails };
+const supplierApi = { getSuppliers, getSupplierDetails };
 export default supplierApi;

@@ -12,51 +12,20 @@ import { Avatar, Button, Input, Space, Table, Tag } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import queryString from "query-string";
 import Highlighter from "react-highlight-words";
-  
+
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-
+import "./SupplierList.css";
 import {
   SupplierManagerPaths,
   getSuppliers,
 } from "features/supplier-manager/supplierManager";
 
-const data = [
-  {
-    avatar: "0",
-    supplierName: "John Wick",
-    contactName: "Jim Red",
-    phoneNumberContact: "098 369 7721",
-    status: 1,
-  },
-  {
-    avatar: "2",
-    supplierName: "Joe Black",
-    contactName: "Jim Black",
-    phoneNumberContact: "098 369 7721",
-    status: 1,
-  },
-  {
-    avatar: "3",
-    supplierName: "Jim Green",
-    contactName: "Jim Blue",
-    phoneNumberContact: "098 369 7721",
-    status: 0,
-  },
-  {
-    avatar: "4",
-    supplierName: "Jim Red",
-    contactName: "Jim Oke",
-    phoneNumberContact: "098 369 7721",
-    status: 1,
-  },
-];
-
 const App = () => {
   const { listSuppliers, totalElements, totalPages, size } = useSelector(
-    (state) => state.employee
-);
+    (state) => state.supplier
+  );
 
   const history = useHistory();
   const location = useLocation();
@@ -68,12 +37,12 @@ const App = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
 
-    useEffect(() => {
-      const query = queryString.parse(location.search);
-      setIsLoading(true);
-      dispatch(getSuppliers())
-           .then(unwrapResult)
-           .then(() => setIsLoading(false))
+  useEffect(() => {
+    // const query = queryString.parse(location.search);
+    setIsLoading(true);
+    dispatch(getSuppliers())
+      .then(unwrapResult)
+      .then(() => setIsLoading(false));
   }, [dispatch, location]);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -200,13 +169,47 @@ const App = () => {
     />
   );
 
+  // const data = [
+  //   {
+  //     avatarSupplier: "https://joeschmoe.io/api/v1/random",
+  //     supplierName: "John Brown",
+  //     firstContactName: 32,
+  //     address: "New York No. 1 Lake Park",
+  //   },
+  //   {
+  //     avatarSupplier: "2",
+  //     supplierName: "Jim Green",
+  //     firstContactName: 42,
+  //     address: "London No. 1 Lake Park",
+  //   },
+  //   {
+  //     avatarSupplier: "3",
+  //     supplierName: "Joe Black",
+  //     firstContactName: 32,
+  //     address: "Sidney No. 1 Lake Park",
+  //   },
+  //   {
+  //     avatarSupplier: "4",
+  //     supplierName: "Jim Red",
+  //     firstContactName: 32,
+  //     address: "London No. 2 Lake Park",
+  //   },
+  // ];
+
   const columns = [
     {
       title: "Avatar",
-      dataIndex: "avatar",
-      key: "avatar",
-      width: "30%",
-      ...getColumnSearchProps("avatar"),
+      dataIndex: "avatarSupplier",
+      key: "avatarSupplier",
+      width: "10%",
+      ...getColumnSearchProps("avatarSupplier"),
+      render: (text, record) => {
+        return (
+          <div>
+            <Avatar src={record.avatarSupplier} />
+          </div>
+        );
+      },
     },
     {
       title: "Supplier Name",
@@ -219,16 +222,24 @@ const App = () => {
     },
     {
       title: "Contact Name",
-      dataIndex: "contactName",
-      key: "contactName",
-      ...getColumnSearchProps("contactName"),
-      sorter: (a, b) => a.contactName.length - b.contactName.length,
+      colSpan: 2,
+      dataIndex: "firstContactName",
+      width: "10%",
+      ...getColumnSearchProps("lastContactName"),
+      sorter: (a, b) => a.lastContactName.length - b.lastContactName.length,
       sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Phone",
+      colSpan: 0,
+      dataIndex: "lastContactName",
+      width: "10%",
     },
     {
       title: "Phone Number Contact",
       dataIndex: "phoneNumberContact",
       key: "phoneNumberContact",
+      width: "20%",
       ...getColumnSearchProps("phoneNumberContact"),
     },
     {
@@ -259,6 +270,7 @@ const App = () => {
           </Tag>
         );
       },
+      width: "20%",
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend", "ascend"],
     },
@@ -294,27 +306,27 @@ const App = () => {
       <Table
         rowKey="id"
         columns={columns}
-        dataSource={data}
+        dataSource={listSuppliers}
         onRow={(record) => ({
           onClick: () => {
             onRowClick(record);
           },
         })}
         pagination={
-          data.length !== 0
-                         ? {
-                                showSizeChanger: true,
-                                position: ["bottomCenter"],
-                                size: "default",
-                                pageSize: 10,
-                                // current: getPageUrl || pageHead,
-                                totalElements,
-                                // onChange: (page, size) =>
-                                // 	onHandlePagination(page, size),
-                                pageSizeOptions: ["10", "15", "20", "25"],
-                           }
-                         : false
-               }
+          listSuppliers.length !== 0
+            ? {
+                showSizeChanger: true,
+                position: ["bottomCenter"],
+                size: "default",
+                pageSize: 10,
+                // current: getPageUrl || pageHead,
+                totalElements,
+                // onChange: (page, size) =>
+                // 	onHandlePagination(page, size),
+                pageSizeOptions: ["10", "15", "20", "25"],
+              }
+            : false
+        }
         loading={isLoading}
       />
     </>
