@@ -5,8 +5,8 @@ import {
      employeesReducer,
      EMPLOYEES_FEATURE_KEY,
 } from "features/employee-manager/employeeManager";import {
-     supplierReducer,
-     SUPPLIER_FEATURE_KEY,
+     suppliersReducer,
+     SUPPLIERS_FEATURE_KEY,
 } from "features/supplier-manager/supplierManager";
 
 import {
@@ -21,7 +21,7 @@ import {
 const rootReducer = combineReducers({
      [AUTHEN_FEATURE_KEY]: authReducer,
      [EMPLOYEES_FEATURE_KEY]: employeesReducer,
-     [SUPPLIER_FEATURE_KEY]: supplierReducer,
+     [SUPPLIERS_FEATURE_KEY]: suppliersReducer,
      [PERMISSIONS_FEATURE_KEY]: permissionsReducer,
      [PROVINCES_FEATURE_KEY]: provincesReducer,
 });

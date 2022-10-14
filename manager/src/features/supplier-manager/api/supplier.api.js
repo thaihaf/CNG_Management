@@ -1,16 +1,36 @@
 import { api } from "api/api";
-import { SupplierManagerPaths } from "../supplierManager";
+import { SupplierEndPoints } from "../supplierManager";
 
 const getSuppliers = () => {
-     const url = SupplierManagerPaths.SUPPLIER_LIST;
+     const url = SupplierEndPoints.SUPPLIER_MANAGER;
      return api.get(url);
 };
+const createDetails = (data) => {
+     const url = SupplierEndPoints.SUPPLIER_MANAGER;
+     return api.post(url, data);
+};
+const createSupplier = (data) => {
+     const url = SupplierEndPoints.CREATE_SUPPLIER;
+     return api.post(url, data);
+};
 const getSupplierDetails = (id) => {
-     const url = SupplierManagerPaths.SUPPLIER_DETAIL.replace(
+     const url = SupplierEndPoints.SUPPLIER_DETAIL.replace(
           ":supplierId",
           id || ""
      );
      return api.get(url);
 };
-const supplierApi = { getSuppliers, getSupplierDetails };
+const updateDetails = (id, data) => {
+     const url = SupplierEndPoints.SUPPLIER_DETAIL.replace(
+          ":supplierId",
+          id || ""
+     );
+     return api.put(url, data);
+};
+const supplierApi = { 
+     getSuppliers, 
+     getSupplierDetails,
+     createSupplier,
+     createDetails,
+     updateDetails };
 export default supplierApi;

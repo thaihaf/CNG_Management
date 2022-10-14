@@ -28,5 +28,5 @@ export default function SupplierDetails() {
      if (isLoading) {
           return <LoadingSpinner isFullscreen />;
      }
-     return <SupplierDetailsForm />;
+     return <SupplierDetailsForm isCreateMode={false}/>;
 }

@@ -272,7 +272,7 @@ function EmployeeDetailsForm() {
                                                             <CaretUpOutlined />
                                                        }
                                                        size={"large"}
-                                                       htmlType="submit"
+                                           Upload            htmlType="submit"
                                                   >
                                                        {createMode
                                                             ? "Create"
