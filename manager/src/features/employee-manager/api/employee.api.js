@@ -27,11 +27,17 @@ const updateDetails = (id, data) => {
      );
      return api.put(url, data);
 };
+const getAccounts = () => {
+	const url = EmployeeEndPoints.ACCOUNT_MANAGER;
+	return api.get(url);
+};
+
 const employeeApi = {
      getEmployees,
      getEmployeeDetails,
      createAccEmployee,
      createDetails,
      updateDetails,
+		 getAccounts
 };
 export default employeeApi;

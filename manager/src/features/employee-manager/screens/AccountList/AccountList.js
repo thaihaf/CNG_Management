@@ -9,14 +9,11 @@ import {
      DownloadOutlined,
      LockOutlined,
      SearchOutlined,
-		 UserOutlined,
 } from "@ant-design/icons";
 import {
-     Avatar,
      Button,
      Divider,
      Form,
-     Image,
      Input,
      message,
      Modal,
@@ -27,10 +24,10 @@ import {
 } from "antd";
 import {
      EmployeeManagerPaths,
-     getEmployees,
+     getAccounts,
 } from "features/employee-manager/employeeManager";
 
-import "./EmployeeList.css";
+import "../EmployeeList/EmployeeList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
@@ -40,8 +37,8 @@ import {
 } from "features/employee-manager/employeeManager";
 const { Title, Text } = Typography;
 
-export default function EmployeeList() {
-     const { listEmployees, totalElements, totalPages, size } = useSelector(
+export default function AccountList() {
+     const { listAccounts, totalElements, totalPages, size } = useSelector(
           (state) => state.employee
      );
      const history = useHistory();
@@ -58,7 +55,7 @@ export default function EmployeeList() {
      useEffect(() => {
           const query = queryString.parse(location.search);
           setIsLoading(true);
-          dispatch(getEmployees())
+          dispatch(getAccounts())
                .then(unwrapResult)
                .then(() => setIsLoading(false));
      }, [dispatch, location]);
@@ -183,12 +180,6 @@ export default function EmployeeList() {
 
      const columns = [
           {
-               title: "Avatar",
-               dataIndex: "avatar",
-               key: "avatar",
-               render: (s) => <Avatar size={50} icon={<UserOutlined />} />,
-          },
-          {
                title: "ID",
                dataIndex: "id",
                key: "id",
@@ -197,46 +188,12 @@ export default function EmployeeList() {
                ...getColumnSearchProps("id"),
           },
           {
-               title: "Firstname",
-               dataIndex: "firstName",
-               key: "firstName",
-               sorter: (a, b) => a.firstName.length - b.firstName.length,
+               title: "Username",
+               dataIndex: "username",
+               key: "username",
+               sorter: (a, b) => a.username.length - b.username.length,
                sortDirections: ["descend", "ascend"],
-               ...getColumnSearchProps("firstName"),
-          },
-          {
-               title: "Lastname",
-               dataIndex: "lastName",
-               key: "lastName",
-               sorter: (a, b) => a.lastName.length - b.lastName.length,
-               sortDirections: ["descend", "ascend"],
-               ...getColumnSearchProps("lastName"),
-          },
-          {
-               title: "Gender",
-               dataIndex: "gender",
-               key: "gender",
-               filters: [
-                    {
-                         text: "Male",
-                         value: true,
-                    },
-                    {
-                         text: "Female",
-                         value: false,
-                    },
-               ],
-               onFilter: (value, record) => record.gender == value,
-               filterSearch: true,
-               render: (s) => (s ? "Male" : "Female"),
-               sorter: (a, b) => a.gender.length - b.gender.length,
-               sortDirections: ["descend", "ascend"],
-          },
-          {
-               title: "Phone",
-               dataIndex: "phoneNumber",
-               key: "phoneNumber",
-               ...getColumnSearchProps("phoneNumber"),
+               ...getColumnSearchProps("username"),
           },
           {
                title: "Email",
@@ -245,6 +202,26 @@ export default function EmployeeList() {
                sorter: (a, b) => a.email.length - b.email.length,
                sortDirections: ["descend", "ascend"],
                ...getColumnSearchProps("email"),
+          },
+          {
+               title: "Role",
+               dataIndex: "role",
+               key: "role",
+               filters: [
+                    {
+                         text: "ADMIN",
+                         value: "ROLE_ADMIN",
+                    },
+                    {
+                         text: "EMPLOYEE",
+                         value: "ROLE_EMPLOYEE",
+                    },
+               ],
+               onFilter: (value, record) => record.role == value,
+               filterSearch: true,
+               render: (s) => (s === "ROLE_ADMIN" ? "ADMIN" : "EMPLOYEE"),
+               sorter: (a, b) => a.role.length - b.role.length,
+               sortDirections: ["descend", "ascend"],
           },
           {
                title: "Status",
@@ -284,15 +261,6 @@ export default function EmployeeList() {
           // },
      ];
 
-     const onRowClick = (record) => {
-          history.push(
-               EmployeeManagerPaths.EMPLOYEE_DETAILS.replace(
-                    ":employeeId",
-                    record.id || ""
-               )
-          );
-     };
-
      const onSubmitCreate = ({ rePassword, ...params }) => {
           dispatch(
                createAccEmployee({ data: { ...params, role: "ROLE_EMPLOYEE" } })
@@ -317,7 +285,15 @@ export default function EmployeeList() {
      return (
           <div className="employee-list">
                <div className="top">
-                    <Title level={2}>Employee List</Title>
+                    <Title level={2}>Account List</Title>
+                    <Button
+                         type="primary"
+                         shape={"round"}
+                         size={"large"}
+                         onClick={() => setModal1Open(true)}
+                    >
+                         Create New
+                    </Button>
 
                     <Modal
                          title="Create New Employee"
@@ -502,24 +478,19 @@ export default function EmployeeList() {
                <Table
                     rowKey="id"
                     columns={columns}
-                    dataSource={listEmployees}
-                    onRow={(record) => ({
-                         onClick: () => {
-                              onRowClick(record);
-                         },
-                    })}
+                    dataSource={listAccounts}
                     pagination={
-                         listEmployees.length !== 0
+                         listAccounts.length !== 0
                               ? {
                                      showSizeChanger: true,
                                      position: ["bottomCenter"],
                                      size: "default",
-                                     pageSize: 10,
+                                     pageSize: 2,
                                      // current: getPageUrl || pageHead,
                                      totalElements,
                                      // onChange: (page, size) =>
                                      // 	onHandlePagination(page, size),
-                                     pageSizeOptions: ["10", "15", "20", "25"],
+                                     pageSizeOptions: ["2", "10", "15", "25"],
                                 }
                               : false
                     }
