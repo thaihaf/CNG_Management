@@ -30,10 +30,11 @@ import { EmployeeManagerPaths } from "features/employee-manager/employeeManager"
 import "./LoginScreen.css";
 import { getIsLogin } from "helpers/auth.helpers";
 import { LoadingSpinner } from "components";
+import { SupplierManagerPaths } from "features/supplier-manager/supplierManager";
 
 export default function LoginScreen() {
      const dispatch = useDispatch();
-     const errorLogin = useSelector((state) => state.auth.errorLogin);
+     const { errorLogin, role } = useSelector((state) => state.auth);
      const history = useHistory();
      const [loading, setLoading] = useState(false);
 
@@ -57,7 +58,14 @@ export default function LoginScreen() {
                .then(unwrapResult)
                .then((res) => {
                     message.success("Login success!");
-                    history.push(EmployeeManagerPaths.EMPLOYEE_LIST);
+                    switch (res.role.substring(1, res.role.length - 1)) {
+                         case "ROLE_ADMIN":
+                              history.push(EmployeeManagerPaths.EMPLOYEE_MANAGER);
+                              break;
+                         case "ROLE_EMPLOYEE":
+                              history.push(SupplierManagerPaths.SUPPLIER_LIST);
+                              break;
+                    }
                })
                .catch((error) => {
                     message.error("Username or password not correct");
@@ -89,21 +97,21 @@ export default function LoginScreen() {
                                         ),
                                    },
                                    {
-                                        max: 20,
+                                        max: 25,
                                         message: getMessage(
                                              CODE_ERROR.ERROR_NUMBER_MAX,
                                              MESSAGE_ERROR,
                                              "Username",
-                                             20
+                                             25
                                         ),
                                    },
                                    {
-                                        min: 3,
+                                        min: 8,
                                         message: getMessage(
                                              CODE_ERROR.ERROR_NUMBER_MIN,
                                              MESSAGE_ERROR,
                                              "Username",
-                                             3
+                                             8
                                         ),
                                    },
                               ]}
@@ -129,21 +137,21 @@ export default function LoginScreen() {
                                         ),
                                    },
                                    {
-                                        max: 20,
+                                        max: 25,
                                         message: getMessage(
                                              CODE_ERROR.ERROR_NUMBER_MAX,
                                              MESSAGE_ERROR,
                                              "Password",
-                                             20
+                                             25
                                         ),
                                    },
                                    {
-                                        min: 3,
+                                        min: 8,
                                         message: getMessage(
                                              CODE_ERROR.ERROR_NUMBER_MIN,
                                              MESSAGE_ERROR,
                                              "Password",
-                                             3
+                                             8
                                         ),
                                    },
                               ]}

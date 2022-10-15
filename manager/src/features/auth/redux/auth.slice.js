@@ -26,6 +26,7 @@ const initialState = {
      isSignedIn: false,
      userName: null,
      role: null,
+		 id : null
 };
 
 const authenSlice = createSlice({
@@ -48,7 +49,12 @@ const authenSlice = createSlice({
                state.isSignedIn = true;
                state.accessToken = action.payload.token;
                state.userName = action.payload.username;
-               state.role = action.payload.role.split("_")[1].toLowerCase();
+               state.id = action.payload.id;
+               const roleAPI = action.payload.role;
+               state.role = roleAPI
+                    .substring(1, roleAPI.length - 1)
+                    .split("_")[1]
+                    .toLowerCase();
           });
           builder.addCase(postLogin.rejected, (state, action) => {
                state.errorLogin = CODE_ERROR.ERROR_LOGIN;
@@ -64,7 +70,7 @@ export const { updateAccessToken, updateError, updateUserName } =
 const authConfig = {
      key: "auth",
      storage,
-     whitelist: ["accessToken", "isSignedIn", "userName", "role"],
+     whitelist: ["accessToken", "isSignedIn", "userName", "role", "id"],
 };
 
 export const LOCAL_STORAGE_AUTH_KEY = "persist:auth";
