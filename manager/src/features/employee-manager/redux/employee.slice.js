@@ -59,8 +59,18 @@ export const createDetails = createAsyncThunk(
      }
 );
 
+export const getAccounts = createAsyncThunk(
+	"employee/getAccounts",
+	async () => {
+			 const response = await api.getAccounts();
+			 console.log(response);
+			 return response.data;
+	}
+);
+
 const initialState = {
      listEmployees: [],
+		 listAccounts: [],
      totalElements: 0,
      totalPages: 0,
      size: 0,
@@ -85,16 +95,22 @@ const employeesSlice = createSlice({
                state.size = action.payload.size;
           },
           [createAccEmployee.fulfilled]: (state, action) => {
-               state.errorProcess = "";
+						state.errorProcess = "";
           },
           [getEmployeeDetails.fulfilled]: (state, action) => {
-               state.dataDetails = action.payload;
-               state.errorProcess = "";
-               state.createMode = false;
+						state.dataDetails = action.payload;
+						state.errorProcess = "";
+						state.createMode = false;
           },
           [getEmployeeDetails.rejected]: (state, action) => {
-               state.createMode = true;
+						state.createMode = true;
           },
+					[getAccounts.fulfilled]: (state, action) => {
+							 state.listAccounts = action.payload.content;
+							 state.totalElements = action.payload.totalElements;
+							 state.totalPages = action.payload.totalPages;
+							 state.size = action.payload.size;
+					},
      },
 });
 
