@@ -54,7 +54,7 @@ export default function AccountList() {
 
      useEffect(() => {
           const query = queryString.parse(location.search);
-					console.log("object")
+          console.log("object");
           setIsLoading(true);
           dispatch(getAccounts())
                .then(unwrapResult)
@@ -362,6 +362,14 @@ export default function AccountList() {
                                                   required: true,
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_REQUIRED,
+                                                       MESSAGE_ERROR,
+                                                       "Email"
+                                                  ),
+                                             },
+                                             {
+                                                  type: "email",
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_EMAIL,
                                                        MESSAGE_ERROR,
                                                        "Email"
                                                   ),

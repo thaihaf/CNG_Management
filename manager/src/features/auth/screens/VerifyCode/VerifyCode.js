@@ -1,49 +1,42 @@
 import React, { useEffect, useState } from "react";
 import cx from "classnames";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
+import queryString from "query-string";
 
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import {
-     Button,
-     Form,
-     Input,
-     message,
-     Spin,
-} from "antd";
+import { Button, Form, Input, message, Spin } from "antd";
 
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
-import {
-     forgotPassword,
-     updateError,
-     AuthPaths,
-} from "../../auth";
+import { verifyCode, updateError, AuthPaths } from "../../auth";
 
-import "./ForgotPassword.css";
+import "../ForgotPassword/ForgotPassword.css";
 import { LoadingSpinner } from "components";
 
-export default function ForgotPassword() {
+export default function VerifyCode() {
      const dispatch = useDispatch();
      const history = useHistory();
+     const location = useLocation();
 
      const [loading, setLoading] = useState(false);
 
      const onFinish = (values) => {
+          const query = queryString.parse(location.search);
+
           setLoading(true);
 
-          dispatch(forgotPassword({ data: values }))
+          dispatch(verifyCode({ data: { ...values, ...query } }))
                .then(unwrapResult)
                .then((res) => {
-                    message.success("Get code success, check your email now!");
-                    history.push(AuthPaths.LOGIN);
+                    message.success("Code correctly!");
+                    history.push(AuthPaths.RESET_PASSWORD, {id : query.accountId});
                })
                .catch((error) => {
-                    message.error("Email not found");
+                    message.error("Code not correct, try again");
                     setLoading(false);
-                    dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
                });
      };
 
@@ -59,32 +52,34 @@ export default function ForgotPassword() {
                          onFinish={onFinish}
                     >
                          <Form.Item
-                              name="email"
+                              name="verifCodes"
                               rules={[
                                    {
                                         required: true,
                                         message: getMessage(
                                              CODE_ERROR.ERROR_REQUIRED,
                                              MESSAGE_ERROR,
-                                             "Email"
+                                             "Code"
                                         ),
                                    },
                                    {
-                                        type: "email",
+                                        len: 6,
                                         message: getMessage(
-                                             CODE_ERROR.ERROR_EMAIL,
+                                             CODE_ERROR.ERROR_LENGTH,
                                              MESSAGE_ERROR,
-                                             "Email"
+                                             "Code",
+                                             6
                                         ),
                                    },
                               ]}
                               className="form_item"
                          >
-                              <Input
+                              <Input.Password
                                    prefix={
-                                        <UserOutlined className="site-form-item-icon" />
+                                        <LockOutlined className="site-form-item-icon" />
                                    }
-                                   placeholder="email@gmail.com"
+                                   type="password"
+                                   placeholder="●●●●●●●●●"
                                    className="login_input"
                               />
                          </Form.Item>
@@ -95,7 +90,7 @@ export default function ForgotPassword() {
                                    htmlType="submit"
                                    className="login-form-button= btn_signUp"
                               >
-                                   Get Code
+                                   Submit
                               </Button>
                          </Form.Item>
                     </Form>

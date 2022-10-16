@@ -439,6 +439,14 @@ function EmployeeDetailsForm() {
                                                             "Email"
                                                        ),
                                                   },
+                                                  {
+                                                       type: "email",
+                                                       message: getMessage(
+                                                            CODE_ERROR.ERROR_EMAIL,
+                                                            MESSAGE_ERROR,
+                                                            "Email"
+                                                       ),
+                                                  },
                                              ]}
                                         >
                                              <Input />

@@ -31,6 +31,30 @@ export const forgotPassword = createAsyncThunk(
           }
      }
 );
+export const verifyCode = createAsyncThunk(
+     "auth/verifyCode",
+     async ({ data }, { rejectWithValue }) => {
+          try {
+               console.log(data);
+               const response = await api.verifyCode(data);
+               return response.data;
+          } catch (error) {
+               throw rejectWithValue(error);
+          }
+     }
+);
+export const resetPassword = createAsyncThunk(
+     "auth/resetPassword",
+     async ({ data }, { rejectWithValue }) => {
+          try {
+               console.log(data);
+               const response = await api.resetPassword(data);
+               return response.data;
+          } catch (error) {
+               throw rejectWithValue(error);
+          }
+     }
+);
 
 const initialState = {
      accessToken: "",
