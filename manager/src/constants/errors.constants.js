@@ -22,4 +22,5 @@ export const CODE_ERROR = {
   ERROR_DATE: "0400",
   ERROR_BOOLEAN: "0500",
   ERROR_FORMAT: "0005",
+  ERROR_LENGTH: "0107",
 };
