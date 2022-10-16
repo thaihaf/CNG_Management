@@ -24,7 +24,7 @@ import {
      postLogin,
      updateError,
      updateUserName,
-} from "../auth";
+} from "../../auth";
 import { EmployeeManagerPaths } from "features/employee-manager/employeeManager";
 
 import "./LoginScreen.css";
@@ -177,7 +177,7 @@ export default function LoginScreen() {
 
                               <a
                                    className="/login-form-forgot forgot"
-                                   href="/forgot"
+                                   href="/forgot-password"
                               >
                                    Forgot password
                               </a>

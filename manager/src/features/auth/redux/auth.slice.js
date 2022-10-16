@@ -19,6 +19,18 @@ export const postLogin = createAsyncThunk(
           }
      }
 );
+export const forgotPassword = createAsyncThunk(
+     "auth/forgotPassword",
+     async ({ data }, { rejectWithValue }) => {
+          try {
+               console.log(data);
+               const response = await api.forgotPassword(data);
+               return response.data;
+          } catch (error) {
+               throw rejectWithValue(error);
+          }
+     }
+);
 
 const initialState = {
      accessToken: "",
@@ -26,7 +38,7 @@ const initialState = {
      isSignedIn: false,
      userName: null,
      role: null,
-		 id : null
+     id: null,
 };
 
 const authenSlice = createSlice({
@@ -60,6 +72,9 @@ const authenSlice = createSlice({
                state.errorLogin = CODE_ERROR.ERROR_LOGIN;
                state.isSignedIn = false;
                state.accessToken = "";
+          });
+          builder.addCase(forgotPassword.fulfilled, (state, action) => {
+               console.log(action.payload);
           });
      },
 });
