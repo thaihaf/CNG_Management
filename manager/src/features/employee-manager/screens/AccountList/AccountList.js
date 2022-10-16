@@ -54,6 +54,7 @@ export default function AccountList() {
 
      useEffect(() => {
           const query = queryString.parse(location.search);
+					console.log("object")
           setIsLoading(true);
           dispatch(getAccounts())
                .then(unwrapResult)

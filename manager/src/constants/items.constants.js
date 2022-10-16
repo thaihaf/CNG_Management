@@ -46,7 +46,7 @@ export const siderBarItems = [
      {
           key: "profile",
           icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Profle`,
+          label: `Profile`,
           role: "employee",
      },
      {
