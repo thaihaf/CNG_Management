@@ -19,6 +19,12 @@ export const siderBarItems = [
           role: "admin employee",
      },
      {
+          key: "accounts",
+          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Account`,
+          role: "admin",
+     },
+     {
           key: "employee",
           icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
           label: `Employee`,
@@ -40,7 +46,7 @@ export const siderBarItems = [
      {
           key: "profile",
           icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Profle`,
+          label: `Profile`,
           role: "employee",
      },
      {

@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { LoadingSpinner } from "components";
@@ -7,15 +7,23 @@ import RoutesApp from "routes/Routes";
 import "antd/dist/antd.css";
 import "./App.css";
 import { Spin } from "antd";
-function App() {
-     const loadingTranslation = false;
+import { useDispatch } from "react-redux";
+import { getProvinces } from "features/provinces/provinces";
 
-     if (loadingTranslation) {
-          return <Spin spinning={true} />;
-     }
+function App() {
+     const dispatch = useDispatch();
+     //  const loadingTranslation = false;
+
+     //  if (loadingTranslation) {
+     //       return <Spin spinning={true} />;
+     //  }
+
+     useEffect(() => {
+          dispatch(getProvinces());
+     }, [dispatch]);
 
      return (
-          <Suspense fallback={<Spin spinning={true} delay={50}/>}>
+          <Suspense fallback={<Spin spinning={true} delay={50} />}>
                <Router>
                     <RoutesApp />
                </Router>

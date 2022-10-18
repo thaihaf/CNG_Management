@@ -36,7 +36,7 @@ export default function Profile() {
                .then(unwrapResult)
                .catch((error) => {
                     if (!createMode) {
-                        //  info();
+                         info();
                     }
                });
      }, [dispatch, id]);

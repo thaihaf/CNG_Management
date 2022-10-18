@@ -10,7 +10,6 @@ export const getEmployees = createAsyncThunk(
      "employee/getEmployees",
      async () => {
           const response = await api.getEmployees();
-          console.log(response);
           return response.data;
      }
 );
@@ -36,12 +35,36 @@ export const getEmployeeDetails = createAsyncThunk(
 export const updateDetails = createAsyncThunk(
      "employee/updateDetails",
      async ({ id, data }, { rejectWithValue }) => {
-          console.log(id);
-          console.log(data);
           try {
                const response = await api.updateDetails(id, data);
                return response;
           } catch (error) {
+               throw rejectWithValue(error);
+          }
+     }
+);
+export const deleteEmployee = createAsyncThunk(
+     "employee/deleteEmployee",
+     async (id, { rejectWithValue }) => {
+          try {
+               const response = await api.deleteEmployee(id);
+               return response;
+          } catch (error) {
+               throw rejectWithValue(error);
+          }
+     }
+);
+export const deleteEmployees = createAsyncThunk(
+     "employee/deleteEmployees",
+     async (list, { rejectWithValue }) => {
+          try {
+               list.forEach(async (id) => {
+                    console.log(id);
+                    await api.deleteEmployee(id);
+               });
+               return true;
+          } catch (error) {
+               console.log(error);
                throw rejectWithValue(error);
           }
      }
@@ -59,8 +82,17 @@ export const createDetails = createAsyncThunk(
      }
 );
 
+export const getAccounts = createAsyncThunk(
+     "employee/getAccounts",
+     async () => {
+          const response = await api.getAccounts();
+          return response.data;
+     }
+);
+
 const initialState = {
      listEmployees: [],
+     listAccounts: [],
      totalElements: 0,
      totalPages: 0,
      size: 0,
@@ -94,6 +126,12 @@ const employeesSlice = createSlice({
           },
           [getEmployeeDetails.rejected]: (state, action) => {
                state.createMode = true;
+          },
+          [getAccounts.fulfilled]: (state, action) => {
+               state.listAccounts = action.payload.content;
+               state.totalElements = action.payload.totalElements;
+               state.totalPages = action.payload.totalPages;
+               state.size = action.payload.size;
           },
      },
 });
