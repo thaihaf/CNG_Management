@@ -1,7 +1,6 @@
 @import "../../../styles/colors.scss";
-@import "../../../styles/colors.scss";
 
 .layout {
      height: 100vh !important;
-     background-color: $bg-color;
+     background-color: $bg-auth-color !important;
 }

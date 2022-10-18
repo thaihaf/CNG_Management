@@ -11,6 +11,7 @@ export const MESSAGE_ERROR = {
   "0104": "%field% must be within %limit% characters.",
   "0105": "%field% must be at least %limit%.",
   "0106": "Please enter %field% in full-width characters.",
+  "0107": "%field% must be %limit% characters.",
   "0200": "%field% must be an array",
   "0201": "%field% is a duplicate",
   "0300": "Please enter half-width numbers for %field%.",

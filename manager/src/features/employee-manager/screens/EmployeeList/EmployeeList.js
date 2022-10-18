@@ -9,11 +9,16 @@ import {
      DownloadOutlined,
      LockOutlined,
      SearchOutlined,
+     UserOutlined,
 } from "@ant-design/icons";
 import {
+     Avatar,
      Button,
+     Divider,
      Form,
+     Image,
      Input,
+     message,
      Modal,
      Space,
      Table,
@@ -29,7 +34,10 @@ import "./EmployeeList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
-
+import {
+     updateErrorProcess,
+     createAccEmployee,
+} from "features/employee-manager/employeeManager";
 const { Title, Text } = Typography;
 
 export default function EmployeeList() {
@@ -39,8 +47,8 @@ export default function EmployeeList() {
      const history = useHistory();
      const location = useLocation();
      const dispatch = useDispatch();
+     const [form] = Form.useForm();
 
-     const [modal1Open, setModal1Open] = useState(false);
      const [isLoading, setIsLoading] = useState(false);
      const [searchText, setSearchText] = useState("");
      const [searchedColumn, setSearchedColumn] = useState("");
@@ -174,6 +182,12 @@ export default function EmployeeList() {
 
      const columns = [
           {
+               title: "Avatar",
+               dataIndex: "avatar",
+               key: "avatar",
+               render: (s) => <Avatar size={50} icon={<UserOutlined />} />,
+          },
+          {
                title: "ID",
                dataIndex: "id",
                key: "id",
@@ -278,220 +292,30 @@ export default function EmployeeList() {
           );
      };
 
+     const onSubmitCreate = ({ rePassword, ...params }) => {
+          dispatch(
+               createAccEmployee({ data: { ...params, role: "ROLE_EMPLOYEE" } })
+          )
+               .then(unwrapResult)
+               .then(({ data, status }) => {
+                    if (data === true) {
+                         form.resetFields();
+                         message.success("Create account employee success!");
+                    } else {
+                         message.error(data.Error.message);
+                    }
+               })
+               .catch((error) => {
+                    console.log("err", error);
+                    message.error("Username or password not correct");
+                    // dispatch(updateErrorProcess(CODE_ERROR.ERROR_CREATE));
+               });
+     };
+
      return (
           <div className="employee-list">
                <div className="top">
                     <Title level={2}>Employee List</Title>
-                    <Button
-                         type="primary"
-                         shape={"round"}
-                         size={"large"}
-                         onClick={() => setModal1Open(true)}
-                    >
-                         Create New
-                    </Button>
-
-                    <Modal
-                         title="Create New Employee"
-                         style={{ top: 20 }}
-                         open={modal1Open}
-                         onOk={() => setModal1Open(false)}
-                         onCancel={() => setModal1Open(false)}
-                         footer={[
-                              <Button
-                                   key="back"
-                                   shape={"round"}
-                                   onClick={() => setModal1Open(false)}
-                              >
-                                   Cancel
-                              </Button>,
-                              <Button
-                                   key="submit"
-                                   shape={"round"}
-                                   type="primary"
-                                   //  loading={loading}
-                                   onClick={() => setModal1Open(false)}
-                              >
-                                   Submit
-                              </Button>,
-                         ]}
-                    >
-                         <Form
-                              // form={form}
-                              labelCol={{
-                                   span: 4,
-                              }}
-                              wrapperCol={{
-                                   span: 14,
-                              }}
-                              layout="horizontal"
-                              // onValuesChange={onFormLayoutChange}
-                              name="form"
-                              // initialValues={initialValues}
-                              // onFinish={onFinish}
-                              colon={false}
-                         >
-                              <div className="details__group">
-                                   <Form.Item
-                                        name="username"
-                                        label={<Text>Username</Text>}
-                                        className="details__item"
-                                        rules={[
-                                             {
-                                                  required: true,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_REQUIRED,
-                                                       MESSAGE_ERROR,
-                                                       "Password"
-                                                  ),
-                                             },
-                                             {
-                                                  max: 20,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_NUMBER_MAX,
-                                                       MESSAGE_ERROR,
-                                                       "Password",
-                                                       20
-                                                  ),
-                                             },
-                                             {
-                                                  min: 3,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_NUMBER_MIN,
-                                                       MESSAGE_ERROR,
-                                                       "Password",
-                                                       3
-                                                  ),
-                                             },
-                                        ]}
-                                   >
-                                        <Input placeholder="username" />
-                                   </Form.Item>
-                                   <Form.Item
-                                        name="email"
-                                        label={<Text>Email</Text>}
-                                        className="details__item"
-                                        rules={[
-                                             {
-                                                  required: true,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_REQUIRED,
-                                                       MESSAGE_ERROR,
-                                                       "Password"
-                                                  ),
-                                             },
-                                             {
-                                                  max: 20,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_NUMBER_MAX,
-                                                       MESSAGE_ERROR,
-                                                       "Password",
-                                                       20
-                                                  ),
-                                             },
-                                             {
-                                                  min: 3,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_NUMBER_MIN,
-                                                       MESSAGE_ERROR,
-                                                       "Password",
-                                                       3
-                                                  ),
-                                             },
-                                        ]}
-                                   >
-                                        <Input placeholder="username" />
-                                   </Form.Item>
-                              </div>
-
-                              <div className="details__group">
-                                   <Form.Item
-                                        name="password"
-                                        label={<Text>Password</Text>}
-                                        className="details__item"
-                                        rules={[
-                                             {
-                                                  required: true,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_REQUIRED,
-                                                       MESSAGE_ERROR,
-                                                       "Password"
-                                                  ),
-                                             },
-                                             {
-                                                  max: 20,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_NUMBER_MAX,
-                                                       MESSAGE_ERROR,
-                                                       "Password",
-                                                       20
-                                                  ),
-                                             },
-                                             {
-                                                  min: 3,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_NUMBER_MIN,
-                                                       MESSAGE_ERROR,
-                                                       "Password",
-                                                       3
-                                                  ),
-                                             },
-                                        ]}
-                                   >
-                                        <Input.Password
-                                             prefix={
-                                                  <LockOutlined className="site-form-item-icon" />
-                                             }
-                                             type="password"
-                                             placeholder="●●●●●●●●●"
-                                             className="login_input"
-                                        />
-                                   </Form.Item>
-                                   <Form.Item
-                                        name="rePassword"
-                                        label={<Text>Re-password</Text>}
-                                        className="details__item"
-                                        rules={[
-                                             {
-                                                  required: true,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_REQUIRED,
-                                                       MESSAGE_ERROR,
-                                                       "Password"
-                                                  ),
-                                             },
-                                             {
-                                                  max: 20,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_NUMBER_MAX,
-                                                       MESSAGE_ERROR,
-                                                       "Password",
-                                                       20
-                                                  ),
-                                             },
-                                             {
-                                                  min: 3,
-                                                  message: getMessage(
-                                                       CODE_ERROR.ERROR_NUMBER_MIN,
-                                                       MESSAGE_ERROR,
-                                                       "Password",
-                                                       3
-                                                  ),
-                                             },
-                                        ]}
-                                   >
-                                        <Input.Password
-                                             prefix={
-                                                  <LockOutlined className="site-form-item-icon" />
-                                             }
-                                             type="password"
-                                             placeholder="●●●●●●●●●"
-                                             className="login_input"
-                                        />
-                                   </Form.Item>
-                              </div>
-                         </Form>
-                    </Modal>
                </div>
                <Table
                     rowKey="id"
