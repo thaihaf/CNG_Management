@@ -17,7 +17,6 @@ export const getProvince = createAsyncThunk(
      "provinces/getProvince",
      async (value) => {
           const response = await api.getProvince(value);
-					console.log(response)
           return response;
      }
 );
@@ -25,7 +24,6 @@ export const getDistrict = createAsyncThunk(
      "provinces/getDistrict",
      async (value) => {
           const response = await api.getDistrict(value);
-					console.log(response)
           return response;
      }
 );

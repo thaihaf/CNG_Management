@@ -10,7 +10,6 @@ export const getEmployees = createAsyncThunk(
      "employee/getEmployees",
      async () => {
           const response = await api.getEmployees();
-          console.log(response);
           return response.data;
      }
 );
@@ -36,8 +35,6 @@ export const getEmployeeDetails = createAsyncThunk(
 export const updateDetails = createAsyncThunk(
      "employee/updateDetails",
      async ({ id, data }, { rejectWithValue }) => {
-          console.log(id);
-          console.log(data);
           try {
                const response = await api.updateDetails(id, data);
                return response;
@@ -60,17 +57,16 @@ export const createDetails = createAsyncThunk(
 );
 
 export const getAccounts = createAsyncThunk(
-	"employee/getAccounts",
-	async () => {
-			 const response = await api.getAccounts();
-			 console.log(response);
-			 return response.data;
-	}
+     "employee/getAccounts",
+     async () => {
+          const response = await api.getAccounts();
+          return response.data;
+     }
 );
 
 const initialState = {
      listEmployees: [],
-		 listAccounts: [],
+     listAccounts: [],
      totalElements: 0,
      totalPages: 0,
      size: 0,
@@ -95,22 +91,22 @@ const employeesSlice = createSlice({
                state.size = action.payload.size;
           },
           [createAccEmployee.fulfilled]: (state, action) => {
-						state.errorProcess = "";
+               state.errorProcess = "";
           },
           [getEmployeeDetails.fulfilled]: (state, action) => {
-						state.dataDetails = action.payload;
-						state.errorProcess = "";
-						state.createMode = false;
+               state.dataDetails = action.payload;
+               state.errorProcess = "";
+               state.createMode = false;
           },
           [getEmployeeDetails.rejected]: (state, action) => {
-						state.createMode = true;
+               state.createMode = true;
           },
-					[getAccounts.fulfilled]: (state, action) => {
-							 state.listAccounts = action.payload.content;
-							 state.totalElements = action.payload.totalElements;
-							 state.totalPages = action.payload.totalPages;
-							 state.size = action.payload.size;
-					},
+          [getAccounts.fulfilled]: (state, action) => {
+               state.listAccounts = action.payload.content;
+               state.totalElements = action.payload.totalElements;
+               state.totalPages = action.payload.totalPages;
+               state.size = action.payload.size;
+          },
      },
 });
 
