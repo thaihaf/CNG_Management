@@ -6,7 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 
 import {
+     CaretUpOutlined,
+     DeleteTwoTone,
      DownloadOutlined,
+     DownOutlined,
+     ExclamationCircleOutlined,
      LockOutlined,
      SearchOutlined,
      UserOutlined,
@@ -15,12 +19,15 @@ import {
      Avatar,
      Button,
      Divider,
+     Dropdown,
      Form,
      Image,
      Input,
+     Menu,
      message,
      Modal,
      Space,
+     Spin,
      Table,
      Tag,
      Typography,
@@ -28,6 +35,8 @@ import {
 import {
      EmployeeManagerPaths,
      getEmployees,
+     deleteEmployee,
+     deleteEmployees,
 } from "features/employee-manager/employeeManager";
 
 import "./EmployeeList.css";
@@ -52,27 +61,100 @@ export default function EmployeeList() {
      const [isLoading, setIsLoading] = useState(false);
      const [searchText, setSearchText] = useState("");
      const [searchedColumn, setSearchedColumn] = useState("");
+     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
      const searchInput = useRef(null);
 
-     useEffect(() => {
-          const query = queryString.parse(location.search);
-          setIsLoading(true);
-          dispatch(getEmployees())
-               .then(unwrapResult)
-               .then(() => setIsLoading(false));
-     }, [dispatch, location]);
+     const onSelectChange = (newSelectedRowKeys) => {
+          setSelectedRowKeys(newSelectedRowKeys);
+     };
+     const rowSelection = {
+          selectedRowKeys,
+          onChange: onSelectChange,
+          selections: [
+               Table.SELECTION_ALL,
+               Table.SELECTION_INVERT,
+               Table.SELECTION_NONE,
+               {
+                    key: "odd",
+                    text: "Select Odd Row",
+                    onSelect: (changableRowKeys) => {
+                         let newSelectedRowKeys = [];
+                         newSelectedRowKeys = changableRowKeys.filter(
+                              (_, index) => {
+                                   if (index % 2 !== 0) {
+                                        return false;
+                                   }
+                                   return true;
+                              }
+                         );
+                         setSelectedRowKeys(newSelectedRowKeys);
+                    },
+               },
+               {
+                    key: "even",
+                    text: "Select Even Row",
+                    onSelect: (changableRowKeys) => {
+                         let newSelectedRowKeys = [];
+                         newSelectedRowKeys = changableRowKeys.filter(
+                              (_, index) => {
+                                   if (index % 2 !== 0) {
+                                        return true;
+                                   }
+                                   return false;
+                              }
+                         );
+                         setSelectedRowKeys(newSelectedRowKeys);
+                    },
+               },
+          ],
+     };
+
+     const onRowDelete = (record) => {
+          Modal.confirm({
+               title: "Confirm",
+               icon: <ExclamationCircleOutlined />,
+               content: "Delete can't revert, scarefully",
+               okText: "Delete",
+               cancelText: "Cancel",
+               onOk: () => {
+                    setIsLoading(true);
+                    dispatch(
+                         record
+                              ? deleteEmployee(record.id)
+                              : deleteEmployees(selectedRowKeys)
+                    )
+                         .then(unwrapResult)
+                         .then((res) => {
+                              console.log(res);
+                              dispatch(getEmployees())
+                                   .then(unwrapResult)
+                                   .then(() => setIsLoading(false));
+                         })
+                         .catch((error) => {
+                              console.log(error);
+                         });
+               },
+               onCancel: () => {},
+          });
+     };
+     const onRowDetails = (record) => {
+          history.push(
+               EmployeeManagerPaths.EMPLOYEE_DETAILS.replace(
+                    ":employeeId",
+                    record.id || ""
+               )
+          );
+     };
 
      const handleSearch = (selectedKeys, confirm, dataIndex) => {
           confirm();
           setSearchText(selectedKeys[0]);
           setSearchedColumn(dataIndex);
      };
-
      const handleReset = (clearFilters) => {
           clearFilters();
           setSearchText("");
      };
-
      const getColumnSearchProps = (dataIndex) => ({
           filterDropdown: ({
                setSelectedKeys,
@@ -185,15 +267,8 @@ export default function EmployeeList() {
                title: "Avatar",
                dataIndex: "avatar",
                key: "avatar",
+               align: "center",
                render: (s) => <Avatar size={50} icon={<UserOutlined />} />,
-          },
-          {
-               title: "ID",
-               dataIndex: "id",
-               key: "id",
-               sorter: (a, b) => a.id - b.id,
-               sortDirections: ["descend", "ascend"],
-               ...getColumnSearchProps("id"),
           },
           {
                title: "Firstname",
@@ -215,6 +290,7 @@ export default function EmployeeList() {
                title: "Gender",
                dataIndex: "gender",
                key: "gender",
+               align: "center",
                filters: [
                     {
                          text: "Male",
@@ -249,6 +325,7 @@ export default function EmployeeList() {
                title: "Status",
                dataIndex: "status",
                key: "status",
+               align: "center",
                filters: [
                     {
                          text: "Active",
@@ -276,56 +353,77 @@ export default function EmployeeList() {
                sorter: (a, b) => a.status - b.status,
                sortDirections: ["descend", "ascend"],
           },
-          // {
-          //      title: "Account",
-          // 		 render: (s) => {reutrn<>View</>},
-          //      key: "account",
-          // },
+          {
+               title: "Actions",
+               dataIndex: "operation",
+               key: "operation",
+               render: (_, record) => (
+                    <Dropdown
+                         overlay={
+                              <Menu
+                                   items={[
+                                        {
+                                             key: 1,
+                                             label: "View Details and Update",
+                                             onClick: () =>
+                                                  onRowDetails(record),
+                                        },
+                                        {
+                                             key: 2,
+                                             label: "Delete Employee",
+                                             onClick: () => onRowDelete(record),
+                                        },
+                                   ]}
+                              />
+                         }
+                    >
+                         <a>
+                              More <DownOutlined />
+                         </a>
+                    </Dropdown>
+               ),
+          },
      ];
+     const hasSelected = selectedRowKeys.length > 0;
 
-     const onRowClick = (record) => {
-          history.push(
-               EmployeeManagerPaths.EMPLOYEE_DETAILS.replace(
-                    ":employeeId",
-                    record.id || ""
-               )
-          );
-     };
-
-     const onSubmitCreate = ({ rePassword, ...params }) => {
-          dispatch(
-               createAccEmployee({ data: { ...params, role: "ROLE_EMPLOYEE" } })
-          )
+     useEffect(() => {
+          setIsLoading(true);
+          dispatch(getEmployees())
                .then(unwrapResult)
-               .then(({ data, status }) => {
-                    if (data === true) {
-                         form.resetFields();
-                         message.success("Create account employee success!");
-                    } else {
-                         message.error(data.Error.message);
-                    }
-               })
-               .catch((error) => {
-                    console.log("err", error);
-                    message.error("Username or password not correct");
-                    // dispatch(updateErrorProcess(CODE_ERROR.ERROR_CREATE));
-               });
-     };
+               .then(() => setIsLoading(false));
+     }, [dispatch, location]);
 
      return (
           <div className="employee-list">
                <div className="top">
                     <Title level={2}>Employee List</Title>
+                    <div>
+                         <span
+                              style={{
+                                   marginRight: 9,
+                              }}
+                         >
+                              {hasSelected
+                                   ? `Selected ${selectedRowKeys.length} items`
+                                   : ""}
+                         </span>
+                         <Button
+                              onClick={() => onRowDelete()}
+                              disabled={!hasSelected}
+                              loading={isLoading}
+                              shape="round"
+                              icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
+                         >
+                              Delete
+                         </Button>
+                    </div>
                </div>
+
                <Table
                     rowKey="id"
                     columns={columns}
+                    loading={isLoading}
                     dataSource={listEmployees}
-                    onRow={(record) => ({
-                         onClick: () => {
-                              onRowClick(record);
-                         },
-                    })}
                     pagination={
                          listEmployees.length !== 0
                               ? {
@@ -341,7 +439,7 @@ export default function EmployeeList() {
                                 }
                               : false
                     }
-                    loading={isLoading}
+                    rowSelection={rowSelection}
                />
           </div>
      );

@@ -100,14 +100,19 @@
                          display: block;
                     }
 
+                    .ant-select.ant-select-in-form-item {
+                         width: 100% !important;
+                    }
+                    .ant-input,
+                    .ant-select-selector,
+                    .ant-picker {
+                         border-radius: 2rem !important;
+                         width: 100% !important;
+                    }
                     .ant-input {
                          border-radius: 2rem !important;
                          padding: 1rem 2rem;
                          margin-top: 0.7rem;
-                    }
-                    .ant-select-selector,
-                    .ant-picker.ant-picker-disabled {
-                         border-radius: 2rem !important;
                     }
                }
           }
