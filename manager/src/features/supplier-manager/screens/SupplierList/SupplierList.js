@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import moment from "moment";
 import queryString from "query-string";
 import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -10,6 +11,7 @@ import {
   DownloadOutlined,
   LockOutlined,
   SearchOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import {
   Avatar,
@@ -27,6 +29,7 @@ import {
   Dropdown,
   Menu,
   Upload,
+  Select,
 } from "antd";
 import {
   SupplierManagerPaths,
@@ -42,13 +45,21 @@ import {
   createSupplier,
   createDetails,
 } from "features/supplier-manager/supplierManager";
+import {
+  getDistrict,
+  getProvince,
+  getProvinces,
+} from "features/provinces/provinces";
 import { ClassSharp } from "@mui/icons-material";
 const { Title, Text } = Typography;
-
+const { Option } = Select;
 export default function SupplierList() {
   const { listSuppliers, totalElements, totalPages, size } = useSelector(
     (state) => state.supplier
   );
+  const { provinces, districts, wards } = useSelector(
+    (state) => state.provinces
+);
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -200,11 +211,10 @@ export default function SupplierList() {
       dataIndex: "avatarSupplier",
       key: "avatarSupplier",
       width: "10%",
-      ...getColumnSearchProps("avatarSupplier"),
       render: (text, record) => {
         return (
           <div>
-            <Avatar src={record.avatarSupplier} />
+            <Avatar size={60} src={record.avatarSupplier} />
           </div>
         );
       },
@@ -213,7 +223,7 @@ export default function SupplierList() {
       title: "Supplier Name",
       dataIndex: "supplierName",
       key: "supplierName",
-      width: "20%",
+      width: "10%",
       ...getColumnSearchProps("supplierName"),
       sorter: (a, b) => a.supplierName - b.supplierName,
       sortDirections: ["descend", "ascend"],
@@ -222,7 +232,7 @@ export default function SupplierList() {
       title: "First Contact Name",
       dataIndex: "firstContactName",
       key: "firstContactName",
-      width: "20%",
+      width: "10%",
       ...getColumnSearchProps("firstContactName"),
       sorter: (a, b) => a.firstContactName.length - b.firstContactName.length,
       sortDirections: ["descend", "ascend"],
@@ -231,16 +241,32 @@ export default function SupplierList() {
       title: "Last Contact Name",
       dataIndex: "lastContactName",
       key: "lastContactName",
-      width: "20%",
+      width: "10%",
       ...getColumnSearchProps("lastContactName"),
       sorter: (a, b) => a.lastContactName.length - b.lastContactName.length,
       sortDirections: ["descend", "ascend"],
     },
     {
+      title: "Bank Name",
+      dataIndex: "bankName",
+      key: "bankName",
+      width: "10%",
+      ...getColumnSearchProps("bankName"),
+      sorter: (a, b) => a.bankName.length - b.bankName.length,
+    },
+    {
+      title: "Bank Account Number",
+      dataIndex: "bankAccountNumber",
+      key: "bankAccountNumber",
+      width: "10%",
+      ...getColumnSearchProps("bankAccountNumber"),
+      sorter: (a, b) => a.bankAccountNumber.length - b.bankAccountNumber.length,
+    },
+    {
       title: "Phone Number Contact",
       dataIndex: "phoneNumberContact",
       key: "phoneNumberContact",
-      width: "20%",
+      width: "10%",
       ...getColumnSearchProps("phoneNumberContact"),
     },
     {
@@ -263,15 +289,15 @@ export default function SupplierList() {
         let color = s === 1 ? "green" : "volcano";
         return s === 1 ? (
           <Tag color={color} key={s}>
-            Approved
+            Active
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            Pending
+            In Active
           </Tag>
         );
       },
-      width: "20%",
+      width: "10%",
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend", "ascend"],
     },
@@ -298,10 +324,13 @@ export default function SupplierList() {
     console.log(record.id);
   };
 
-  const onSubmitCreate = async ({ ...args }) => {
+  const onSubmitCreate = async ({ city, district, ward, ...args }) => {
     dispatch(
       createDetails({
         data: {
+          city: city.value,
+          district: district.value,
+          ward: ward.value,
           ...args,
           status: 1,
         },
@@ -310,15 +339,20 @@ export default function SupplierList() {
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
-        message.success("Create details success!");
+        message.success("Create supplier success!");
       })
       .catch((error) => {
         console.log(error);
         console.log(args);
-        message.error("Username or password not correct");
+        message.error("Create supplier failed!");
         //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
       });
   };
+
+  useEffect(() => {
+    dispatch(getProvinces());
+    // setComponentDisabled(createMode);
+}, [dispatch]);
 
   return (
     <div className="employee-list">
@@ -355,7 +389,7 @@ export default function SupplierList() {
             onFinish={onSubmitCreate}
           >
             <div className="details__group">
-              <Avatar src="http://static1.squarespace.com/static/55c7a3e2e4b0fa365689d8aa/55e0aceae4b0643202e59629/55e322ade4b077beb0266329/1590769127854/?format=1500w" />
+              <Avatar size={64} icon={<UserOutlined />} />
               <Form.Item
                 name="avatarSupplier"
                 label={<Text>Avatar Supplier</Text>}
@@ -389,21 +423,21 @@ export default function SupplierList() {
                     ),
                   },
                   {
-                    max: 25,
+                    max: 20,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
                       "firstContactName",
-                      25
+                      20
                     ),
                   },
                   {
-                    min: 8,
+                    min: 2,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
                       "firstContactName",
-                      8
+                      2
                     ),
                   },
                 ]}
@@ -425,21 +459,21 @@ export default function SupplierList() {
                     ),
                   },
                   {
-                    max: 25,
+                    max: 20,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
                       "lastContactName",
-                      25
+                      20
                     ),
                   },
                   {
-                    min: 8,
+                    min: 2,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
                       "lastContactName",
-                      8
+                      2
                     ),
                   },
                 ]}
@@ -471,7 +505,7 @@ export default function SupplierList() {
                     ),
                   },
                   {
-                    min: 4,
+                    min: 2,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
@@ -498,21 +532,21 @@ export default function SupplierList() {
                     ),
                   },
                   {
-                    max: 25,
+                    max: 9,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
                       "bankAccountNumber",
-                      25
+                      9
                     ),
                   },
                   {
-                    min: 8,
+                    min: 0,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
                       "bankAccountNumber",
-                      8
+                      0
                     ),
                   },
                 ]}
@@ -535,21 +569,21 @@ export default function SupplierList() {
                     ),
                   },
                   {
-                    max: 11,
+                    max: 10,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
                       "phoneNumberContact",
-                      11
+                      10
                     ),
                   },
                   {
-                    min: 10,
+                    min: 9,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
                       "phoneNumberContact",
-                      10
+                      9
                     ),
                   },
                 ]}
@@ -580,7 +614,7 @@ export default function SupplierList() {
                     ),
                   },
                   {
-                    min: 8,
+                    min: 3,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
@@ -629,8 +663,199 @@ export default function SupplierList() {
               >
                 <Input placeholder="TaxCode" />
               </Form.Item>
+              {/* <Form.Item
+                name="description"
+                label={<Text>Description</Text>}
+                className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "description"
+                    ),
+                  },
+                  {
+                    max: 13,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MAX,
+                      MESSAGE_ERROR,
+                      "description",
+                      13
+                    ),
+                  },
+                  {
+                    min: 10,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MIN,
+                      MESSAGE_ERROR,
+                      "description",
+                      10
+                    ),
+                  },
+                ]}
+              >
+                <Input placeholder="Description" />
+              </Form.Item> */}
             </div>
+            <div className="details__group">
+            <Form.Item
+                name="apartmentNumber"
+                label={<Text>Apartment Number</Text>}
+                className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "City"
+                    ),
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="city"
+                label={<Text>City</Text>}
+                className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "City"
+                    ),
+                  },
+                ]}
+              >
+                <Select
+                  labelInValue
+                  showSearch
+                  style={{
+                    width: 200,
+                  }}
+                  onChange={(value) => {
+                    dispatch(getProvince(value.key));
+                  }}
+                  placeholder="Search to Select"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option.children.includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    optionA.children
+                      .toLowerCase()
+                      .localeCompare(optionB.children.toLowerCase())
+                  }
+                >
+                  {provinces?.map((p) => {
+                    return (
+                      <Option value={p.name} key={p.code}>
+                        {`${p.name}`}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </div>
+            <div className="details__group">
+              <Form.Item
+                name="district"
+                label={<Text>District</Text>}
+                className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "District"
+                    ),
+                  },
+                ]}
+              >
+                <Select
+                  labelInValue
+                  showSearch
+                  style={{
+                    width: 200,
+                  }}
+                  onChange={(value, e) => {
+                    dispatch(getDistrict(value.key));
+                  }}
+                  placeholder="Search to Select"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option.children.includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    optionA.children
+                      .toLowerCase()
+                      .localeCompare(optionB.children.toLowerCase())
+                  }
+                >
+                  {districts?.map((d) => {
+                    return (
+                      <Option value={d.name} key={d.code}>
+                        {`${d.name}`}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
 
+              <Form.Item
+                name="ward"
+                label={<Text>Ward</Text>}
+                className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Ward"
+                    ),
+                  },
+                ]}
+              >
+                <Select
+                  labelInValue
+                  showSearch
+                  style={{
+                    width: 200,
+                  }}
+                  onChange={(value, e) => {
+                    console.log(value.value);
+                    // dispatch(
+                    // 		 getDistrict(value.key)
+                    // );
+                  }}
+                  placeholder="Search to Select"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option.children.includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    optionA.children
+                      .toLowerCase()
+                      .localeCompare(optionB.children.toLowerCase())
+                  }
+                >
+                  {wards?.map((w) => {
+                    return (
+                      <Option value={w.name} key={w.code}>
+                        {`${w.name}`}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </div>
             <div className="btns">
               <Button
                 key="back"
@@ -684,351 +909,3 @@ export default function SupplierList() {
     </div>
   );
 }
-
-// // import React from 'react'
-
-// // export default function SupplierList() {
-// // 	return (
-// // 		<div>SupplierList</div>
-// // 	)
-// // }
-// import { DownOutlined } from "@ant-design/icons";
-// import { Dropdown, Menu, Typography } from "antd";
-// import { SearchOutlined } from "@ant-design/icons";
-// import { Avatar, Button, Input, Space, Table, Tag } from "antd";
-// import React, { useEffect, useRef, useState } from "react";
-// import queryString from "query-string";
-// import Highlighter from "react-highlight-words";
-
-// import { unwrapResult } from "@reduxjs/toolkit";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useHistory, useLocation } from "react-router-dom";
-// import "./SupplierList.css";
-// import {
-//   SupplierManagerPaths,
-//   getSuppliers,
-// } from "features/supplier-manager/supplierManager";
-
-// const App = () => {
-//   const { listSuppliers, totalElements, totalPages, size } = useSelector(
-//     (state) => state.supplier
-//   );
-
-//   const history = useHistory();
-//   const location = useLocation();
-//   const dispatch = useDispatch();
-
-//   const [modal1Open, setModal1Open] = useState(false);
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   const [searchText, setSearchText] = useState("");
-//   const [searchedColumn, setSearchedColumn] = useState("");
-//   const searchInput = useRef(null);
-
-//   useEffect(() => {
-//     // const query = queryString.parse(location.search);
-//     setIsLoading(true);
-//     dispatch(getSuppliers())
-//       .then(unwrapResult)
-//       .then(() => setIsLoading(false));
-//   }, [dispatch, location]);
-
-//   const handleSearch = (selectedKeys, confirm, dataIndex) => {
-//     confirm();
-//     setSearchText(selectedKeys[0]);
-//     setSearchedColumn(dataIndex);
-//   };
-
-//   const handleReset = (clearFilters) => {
-//     clearFilters();
-//     setSearchText("");
-//   };
-
-//   const getColumnSearchProps = (dataIndex) => ({
-//     filterDropdown: ({
-//       setSelectedKeys,
-//       selectedKeys,
-//       confirm,
-//       clearFilters,
-//     }) => (
-//       <div
-//         style={{
-//           padding: 8,
-//         }}
-//       >
-//         <Input
-//           ref={searchInput}
-//           placeholder={`Search ${dataIndex}`}
-//           value={selectedKeys[0]}
-//           onChange={(e) =>
-//             setSelectedKeys(e.target.value ? [e.target.value] : [])
-//           }
-//           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-//           style={{
-//             marginBottom: 8,
-//             display: "block",
-//           }}
-//         />
-//         <Space>
-//           <Button
-//             type="primary"
-//             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-//             icon={<SearchOutlined />}
-//             size="small"
-//             style={{
-//               width: 90,
-//             }}
-//           >
-//             Search
-//           </Button>
-//           <Button
-//             onClick={() => clearFilters && handleReset(clearFilters)}
-//             size="small"
-//             style={{
-//               width: 90,
-//             }}
-//           >
-//             Reset
-//           </Button>
-//           <Button
-//             type="link"
-//             size="small"
-//             onClick={() => {
-//               confirm({
-//                 closeDropdown: false,
-//               });
-//               setSearchText(selectedKeys[0]);
-//               setSearchedColumn(dataIndex);
-//             }}
-//           >
-//             Filter
-//           </Button>
-//         </Space>
-//       </div>
-//     ),
-//     filterIcon: (filtered) => (
-//       <SearchOutlined
-//         style={{
-//           color: filtered ? "#1890ff" : undefined,
-//         }}
-//       />
-//     ),
-//     onFilter: (value, record) =>
-//       record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-//     onFilterDropdownOpenChange: (visible) => {
-//       if (visible) {
-//         setTimeout(() => searchInput.current?.select(), 100);
-//       }
-//     },
-//     render: (text) =>
-//       searchedColumn === dataIndex ? (
-//         <Highlighter
-//           highlightStyle={{
-//             backgroundColor: "#ffc069",
-//             padding: 0,
-//           }}
-//           searchWords={[searchText]}
-//           autoEscape
-//           textToHighlight={text ? text.toString() : ""}
-//         />
-//       ) : (
-//         text
-//       ),
-//   });
-
-//   const menu = (
-//     <Menu
-//       selectable
-//       //   defaultSelectedKeys={['3']}
-//       items={[
-//         {
-//           key: "1",
-//           label: "View",
-//         },
-//         {
-//           key: "2",
-//           label: "Edit",
-//         },
-//         {
-//           key: "3",
-//           label: "Delete",
-//         },
-//       ]}
-//     />
-//   );
-
-//   // const data = [
-//   //   {
-//   //     avatarSupplier: "https://joeschmoe.io/api/v1/random",
-//   //     supplierName: "John Brown",
-//   //     firstContactName: 32,
-//   //     address: "New York No. 1 Lake Park",
-//   //   },
-//   //   {
-//   //     avatarSupplier: "2",
-//   //     supplierName: "Jim Green",
-//   //     firstContactName: 42,
-//   //     address: "London No. 1 Lake Park",
-//   //   },
-//   //   {
-//   //     avatarSupplier: "3",
-//   //     supplierName: "Joe Black",
-//   //     firstContactName: 32,
-//   //     address: "Sidney No. 1 Lake Park",
-//   //   },
-//   //   {
-//   //     avatarSupplier: "4",
-//   //     supplierName: "Jim Red",
-//   //     firstContactName: 32,
-//   //     address: "London No. 2 Lake Park",
-//   //   },
-//   // ];
-
-//   const columns = [
-//     {
-//       title: "Avatar",
-//       dataIndex: "avatarSupplier",
-//       key: "avatarSupplier",
-//       width: "10%",
-//       ...getColumnSearchProps("avatarSupplier"),
-//       render: (text, record) => {
-//         return (
-//           <div>
-//             <Avatar src={record.avatarSupplier} />
-//           </div>
-//         );
-//       },
-//     },
-//     {
-//       title: "Supplier Name",
-//       dataIndex: "supplierName",
-//       key: "supplierName",
-//       width: "20%",
-//       ...getColumnSearchProps("supplierName"),
-//       sorter: (a, b) => a.supplierName - b.supplierName,
-//       sortDirections: ["descend", "ascend"],
-//     },
-//     {
-//       title: "Contact Name",
-//       colSpan: 2,
-//       dataIndex: "firstContactName",
-//       width: "10%",
-//       ...getColumnSearchProps("lastContactName"),
-//       sorter: (a, b) => a.lastContactName.length - b.lastContactName.length,
-//       sortDirections: ["descend", "ascend"],
-//     },
-//     {
-//       title: "Phone",
-//       colSpan: 0,
-//       dataIndex: "lastContactName",
-//       width: "10%",
-//     },
-//     {
-//       title: "Phone Number Contact",
-//       dataIndex: "phoneNumberContact",
-//       key: "phoneNumberContact",
-//       width: "20%",
-//       ...getColumnSearchProps("phoneNumberContact"),
-//     },
-//     {
-//       title: "Status",
-//       dataIndex: "status",
-//       key: "status",
-//       filters: [
-//         {
-//           text: "Active",
-//           value: 1,
-//         },
-//         {
-//           text: "In Active",
-//           value: 0,
-//         },
-//       ],
-//       onFilter: (value, record) => record.status === value,
-//       filterSearch: true,
-//       render: (s) => {
-//         let color = s === 1 ? "green" : "volcano";
-//         return s === 1 ? (
-//           <Tag color={color} key={s}>
-//             Approved
-//           </Tag>
-//         ) : (
-//           <Tag color={color} key={s}>
-//             Pending
-//           </Tag>
-//         );
-//       },
-//       width: "20%",
-//       sorter: (a, b) => a.status - b.status,
-//       sortDirections: ["descend", "ascend"],
-//     },
-//     {
-//       render: () => (
-//         <Space size="middle">
-//           <Dropdown overlay={menu}>
-//             <a>
-//               Action <DownOutlined />
-//             </a>
-//           </Dropdown>
-//         </Space>
-//       ),
-//     },
-//   ];
-
-//   const onRowClick = (record) => {
-//     history.push(
-//       SupplierManagerPaths.SUPPLIER_DETAIL.replace(
-//         ":supplierId",
-//         record.id || ""
-//       )
-//     );
-//   };
-
-//   return (
-//     <>
-//       <>
-//         <Button type="primary">Add Supplier</Button>
-//         <h1>Supplier List</h1>
-//         <br />
-//         <Button
-//           type="primary"
-//           shape={"round"}
-//           size={"large"}
-//           onClick={() => setModal1Open(true)}
-//         >
-//           Create New
-//         </Button>
-
-//       </>
-//       <br />
-//       <Table
-//         rowKey="id"
-//         columns={columns}
-//         dataSource={listSuppliers}
-//         onRow={(record) => ({
-//           onClick: () => {
-//             onRowClick(record);
-//           },
-//         })}
-//         pagination={
-//           listSuppliers.length !== 0
-//             ? {
-//                 showSizeChanger: true,
-//                 position: ["bottomCenter"],
-//                 size: "default",
-//                 pageSize: 10,
-//                 // current: getPageUrl || pageHead,
-//                 totalElements,
-//                 // onChange: (page, size) =>
-//                 // 	onHandlePagination(page, size),
-//                 pageSizeOptions: ["10", "15", "20", "25"],
-//               }
-//             : false
-//         }
-//         loading={isLoading}
-//       />
-//     </>
-//   );
-// };
-
-// export default App;
