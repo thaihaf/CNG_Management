@@ -29,9 +29,9 @@ export const getDistrict = createAsyncThunk(
 );
 
 const initialState = {
-     provinces : [],
-		 districts : [],
-		 wards : [],
+     provinces: [],
+     districts: [],
+     wards: [],
 };
 
 const provincesSlice = createSlice({
@@ -43,6 +43,7 @@ const provincesSlice = createSlice({
                state.provinces = action.payload;
           },
           [getProvince.fulfilled]: (state, action) => {
+               console.log(action.payload.districts);
                state.districts = action.payload.districts;
           },
           [getDistrict.fulfilled]: (state, action) => {
