@@ -1,20 +1,18 @@
 import { unwrapResult } from "@reduxjs/toolkit";
-import { LoadingSpinner } from "components";
+import { Spin } from "antd";
 import { CODE_ERROR } from "constants/errors.constants";
 import { updateError } from "features/auth/auth";
 import { EmployeeDetailsForm } from "features/employee-manager/components";
 import { getEmployeeDetails } from "features/employee-manager/employeeManager";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export default function EmployeeDetails() {
      const { employeeId } = useParams();
 
-     const history = useHistory();
-     const location = useLocation();
      const dispatch = useDispatch();
-     const [isLoading, setIsLoading] = useState(false);
+     const [isLoading, setIsLoading] = useState(true);
 
      useEffect(() => {
           dispatch(getEmployeeDetails(employeeId))
@@ -25,8 +23,9 @@ export default function EmployeeDetails() {
                });
      }, [dispatch, employeeId]);
 
-     if (isLoading) {
-          return <LoadingSpinner isFullscreen />;
-     }
-     return <EmployeeDetailsForm isCreateMode={false}/>;
+     return (
+          <Spin spinning={isLoading}>
+               <EmployeeDetailsForm isCreateMode={false} />
+          </Spin>
+     );
 }

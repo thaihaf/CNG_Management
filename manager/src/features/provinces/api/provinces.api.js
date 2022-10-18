@@ -3,7 +3,6 @@ import { ProvincesEndPoint } from "../provinces";
 
 const getProvinces = async () => {
      const url = ProvincesEndPoint.LIST_PROVINCES;
-
      return fetch(url).then((response) => response.json());
 };
 const getProvince = async (id) => {
