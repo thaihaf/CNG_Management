@@ -1,40 +1,40 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CODE_ERROR } from "constants/errors.constants";
-import { SUPPLIER_KEY } from "../constants/supplier.key";
+import { BRAND_KEY } from "../constants/brand.key";
 
-import api from "../api/supplier.api";
+import api from "../api/brand.api";
 
-export const SUPPLIERS_FEATURE_KEY = SUPPLIER_KEY;
+export const BRANDS_FEATURE_KEY = BRAND_KEY;
 
-export const getSuppliers = createAsyncThunk(
-  "supplier/getSuppliers",
+export const getBrands = createAsyncThunk(
+  "brand/getBrands",
   async () => {
-    const response = await api.getSuppliers();
+    const response = await api.getBrands();
     console.log(response);
     return response.data;
   }
 );
-export const createSupplier = createAsyncThunk(
-  "supplier/createSupplier",
+export const createBrand = createAsyncThunk(
+  "brand/createBrand",
   async ({ data }, { rejectWithValue }) => {
     try {
-      const response = await api.createSupplier(data);
+      const response = await api.createBrand(data);
       return response;
     } catch (error) {
       throw rejectWithValue(error);
     }
   }
 );
-export const getSupplierDetails = createAsyncThunk(
-  "supplier/getSupplierDetails",
+export const getBrandDetails = createAsyncThunk(
+  "brand/getBrandDetails",
   async (id) => {
-    const response = await api.getSupplierDetails(id);
+    const response = await api.getBrandDetails(id);
     return response.data;
   }
 );
 
 export const updateDetails = createAsyncThunk(
-  "supplier/updateDetails",
+  "brand/updateDetails",
   async ({ id, data }, { rejectWithValue }) => {
        console.log(id);
        console.log(data);
@@ -48,7 +48,7 @@ export const updateDetails = createAsyncThunk(
 );
 
 export const createDetails = createAsyncThunk(
-  "supplier/createDetails",
+  "brand/createDetails",
   async ({ data }, { rejectWithValue }) => {
        try {
             const response = await api.createDetails(data);
@@ -60,7 +60,7 @@ export const createDetails = createAsyncThunk(
 );
 
 const initialState = {
-  listSuppliers: [],
+  listBrands: [],
   totalElements: 0,
   totalPages: 0,
   size: 0,
@@ -69,8 +69,8 @@ const initialState = {
   createMode: false,
 };
 
-const supplierSlice = createSlice({
-  name: SUPPLIERS_FEATURE_KEY,
+const brandSlice = createSlice({
+  name: BRANDS_FEATURE_KEY,
   initialState,
   reducers: {
     updateErrorProcess: (state, action) => {
@@ -78,25 +78,25 @@ const supplierSlice = createSlice({
     },
   },
   extraReducers: {
-    [getSuppliers.fulfilled]: (state, action) => {
-      state.listSuppliers = action.payload.content;
+    [getBrands.fulfilled]: (state, action) => {
+      state.listBrands = action.payload.content;
       state.totalElements = action.payload.totalElements;
       state.totalPages = action.payload.totalPages;
       state.size = action.payload.size;
     },
-    [createSupplier.fulfilled]: (state, action) => {
+    [createBrand.fulfilled]: (state, action) => {
       state.errorProcess = "";
     },
-    [getSupplierDetails.fulfilled]: (state, action) => {
+    [getBrandDetails.fulfilled]: (state, action) => {
       state.dataDetails = action.payload;
       state.errorProcess = "";
       state.createMode = false;
     },
-    [getSupplierDetails.rejected]: (state, action) => {
+    [getBrandDetails.rejected]: (state, action) => {
       state.createMode = true;
     },
   },
 });
-export const { updateErrorProcess, updateDataDetails } = supplierSlice.actions;
+export const { updateErrorProcess, updateDataDetails } = brandSlice.actions;
 
-export const suppliersReducer = supplierSlice.reducer;
+export const brandsReducer = brandSlice.reducer;

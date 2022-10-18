@@ -1,7 +1,8 @@
 import React from "react";
+
 import { SupplierManagerPaths } from "../constants/supplier-manager.paths";
 
-const SupplierList = React.lazy(() =>
+const SupplierListScreen = React.lazy(() =>
   import("../screens/SupplierList/SupplierList")
 );
 // const CreateSupplier = React.lazy(() =>
@@ -10,11 +11,11 @@ const SupplierList = React.lazy(() =>
 const SupplierDetailsScreen = React.lazy(() =>
   import("../screens/SupplierDetails/SupplierDetails")
 );
-
+// const ProfileScreen = React.lazy(() => import("../screens/Profile/Profile"));
 const SUPPLIER_LIST_SCREEN = {
   id: "supplier-list",
   path: SupplierManagerPaths.SUPPLIER_LIST,
-  component: SupplierList,
+  component: SupplierListScreen,
   isPrivateRoute: true,
   pageTitle: "Supplier Manager",
 };

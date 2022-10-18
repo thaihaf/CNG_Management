@@ -225,7 +225,7 @@ function EmployeeDetailsForm() {
                                         {
                                              max: 12,
                                              message: getMessage(
-                                                  CODE_ERROR.ERROR_MAX_LENGTH,
+                                                  CODE_ERROR.ERROR_NUMBER_MAX,
                                                   MESSAGE_ERROR,
                                                   "Number ID",
                                                   12
@@ -234,18 +234,10 @@ function EmployeeDetailsForm() {
                                         {
                                              min: 8,
                                              message: getMessage(
-                                                  CODE_ERROR.ERROR_MIN_LENGTH,
+                                                  CODE_ERROR.ERROR_NUMBER_MIN,
                                                   MESSAGE_ERROR,
                                                   "Number ID",
                                                   8
-                                             ),
-                                        },
-                                        {
-                                             pattern: /^[0-9]*$/,
-                                             message: getMessage(
-                                                  CODE_ERROR.ERROR_NUMBER,
-                                                  MESSAGE_ERROR,
-                                                  "Number ID"
                                              ),
                                         },
                                    ]}
@@ -254,7 +246,7 @@ function EmployeeDetailsForm() {
                               </Form.Item>
                               {!createMode && (
                                    <Form.Item
-                                        label={<Text>Active Status</Text>}
+                                        label={<Text>Status</Text>}
                                         className="details__item"
                                    >
                                         <Switch
@@ -266,7 +258,6 @@ function EmployeeDetailsForm() {
                                              onChange={(checked) =>
                                                   setStatus(checked)
                                              }
-                                             disabled={true}
                                         />
                                    </Form.Item>
                               )}
@@ -289,7 +280,7 @@ function EmployeeDetailsForm() {
                                         {
                                              max: 10,
                                              message: getMessage(
-                                                  CODE_ERROR.ERROR_MAX_LENGTH,
+                                                  CODE_ERROR.ERROR_NUMBER_MAX,
                                                   MESSAGE_ERROR,
                                                   "Firstname",
                                                   10
@@ -298,7 +289,7 @@ function EmployeeDetailsForm() {
                                         {
                                              min: 2,
                                              message: getMessage(
-                                                  CODE_ERROR.ERROR_MIN_LENGTH,
+                                                  CODE_ERROR.ERROR_NUMBER_MIN,
                                                   MESSAGE_ERROR,
                                                   "Firstname",
                                                   2
@@ -324,7 +315,7 @@ function EmployeeDetailsForm() {
                                         {
                                              max: 10,
                                              message: getMessage(
-                                                  CODE_ERROR.ERROR_MAX_LENGTH,
+                                                  CODE_ERROR.ERROR_NUMBER_MAX,
                                                   MESSAGE_ERROR,
                                                   "Lastname",
                                                   10
@@ -333,7 +324,7 @@ function EmployeeDetailsForm() {
                                         {
                                              min: 2,
                                              message: getMessage(
-                                                  CODE_ERROR.ERROR_MIN_LENGTH,
+                                                  CODE_ERROR.ERROR_NUMBER_MIN,
                                                   MESSAGE_ERROR,
                                                   "Lastname",
                                                   2
@@ -385,20 +376,12 @@ function EmployeeDetailsForm() {
                                              ),
                                         },
                                         {
-                                             len: 10,
+                                             max: 50,
                                              message: getMessage(
-                                                  CODE_ERROR.ERROR_LENGTH,
+                                                  CODE_ERROR.ERROR_NUMBER_MAX,
                                                   MESSAGE_ERROR,
                                                   "Lastname",
-                                                  10
-                                             ),
-                                        },
-                                        {
-                                             pattern: /^[0-9]*$/,
-                                             message: getMessage(
-                                                  CODE_ERROR.ERROR_NUMBER,
-                                                  MESSAGE_ERROR,
-                                                  "Number ID"
+                                                  50
                                              ),
                                         },
                                    ]}
@@ -455,7 +438,6 @@ function EmployeeDetailsForm() {
                                    ]}
                               >
                                    <Select
-                                        labelInValue
                                         showSearch
                                         style={{
                                              width: 200,
@@ -535,7 +517,6 @@ function EmployeeDetailsForm() {
                                    ]}
                               >
                                    <Select
-                                        labelInValue
                                         showSearch
                                         style={{
                                              width: 200,
@@ -585,13 +566,15 @@ function EmployeeDetailsForm() {
                                    ]}
                               >
                                    <Select
-                                        labelInValue
                                         showSearch
                                         style={{
                                              width: 200,
                                         }}
                                         onChange={(value, e) => {
                                              console.log(value.value);
+                                             // dispatch(
+                                             // 		 getDistrict(value.key)
+                                             // );
                                         }}
                                         placeholder="Search to Select"
                                         optionFilterProp="children"
