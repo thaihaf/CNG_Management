@@ -82,10 +82,12 @@
      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 .info {
-     margin-left: auto;
      display: flex;
      align-items: center;
-     gap: 2rem;
+     justify-content: center;
+     grid-gap: 2rem;
+     gap: 1rem;
+     padding: 2rem;
 }
 .info_avt {
      width: 4.5rem;
@@ -93,7 +95,6 @@
      overflow: hidden;
      object-fit: contain;
      border-radius: 50%;
-     margin: 2rem 0;
      display: flex;
      align-items: center;
      justify-content: center;
@@ -115,13 +116,13 @@
 .info_fullname,
 .info_role {
      line-height: 24px;
+     text-align: center;
 }
 
 .info_role {
      background-color: $primary-color;
      width: 100%;
-     text-align: center;
-     border-radius: 0.5rem;
+     border-radius: 1rem;
      padding: 0 2rem;
 }
 
@@ -140,11 +141,53 @@
      box-shadow: rgb(149 157 165 / 20%) 0px 8px 24px;
      border-radius: 2rem;
 }
+.top2 {
+     position: relative;
+     width: 100%;
+     height: min-content;
+}
+.breadcrumb {
+     padding: 16px 3rem !important;
+     background: white;
+     margin-bottom: 2rem !important;
+     border-radius: 2rem;
+     box-shadow: rgb(149 157 165 / 20%) 0px 8px 24px;
+}
+.logout {
+     position: absolute;
+     right: 6rem;
+     top: 1.3rem;
+     width: 2.5rem;
+     height: 2.5rem;
+     cursor: pointer;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     gap: 1rem;
+}
+.ant-modal-content {
+     border-radius: 2rem !important;
+}
+.ant-modal-content {
+     border-radius: 2rem !important;
 
-.breadcrumb{
-	padding: 16px 3rem !important;
-    background: white;
-    margin-bottom: 2rem !important;
-    border-radius: 2rem;
-		box-shadow: rgb(149 157 165 / 20%) 0px 8px 24px;
+     .ant-modal-header {
+          border-radius: 2rem 2rem 0 0 !important;
+     }
+     .ant-modal-body {
+          padding: 20px 35px !important;
+     }
+     .img-crop-modal .img-crop-container {
+          border-radius: 2rem !important;
+     }
+     .ant-modal-footer {
+          padding: 20px 35px !important;
+
+          .ant-btn {
+               border-radius: 2rem !important;
+               padding: 0.5rem 4rem !important;
+               width: fit-content !important;
+               height: fit-content !important;
+          }
+     }
 }

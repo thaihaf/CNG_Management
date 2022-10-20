@@ -23,8 +23,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 100%;
 }
 .details .details__left .details__avatar .item_choose-avt {
   position: absolute;

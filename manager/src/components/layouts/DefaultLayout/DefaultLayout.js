@@ -9,7 +9,7 @@ import {
      SettingTwoTone,
 } from "@ant-design/icons";
 
-import { Breadcrumb, Dropdown, Layout, Menu } from "antd";
+import { Breadcrumb, Dropdown, Layout, Menu, Tooltip } from "antd";
 import { Footer } from "components";
 
 import "./DefaultLayout.css";
@@ -20,15 +20,17 @@ import logo5 from "assets/images/logo5.png";
 import logo3 from "assets/images/logo3.png";
 import avt from "assets/images/avt.jpg";
 import { useHistory, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AuthPaths } from "features/auth/auth";
-
+import logout from "assets/images/logout.png";
+import { postLogout } from "features/auth/auth";
 const { Header, Content, Sider } = Layout;
 
 const DefaultLayout = ({ children }) => {
      const [collapsed, setCollapsed] = useState(false);
      const { userName, role } = useSelector((state) => state.auth);
 
+     const dispatch = useDispatch();
      const history = useHistory();
      const location = useLocation();
 
@@ -42,47 +44,11 @@ const DefaultLayout = ({ children }) => {
           history.push(`/${key}`);
      };
 
-     const menu = (
-          <Menu
-               items={[
-                    {
-                         key: "1",
-                         label: (
-                              <a
-                                   href="https://www.antgroup.com"
-                                   className="menu-item"
-                              >
-                                   <ProfileTwoTone />
-                                   <span>Profile</span>
-                              </a>
-                         ),
-                    },
-                    {
-                         key: "2",
-                         label: (
-                              <a
-                                   href="https://www.aliyun.com"
-                                   className="menu-item"
-                              >
-                                   <SettingTwoTone />
-                                   <span>Setting</span>
-                              </a>
-                         ),
-                    },
-                    {
-                         key: "3",
-                         label: (
-                              <a href={AuthPaths.LOGOUT} className="menu-item">
-                                   <LogoutOutlined
-                                        style={{ color: "#52c41a" }}
-                                   />
-                                   <span>Logout</span>
-                              </a>
-                         ),
-                    },
-               ]}
-          />
-     );
+     const handleLogout = () => {
+          dispatch(postLogout());
+          localStorage.removeItem("persist:auth");
+          history.push(AuthPaths.LOGIN);
+     };
 
      return (
           <Layout className="defaultLayout">
@@ -128,7 +94,7 @@ const DefaultLayout = ({ children }) => {
                               onClick={(item) => getSelect(item)}
                          />
 
-                         <span className="toggleSidebar">
+                         {/* <span className="toggleSidebar">
                               {collapsed ? (
                                    <MenuUnfoldOutlined
                                         style={{
@@ -144,47 +110,81 @@ const DefaultLayout = ({ children }) => {
                                         onClick={() => setCollapsed(!collapsed)}
                                    />
                               )}
-                         </span>
+                         </span> */}
+
+                         <div className="info">
+                              <div className="info_avt">
+                                   <img
+                                        src={avt}
+                                        alt=""
+                                        className="info_avt_img"
+                                   />
+                              </div>
+
+                              <div className="info_detail">
+                                   <div className="info_fullname">
+                                        {userName}
+                                   </div>
+                                   <div className="info_role">{role}</div>
+                              </div>
+                         </div>
                     </div>
                </Sider>
 
                <Layout className="wrapper_layout">
-                    {/* <Header className="header">
-                         <Dropdown overlay={menu} placement="bottomLeft" arrow>
-                              <div className="info">
-                                   <div className="info_avt">
-                                        <img
-                                             src={avt}
-                                             alt=""
-                                             className="info_avt_img"
-                                        />
-                                   </div>
-
-                                   <div className="info_detail">
-                                        <div className="info_fullname">
-                                             {userName}
-                                        </div>
-                                        <div className="info_role">{role}</div>
-                                   </div>
-                              </div>
-                         </Dropdown>
-                    </Header> */}
-
                     <Layout
                          style={{
                               padding: "3rem 24px 24px",
                               minHeight: "100vh",
                          }}
                     >
-                         <Breadcrumb className="breadcrumb">
-                              <Breadcrumb.Item href="/">
-                                   <HomeOutlined /> Home
-                              </Breadcrumb.Item>
-                              <Breadcrumb.Item href="/employee">
-                                   Employee List
-                              </Breadcrumb.Item>
-                              <Breadcrumb.Item>App</Breadcrumb.Item>
-                         </Breadcrumb>
+                         <div className="top2">
+                              <Breadcrumb className="breadcrumb">
+                                   {location.pathname
+                                        .split("/")
+                                        .map((item, index) => {
+                                             if (index === 0) {
+                                                  return (
+                                                       <Breadcrumb.Item
+                                                            href={`/${item}`}
+                                                            key={item}
+                                                       >
+                                                            <HomeOutlined />{" "}
+                                                            Home
+                                                       </Breadcrumb.Item>
+                                                  );
+                                             }
+                                             return (
+                                                  <Breadcrumb.Item
+                                                       href={`/${item}`}
+                                                       key={`/${item}`}
+                                                  >
+                                                       {item
+                                                            .split(" ")
+                                                            .map((word) => {
+                                                                 return (
+                                                                      word[0].toUpperCase() +
+                                                                      word.substring(
+                                                                           1
+                                                                      )
+                                                                 );
+                                                            })
+                                                            .join(" ")}
+                                                  </Breadcrumb.Item>
+                                             );
+                                        })}
+                              </Breadcrumb>
+
+                              <Tooltip placement="bottomRight" title={"Logout"}>
+                                   <div
+                                        className="logout"
+                                        onClick={handleLogout}
+                                   >
+                                        <img src={logout} alt="" />
+                                        <span> Logout</span>
+                                   </div>
+                              </Tooltip>
+                         </div>
 
                          <Content className="content">{children}</Content>
 
@@ -195,4 +195,4 @@ const DefaultLayout = ({ children }) => {
      );
 };
 
-export default DefaultLayout;
+export default React.memo(DefaultLayout);
