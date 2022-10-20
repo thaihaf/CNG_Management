@@ -66,8 +66,8 @@ function EmployeeDetailsForm() {
 
           const imgRef = ref(storage, `images/${file.name + v4()}`);
           uploadBytes(imgRef, file).then((snapshot) => {
-               console.log(snapshot);
                getDownloadURL(snapshot.ref).then((url) => {
+                    setIsLoading(false);
                     setImgUrl(url);
                });
           });
@@ -154,7 +154,7 @@ function EmployeeDetailsForm() {
      useEffect(() => {
           form.setFieldsValue(initialValues);
           if (!createMode && initialValues !== null) {
-               setImgUrl(initialValues.fileAttachDTO.filePath);
+               setImgUrl(initialValues.fileAttachDTO?.filePath);
           }
      }, [dispatch, createMode, initialValues]);
 
@@ -170,7 +170,7 @@ function EmployeeDetailsForm() {
                               <div className="details__avatar-img">
                                    <img
                                         src={
-                                             imgURL === null || imgURL === ""
+                                             !imgURL || imgURL === ""
                                                   ? avt_default
                                                   : imgURL
                                         }
@@ -197,6 +197,7 @@ function EmployeeDetailsForm() {
                                              listType="picture-card"
                                              maxCount={1}
                                              beforeUpload={(file) => {
+                                                  setIsLoading(true);
                                                   return new Promise(
                                                        (resolve) => {
                                                             const reader =

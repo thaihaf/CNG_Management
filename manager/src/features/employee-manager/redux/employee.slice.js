@@ -127,6 +127,9 @@ const employeesSlice = createSlice({
           [getEmployeeDetails.rejected]: (state, action) => {
                state.createMode = true;
           },
+          [createDetails.fulfilled]: (state, action) => {
+               state.createMode = false;
+          },
           [getAccounts.fulfilled]: (state, action) => {
                state.listAccounts = action.payload.content;
                state.totalElements = action.payload.totalElements;

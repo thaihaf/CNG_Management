@@ -19,6 +19,7 @@ export const postLogin = createAsyncThunk(
           }
      }
 );
+
 export const forgotPassword = createAsyncThunk(
      "auth/forgotPassword",
      async ({ data }, { rejectWithValue }) => {
@@ -78,6 +79,14 @@ const authenSlice = createSlice({
           updateUserName: (state, action) => {
                state.userName = action.payload;
           },
+          postLogout: (state, action) => {
+               state.accessToken = "";
+               state.errorLogin = "";
+               state.isSignedIn = false;
+               state.userName = null;
+               state.role = null;
+               state.id = null;
+          },
      },
      extraReducers: (builder) => {
           builder.addCase(postLogin.fulfilled, (state, action) => {
@@ -103,7 +112,7 @@ const authenSlice = createSlice({
      },
 });
 
-export const { updateAccessToken, updateError, updateUserName } =
+export const { updateAccessToken, updateError, updateUserName, postLogout } =
      authenSlice.actions;
 
 const authConfig = {

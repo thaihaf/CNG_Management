@@ -39,6 +39,7 @@ import {
      deleteEmployees,
 } from "features/employee-manager/employeeManager";
 
+import avt_default from "assets/images/avt-default.png";
 import "./EmployeeList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
@@ -268,7 +269,16 @@ export default function EmployeeList() {
                dataIndex: "avatar",
                key: "avatar",
                align: "center",
-               render: (s) => <Avatar size={50} icon={<UserOutlined />} />,
+               render: (_, record) => (
+                    <Avatar
+                         size={50}
+                         src={
+                              record.fileAttachDTO.filePath === ""
+                                   ? avt_default
+                                   : record.fileAttachDTO.filePath
+                         }
+                    />
+               ),
           },
           {
                title: "Firstname",
