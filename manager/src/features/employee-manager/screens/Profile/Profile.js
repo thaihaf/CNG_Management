@@ -19,6 +19,8 @@ export default function Profile() {
      const location = useLocation();
      const dispatch = useDispatch();
 
+     const [isRefresh, setIsRefresh] = useState(false);
+
      const info = () => {
           Modal.info({
                title: "Your account dont have infomation details",
@@ -35,9 +37,10 @@ export default function Profile() {
           dispatch(getEmployeeDetails(id))
                .then(unwrapResult)
                .catch((error) => {
-                    if (!createMode) {
+                    if (!createMode && !isRefresh) {
                          info();
                     }
+                    setIsRefresh(true);
                });
      }, [dispatch, id]);
 
