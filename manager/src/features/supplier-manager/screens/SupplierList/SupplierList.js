@@ -10,6 +10,8 @@ import {
   CameraOutlined,
   DownloadOutlined,
   LockOutlined,
+  DeleteTwoTone,
+  ExclamationCircleOutlined,
   SearchOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -34,6 +36,8 @@ import {
 import {
   SupplierManagerPaths,
   getSuppliers,
+  deleteSupplier,
+  deleteSuppliers,
 } from "features/supplier-manager/supplierManager";
 
 import "./SupplierList.css";
@@ -59,7 +63,7 @@ export default function SupplierList() {
   );
   const { provinces, districts, wards } = useSelector(
     (state) => state.provinces
-);
+  );
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -71,7 +75,86 @@ export default function SupplierList() {
   const [searchText, setSearchText] = useState("");
   const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const searchInput = useRef(null);
+
+  const onSelectChange = (newSelectedRowKeys) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    selections: [
+      Table.SELECTION_ALL,
+      Table.SELECTION_INVERT,
+      Table.SELECTION_NONE,
+      {
+        key: "odd",
+        text: "Select Odd Row",
+        onSelect: (changableRowKeys) => {
+          let newSelectedRowKeys = [];
+          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
+            if (index % 2 !== 0) {
+              return false;
+            }
+            return true;
+          });
+          setSelectedRowKeys(newSelectedRowKeys);
+        },
+      },
+      {
+        key: "even",
+        text: "Select Even Row",
+        onSelect: (changableRowKeys) => {
+          let newSelectedRowKeys = [];
+          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
+            if (index % 2 !== 0) {
+              return true;
+            }
+            return false;
+          });
+          setSelectedRowKeys(newSelectedRowKeys);
+        },
+      },
+    ],
+  };
+
+  const onRowDelete = (record) => {
+    Modal.confirm({
+         title: "Confirm",
+         icon: <ExclamationCircleOutlined />,
+         content: "Delete can't revert, scarefully",
+         okText: "Delete",
+         cancelText: "Cancel",
+         onOk: () => {
+              setIsLoading(true);
+              dispatch(
+                   record
+                        ? deleteSupplier(record.id)
+                        : deleteSuppliers(selectedRowKeys)
+              )
+                   .then(unwrapResult)
+                   .then((res) => {
+                        console.log(res);
+                        dispatch(getProvinces())
+                             .then(unwrapResult)
+                             .then(() => setIsLoading(false));
+                   })
+                   .catch((error) => {
+                        console.log(error);
+                   });
+         },
+         onCancel: () => {},
+    });
+};
+  const onRowDetails = (record) => {
+    history.push(
+      SupplierManagerPaths.SUPPLIER_DETAIL.replace(
+        ":supplierId",
+        record.id || ""
+      )
+    );
+  };
 
   useEffect(() => {
     const query = queryString.parse(location.search);
@@ -184,27 +267,6 @@ export default function SupplierList() {
       ),
   });
 
-  const menu = (
-    <Menu
-      selectable
-      //   defaultSelectedKeys={['3']}
-      items={[
-        {
-          key: "1",
-          label: "View",
-        },
-        {
-          key: "2",
-          label: "Edit",
-        },
-        {
-          key: "3",
-          label: "Delete",
-        },
-      ]}
-    />
-  );
-
   const columns = [
     {
       title: "Avatar",
@@ -302,37 +364,57 @@ export default function SupplierList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      render: () => (
-        <Space size="middle">
-          <Dropdown overlay={menu}>
-            <a>
-              Action <DownOutlined />
-            </a>
-          </Dropdown>
-        </Space>
+      title: "Actions",
+      dataIndex: "operation",
+      key: "operation",
+      render: (_, record) => (
+        <Dropdown
+          overlay={
+            <Menu
+              items={[
+                {
+                  key: 1,
+                  label: "View Details and Update",
+                  onClick: () => onRowDetails(record),
+                },
+                {
+                  key: 2,
+                  label: "Delete Supplier",
+                  onClick: () => onRowDelete(record),
+                },
+              ]}
+            />
+          }
+        >
+          <a>
+            More <DownOutlined />
+          </a>
+        </Dropdown>
       ),
     },
   ];
+  const hasSelected = selectedRowKeys.length > 0;
 
-  const onRowClick = (record) => {
-    history.push(
-      SupplierManagerPaths.SUPPLIER_DETAIL.replace(
-        ":supplierId",
-        record.id || ""
-      )
-    );
-    console.log(record.id);
-  };
-
-  const onSubmitCreate = async ({ city, district, ward, ...args }) => {
+  const onSubmitCreate = async ({ apartmentNumber,city, district, ward, ...args }) => {
+    console.log(apartmentNumber)
     dispatch(
+
       createDetails({
         data: {
-          city: city.value,
-          district: district.value,
-          ward: ward.value,
+          address: {
+          city:
+            typeof city === "string" ? city : city.value,
+          district:
+            typeof district === "string"
+                 ? district
+                 : district.value,
+          ward:
+            typeof ward === "string" ? ward : ward.value,
+          apartmentNumber: apartmentNumber,
+       },
           ...args,
           status: 1,
+          
         },
       })
     )
@@ -352,318 +434,335 @@ export default function SupplierList() {
   useEffect(() => {
     dispatch(getProvinces());
     // setComponentDisabled(createMode);
-}, [dispatch]);
+  }, [dispatch]);
 
   return (
     <div className="employee-list">
       <div className="top">
         <Title level={2}>Supplier List</Title>
-        <Button
-          type="primary"
-          shape={"round"}
-          size={"large"}
-          onClick={() => setModal1Open(true)}
-        >
-          Create Supplier
-        </Button>
-
-        <Modal
-          title="Create New Supplier"
-          style={{ top: 20 }}
-          open={modal1Open}
-          onOk={() => setModal1Open(false)}
-          onCancel={() => setModal1Open(false)}
-          footer={[]}
-        >
-          <Form
-            form={form}
-            labelCol={{
-              span: 4,
+        <div>
+          <span
+            style={{
+              marginRight: 9,
             }}
-            wrapperCol={{
-              span: 14,
-            }}
-            layout="horizontal"
-            name="form"
-            colon={false}
-            onFinish={onSubmitCreate}
           >
-            <div className="details__group">
-              <Avatar size={64} icon={<UserOutlined />} />
-              <Form.Item
-                name="avatarSupplier"
-                label={<Text>Avatar Supplier</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "avatarSupplier"
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="Image Address" />
-              </Form.Item>
-            </div>
-            <div className="details__group">
-              <Form.Item
-                name="firstContactName"
-                label={<Text>First Contact Name</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "firstContactName"
-                    ),
-                  },
-                  {
-                    max: 20,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "firstContactName",
-                      20
-                    ),
-                  },
-                  {
-                    min: 2,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "firstContactName",
-                      2
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="FirstContactName" />
-              </Form.Item>
+            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+          </span>
+          <Button
+            className="btnDelete"
+            onClick={() => onRowDelete()}
+            disabled={!hasSelected}
+            loading={isLoading}
+            shape="round"
+            icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
+          >
+            Delete
+          </Button>
+          <Button
+            type="primary"
+            shape={"round"}
+            size={"large"}
+            onClick={() => setModal1Open(true)}
+          >
+            Create Supplier
+          </Button>
+          <Modal
+            title="Create New Supplier"
+            style={{ top: 20 }}
+            open={modal1Open}
+            onOk={() => setModal1Open(false)}
+            onCancel={() => setModal1Open(false)}
+            footer={[]}
+          >
+            <Form
+              form={form}
+              labelCol={{
+                span: 4,
+              }}
+              wrapperCol={{
+                span: 14,
+              }}
+              layout="horizontal"
+              name="form"
+              colon={false}
+              onFinish={onSubmitCreate}
+            >
+              <div className="details__group">
+                <Avatar size={64} icon={<UserOutlined />} />
+                <Form.Item
+                  name="avatarSupplier"
+                  label={<Text>Avatar Supplier</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "avatarSupplier"
+                      ),
+                    },
+                  ]}
+                >
+                  <Input placeholder="Image Address" />
+                </Form.Item>
+              </div>
+              <div className="details__group">
+                <Form.Item
+                  name="firstContactName"
+                  label={<Text>First Contact Name</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "firstContactName"
+                      ),
+                    },
+                    {
+                      max: 20,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "firstContactName",
+                        20
+                      ),
+                    },
+                    {
+                      min: 2,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "firstContactName",
+                        2
+                      ),
+                    },
+                  ]}
+                >
+                  <Input placeholder="FirstContactName" />
+                </Form.Item>
 
-              <Form.Item
-                name="lastContactName"
-                label={<Text>Last Contact Name</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "lastContactName"
-                    ),
-                  },
-                  {
-                    max: 20,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "lastContactName",
-                      20
-                    ),
-                  },
-                  {
-                    min: 2,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "lastContactName",
-                      2
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="LastContactName" />
-              </Form.Item>
-            </div>
-            <div className="details__group">
-              <Form.Item
-                name="bankName"
-                label={<Text>Bank Name</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "bankName"
-                    ),
-                  },
-                  {
-                    max: 25,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "bankName",
-                      25
-                    ),
-                  },
-                  {
-                    min: 2,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "bankName",
-                      8
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="BankName" />
-              </Form.Item>
+                <Form.Item
+                  name="lastContactName"
+                  label={<Text>Last Contact Name</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "lastContactName"
+                      ),
+                    },
+                    {
+                      max: 20,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "lastContactName",
+                        20
+                      ),
+                    },
+                    {
+                      min: 2,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "lastContactName",
+                        2
+                      ),
+                    },
+                  ]}
+                >
+                  <Input placeholder="LastContactName" />
+                </Form.Item>
+              </div>
+              <div className="details__group">
+                <Form.Item
+                  name="bankName"
+                  label={<Text>Bank Name</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "bankName"
+                      ),
+                    },
+                    {
+                      max: 25,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "bankName",
+                        25
+                      ),
+                    },
+                    {
+                      min: 2,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "bankName",
+                        8
+                      ),
+                    },
+                  ]}
+                >
+                  <Input placeholder="BankName" />
+                </Form.Item>
 
-              <Form.Item
-                name="bankAccountNumber"
-                label={<Text>Bank Account Number</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "bankAccountNumber"
-                    ),
-                  },
-                  {
-                    max: 9,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "bankAccountNumber",
-                      9
-                    ),
-                  },
-                  {
-                    min: 0,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "bankAccountNumber",
-                      0
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="BankAccountNumber" />
-              </Form.Item>
-            </div>
-            <div className="details__group">
-              <Form.Item
-                name="phoneNumberContact"
-                label={<Text>Phone Number Contact</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "phoneNumberContact"
-                    ),
-                  },
-                  {
-                    max: 10,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "phoneNumberContact",
-                      10
-                    ),
-                  },
-                  {
-                    min: 9,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "phoneNumberContact",
-                      9
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="PhoneNumberContact" />
-              </Form.Item>
+                <Form.Item
+                  name="bankAccountNumber"
+                  label={<Text>Bank Account Number</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "bankAccountNumber"
+                      ),
+                    },
+                    {
+                      max: 9,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "bankAccountNumber",
+                        9
+                      ),
+                    },
+                    {
+                      min: 0,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "bankAccountNumber",
+                        0
+                      ),
+                    },
+                  ]}
+                >
+                  <Input placeholder="BankAccountNumber" />
+                </Form.Item>
+              </div>
+              <div className="details__group">
+                <Form.Item
+                  name="phoneNumberContact"
+                  label={<Text>Phone Number Contact</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "phoneNumberContact"
+                      ),
+                    },
+                    {
+                      max: 10,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "phoneNumberContact",
+                        10
+                      ),
+                    },
+                    {
+                      min: 9,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "phoneNumberContact",
+                        9
+                      ),
+                    },
+                  ]}
+                >
+                  <Input placeholder="PhoneNumberContact" />
+                </Form.Item>
 
-              <Form.Item
-                name="supplierName"
-                label={<Text>Supplier Name</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "supplierName"
-                    ),
-                  },
-                  {
-                    max: 25,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "supplierName",
-                      25
-                    ),
-                  },
-                  {
-                    min: 3,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "supplierName",
-                      8
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="SupplierName" />
-              </Form.Item>
-            </div>
-            <div className="details__group">
-              <Form.Item
-                name="taxCode"
-                label={<Text>Tax Code</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "taxCode"
-                    ),
-                  },
-                  {
-                    max: 13,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "taxCode",
-                      13
-                    ),
-                  },
-                  {
-                    min: 10,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "taxCode",
-                      10
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="TaxCode" />
-              </Form.Item>
-              {/* <Form.Item
+                <Form.Item
+                  name="supplierName"
+                  label={<Text>Supplier Name</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "supplierName"
+                      ),
+                    },
+                    {
+                      max: 25,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "supplierName",
+                        25
+                      ),
+                    },
+                    {
+                      min: 3,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "supplierName",
+                        8
+                      ),
+                    },
+                  ]}
+                >
+                  <Input placeholder="SupplierName" />
+                </Form.Item>
+              </div>
+              <div className="details__group">
+                <Form.Item
+                  name="taxCode"
+                  label={<Text>Tax Code</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "taxCode"
+                      ),
+                    },
+                    {
+                      max: 13,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "taxCode",
+                        13
+                      ),
+                    },
+                    {
+                      min: 10,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "taxCode",
+                        10
+                      ),
+                    },
+                  ]}
+                >
+                  <Input placeholder="TaxCode" />
+                </Form.Item>
+                {/* <Form.Item
                 name="description"
                 label={<Text>Description</Text>}
                 className="details__item"
@@ -698,197 +797,194 @@ export default function SupplierList() {
               >
                 <Input placeholder="Description" />
               </Form.Item> */}
-            </div>
-            <div className="details__group">
-            <Form.Item
-                name="apartmentNumber"
-                label={<Text>Apartment Number</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "City"
-                    ),
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="city"
-                label={<Text>City</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "City"
-                    ),
-                  },
-                ]}
-              >
-                <Select
-                  labelInValue
-                  showSearch
-                  style={{
-                    width: 200,
-                  }}
-                  onChange={(value) => {
-                    dispatch(getProvince(value.key));
-                  }}
-                  placeholder="Search to Select"
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.children.includes(input)
-                  }
-                  filterSort={(optionA, optionB) =>
-                    optionA.children
-                      .toLowerCase()
-                      .localeCompare(optionB.children.toLowerCase())
-                  }
+              </div>
+              <div className="details__group">
+                <Form.Item
+                  name="apartmentNumber"
+                  label={<Text>Apartment Number</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "City"
+                      ),
+                    },
+                  ]}
                 >
-                  {provinces?.map((p) => {
-                    return (
-                      <Option value={p.name} key={p.code}>
-                        {`${p.name}`}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-            </div>
-            <div className="details__group">
-              <Form.Item
-                name="district"
-                label={<Text>District</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "District"
-                    ),
-                  },
-                ]}
-              >
-                <Select
-                  labelInValue
-                  showSearch
-                  style={{
-                    width: 200,
-                  }}
-                  onChange={(value, e) => {
-                    dispatch(getDistrict(value.key));
-                  }}
-                  placeholder="Search to Select"
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.children.includes(input)
-                  }
-                  filterSort={(optionA, optionB) =>
-                    optionA.children
-                      .toLowerCase()
-                      .localeCompare(optionB.children.toLowerCase())
-                  }
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name="city"
+                  label={<Text>City</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "City"
+                      ),
+                    },
+                  ]}
                 >
-                  {districts?.map((d) => {
-                    return (
-                      <Option value={d.name} key={d.code}>
-                        {`${d.name}`}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
+                  <Select
+                    labelInValue
+                    showSearch
+                    style={{
+                      width: 200,
+                    }}
+                    onChange={(value) => {
+                      dispatch(getProvince(value.key));
+                    }}
+                    placeholder="Search to Select"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      option.children.includes(input)
+                    }
+                    filterSort={(optionA, optionB) =>
+                      optionA.children
+                        .toLowerCase()
+                        .localeCompare(optionB.children.toLowerCase())
+                    }
+                  >
+                    {provinces?.map((p) => {
+                      return (
+                        <Option value={p.name} key={p.code}>
+                          {`${p.name}`}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </div>
+              <div className="details__group">
+                <Form.Item
+                  name="district"
+                  label={<Text>District</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "District"
+                      ),
+                    },
+                  ]}
+                >
+                  <Select
+                    labelInValue
+                    showSearch
+                    style={{
+                      width: 200,
+                    }}
+                    onChange={(value, e) => {
+                      dispatch(getDistrict(value.key));
+                    }}
+                    placeholder="Search to Select"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      option.children.includes(input)
+                    }
+                    filterSort={(optionA, optionB) =>
+                      optionA.children
+                        .toLowerCase()
+                        .localeCompare(optionB.children.toLowerCase())
+                    }
+                  >
+                    {districts?.map((d) => {
+                      return (
+                        <Option value={d.name} key={d.code}>
+                          {`${d.name}`}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
 
-              <Form.Item
-                name="ward"
-                label={<Text>Ward</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "Ward"
-                    ),
-                  },
-                ]}
-              >
-                <Select
-                  labelInValue
-                  showSearch
-                  style={{
-                    width: 200,
-                  }}
-                  onChange={(value, e) => {
-                    console.log(value.value);
-                    // dispatch(
-                    // 		 getDistrict(value.key)
-                    // );
-                  }}
-                  placeholder="Search to Select"
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option.children.includes(input)
-                  }
-                  filterSort={(optionA, optionB) =>
-                    optionA.children
-                      .toLowerCase()
-                      .localeCompare(optionB.children.toLowerCase())
-                  }
+                <Form.Item
+                  name="ward"
+                  label={<Text>Ward</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Ward"
+                      ),
+                    },
+                  ]}
                 >
-                  {wards?.map((w) => {
-                    return (
-                      <Option value={w.name} key={w.code}>
-                        {`${w.name}`}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-            </div>
-            <div className="btns">
-              <Button
-                key="back"
-                shape={"round"}
-                htmlType="reset"
-                onClick={() => {
-                  setModal1Open(false);
-                  form.resetFields();
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                key="submit"
-                shape={"round"}
-                type="primary"
-                htmlType="submit"
-              >
-                Submit
-              </Button>
-            </div>
-          </Form>
-        </Modal>
+                  <Select
+                    labelInValue
+                    showSearch
+                    style={{
+                      width: 200,
+                    }}
+                    onChange={(value, e) => {
+                      console.log(value.value);
+                      // dispatch(
+                      // 		 getDistrict(value.key)
+                      // );
+                    }}
+                    placeholder="Search to Select"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      option.children.includes(input)
+                    }
+                    filterSort={(optionA, optionB) =>
+                      optionA.children
+                        .toLowerCase()
+                        .localeCompare(optionB.children.toLowerCase())
+                    }
+                  >
+                    {wards?.map((w) => {
+                      return (
+                        <Option value={w.name} key={w.code}>
+                          {`${w.name}`}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </div>
+              <div className="btns">
+                <Button
+                  key="back"
+                  shape={"round"}
+                  htmlType="reset"
+                  onClick={() => {
+                    setModal1Open(false);
+                    form.resetFields();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  key="submit"
+                  shape={"round"}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Submit
+                </Button>
+              </div>
+            </Form>
+          </Modal>
+        </div>
       </div>
       <Table
         rowKey="id"
         columns={columns}
+        loading={isLoading}
         dataSource={listSuppliers}
-        onRow={(record) => ({
-          onClick: () => {
-            onRowClick(record);
-          },
-        })}
         pagination={
           listSuppliers.length !== 0
             ? {
@@ -904,7 +1000,7 @@ export default function SupplierList() {
               }
             : false
         }
-        loading={isLoading}
+        rowSelection={rowSelection}
       />
     </div>
   );

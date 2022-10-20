@@ -8,6 +8,7 @@ import {
   DownloadOutlined,
   HighlightOutlined,
   PlusOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
@@ -30,6 +31,7 @@ import {
   Typography,
   message,
   Spin,
+  Avatar,
 } from "antd";
 import {
   getSupplierDetails,
@@ -73,11 +75,28 @@ function SupplierDetailsForm() {
   };
   const initialValues = createMode ? defaultValues : dataDetails;
 
-  const onFinishUpdate = async ({ ...args }) => {
+  const onFinishUpdate = async ({
+    apartmentNumber,
+    city,
+    district,
+    ward,
+    ...args
+  }) => {
     dispatch(
       updateDetails({
         id: dataDetails.id,
         data: {
+          address: {
+            city:
+              typeof city === "string" ? city : city.value,
+            district:
+              typeof district === "string"
+                   ? district
+                   : district.value,
+            ward:
+              typeof ward === "string" ? ward : ward.value,
+            apartmentNumber: apartmentNumber,
+         },
           ...args,
           status: 1,
         },
@@ -141,7 +160,7 @@ function SupplierDetailsForm() {
             <circle cx="12" cy="11" r="3"></circle>
             <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"></path>
           </svg>
-          {`${dataDetails.district}, ${dataDetails.city}`}
+          {`${dataDetails.address.district}, ${dataDetails.address.city}`}
         </div>
 
         {dataDetails.status === 1 ? (
@@ -222,6 +241,16 @@ function SupplierDetailsForm() {
               name="avatarSupplier"
               label={<Text>Avatar Supplier</Text>}
               className="details__item"
+              rules={[
+                {
+                  required: true,
+                  message: getMessage(
+                    CODE_ERROR.ERROR_REQUIRED,
+                    MESSAGE_ERROR,
+                    "avatarSupplier"
+                  ),
+                },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -242,50 +271,21 @@ function SupplierDetailsForm() {
             >
               <Input />
             </Form.Item>
-            {/* <Form.Item
-                                             name="address"
-                                             label={
-                                                  <Text>Address</Text>
-                                             }
-                                             className="details__item"
-                                        >
-                                             <Input />
-                                        </Form.Item> */}
           </div>
 
           <div className="details__group">
             <Form.Item
-              name="addressId"
-              label={<Text>Apartment Number</Text>}
+              name="apartmentNumber"
+              label={<Text>Street</Text>}
               className="details__item"
-              rules={[
-                {
-                  required: true,
-                  message: getMessage(
-                    CODE_ERROR.ERROR_REQUIRED,
-                    MESSAGE_ERROR,
-                    "City"
-                  ),
-                },
-              ]}
             >
-              <Input />
+              <Input defaultValue={initialValues.address?.apartmentNumber} />
             </Form.Item>
 
             <Form.Item
               name="city"
               label={<Text>City</Text>}
               className="details__item"
-              rules={[
-                {
-                  required: true,
-                  message: getMessage(
-                    CODE_ERROR.ERROR_REQUIRED,
-                    MESSAGE_ERROR,
-                    "City"
-                  ),
-                },
-              ]}
             >
               <Select
                 labelInValue
@@ -293,6 +293,7 @@ function SupplierDetailsForm() {
                 style={{
                   width: 200,
                 }}
+                defaultValue={initialValues.address?.city}
                 onChange={(value) => {
                   dispatch(getProvince(value.key));
                 }}
@@ -323,16 +324,6 @@ function SupplierDetailsForm() {
               name="district"
               label={<Text>District</Text>}
               className="details__item"
-              rules={[
-                {
-                  required: true,
-                  message: getMessage(
-                    CODE_ERROR.ERROR_REQUIRED,
-                    MESSAGE_ERROR,
-                    "District"
-                  ),
-                },
-              ]}
             >
               <Select
                 labelInValue
@@ -340,6 +331,7 @@ function SupplierDetailsForm() {
                 style={{
                   width: 200,
                 }}
+                defaultValue={initialValues.address?.district}
                 onChange={(value, e) => {
                   dispatch(getDistrict(value.key));
                 }}
@@ -368,16 +360,6 @@ function SupplierDetailsForm() {
               name="ward"
               label={<Text>Ward</Text>}
               className="details__item"
-              rules={[
-                {
-                  required: true,
-                  message: getMessage(
-                    CODE_ERROR.ERROR_REQUIRED,
-                    MESSAGE_ERROR,
-                    "Ward"
-                  ),
-                },
-              ]}
             >
               <Select
                 labelInValue
@@ -385,11 +367,10 @@ function SupplierDetailsForm() {
                 style={{
                   width: 200,
                 }}
+                defaultValue={initialValues.address?.ward}
                 onChange={(value, e) => {
                   console.log(value.value);
-                  // dispatch(
-                  // 		 getDistrict(value.key)
-                  // );
+                  dispatch(getDistrict(value.key));
                 }}
                 placeholder="Search to Select"
                 optionFilterProp="children"

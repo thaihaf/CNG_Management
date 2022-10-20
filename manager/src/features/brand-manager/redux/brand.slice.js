@@ -46,6 +46,32 @@ export const updateDetails = createAsyncThunk(
        }
   }
 );
+export const deleteBrand = createAsyncThunk(
+  "brand/deleteBrand",
+  async (id, { rejectWithValue }) => {
+       try {
+            const response = await api.deleteBrand(id);
+            return response;
+       } catch (error) {
+            throw rejectWithValue(error);
+       }
+  }
+);
+export const deleteBrands = createAsyncThunk(
+  "brand/deleteBrands",
+  async (list, { rejectWithValue }) => {
+       try {
+            list.forEach(async (id) => {
+                 console.log(id);
+                 await api.deleteBrand(id);
+            });
+            return true;
+       } catch (error) {
+            console.log(error);
+            throw rejectWithValue(error);
+       }
+  }
+);
 
 export const createDetails = createAsyncThunk(
   "brand/createDetails",

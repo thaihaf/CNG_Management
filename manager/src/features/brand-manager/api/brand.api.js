@@ -27,10 +27,19 @@ const updateDetails = (id, data) => {
      );
      return api.put(url, data);
 };
+const deleteBrand = (id) => {
+     const url = BrandEndPoints.BRAND_DETAIL.replace(
+                   ":brandId",
+                   id || ""
+     );
+     return api.delete(url);
+};
 const brandApi = { 
      getBrands, 
      getBrandDetails,
      createBrand,
      createDetails,
-     updateDetails };
+     updateDetails,
+     deleteBrand
+};
 export default brandApi;
