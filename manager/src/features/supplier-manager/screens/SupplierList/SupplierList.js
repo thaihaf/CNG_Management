@@ -6,6 +6,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { DownOutlined } from "@ant-design/icons";
+import ImgCrop from "antd-img-crop";
 import {
   CameraOutlined,
   DownloadOutlined,
@@ -39,11 +40,14 @@ import {
   deleteSupplier,
   deleteSuppliers,
 } from "features/supplier-manager/supplierManager";
-
+import avt_default from "assets/images/avt-default.png";
 import "./SupplierList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
+import { storage } from "firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 import {
   updateErrorProcess,
   createSupplier,
@@ -61,6 +65,7 @@ export default function SupplierList() {
   const { listSuppliers, totalElements, totalPages, size } = useSelector(
     (state) => state.supplier
   );
+  const { dataDetails, createMode } = useSelector((state) => state.supplier);
   const { provinces, districts, wards } = useSelector(
     (state) => state.provinces
   );
@@ -72,11 +77,30 @@ export default function SupplierList() {
   const [componentDisabled, setComponentDisabled] = useState(true);
   const [modal1Open, setModal1Open] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [imgURL, setImgUrl] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const searchInput = useRef(null);
+
+  const defaultValues = {
+    status: 0,
+    gender: true,
+};
+  const initialValues = createMode ? defaultValues : dataDetails;
+
+  const upLoadImg = async (file) => {
+    if (file == null) return;
+
+    const imgRef = ref(storage, `images/${file.name + v4()}`);
+    uploadBytes(imgRef, file).then((snapshot) => {
+         getDownloadURL(snapshot.ref).then((url) => {
+              setIsLoading(false);
+              setImgUrl(url);
+         });
+    });
+};
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -121,32 +145,30 @@ export default function SupplierList() {
 
   const onRowDelete = (record) => {
     Modal.confirm({
-         title: "Confirm",
-         icon: <ExclamationCircleOutlined />,
-         content: "Delete can't revert, scarefully",
-         okText: "Delete",
-         cancelText: "Cancel",
-         onOk: () => {
-              setIsLoading(true);
-              dispatch(
-                   record
-                        ? deleteSupplier(record.id)
-                        : deleteSuppliers(selectedRowKeys)
-              )
-                   .then(unwrapResult)
-                   .then((res) => {
-                        console.log(res);
-                        dispatch(getProvinces())
-                             .then(unwrapResult)
-                             .then(() => setIsLoading(false));
-                   })
-                   .catch((error) => {
-                        console.log(error);
-                   });
-         },
-         onCancel: () => {},
+      title: "Confirm",
+      icon: <ExclamationCircleOutlined />,
+      content: "Delete can't revert, scarefully",
+      okText: "Delete",
+      cancelText: "Cancel",
+      onOk: () => {
+        setIsLoading(true);
+        dispatch(
+          record ? deleteSupplier(record.id) : deleteSuppliers(selectedRowKeys)
+        )
+          .then(unwrapResult)
+          .then((res) => {
+            console.log(res);
+            dispatch(getProvinces())
+              .then(unwrapResult)
+              .then(() => setIsLoading(false));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
+      onCancel: () => {},
     });
-};
+  };
   const onRowDetails = (record) => {
     history.push(
       SupplierManagerPaths.SUPPLIER_DETAIL.replace(
@@ -395,26 +417,26 @@ export default function SupplierList() {
   ];
   const hasSelected = selectedRowKeys.length > 0;
 
-  const onSubmitCreate = async ({ apartmentNumber,city, district, ward, ...args }) => {
-    console.log(apartmentNumber)
+  const onSubmitCreate = async ({
+    apartmentNumber,
+    city,
+    district,
+    ward,
+    ...args
+  }) => {
+    console.log(apartmentNumber);
     dispatch(
-
       createDetails({
         data: {
           address: {
-          city:
-            typeof city === "string" ? city : city.value,
-          district:
-            typeof district === "string"
-                 ? district
-                 : district.value,
-          ward:
-            typeof ward === "string" ? ward : ward.value,
-          apartmentNumber: apartmentNumber,
-       },
+            city: typeof city === "string" ? city : city.value,
+            district: typeof district === "string" ? district : district.value,
+            ward: typeof ward === "string" ? ward : ward.value,
+            apartmentNumber: apartmentNumber,
+          },
           ...args,
           status: 1,
-          
+          avatarSupplier: imgURL === null ? "" : imgURL,
         },
       })
     )
@@ -435,6 +457,13 @@ export default function SupplierList() {
     dispatch(getProvinces());
     // setComponentDisabled(createMode);
   }, [dispatch]);
+
+  useEffect(() => {
+    form.setFieldsValue(initialValues);
+    if (!createMode && initialValues !== null) {
+         setImgUrl(initialValues.avatarSupplier);
+    }
+}, [dispatch, createMode, initialValues]);
 
   return (
     <div className="employee-list">
@@ -488,24 +517,45 @@ export default function SupplierList() {
               onFinish={onSubmitCreate}
             >
               <div className="details__group">
-                <Avatar size={64} icon={<UserOutlined />} />
-                <Form.Item
-                  name="avatarSupplier"
-                  label={<Text>Avatar Supplier</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "avatarSupplier"
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Image Address" />
-                </Form.Item>
+                <div className="details__avatar">
+                  <div className="details__avatar-img">
+                    <img
+                      src={!imgURL || imgURL === "" ? avt_default : imgURL}
+                      alt="avt"
+                    />
+                  </div>
+                  <Form.Item
+                    valuePropName="fileList"
+                    className="item_choose-avt"
+                    name="avt"
+                  >
+                    <ImgCrop rotate>
+                      <Upload
+                        listType="picture-card"
+                        maxCount={1}
+                        beforeUpload={(file) => {
+                          setIsLoading(true);
+                          return new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                              if (reader.readyState === 2) {
+                                setImgUrl(reader.result);
+                                upLoadImg(file);
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          });
+                        }}
+                      >
+                        <CameraOutlined
+                          style={{
+                            fontSize: "2rem",
+                          }}
+                        />
+                      </Upload>
+                    </ImgCrop>
+                  </Form.Item>
+                </div>
               </div>
               <div className="details__group">
                 <Form.Item

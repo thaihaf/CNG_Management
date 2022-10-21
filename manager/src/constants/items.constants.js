@@ -55,4 +55,10 @@ export const siderBarItems = [
           label: `Settings`,
           role: ["admin", "employee"],
      },
+     {
+          key: "warehouse",
+          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Warehouse`,
+          role: ["admin", "employee"],
+     },
 ];
