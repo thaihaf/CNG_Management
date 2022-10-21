@@ -95,6 +95,9 @@ const brandSlice = createSlice({
     [getBrandDetails.rejected]: (state, action) => {
       state.createMode = true;
     },
+		["LOGOUT"]: (state) => {
+			Object.assign(state, initialState);
+ },
   },
 });
 export const { updateErrorProcess, updateDataDetails } = brandSlice.actions;

@@ -93,13 +93,15 @@
   align-items: center;
   justify-content: center;
   grid-gap: 2rem;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 2rem;
 }
 
 .info_avt {
   width: 4.5rem;
   height: 4.5rem;
+  min-width: 4.5rem;
+  min-height: 4.5rem;
   overflow: hidden;
   -o-object-fit: contain;
      object-fit: contain;
@@ -137,6 +139,7 @@
   width: 100%;
   border-radius: 1rem;
   padding: 0 2rem;
+  font-weight: bold;
 }
 
 .menu-item {
@@ -197,6 +200,14 @@
 .ant-modal-content .ant-modal-body {
   padding: 20px 35px !important;
 }
+.ant-modal-content .ant-modal-body .ant-spin-nested-loading {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 2rem;
+  padding: 1.5rem 0;
+}
+.ant-modal-content .ant-modal-body .ant-tabs-tabpane {
+  padding-right: 2rem;
+}
 .ant-modal-content .img-crop-modal .img-crop-container {
   border-radius: 2rem !important;
 }
@@ -212,4 +223,12 @@
   height: -webkit-fit-content !important;
   height: -moz-fit-content !important;
   height: fit-content !important;
+}
+
+.modalSetting .details__group .details__item {
+  width: 100% !important;
+}
+.modalSetting .details__group .details__item .ant-form-item-explain-error {
+  font-size: 1.2rem;
+  padding-left: 1rem;
 }/*# sourceMappingURL=DefaultLayout.css.map */
