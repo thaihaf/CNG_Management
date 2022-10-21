@@ -20,11 +20,21 @@ export const postLogin = createAsyncThunk(
      }
 );
 
+export const changePassword = createAsyncThunk(
+     "auth/changePassword",
+     async ({ data }, { rejectWithValue }) => {
+          try {
+               const response = await api.changePassword(data);
+               return response;
+          } catch (error) {
+               throw rejectWithValue(error.response.data.Error);
+          }
+     }
+);
 export const forgotPassword = createAsyncThunk(
      "auth/forgotPassword",
      async ({ data }, { rejectWithValue }) => {
           try {
-               console.log(data);
                const response = await api.forgotPassword(data);
                return response.data;
           } catch (error) {
@@ -36,7 +46,6 @@ export const verifyCode = createAsyncThunk(
      "auth/verifyCode",
      async ({ data }, { rejectWithValue }) => {
           try {
-               console.log(data);
                const response = await api.verifyCode(data);
                return response.data;
           } catch (error) {
@@ -48,10 +57,33 @@ export const resetPassword = createAsyncThunk(
      "auth/resetPassword",
      async ({ data }, { rejectWithValue }) => {
           try {
-               console.log(data);
                const response = await api.resetPassword(data);
                return response.data;
           } catch (error) {
+               throw rejectWithValue(error);
+          }
+     }
+);
+
+export const getAccountEmail = createAsyncThunk(
+     "auth/getAccountEmail",
+     async (_, { rejectWithValue }) => {
+          try {
+               const response = await api.getAccountEmail();
+               return response.data;
+          } catch (error) {
+               throw rejectWithValue(error);
+          }
+     }
+);
+export const getAccountAvatar = createAsyncThunk(
+     "auth/getAccountAvatar",
+     async (_, { rejectWithValue }) => {
+          try {
+               const response = await api.getAccountAvatar();
+               return response.data;
+          } catch (error) {
+               console.log(error);
                throw rejectWithValue(error);
           }
      }
@@ -62,6 +94,8 @@ const initialState = {
      errorLogin: "",
      isSignedIn: false,
      userName: null,
+     email: null,
+     avatar: null,
      role: null,
      id: null,
 };
@@ -79,14 +113,10 @@ const authenSlice = createSlice({
           updateUserName: (state, action) => {
                state.userName = action.payload;
           },
-          postLogout: (state, action) => {
-               state.accessToken = "";
-               state.errorLogin = "";
-               state.isSignedIn = false;
-               state.userName = null;
-               state.role = null;
-               state.id = null;
+          updateAvatar: (state, action) => {
+               state.avatar = action.payload;
           },
+          postLogout: () => initialState,
      },
      extraReducers: (builder) => {
           builder.addCase(postLogin.fulfilled, (state, action) => {
@@ -109,11 +139,25 @@ const authenSlice = createSlice({
           builder.addCase(forgotPassword.fulfilled, (state, action) => {
                console.log(action.payload);
           });
+          builder.addCase(getAccountEmail.fulfilled, (state, action) => {
+               state.email = action.payload.email;
+          });
+          builder.addCase(getAccountAvatar.fulfilled, (state, action) => {
+               state.avatar = action.payload.filePath;
+          });
+          builder.addCase("LOGOUT", (state) => {
+               Object.assign(state, initialState);
+          });
      },
 });
 
-export const { updateAccessToken, updateError, updateUserName, postLogout } =
-     authenSlice.actions;
+export const {
+     updateAccessToken,
+     updateError,
+     updateUserName,
+     postLogout,
+     updateAvatar,
+} = authenSlice.actions;
 
 const authConfig = {
      key: "auth",

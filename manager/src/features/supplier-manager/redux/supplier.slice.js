@@ -121,6 +121,9 @@ const supplierSlice = createSlice({
     [getSupplierDetails.rejected]: (state, action) => {
       state.createMode = true;
     },
+		["LOGOUT"]: (state) => {
+			Object.assign(state, initialState);
+ },
   },
 });
 export const { updateErrorProcess, updateDataDetails } = supplierSlice.actions;

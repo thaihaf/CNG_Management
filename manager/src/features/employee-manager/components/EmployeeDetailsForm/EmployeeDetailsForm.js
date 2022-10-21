@@ -26,6 +26,7 @@ import {
 import {
      createDetails,
      updateDetails,
+     getEmployeeDetails,
 } from "features/employee-manager/employeeManager";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -38,11 +39,14 @@ import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
 import { getDistrict, getProvince } from "features/provinces/provinces";
+import { useParams } from "react-router-dom";
+import { updateAvatar } from "features/auth/auth";
 const { Option } = Select;
 const { Text } = Typography;
 
 function EmployeeDetailsForm() {
      const { dataDetails, createMode } = useSelector((state) => state.employee);
+     const { email, role } = useSelector((state) => state.auth);
      const { provinces, districts, wards } = useSelector(
           (state) => state.provinces
      );
@@ -54,12 +58,6 @@ function EmployeeDetailsForm() {
      const [imgURL, setImgUrl] = useState(null);
      const [status, setStatus] = useState(null);
      const [birthDay, setBirthDay] = useState(null);
-
-     const defaultValues = {
-          status: 0,
-          gender: true,
-     };
-     const initialValues = createMode ? defaultValues : dataDetails;
 
      const upLoadImg = async (file) => {
           if (file == null) return;
@@ -103,14 +101,20 @@ function EmployeeDetailsForm() {
                )
                     .then(unwrapResult)
                     .then((res) => {
-                         console.log(res);
-                         setIsLoading(false);
-                         message.success("Create details success!");
+                         dispatch(getEmployeeDetails(res.id))
+                              .then(unwrapResult)
+                              .then((res) => {
+                                   dispatch(updateAvatar(imgURL));
+                              })
+                              .then(() => {
+                                   setIsLoading(false);
+                                   message.success("Create details success!");
+                              });
                     })
                     .catch((error) => {
                          console.log(error);
-                         message.error("Username or password not correct");
-                         //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
+                         setIsLoading(false);
+                         message.error("Check error in F12");
                     });
           } else {
                const bd = birthDay === null ? initialValues.birthDay : birthDay;
@@ -139,20 +143,37 @@ function EmployeeDetailsForm() {
                )
                     .then(unwrapResult)
                     .then((res) => {
-                         console.log(res);
-                         setIsLoading(false);
-                         message.success("Update success!");
+                         dispatch(getEmployeeDetails(dataDetails.id))
+                              .then(unwrapResult)
+                              .then((res) => {
+                                   if (role !== "admin") {
+                                        dispatch(updateAvatar(imgURL));
+                                   }
+                              })
+                              .then(() => {
+                                   setIsLoading(false);
+                                   message.success("Update details success!");
+                              });
                     })
                     .catch((error) => {
                          console.log(error);
-                         //  message.error("Username or password not correct");
+                         setIsLoading(false);
+                         message.error("Check error in F12");
                          //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
                     });
           }
      };
 
+     const defaultValues = {
+          status: 0,
+          gender: true,
+          email: email,
+     };
+     const initialValues = createMode ? defaultValues : dataDetails;
+
      useEffect(() => {
           form.setFieldsValue(initialValues);
+
           if (!createMode && initialValues !== null) {
                setImgUrl(initialValues.fileAttachDTO?.filePath);
           }

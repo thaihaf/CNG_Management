@@ -37,5 +37,5 @@ export const setAuthLocal = (auth) => {
 
 export const getIsLogin = () => {
      const auth = JSON.parse(localStorage.getItem("persist:auth"));
-     return auth.isSignedIn;
+     return auth?.isSignedIn;
 };
