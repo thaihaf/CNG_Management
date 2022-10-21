@@ -17,6 +17,26 @@ const resetPassword = (data) => {
      const url = AuthEndPoint.RESET_PASSWORD;
      return api.put(url, data);
 };
+const getAccountEmail = () => {
+     const url = AuthEndPoint.GET_ACCOUNT_EMAIL;
+     return api.get(url);
+};
+const getAccountAvatar = () => {
+     const url = AuthEndPoint.GET_ACCOUNT_AVATAR;
+     return api.get(url);
+};
+const changePassword = (data) => {
+     const url = AuthEndPoint.CHANGE_PASSWORD;
+     return api.put(url, data);
+};
 
-const authApi = { loginApi, forgotPassword, verifyCode, resetPassword };
+const authApi = {
+     loginApi,
+     forgotPassword,
+     verifyCode,
+     resetPassword,
+     getAccountEmail,
+     getAccountAvatar,
+		 changePassword
+};
 export default authApi;

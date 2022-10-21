@@ -1,6 +1,7 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Modal } from "antd";
 import { LoadingSpinner } from "components";
+import { getAccountEmail } from "features/auth/auth";
 import { EmployeeDetailsForm } from "features/employee-manager/components";
 import {
      getEmployeeDetails,
@@ -19,8 +20,6 @@ export default function Profile() {
      const location = useLocation();
      const dispatch = useDispatch();
 
-     const [isRefresh, setIsRefresh] = useState(false);
-
      const info = () => {
           Modal.info({
                title: "Your account dont have infomation details",
@@ -37,10 +36,12 @@ export default function Profile() {
           dispatch(getEmployeeDetails(id))
                .then(unwrapResult)
                .catch((error) => {
-                    if (!createMode && !isRefresh) {
-                         info();
-                    }
-                    setIsRefresh(true);
+                    dispatch(getAccountEmail())
+                         .then(unwrapResult)
+                         .then(() => {
+                              dispatch(getAccountEmail());
+                              info();
+                         });
                });
      }, [dispatch, id]);
 

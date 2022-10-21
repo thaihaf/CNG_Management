@@ -40,7 +40,7 @@ export default function LoginScreen() {
 
      useEffect(() => {
           const isLogin = getIsLogin();
-          if (isLogin == true) {
+          if (isLogin === true) {
                history.push(EmployeeManagerPaths.EMPLOYEE_LIST);
           }
      });

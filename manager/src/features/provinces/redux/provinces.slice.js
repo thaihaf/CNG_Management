@@ -49,6 +49,9 @@ const provincesSlice = createSlice({
           [getDistrict.fulfilled]: (state, action) => {
                state.wards = action.payload.wards;
           },
+          ["LOGOUT"]: (state) => {
+               Object.assign(state, initialState);
+          },
      },
 });
 

@@ -59,7 +59,6 @@ export const deleteEmployees = createAsyncThunk(
      async (list, { rejectWithValue }) => {
           try {
                list.forEach(async (id) => {
-                    console.log(id);
                     await api.deleteEmployee(id);
                });
                return true;
@@ -75,7 +74,7 @@ export const createDetails = createAsyncThunk(
      async ({ data }, { rejectWithValue }) => {
           try {
                const response = await api.createDetails(data);
-               return response;
+               return response.data;
           } catch (error) {
                throw rejectWithValue(error);
           }
@@ -125,6 +124,7 @@ const employeesSlice = createSlice({
                state.createMode = false;
           },
           [getEmployeeDetails.rejected]: (state, action) => {
+               state.dataDetails = null;
                state.createMode = true;
           },
           [createDetails.fulfilled]: (state, action) => {
@@ -135,6 +135,9 @@ const employeesSlice = createSlice({
                state.totalElements = action.payload.totalElements;
                state.totalPages = action.payload.totalPages;
                state.size = action.payload.size;
+          },
+          ["LOGOUT"]: (state) => {
+               Object.assign(state, initialState);
           },
      },
 });
