@@ -2,6 +2,7 @@ import { EMPLOYEE_MANAGER_ROUTES } from "features/employee-manager/employeeManag
 import { SUPPLIER_MANAGER_ROUTES } from "features/supplier-manager/supplierManager";
 import { BRAND_MANAGER_ROUTES } from "features/brand-manager/brandManager";
 import { WAREHOUSE_MANAGER_ROUTES } from "features/warehouse-manager/warehouseManager";
+import { CATEGORY_MANAGER_ROUTES } from "features/category-manager/categoryManager";
 import { AUTH_ROUTES } from "features/auth/auth";
 import { DASHBOARD_ROUTES } from "features/dashboard/dashboard";
 // import { NOTICE_ROUTES } from "features/notice/notice";
@@ -16,4 +17,5 @@ export const ROUTE_LIST = [
      ...SUPPLIER_MANAGER_ROUTES,
      ...BRAND_MANAGER_ROUTES,
      ...WAREHOUSE_MANAGER_ROUTES,
+     ...CATEGORY_MANAGER_ROUTES,
 ];
