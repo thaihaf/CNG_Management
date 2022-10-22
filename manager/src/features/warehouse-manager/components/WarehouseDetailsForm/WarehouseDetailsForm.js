@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import "./SupplierDetailsForm.css";
+import "./WarehouseDetailsForm.css";
 import avt_default from "assets/images/avt-default.png";
 import {
   CameraOutlined,
@@ -34,10 +34,10 @@ import {
   Avatar,
 } from "antd";
 import {
-  getSupplierDetails,
+  getWarehouseDetails,
   createDetails,
   updateDetails,
-} from "features/supplier-manager/supplierManager";
+} from "features/warehouse-manager/warehouseManager";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -58,8 +58,8 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { Paragraph, Text } = Typography;
 
-function SupplierDetailsForm() {
-  const { dataDetails, createMode } = useSelector((state) => state.supplier);
+function WarehouseDetailsForm() {
+  const { dataDetails, createMode } = useSelector((state) => state.warehouse);
   const { provinces, districts, wards } = useSelector(
     (state) => state.provinces
   );
@@ -80,18 +80,6 @@ function SupplierDetailsForm() {
   };
   const initialValues = createMode ? defaultValues : dataDetails;
 
-  const upLoadImg = async (file) => {
-    if (file == null) return;
-
-    const imgRef = ref(storage, `images/${file.name + v4()}`);
-    uploadBytes(imgRef, file).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setIsLoading(false);
-        setImgUrl(url);
-      });
-    });
-  };
-
   const onFinishUpdate = async ({
     apartmentNumber,
     city,
@@ -103,7 +91,7 @@ function SupplierDetailsForm() {
       updateDetails({
         id: dataDetails.id,
         data: {
-          address: {
+          addressDTO: {
             city: typeof city === "string" ? city : city.value,
             district: typeof district === "string" ? district : district.value,
             ward: typeof ward === "string" ? ward : ward.value,
@@ -111,7 +99,6 @@ function SupplierDetailsForm() {
           },
           ...args,
           status: 1,
-          avatarSupplier: imgURL === null ? "" : imgURL,
         },
       })
     )
@@ -133,9 +120,6 @@ function SupplierDetailsForm() {
   // }, [dispatch, createMode, initialValues]);
   useEffect(() => {
     form.setFieldsValue(initialValues);
-    if (!createMode && initialValues !== null) {
-      setImgUrl(initialValues.avatarSupplier);
-    }
   }, [dispatch, createMode, initialValues]);
 
   if (!initialValues) {
@@ -145,94 +129,6 @@ function SupplierDetailsForm() {
   return (
     <Spin spinning={isLoading}>
       <div className="details">
-        <div className="details__left">
-          <div className="details__avatar">
-            <div className="details__avatar-img">
-              <img
-                src={!imgURL || imgURL === "" ? avt_default : imgURL}
-                alt="avt"
-              />
-            </div>
-            <Form.Item
-              valuePropName="fileList"
-              className="item_choose-avt"
-              name="avt"
-              rules={[
-                {
-                  required: true,
-                  message: getMessage(
-                    CODE_ERROR.ERROR_REQUIRED,
-                    MESSAGE_ERROR,
-                    "Avatar"
-                  ),
-                },
-              ]}
-            >
-              <ImgCrop rotate>
-                <Upload
-                  listType="picture-card"
-                  maxCount={1}
-                  beforeUpload={(file) => {
-                    setIsLoading(true);
-                    return new Promise((resolve) => {
-                      const reader = new FileReader();
-                      reader.onload = () => {
-                        if (reader.readyState === 2) {
-                          setImgUrl(reader.result);
-                          upLoadImg(file);
-                        }
-                      };
-                      reader.readAsDataURL(file);
-                    });
-                  }}
-                >
-                  <CameraOutlined
-                    style={{
-                      fontSize: "2rem",
-                    }}
-                  />
-                </Upload>
-              </ImgCrop>
-            </Form.Item>
-          </div>
-          <>
-            <div className="details__fullname">
-              {`${dataDetails.firstContactName} ${dataDetails.lastContactName}`}
-            </div>
-            <div className="details__username">{`@${getUserName()}`}</div>
-
-            <div className="details__location">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="icon icon-tabler icon-tabler-map-pin"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-                stroke="currentColor"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <circle cx="12" cy="11" r="3"></circle>
-                <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"></path>
-              </svg>
-              {`${dataDetails.address.district}, ${dataDetails.address.city}`}
-            </div>
-
-            {dataDetails.status === 1 ? (
-              <Tag color="success" className="details__status">
-                Active
-              </Tag>
-            ) : (
-              <Tag color="error" className="details__status">
-                Inactive
-              </Tag>
-            )}
-          </>
-        </div>
-
         <div className="details__right">
           <Form
             form={form}
@@ -244,9 +140,37 @@ function SupplierDetailsForm() {
           >
             <div className="details__group">
               <Form.Item
-                name="supplierName"
-                label={<Text>Supplier Name</Text>}
+                name="warehouseName"
+                label={<Text>Warehouse Name</Text>}
                 className="details__item"
+                rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Warehouse Name"
+                      ),
+                    },
+                    {
+                      max: 25,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "Warehouse Name",
+                        25
+                      ),
+                    },
+                    {
+                      min: 2,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "Warehouse Name",
+                        2
+                      ),
+                    },
+                  ]}
               >
                 <Input />
               </Form.Item>
@@ -264,8 +188,8 @@ function SupplierDetailsForm() {
 
             <div className="details__group">
               <Form.Item
-                name="firstContactName"
-                label={<Text>First Contact Name</Text>}
+                name="noteWarehouse"
+                label={<Text>Note Warehouse</Text>}
                 className="details__item"
                 rules={[
                     {
@@ -273,16 +197,16 @@ function SupplierDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "First Contact Name"
+                        "Note Warehouse"
                       ),
                     },
                     {
-                      max: 10,
+                      max: 25,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "First Contact Name",
-                        10
+                        "Note Warehouse",
+                        25
                       ),
                     },
                     {
@@ -290,7 +214,7 @@ function SupplierDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "First Contact Name",
+                        "Note Warehouse",
                         2
                       ),
                     },
@@ -299,9 +223,8 @@ function SupplierDetailsForm() {
                 <Input />
               </Form.Item>
               <Form.Item
-                // name="firstContactName""lastContactName"
-                name="lastContactName"
-                label={<Text>Last Contact Name</Text>}
+                name="phoneNumber"
+                label={<Text>Phone Number</Text>}
                 className="details__item"
                 rules={[
                     {
@@ -309,45 +232,7 @@ function SupplierDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Last Contact Name"
-                      ),
-                    },
-                    {
-                      max: 20,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Last Contact Name",
-                        20
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Last Contact Name",
-                        2
-                      ),
-                    },
-                  ]}
-              >
-                <Input />
-              </Form.Item>
-            </div>
-
-            <div className="details__group">
-              <Form.Item
-                name="bankName"
-                label={<Text>Bank Name</Text>}
-                className="details__item"
-                rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Bank Name"
+                        "Phone Number"
                       ),
                     },
                     {
@@ -355,42 +240,7 @@ function SupplierDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Bank Name",
-                        10
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Bank Name",
-                        2
-                      ),
-                    },
-                  ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="phoneNumberContact"
-                label={<Text>Phone Number Contact</Text>}
-                className="details__item"
-                rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Phone Number Contact"
-                      ),
-                    },
-                    {
-                      max: 10,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Phone Number Contact",
+                        "Phone Number",
                         10
                       ),
                     },
@@ -399,7 +249,7 @@ function SupplierDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Phone Number Contact",
+                        "Phone Number",
                         9
                       ),
                     },
@@ -411,91 +261,8 @@ function SupplierDetailsForm() {
 
             <div className="details__group">
               <Form.Item
-                name="bankAccountNumber"
-                label={<Text>Bank Account Name</Text>}
-                className="details__item"
-                rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Bank Account Number"
-                      ),
-                    },
-                    {
-                      max: 14,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Bank Account Number",
-                        14
-                      ),
-                    },
-                    {
-                      min: 5,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Bank Account Number",
-                        5
-                      ),
-                    },
-                  ]}
-              >
-                <Input />
-              </Form.Item>
-            </div>
-
-            <div className="details__group">
-              <Form.Item
-                name="taxCode"
-                label={<Text>Tax Code</Text>}
-                className="details__item"
-                rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Tax Code"
-                      ),
-                    },
-                    {
-                      max: 13,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Tax Code",
-                        13
-                      ),
-                    },
-                    {
-                      min: 10,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Tax Code",
-                        10
-                      ),
-                    },
-                  ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="description"
-                label={<Text>Description</Text>}
-                className="details__item"
-              >
-                <Input />
-              </Form.Item>
-            </div>
-
-            <div className="details__group">
-              <Form.Item
                 name="apartmentNumber"
-                label={<Text>Street Name, House No</Text>}
+                label={<Text>Street</Text>}
                 className="details__item"
                 rules={[
                     {
@@ -503,12 +270,12 @@ function SupplierDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Street Name, House No"
+                        "Street"
                       ),
                     },
                   ]}
               >
-                <Input defaultValue={initialValues.address?.apartmentNumber} />
+                <Input defaultValue={initialValues.addressDTO?.apartmentNumber} />
               </Form.Item>
 
               <Form.Item
@@ -532,7 +299,7 @@ function SupplierDetailsForm() {
                   style={{
                     width: 200,
                   }}
-                  defaultValue={initialValues.address?.city}
+                  defaultValue={initialValues.addressDTO?.city}
                   onChange={(value) => {
                     dispatch(getProvince(value.key));
                   }}
@@ -580,7 +347,7 @@ function SupplierDetailsForm() {
                   style={{
                     width: 200,
                   }}
-                  defaultValue={initialValues.address?.district}
+                  defaultValue={initialValues.addressDTO?.district}
                   onChange={(value, e) => {
                     dispatch(getDistrict(value.key));
                   }}
@@ -626,7 +393,7 @@ function SupplierDetailsForm() {
                   style={{
                     width: 200,
                   }}
-                  defaultValue={initialValues.address?.ward}
+                  defaultValue={initialValues.addressDTO?.ward}
                   onChange={(value, e) => {
                     console.log(value.value);
                     dispatch(getDistrict(value.key));
@@ -694,4 +461,4 @@ function SupplierDetailsForm() {
   );
 }
 
-export default React.memo(SupplierDetailsForm);
+export default React.memo(WarehouseDetailsForm);

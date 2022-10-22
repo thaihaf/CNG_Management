@@ -446,7 +446,7 @@ export default function BrandList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "brandName"
+                        "Brand Name"
                       ),
                     },
                     {
@@ -454,7 +454,7 @@ export default function BrandList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "brandName",
+                        "Brand Name",
                         25
                       ),
                     },
@@ -463,7 +463,7 @@ export default function BrandList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "brandName",
+                        "Brand Name",
                         2
                       ),
                     },
@@ -482,25 +482,7 @@ export default function BrandList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "supplierId"
-                      ),
-                    },
-                    {
-                      max: 9,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "supplierId",
-                        9
-                      ),
-                    },
-                    {
-                      min: 0,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "supplierId",
-                        0
+                        "Supplier Id"
                       ),
                     },
                   ]}

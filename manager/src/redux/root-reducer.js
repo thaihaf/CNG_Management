@@ -14,6 +14,10 @@ import {
      BRANDS_FEATURE_KEY,
 } from "features/brand-manager/brandManager";
 import {
+     warehousesReducer,
+     WAREHOUSE_FEATURE_KEY,
+} from "features/warehouse-manager/warehouseManager";
+import {
      permissionsReducer,
      PERMISSIONS_FEATURE_KEY,
 } from "features/permissions/permission";
@@ -27,6 +31,7 @@ const rootReducer = combineReducers({
      [EMPLOYEES_FEATURE_KEY]: employeesReducer,
      [SUPPLIERS_FEATURE_KEY]: suppliersReducer,
      [BRANDS_FEATURE_KEY]: brandsReducer,
+     [WAREHOUSE_FEATURE_KEY]: warehousesReducer,
      [PERMISSIONS_FEATURE_KEY]: permissionsReducer,
      [PROVINCES_FEATURE_KEY]: provincesReducer,
 });

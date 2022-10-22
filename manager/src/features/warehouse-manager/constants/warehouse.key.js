@@ -1,0 +1,1 @@
+export const WAREHOUSE_KEY = "warehouse";

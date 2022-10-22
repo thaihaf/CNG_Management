@@ -129,25 +129,25 @@ function BrandDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_REQUIRED,
                     MESSAGE_ERROR,
-                    "brandName"
+                    "Brand Name"
                   ),
                 },
                 {
-                  max: 13,
+                  max: 25,
                   message: getMessage(
                     CODE_ERROR.ERROR_NUMBER_MAX,
                     MESSAGE_ERROR,
-                    "brandName",
-                    13
+                    "Brand Name",
+                    25
                   ),
                 },
                 {
-                  min: 1,
+                  min: 2,
                   message: getMessage(
                     CODE_ERROR.ERROR_NUMBER_MIN,
                     MESSAGE_ERROR,
-                    "brandName",
-                    1
+                    "Brand Name",
+                    2
                   ),
                 },
               ]}
@@ -158,6 +158,16 @@ function BrandDetailsForm() {
               name="supplierId"
               label={<Text>Supplier Id</Text>}
               className="details__item"
+              rules={[
+                {
+                  required: true,
+                  message: getMessage(
+                    CODE_ERROR.ERROR_REQUIRED,
+                    MESSAGE_ERROR,
+                    "Supplier Id"
+                  ),
+                },
+              ]}
             >
               <Input />
             </Form.Item>
