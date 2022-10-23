@@ -55,12 +55,14 @@ import {
   getProvinces,
 } from "features/provinces/provinces";
 import { ClassSharp } from "@mui/icons-material";
+import { getSuppliers } from "features/supplier-manager/supplierManager";
 const { Title, Text } = Typography;
 const { Option } = Select;
 export default function BrandList() {
   const { listBrands, totalElements, totalPages, size } = useSelector(
     (state) => state.brand
   );
+  const { listSuppliers } = useSelector((state) => state.supplier);
   const { provinces, districts, wards } = useSelector(
     (state) => state.provinces
   );
@@ -147,20 +149,23 @@ export default function BrandList() {
   };
   const onRowDetails = (record) => {
     history.push(
-      BrandManagerPaths.BRAND_DETAIL.replace(
-        ":brandId", 
-        record.id || ""
-        )
+      BrandManagerPaths.BRAND_DETAIL.replace(":brandId", record.id || "")
     );
   };
 
   useEffect(() => {
-    const query = queryString.parse(location.search);
     setIsLoading(true);
+
     dispatch(getBrands())
       .then(unwrapResult)
       .then(() => setIsLoading(false));
-  }, [dispatch, location]);
+
+    if (listSuppliers.length === 0 || !listSuppliers) {
+      dispatch(getSuppliers())
+        .then(unwrapResult)
+        .then(() => setIsLoading(false));
+    }
+  }, [dispatch]);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -397,7 +402,8 @@ export default function BrandList() {
           >
             {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
           </span>
-          <Button className="btnDelete"
+          <Button
+            className="btnDelete"
             onClick={() => onRowDelete()}
             disabled={!hasSelected}
             loading={isLoading}
@@ -435,6 +441,30 @@ export default function BrandList() {
               colon={false}
               onFinish={onSubmitCreate}
             >
+            <div className="details__group">
+            <Form.Item
+                  name="supplierID"
+                  label={<Text>Supplier</Text>}
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Brand Name"
+                      ),
+                    },
+                  ]}
+                >
+                  <Select>
+                    {listSuppliers.map((s) => (
+                      <Option value={s.id} key={s.supplierId}>
+                        {s.supplierName}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+            </div>
               <div className="details__group">
                 <Form.Item
                   name="brandName"
@@ -470,24 +500,6 @@ export default function BrandList() {
                   ]}
                 >
                   <Input placeholder="Brand Name" />
-                </Form.Item>
-
-                <Form.Item
-                  name="supplierId"
-                  label={<Text>Supplier Id</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Supplier Id"
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Supplier Id" />
                 </Form.Item>
               </div>
               <div className="btns">

@@ -1,41 +1,22 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import "./WarehouseDetailsForm.css";
-import avt_default from "assets/images/avt-default.png";
 import {
-  CameraOutlined,
   CaretUpOutlined,
-  DownloadOutlined,
   HighlightOutlined,
-  PlusOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import ImgCrop from "antd-img-crop";
 import {
   Form,
   Input,
   Button,
-  Radio,
   Select,
-  Cascader,
-  DatePicker,
-  InputNumber,
-  TreeSelect,
   Switch,
-  Checkbox,
-  Upload,
-  Tag,
   Divider,
-  List,
   Typography,
   message,
   Spin,
-  Avatar,
 } from "antd";
 import {
-  getWarehouseDetails,
-  createDetails,
   updateDetails,
 } from "features/warehouse-manager/warehouseManager";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,9 +24,6 @@ import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 import queryString from "query-string";
 import { getUserName } from "helpers/auth.helpers";
-import { storage } from "firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
 import {
   getDistrict,
   getProvince,
@@ -67,7 +45,7 @@ function WarehouseDetailsForm() {
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
+  const [formWarehouse] = Form.useForm();
 
   const [isLoading, setIsLoading] = useState(false);
   const [imgURL, setImgUrl] = useState(null);
@@ -75,10 +53,13 @@ function WarehouseDetailsForm() {
   const [birthDay, setBirthDay] = useState(null);
 
   const defaultValues = {
-    status: 0,
-    gender: true,
+    ...dataDetails,
+    apartmentNumber: dataDetails?.addressDTO?.apartmentNumber,
+    city: dataDetails?.addressDTO?.city,
+    district: dataDetails?.addressDTO?.district,
+    ward: dataDetails?.addressDTO?.ward,
   };
-  const initialValues = createMode ? defaultValues : dataDetails;
+  const initialValues = dataDetails ? defaultValues : dataDetails;
 
   const onFinishUpdate = async ({
     apartmentNumber,
@@ -111,15 +92,14 @@ function WarehouseDetailsForm() {
         console.log(error);
         console.log(dataDetails.id);
         message.error("Update failed!!!");
-        //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
       });
   };
 
-  // useEffect(() => {
-  //   form.setFieldsValue(initialValues);
-  // }, [dispatch, createMode, initialValues]);
   useEffect(() => {
-    form.setFieldsValue(initialValues);
+    formWarehouse.setFieldsValue(initialValues);
+    if (!createMode && initialValues !== null) {
+      setImgUrl(initialValues.avatarSupplier);
+    }
   }, [dispatch, createMode, initialValues]);
 
   if (!initialValues) {
@@ -131,7 +111,7 @@ function WarehouseDetailsForm() {
       <div className="details">
         <div className="details__right">
           <Form
-            form={form}
+            form={formWarehouse}
             layout="horizontal"
             name="form"
             initialValues={initialValues}
@@ -262,7 +242,7 @@ function WarehouseDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="apartmentNumber"
-                label={<Text>Street</Text>}
+                label={<Text>Street Name, House No</Text>}
                 className="details__item"
                 rules={[
                     {
@@ -270,12 +250,12 @@ function WarehouseDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Street"
+                        "Street Name, House No"
                       ),
                     },
                   ]}
               >
-                <Input defaultValue={initialValues.addressDTO?.apartmentNumber} />
+                <Input />
               </Form.Item>
 
               <Form.Item
@@ -299,7 +279,6 @@ function WarehouseDetailsForm() {
                   style={{
                     width: 200,
                   }}
-                  defaultValue={initialValues.addressDTO?.city}
                   onChange={(value) => {
                     dispatch(getProvince(value.key));
                   }}
@@ -347,7 +326,6 @@ function WarehouseDetailsForm() {
                   style={{
                     width: 200,
                   }}
-                  defaultValue={initialValues.addressDTO?.district}
                   onChange={(value, e) => {
                     dispatch(getDistrict(value.key));
                   }}
@@ -393,7 +371,6 @@ function WarehouseDetailsForm() {
                   style={{
                     width: 200,
                   }}
-                  defaultValue={initialValues.addressDTO?.ward}
                   onChange={(value, e) => {
                     console.log(value.value);
                     dispatch(getDistrict(value.key));

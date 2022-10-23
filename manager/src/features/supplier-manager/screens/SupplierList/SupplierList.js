@@ -90,6 +90,10 @@ export default function SupplierList() {
 };
   const initialValues = createMode ? defaultValues : dataDetails;
 
+  function refreshPage() {
+    window.location.reload(false);
+  }
+
   const upLoadImg = async (file) => {
     if (file == null) return;
 
@@ -429,9 +433,9 @@ export default function SupplierList() {
       createDetails({
         data: {
           address: {
-            city: typeof city === "string" ? city : city.value,
-            district: typeof district === "string" ? district : district.value,
-            ward: typeof ward === "string" ? ward : ward.value,
+            city: city.value,
+            district: district.value,
+            ward: ward.value,
             apartmentNumber: apartmentNumber,
           },
           ...args,
@@ -812,41 +816,6 @@ export default function SupplierList() {
                 >
                   <Input placeholder="TaxCode" />
                 </Form.Item>
-                {/* <Form.Item
-                name="description"
-                label={<Text>Description</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "description"
-                    ),
-                  },
-                  {
-                    max: 13,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "description",
-                      13
-                    ),
-                  },
-                  {
-                    min: 10,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "description",
-                      10
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="Description" />
-              </Form.Item> */}
               </div>
               <div className="details__group">
                 <Form.Item
