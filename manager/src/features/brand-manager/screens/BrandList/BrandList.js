@@ -167,6 +167,13 @@ export default function BrandList() {
     }
   }, [dispatch]);
 
+  const onChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const onSearch = (value) => {
+    console.log('search:', value);
+  };
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -292,7 +299,10 @@ export default function BrandList() {
     {
       title: "Supplier Id",
       dataIndex: "supplierId",
-      key: "supplierId",
+      //dataIndex: "supplierName",
+      key: "supplierName",
+      // render: (listSuppliers) => 
+      // listSuppliers.map(listSuppliers => listSuppliers.supplierName).join(),
       width: "20%",
       ...getColumnSearchProps("supplierId"),
       sorter: (a, b) => a.supplierId - b.supplierId,
@@ -387,7 +397,6 @@ export default function BrandList() {
 
   useEffect(() => {
     dispatch(getProvinces());
-    // setComponentDisabled(createMode);
   }, [dispatch]);
 
   return (
@@ -441,31 +450,41 @@ export default function BrandList() {
               colon={false}
               onFinish={onSubmitCreate}
             >
-            <div className="details__group">
-            <Form.Item
-                  name="supplierID"
-                  label={<Text>Supplier</Text>}
+              <div className="details__group">
+                <Form.Item
+                  name="supplierId"
+                  label={<Text>Supplier Name</Text>}
+                  className="details__item"
                   rules={[
                     {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Brand Name"
+                        "Supplier Name"
                       ),
                     },
                   ]}
                 >
-                  <Select>
+                  <Select
+                    showSearch
+                    placeholder="Select a person"
+                    optionFilterProp="children"
+                    onChange={onChange}
+                    onSearch={onSearch}
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                  >
                     {listSuppliers.map((s) => (
-                      <Option value={s.id} key={s.supplierId}>
+                      <Option value={s.id} >
                         {s.supplierName}
                       </Option>
                     ))}
                   </Select>
                 </Form.Item>
-            </div>
-              <div className="details__group">
                 <Form.Item
                   name="brandName"
                   label={<Text>Brand Name</Text>}

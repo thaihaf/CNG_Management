@@ -7,6 +7,7 @@ import {
      ContactsOutlined,
      DatabaseOutlined,
      TagOutlined,
+     UserOutlined,
 } from "@ant-design/icons/";
 
 export const siderBarItems = [
@@ -42,7 +43,7 @@ export const siderBarItems = [
      },
      {
           key: "customer",
-          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
+          icon: <UserOutlined style={{ fontSize: "1.6rem" }} />,
           label: `Customers`,
           role: ["admin", "employee"],
      },
