@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import "./SupplierDetailsForm.css";
+import "./CustomerDetailsForm.css";
 import avt_default from "assets/images/avt-default.png";
 import {
   CameraOutlined,
@@ -21,7 +21,9 @@ import {
   message,
   Spin,
 } from "antd";
-import { updateDetails } from "features/supplier-manager/supplierManager";
+import {
+  updateDetails,
+} from "features/customer-manager/customerManager";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -41,8 +43,8 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { Paragraph, Text } = Typography;
 
-function SupplierDetailsForm() {
-  const { dataDetails, createMode } = useSelector((state) => state.supplier);
+function CustomerDetailsForm() {
+  const { dataDetails, createMode } = useSelector((state) => state.customer);
   const { provinces, districts, wards } = useSelector(
     (state) => state.provinces
   );
@@ -50,14 +52,21 @@ function SupplierDetailsForm() {
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
-  const [formSupplier] = Form.useForm();
+  const [formCustomer] = Form.useForm();
 
   const [isLoading, setIsLoading] = useState(false);
   const [imgURL, setImgUrl] = useState(null);
   const [status, setStatus] = useState(null);
   const [birthDay, setBirthDay] = useState(null);
 
-  const initialValues = dataDetails ? dataDetails : {};
+  const defaultValues = {
+    ...dataDetails,
+    apartmentNumber: dataDetails?.address?.apartmentNumber,
+    city: dataDetails?.address?.city,
+    district: dataDetails?.address?.district,
+    ward: dataDetails?.address?.ward,
+  };
+  const initialValues = dataDetails ? defaultValues : dataDetails;
 
   const upLoadImg = async (file) => {
     if (file == null) return;
@@ -71,28 +80,24 @@ function SupplierDetailsForm() {
     });
   };
 
-  const onFinishUpdate = async (values) => {
-    console.log(values);
+  const onFinishUpdate = async ({
+    apartmentNumber,
+    city,
+    district,
+    ward,
+    ...args
+  }) => {
     dispatch(
       updateDetails({
         id: dataDetails.id,
         data: {
-          ...values,
           address: {
-            ...values.address,
-            city:
-              typeof values.address.city === "string"
-                ? values.address.city
-                : values.address.city.value,
-            district:
-              typeof values.address.district === "string"
-                ? values.address.district
-                : values.address.district.value,
-            ward:
-              typeof values.address.ward === "string"
-                ? values.address.ward
-                : values.address.ward.value,
+            city: typeof city === "string" ? city : city.value,
+            district: typeof district === "string" ? district : district.value,
+            ward: typeof ward === "string" ? ward : ward.value,
+            apartmentNumber: apartmentNumber,
           },
+          ...args,
           status: 1,
           avatarSupplier: imgURL === null ? "" : imgURL,
         },
@@ -112,7 +117,7 @@ function SupplierDetailsForm() {
   };
 
   useEffect(() => {
-    formSupplier.setFieldsValue(initialValues);
+    formCustomer.setFieldsValue(initialValues);
     if (!createMode && initialValues !== null) {
       setImgUrl(initialValues.avatarSupplier);
     }
@@ -176,12 +181,8 @@ function SupplierDetailsForm() {
             </Form.Item>
           </div>
           <>
-            {/* <div className="details__fullname">
-              {`${dataDetails.firstContactName} ${dataDetails.lastContactName}`}
-            </div>
-            <div className="details__username">{`@${getUserName()}`}</div> */}
             <div className="details__fullname">
-              {`${dataDetails.supplierName}`}
+              {`${dataDetails.firstContactName} ${dataDetails.lastContactName}`}
             </div>
             <div className="details__username">{`@${getUserName()}`}</div>
 
@@ -202,10 +203,10 @@ function SupplierDetailsForm() {
                 <circle cx="12" cy="11" r="3"></circle>
                 <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"></path>
               </svg>
-              {`${dataDetails?.address.district}, ${dataDetails?.address.city}`}
+              {`${dataDetails.address.district}, ${dataDetails.address.city}`}
             </div>
 
-            {dataDetails?.status === 1 ? (
+            {dataDetails.status === 1 ? (
               <Tag color="success" className="details__status">
                 Active
               </Tag>
@@ -219,7 +220,7 @@ function SupplierDetailsForm() {
 
         <div className="details__right">
           <Form
-            form={formSupplier}
+            form={formCustomer}
             layout="horizontal"
             name="form"
             initialValues={initialValues}
@@ -477,7 +478,7 @@ function SupplierDetailsForm() {
 
             <div className="details__group">
               <Form.Item
-                name={["address", "apartmentNumber"]}
+                name="apartmentNumber"
                 label={<Text>Street Name, House No</Text>}
                 className="details__item"
                 rules={[
@@ -495,7 +496,7 @@ function SupplierDetailsForm() {
               </Form.Item>
 
               <Form.Item
-                name={["address", "city"]}
+                name="city"
                 label={<Text>City</Text>}
                 className="details__item"
                 rules={[
@@ -542,7 +543,7 @@ function SupplierDetailsForm() {
 
             <div className="details__group">
               <Form.Item
-                name={["address", "district"]}
+                name="district"
                 label={<Text>District</Text>}
                 className="details__item"
                 rules={[
@@ -587,7 +588,7 @@ function SupplierDetailsForm() {
               </Form.Item>
 
               <Form.Item
-                name={["address", "ward"]}
+                name="ward"
                 label={<Text>Ward</Text>}
                 className="details__item"
                 rules={[
@@ -607,10 +608,10 @@ function SupplierDetailsForm() {
                   style={{
                     width: 200,
                   }}
-                  // onChange={(value, e) => {
-                  //   console.log(value.value);
-                  //   dispatch(getDistrict(value.key));
-                  // }}
+                  onChange={(value, e) => {
+                    console.log(value.value);
+                    dispatch(getDistrict(value.key));
+                  }}
                   placeholder="Search to Select"
                   optionFilterProp="children"
                   filterOption={(input, option) =>
@@ -674,4 +675,4 @@ function SupplierDetailsForm() {
   );
 }
 
-export default React.memo(SupplierDetailsForm);
+export default React.memo(CustomerDetailsForm);
