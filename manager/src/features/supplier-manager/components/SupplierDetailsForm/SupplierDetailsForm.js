@@ -176,12 +176,8 @@ function SupplierDetailsForm() {
             </Form.Item>
           </div>
           <>
-            {/* <div className="details__fullname">
+             <div className="details__fullname">
               {`${dataDetails.firstContactName} ${dataDetails.lastContactName}`}
-            </div>
-            <div className="details__username">{`@${getUserName()}`}</div> */}
-            <div className="details__fullname">
-              {`${dataDetails.supplierName}`}
             </div>
             <div className="details__username">{`@${getUserName()}`}</div>
 

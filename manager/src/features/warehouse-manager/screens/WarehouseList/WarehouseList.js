@@ -87,7 +87,7 @@ export default function WarehouseList() {
   const defaultValues = {
     status: 0,
     gender: true,
-};
+  };
   const initialValues = createMode ? defaultValues : dataDetails;
 
   const onSelectChange = (newSelectedRowKeys) => {
@@ -141,7 +141,9 @@ export default function WarehouseList() {
       onOk: () => {
         setIsLoading(true);
         dispatch(
-          record ? deleteWarehouse(record.id) : deleteWarehouses(selectedRowKeys)
+          record
+            ? deleteWarehouse(record.id)
+            : deleteWarehouses(selectedRowKeys)
         )
           .then(unwrapResult)
           .then((res) => {
@@ -417,12 +419,12 @@ export default function WarehouseList() {
     // setComponentDisabled(createMode);
   }, [dispatch]);
 
-//   useEffect(() => {
-//     form.setFieldsValue(initialValues);
-//     if (!createMode && initialValues !== null) {
-//          setImgUrl(initialValues.avatarSupplier);
-//     }
-// }, [dispatch, createMode, initialValues]);
+  //   useEffect(() => {
+  //     form.setFieldsValue(initialValues);
+  //     if (!createMode && initialValues !== null) {
+  //          setImgUrl(initialValues.avatarSupplier);
+  //     }
+  // }, [dispatch, createMode, initialValues]);
 
   return (
     <div className="employee-list">
