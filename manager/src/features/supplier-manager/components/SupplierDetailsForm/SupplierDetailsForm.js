@@ -179,7 +179,9 @@ function SupplierDetailsForm() {
              <div className="details__fullname">
               {`${dataDetails?.supplierName}`}
             </div>
-            <div className="details__username">{`@${getUserName()}`}</div>
+            <div className="details__username">{
+              `${dataDetails?.firstContactName} ${dataDetails?.lastContactName}`}
+              </div>
 
             <div className="details__location">
               <svg

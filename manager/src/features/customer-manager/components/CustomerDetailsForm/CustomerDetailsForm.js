@@ -183,7 +183,10 @@ function CustomerDetailsForm() {
             <div className="details__fullname">
               {`${dataDetails?.shopName}`}
             </div>
-            <div className="details__username">{`@${getUserName()}`}</div>
+
+            <div className="details__username">{
+              `${dataDetails?.firstName} ${dataDetails?.lastName}`}
+              </div>
 
             <div className="details__location">
               <svg
