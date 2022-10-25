@@ -3,25 +3,30 @@ import {
      TeamOutlined,
      FileDoneOutlined,
      ReconciliationOutlined,
+     AppstoreOutlined,
+     ContactsOutlined,
+     DatabaseOutlined,
+     TagOutlined,
+     UserOutlined,
 } from "@ant-design/icons/";
 
 export const siderBarItems = [
      {
           key: "product",
           icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Product`,
+          label: `Products`,
           role: ["admin", "employee"],
      },
      {
           key: "brand",
-          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Brand`,
+          icon: <TagOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Brands`,
           role: ["admin", "employee"],
      },
      {
           key: "accounts",
           icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Account`,
+          label: `Accounts`,
           role: ["admin"],
      },
      {
@@ -32,14 +37,14 @@ export const siderBarItems = [
      },
      {
           key: "supplier",
-          icon: <FileDoneOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Supplier`,
+          icon: <ContactsOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Suppliers`,
           role: ["admin", "employee"],
      },
      {
           key: "customer",
-          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Customer`,
+          icon: <UserOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Customers`,
           role: ["admin", "employee"],
      },
      //
@@ -48,5 +53,23 @@ export const siderBarItems = [
           icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
           label: `Profile`,
           role: ["employee"],
+     },
+     {
+          key: "settings",
+          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Settings`,
+          role: ["admin", "employee"],
+     },
+     {
+          key: "warehouse",
+          icon: <DatabaseOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Warehouse`,
+          role: ["admin", "employee"],
+     },
+     {
+          key: "category",
+          icon: <AppstoreOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Categories`,
+          role: ["admin", "employee"],
      },
 ];

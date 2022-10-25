@@ -367,7 +367,7 @@ function EmployeeDetailsForm() {
                                                   onChange={(checked) =>
                                                        setStatus(checked)
                                                   }
-                                                  disabled={true}
+                                                  disabled={false}
                                              />
                                         </Form.Item>
                                    )}

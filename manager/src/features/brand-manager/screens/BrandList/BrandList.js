@@ -10,7 +10,9 @@ import {
   CameraOutlined,
   DownloadOutlined,
   LockOutlined,
+  DeleteTwoTone,
   SearchOutlined,
+  ExclamationCircleOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import {
@@ -34,6 +36,8 @@ import {
 import {
   BrandManagerPaths,
   getBrands,
+  deleteBrand,
+  deleteBrands,
 } from "features/brand-manager/brandManager";
 
 import "./BrandList.css";
@@ -51,15 +55,17 @@ import {
   getProvinces,
 } from "features/provinces/provinces";
 import { ClassSharp } from "@mui/icons-material";
+import { getSuppliers } from "features/supplier-manager/supplierManager";
 const { Title, Text } = Typography;
 const { Option } = Select;
 export default function BrandList() {
   const { listBrands, totalElements, totalPages, size } = useSelector(
     (state) => state.brand
   );
+  const { listSuppliers } = useSelector((state) => state.supplier);
   const { provinces, districts, wards } = useSelector(
     (state) => state.provinces
-);
+  );
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -71,15 +77,104 @@ export default function BrandList() {
   const [searchText, setSearchText] = useState("");
   const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const searchInput = useRef(null);
 
+  const onSelectChange = (newSelectedRowKeys) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    selections: [
+      Table.SELECTION_ALL,
+      Table.SELECTION_INVERT,
+      Table.SELECTION_NONE,
+      {
+        key: "odd",
+        text: "Select Odd Row",
+        onSelect: (changableRowKeys) => {
+          let newSelectedRowKeys = [];
+          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
+            if (index % 2 !== 0) {
+              return false;
+            }
+            return true;
+          });
+          setSelectedRowKeys(newSelectedRowKeys);
+        },
+      },
+      {
+        key: "even",
+        text: "Select Even Row",
+        onSelect: (changableRowKeys) => {
+          let newSelectedRowKeys = [];
+          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
+            if (index % 2 !== 0) {
+              return true;
+            }
+            return false;
+          });
+          setSelectedRowKeys(newSelectedRowKeys);
+        },
+      },
+    ],
+  };
+
+  const onRowDelete = (record) => {
+    Modal.confirm({
+      title: "Confirm",
+      icon: <ExclamationCircleOutlined />,
+      content: "Delete can't revert, scarefully",
+      okText: "Delete",
+      cancelText: "Cancel",
+      onOk: () => {
+        setIsLoading(true);
+        dispatch(
+          record ? deleteBrand(record.id) : deleteBrands(selectedRowKeys)
+        )
+          .then(unwrapResult)
+          .then((res) => {
+            console.log(res);
+            dispatch(getBrands())
+              .then(unwrapResult)
+              .then(() => setIsLoading(false));
+              message.success("Delete success!");
+          })
+          .catch((error) => {
+            console.log(error);
+            message.success("Delete failed!!!");
+          });
+      },
+      onCancel: () => {},
+    });
+  };
+  const onRowDetails = (record) => {
+    history.push(
+      BrandManagerPaths.BRAND_DETAIL.replace(":brandId", record.id || "")
+    );
+  };
+
   useEffect(() => {
-    const query = queryString.parse(location.search);
     setIsLoading(true);
+
     dispatch(getBrands())
       .then(unwrapResult)
       .then(() => setIsLoading(false));
-  }, [dispatch, location]);
+
+    if (listSuppliers.length === 0 || !listSuppliers) {
+      dispatch(getSuppliers())
+        .then(unwrapResult)
+        .then(() => setIsLoading(false));
+    }
+  }, [dispatch]);
+
+  const onChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const onSearch = (value) => {
+    console.log('search:', value);
+  };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -184,27 +279,6 @@ export default function BrandList() {
       ),
   });
 
-  const menu = (
-    <Menu
-      selectable
-      //   defaultSelectedKeys={['3']}
-      items={[
-        {
-          key: "1",
-          label: "View",
-        },
-        {
-          key: "2",
-          label: "Edit",
-        },
-        {
-          key: "3",
-          label: "Delete",
-        },
-      ]}
-    />
-  );
-
   const columns = [
     {
       title: "Brand Id",
@@ -227,7 +301,10 @@ export default function BrandList() {
     {
       title: "Supplier Id",
       dataIndex: "supplierId",
-      key: "supplierId",
+      //dataIndex: "supplierName",
+      key: "supplierName",
+      // render: (listSuppliers) => 
+      // listSuppliers.map(listSuppliers => listSuppliers.supplierName).join(),
       width: "20%",
       ...getColumnSearchProps("supplierId"),
       sorter: (a, b) => a.supplierId - b.supplierId,
@@ -266,29 +343,39 @@ export default function BrandList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      render: () => (
-        <Space size="middle">
-          <Dropdown overlay={menu}>
-            <a>
-              Action <DownOutlined />
-            </a>
-          </Dropdown>
-        </Space>
+      title: "Actions",
+      dataIndex: "operation",
+      key: "operation",
+      render: (_, record) => (
+        <Dropdown
+          overlay={
+            <Menu
+              items={[
+                {
+                  key: 1,
+                  label: "View Details and Update",
+                  onClick: () => onRowDetails(record),
+                },
+                {
+                  key: 2,
+                  label: "Delete Brand",
+                  onClick: () => onRowDelete(record),
+                },
+              ]}
+            />
+          }
+        >
+          <a>
+            More <DownOutlined />
+          </a>
+        </Dropdown>
       ),
     },
   ];
 
-  const onRowClick = (record) => {
-    history.push(
-      BrandManagerPaths.BRAND_DETAIL.replace(
-        ":brandId",
-        record.id || ""
-      )
-    );
-    console.log(record.id);
-  };
+  const hasSelected = selectedRowKeys.length > 0;
 
-  const onSubmitCreate = async ({...args }) => {
+  const onSubmitCreate = async ({ ...args }) => {
     dispatch(
       createDetails({
         data: {
@@ -312,149 +399,160 @@ export default function BrandList() {
 
   useEffect(() => {
     dispatch(getProvinces());
-    // setComponentDisabled(createMode);
-}, [dispatch]);
+  }, [dispatch]);
 
   return (
     <div className="employee-list">
       <div className="top">
         <Title level={2}>Brand List</Title>
-        <Button
-          type="primary"
-          shape={"round"}
-          size={"large"}
-          onClick={() => setModal1Open(true)}
-        >
-          Create Brand
-        </Button>
-
-        <Modal
-          title="Create New Brand"
-          style={{ top: 20 }}
-          open={modal1Open}
-          onOk={() => setModal1Open(false)}
-          onCancel={() => setModal1Open(false)}
-          footer={[]}
-        >
-          <Form
-            form={form}
-            labelCol={{
-              span: 4,
+        <div>
+          <span
+            style={{
+              marginRight: 9,
             }}
-            wrapperCol={{
-              span: 14,
-            }}
-            layout="horizontal"
-            name="form"
-            colon={false}
-            onFinish={onSubmitCreate}
           >
-            <div className="details__group">
-              <Form.Item
-                name="brandName"
-                label={<Text>Brand Name</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "brandName"
-                    ),
-                  },
-                  {
-                    max: 25,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "brandName",
-                      25
-                    ),
-                  },
-                  {
-                    min: 2,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "brandName",
-                      2
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="Brand Name" />
-              </Form.Item>
-
-              <Form.Item
-                name="supplierId"
-                label={<Text>Supplier Id</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "supplierId"
-                    ),
-                  },
-                  {
-                    max: 9,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "supplierId",
-                      9
-                    ),
-                  },
-                  {
-                    min: 0,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "supplierId",
-                      0
-                    ),
-                  },
-                ]}
-              >
-                <Input placeholder="Supplier Id" />
-              </Form.Item>
-            </div>
-            <div className="btns">
-              <Button
-                key="back"
-                shape={"round"}
-                htmlType="reset"
-                onClick={() => {
-                  setModal1Open(false);
-                  form.resetFields();
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                key="submit"
-                shape={"round"}
-                type="primary"
-                htmlType="submit"
-              >
-                Submit
-              </Button>
-            </div>
-          </Form>
-        </Modal>
+            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+          </span>
+          <Button
+            className="btnDelete"
+            onClick={() => onRowDelete()}
+            disabled={!hasSelected}
+            loading={isLoading}
+            shape="round"
+            icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
+          >
+            Delete
+          </Button>
+          <Button
+            type="primary"
+            shape={"round"}
+            size={"large"}
+            onClick={() => setModal1Open(true)}
+          >
+            Create Brand
+          </Button>
+          <Modal
+            title="Create New Brand"
+            style={{ top: 20 }}
+            open={modal1Open}
+            onOk={() => setModal1Open(false)}
+            onCancel={() => setModal1Open(false)}
+            footer={[]}
+          >
+            <Form
+              form={form}
+              labelCol={{
+                span: 4,
+              }}
+              wrapperCol={{
+                span: 14,
+              }}
+              layout="horizontal"
+              name="form"
+              colon={false}
+              onFinish={onSubmitCreate}
+            >
+              <div className="details__group">
+                <Form.Item
+                  name="supplierId"
+                  label={<Text>Supplier Name</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Supplier Name"
+                      ),
+                    },
+                  ]}
+                >
+                  <Select
+                    showSearch
+                    placeholder="Select a person"
+                    optionFilterProp="children"
+                    onChange={onChange}
+                    onSearch={onSearch}
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                  >
+                    {listSuppliers.map((s) => (
+                      <Option value={s.id} >
+                        {s.supplierName}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  name="brandName"
+                  label={<Text>Brand Name</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Brand Name"
+                      ),
+                    },
+                    {
+                      max: 25,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "Brand Name",
+                        25
+                      ),
+                    },
+                    {
+                      min: 2,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "Brand Name",
+                        2
+                      ),
+                    },
+                  ]}
+                >
+                  <Input placeholder="Brand Name" />
+                </Form.Item>
+              </div>
+              <div className="btns">
+                <Button
+                  key="back"
+                  shape={"round"}
+                  htmlType="reset"
+                  onClick={() => {
+                    setModal1Open(false);
+                    form.resetFields();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  key="submit"
+                  shape={"round"}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Submit
+                </Button>
+              </div>
+            </Form>
+          </Modal>
+        </div>
       </div>
       <Table
         rowKey="id"
         columns={columns}
+        loading={isLoading}
         dataSource={listBrands}
-        onRow={(record) => ({
-          onClick: () => {
-            onRowClick(record);
-          },
-        })}
         pagination={
           listBrands.length !== 0
             ? {
@@ -470,7 +568,7 @@ export default function BrandList() {
               }
             : false
         }
-        loading={isLoading}
+        rowSelection={rowSelection}
       />
     </div>
   );

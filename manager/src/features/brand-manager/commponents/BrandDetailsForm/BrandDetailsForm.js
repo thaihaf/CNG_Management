@@ -103,95 +103,116 @@ function BrandDetailsForm() {
 
   return (
     <div className="details">
-          <div className="details__right">
-            <Form
-              form={form}
-              labelCol={{
-                span: 4,
-              }}
-              wrapperCol={{
-                span: 14,
-              }}
-              layout="horizontal"
-              name="form"
-              initialValues={initialValues}
-              onFinish={onFinishUpdate}
-              colon={false}
+      <div className="details__right">
+        <Form
+          form={form}
+          labelCol={{
+            span: 4,
+          }}
+          wrapperCol={{
+            span: 14,
+          }}
+          layout="horizontal"
+          name="form"
+          initialValues={initialValues}
+          onFinish={onFinishUpdate}
+          colon={false}
+        >
+          <div className="details__group">
+            <Form.Item
+              name="brandName"
+              label={<Text>Brand Name</Text>}
+              className="details__item"
+              rules={[
+                {
+                  required: true,
+                  message: getMessage(
+                    CODE_ERROR.ERROR_REQUIRED,
+                    MESSAGE_ERROR,
+                    "Brand Name"
+                  ),
+                },
+                {
+                  max: 25,
+                  message: getMessage(
+                    CODE_ERROR.ERROR_NUMBER_MAX,
+                    MESSAGE_ERROR,
+                    "Brand Name",
+                    25
+                  ),
+                },
+                {
+                  min: 2,
+                  message: getMessage(
+                    CODE_ERROR.ERROR_NUMBER_MIN,
+                    MESSAGE_ERROR,
+                    "Brand Name",
+                    2
+                  ),
+                },
+              ]}
             >
-
-              <div className="details__group">
-                <Form.Item
-                  name="brandName"
-                  label={<Text>Brand Name</Text>}
-                  className="details__item"
-                  rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "brandName"
-                    ),
-                  },
-                  {
-                    max: 13,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "brandName",
-                      13
-                    ),
-                  },
-                  {
-                    min: 1,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "brandName",
-                      1
-                    ),
-                  },
-                ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  name="supplierId"
-                  label={<Text>Supplier Id</Text>}
-                  className="details__item"
-                >
-                  <Input />
-                </Form.Item>
-              </div>
-
-              <Divider />
-
-              <div className="details__group">
-                  <Form.Item className="details__items">
-                    <Button
-                      type="primary"
-                      shape="round"
-                      icon={<CaretUpOutlined />}
-                      size={"large"}
-                      htmlType="submit"
-                    >
-                      Update
-                    </Button>
-                  </Form.Item>
-                  <Form.Item className="details__item">
-                    <Button
-                      type="primary"
-                      shape="round"
-                      icon={<HighlightOutlined />}
-                      size={"large"}
-                      htmlType="reset"
-                    >
-                      Reset
-                    </Button>
-                  </Form.Item>
-              </div>
-            </Form>
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="supplierId"
+              label={<Text>Supplier Id</Text>}
+              className="details__item"
+              rules={[
+                {
+                  required: true,
+                  message: getMessage(
+                    CODE_ERROR.ERROR_REQUIRED,
+                    MESSAGE_ERROR,
+                    "Supplier Id"
+                  ),
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
           </div>
+          <div className="details__group">
+            <Form.Item
+              label={<Text>Active Status</Text>}
+              className="details__item"
+            >
+              <Switch
+                checked={status === null ? initialValues.status : status}
+                onChange={(checked) => setStatus(checked)}
+                disabled={false}
+              />
+            </Form.Item>
+          </div>
+
+          <Divider />
+
+          <div className="details__group">
+            <Form.Item className="details__items">
+              <Button
+                type="primary"
+                shape="round"
+                icon={<CaretUpOutlined />}
+                size={"large"}
+                htmlType="submit"
+              >
+                Update
+              </Button>
+            </Form.Item>
+            <Form.Item className="details__item">
+              <Button
+                type="primary"
+                shape="round"
+                icon={<HighlightOutlined />}
+                size={"large"}
+                htmlType="reset"
+              >
+                Reset
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
+      </div>
     </div>
   );
 }
