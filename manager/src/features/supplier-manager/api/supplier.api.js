@@ -27,10 +27,19 @@ const updateDetails = (id, data) => {
      );
      return api.put(url, data);
 };
+const deleteSupplier = (id) => {
+     const url = SupplierEndPoints.SUPPLIER_DETAIL.replace(
+                   ":supplierId",
+                   id || ""
+     );
+     return api.delete(url);
+};
 const supplierApi = { 
      getSuppliers, 
      getSupplierDetails,
      createSupplier,
      createDetails,
-     updateDetails };
+     updateDetails,
+     deleteSupplier
+ };
 export default supplierApi;

@@ -46,6 +46,32 @@ export const updateDetails = createAsyncThunk(
        }
   }
 );
+export const deleteSupplier = createAsyncThunk(
+  "supplier/deleteSupplier",
+  async (id, { rejectWithValue }) => {
+       try {
+            const response = await api.deleteSupplier(id);
+            return response;
+       } catch (error) {
+            throw rejectWithValue(error);
+       }
+  }
+);
+export const deleteSuppliers = createAsyncThunk(
+  "supplier/deleteSuppliers",
+  async (list, { rejectWithValue }) => {
+       try {
+            list.forEach(async (id) => {
+                 console.log(id);
+                 await api.deleteSupplier(id);
+            });
+            return true;
+       } catch (error) {
+            console.log(error);
+            throw rejectWithValue(error);
+       }
+  }
+);
 
 export const createDetails = createAsyncThunk(
   "supplier/createDetails",
