@@ -3,6 +3,7 @@ import { SUPPLIER_MANAGER_ROUTES } from "features/supplier-manager/supplierManag
 import { BRAND_MANAGER_ROUTES } from "features/brand-manager/brandManager";
 import { AUTH_ROUTES } from "features/auth/auth";
 import { DASHBOARD_ROUTES } from "features/dashboard/dashboard";
+import { PRODUCT_MANAGER_ROUTES } from "features/product-manager/productManager";
 // import { NOTICE_ROUTES } from "features/notice/notice";
 // import { UPLOAD_ROUTES } from "features/uploadCSV/upload";
 
@@ -14,4 +15,5 @@ export const ROUTE_LIST = [
      ...EMPLOYEE_MANAGER_ROUTES,
      ...SUPPLIER_MANAGER_ROUTES,
      ...BRAND_MANAGER_ROUTES,
+     ...PRODUCT_MANAGER_ROUTES,
 ];
