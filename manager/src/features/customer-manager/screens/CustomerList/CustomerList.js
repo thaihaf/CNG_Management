@@ -43,9 +43,7 @@ import { getMessage } from "helpers/util.helper";
 import { storage } from "firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
-import {
-  createDetails,
-} from "features/customer-manager/customerManager";
+import { createDetails } from "features/customer-manager/customerManager";
 import {
   getDistrict,
   getProvince,
@@ -80,7 +78,7 @@ export default function CustomerList() {
   const defaultValues = {
     status: 0,
     gender: true,
-};
+  };
   const initialValues = createMode ? defaultValues : dataDetails;
 
   const upLoadImg = async (file) => {
@@ -88,12 +86,12 @@ export default function CustomerList() {
 
     const imgRef = ref(storage, `images/${file.name + v4()}`);
     uploadBytes(imgRef, file).then((snapshot) => {
-         getDownloadURL(snapshot.ref).then((url) => {
-              setIsLoading(false);
-              setImgUrl(url);
-         });
+      getDownloadURL(snapshot.ref).then((url) => {
+        setIsLoading(false);
+        setImgUrl(url);
+      });
     });
-};
+  };
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -154,9 +152,11 @@ export default function CustomerList() {
             dispatch(getProvinces())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
+              message.success("Delete success!");
           })
           .catch((error) => {
             console.log(error);
+            message.success("Delete failed!!!");
           });
       },
       onCancel: () => {},
@@ -285,66 +285,48 @@ export default function CustomerList() {
   const columns = [
     {
       title: "Avatar",
-      dataIndex: "avatarSupplier",
-      key: "avatarSupplier",
+      dataIndex: "avatar",
+      key: "avatar",
+      align: "center",
       width: "10%",
-      render: (text, record) => {
-        return (
-          <div>
-            <Avatar size={60} src={record.avatarSupplier} />
-          </div>
-        );
-      },
+      render: (_, record) => (
+        //<Avatar size={60} src={record.avatarSupplier} />
+        <Avatar size={60} src={record.fileAttachDTO.filePath} />
+      ),
     },
     {
-      title: "Supplier Name",
-      dataIndex: "supplierName",
-      key: "supplierName",
-      width: "10%",
-      ...getColumnSearchProps("supplierName"),
-      sorter: (a, b) => a.supplierName - b.supplierName,
+      title: "Shop Name",
+      dataIndex: "shopName",
+      key: "shopName",
+      width: "20%",
+      ...getColumnSearchProps("shopName"),
+      sorter: (a, b) => a.shopName - b.shopName,
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "First Contact Name",
-      dataIndex: "firstContactName",
-      key: "firstContactName",
-      width: "10%",
-      ...getColumnSearchProps("firstContactName"),
-      sorter: (a, b) => a.firstContactName.length - b.firstContactName.length,
+      title: "First Name",
+      dataIndex: "firstName",
+      key: "firstName",
+      width: "20%",
+      ...getColumnSearchProps("firstName"),
+      sorter: (a, b) => a.firstName.length - b.firstName.length,
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Last Contact Name",
-      dataIndex: "lastContactName",
-      key: "lastContactName",
-      width: "10%",
-      ...getColumnSearchProps("lastContactName"),
-      sorter: (a, b) => a.lastContactName.length - b.lastContactName.length,
+      title: "Last Name",
+      dataIndex: "lastName",
+      key: "lastName",
+      width: "20%",
+      ...getColumnSearchProps("lastName"),
+      sorter: (a, b) => a.lastName.length - b.lastName.length,
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Bank Name",
-      dataIndex: "bankName",
-      key: "bankName",
-      width: "10%",
-      ...getColumnSearchProps("bankName"),
-      sorter: (a, b) => a.bankName.length - b.bankName.length,
-    },
-    {
-      title: "Bank Account Number",
-      dataIndex: "bankAccountNumber",
-      key: "bankAccountNumber",
-      width: "10%",
-      ...getColumnSearchProps("bankAccountNumber"),
-      sorter: (a, b) => a.bankAccountNumber.length - b.bankAccountNumber.length,
-    },
-    {
-      title: "Phone Number Contact",
-      dataIndex: "phoneNumberContact",
-      key: "phoneNumberContact",
-      width: "10%",
-      ...getColumnSearchProps("phoneNumberContact"),
+      title: "Phone Number",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+      width: "20%",
+      ...getColumnSearchProps("phoneNumber"),
     },
     {
       title: "Status",
@@ -421,7 +403,7 @@ export default function CustomerList() {
     dispatch(
       createDetails({
         data: {
-          address: {
+          addressDTO: {
             city: city.value,
             district: district.value,
             ward: ward.value,
@@ -429,7 +411,9 @@ export default function CustomerList() {
           },
           ...args,
           status: 1,
-          avatarSupplier: imgURL === null ? "" : imgURL,
+          fileAttachDTO: {
+            filePath: imgURL === null ? "" : imgURL,
+          },
         },
       })
     )
@@ -454,9 +438,9 @@ export default function CustomerList() {
   useEffect(() => {
     form.setFieldsValue(initialValues);
     if (!createMode && initialValues !== null) {
-         setImgUrl(initialValues.avatarSupplier);
+      setImgUrl(initialValues.avatarSupplier);
     }
-}, [dispatch, createMode, initialValues]);
+  }, [dispatch, createMode, initialValues]);
 
   return (
     <div className="employee-list">
@@ -552,8 +536,8 @@ export default function CustomerList() {
               </div>
               <div className="details__group">
                 <Form.Item
-                  name="firstContactName"
-                  label={<Text>First Contact Name</Text>}
+                  name="firstName"
+                  label={<Text>First Name</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -561,7 +545,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "First Contact Name"
+                        "First Name"
                       ),
                     },
                     {
@@ -569,7 +553,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "First Contact Name",
+                        "First Name",
                         10
                       ),
                     },
@@ -578,18 +562,18 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "First Contact Name",
+                        "First Name",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="FirstContactName" />
+                  <Input placeholder="FirstName" />
                 </Form.Item>
 
                 <Form.Item
-                  name="lastContactName"
-                  label={<Text>Last Contact Name</Text>}
+                  name="lastName"
+                  label={<Text>Last Name</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -597,7 +581,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Last Contact Name"
+                        "Last Name"
                       ),
                     },
                     {
@@ -605,7 +589,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Last Contact Name",
+                        "Last Name",
                         20
                       ),
                     },
@@ -614,19 +598,19 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Last Contact Name",
+                        "Last Name",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="LastContactName" />
+                  <Input placeholder="LastName" />
                 </Form.Item>
               </div>
               <div className="details__group">
                 <Form.Item
-                  name="bankName"
-                  label={<Text>Bank Name</Text>}
+                  name="phoneNumber"
+                  label={<Text>Phone Number</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -634,7 +618,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Bank Name"
+                        "Phone Number"
                       ),
                     },
                     {
@@ -642,80 +626,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Bank Name",
-                        10
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Bank Name",
-                        2
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="BankName" />
-                </Form.Item>
-
-                <Form.Item
-                  name="bankAccountNumber"
-                  label={<Text>Bank Account Number</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Bank Account Number"
-                      ),
-                    },
-                    {
-                      max: 14,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Bank Account Number",
-                        14
-                      ),
-                    },
-                    {
-                      min: 5,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Bank Account Number",
-                        5
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="BankAccountNumber" />
-                </Form.Item>
-              </div>
-              <div className="details__group">
-                <Form.Item
-                  name="phoneNumberContact"
-                  label={<Text>Phone Number Contact</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Phone Number Contact"
-                      ),
-                    },
-                    {
-                      max: 10,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Phone Number Contact",
+                        "Phone Number",
                         10
                       ),
                     },
@@ -724,18 +635,18 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Phone Number Contact",
+                        "Phone Number",
                         9
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="PhoneNumberContact" />
+                  <Input placeholder="PhoneNumber" />
                 </Form.Item>
 
                 <Form.Item
-                  name="supplierName"
-                  label={<Text>Supplier Name</Text>}
+                  name="shopName"
+                  label={<Text>Shop Name</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -743,7 +654,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Supplier Name"
+                        "Shop Name"
                       ),
                     },
                     {
@@ -751,7 +662,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Supplier Name",
+                        "Shop Name",
                         25
                       ),
                     },
@@ -760,13 +671,13 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Supplier Name",
+                        "Shop Name",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="SupplierName" />
+                  <Input placeholder="ShopName" />
                 </Form.Item>
               </div>
               <div className="details__group">
@@ -822,7 +733,7 @@ export default function CustomerList() {
                     },
                   ]}
                 >
-                  <Input placeholder="Street Name, House No"/>
+                  <Input placeholder="Street Name, House No" />
                 </Form.Item>
                 <Form.Item
                   name="city"

@@ -52,33 +52,29 @@ function WarehouseDetailsForm() {
   const [status, setStatus] = useState(null);
   const [birthDay, setBirthDay] = useState(null);
 
-  const defaultValues = {
-    ...dataDetails,
-    apartmentNumber: dataDetails?.addressDTO?.apartmentNumber,
-    city: dataDetails?.addressDTO?.city,
-    district: dataDetails?.addressDTO?.district,
-    ward: dataDetails?.addressDTO?.ward,
-  };
-  const initialValues = dataDetails ? defaultValues : dataDetails;
+  const initialValues = dataDetails ? dataDetails : {};
 
-  const onFinishUpdate = async ({
-    apartmentNumber,
-    city,
-    district,
-    ward,
-    ...args
-  }) => {
+  const onFinishUpdate = async (values) => {
     dispatch(
       updateDetails({
         id: dataDetails.id,
         data: {
+          ...values,
           addressDTO: {
-            city: typeof city === "string" ? city : city.value,
-            district: typeof district === "string" ? district : district.value,
-            ward: typeof ward === "string" ? ward : ward.value,
-            apartmentNumber: apartmentNumber,
+            ...values.addressDTO,
+            city:
+              typeof values.addressDTO.city === "string"
+                ? values.addressDTO.city
+                : values.addressDTO.city.value,
+                district:
+                typeof values.addressDTO.district === "string"
+                  ? values.addressDTO.district
+                  : values.addressDTO.district.value,
+              ward:
+                typeof values.addressDTO.ward === "string"
+                  ? values.addressDTO.ward
+                  : values.addressDTO.ward.value,
           },
-          ...args,
           status: 1,
         },
       })
@@ -241,7 +237,7 @@ function WarehouseDetailsForm() {
 
             <div className="details__group">
               <Form.Item
-                name="apartmentNumber"
+                name={["addressDTO", "apartmentNumber"]}
                 label={<Text>Street Name, House No</Text>}
                 className="details__item"
                 rules={[
@@ -259,7 +255,7 @@ function WarehouseDetailsForm() {
               </Form.Item>
 
               <Form.Item
-                name="city"
+                name={["addressDTO", "city"]}
                 label={<Text>City</Text>}
                 className="details__item"
                 rules={[
@@ -306,7 +302,7 @@ function WarehouseDetailsForm() {
 
             <div className="details__group">
               <Form.Item
-                name="district"
+                name={["addressDTO", "district"]}
                 label={<Text>District</Text>}
                 className="details__item"
                 rules={[
@@ -351,7 +347,7 @@ function WarehouseDetailsForm() {
               </Form.Item>
 
               <Form.Item
-                name="ward"
+                name={["addressDTO", "ward"]}
                 label={<Text>Ward</Text>}
                 className="details__item"
                 rules={[
@@ -371,10 +367,10 @@ function WarehouseDetailsForm() {
                   style={{
                     width: 200,
                   }}
-                  onChange={(value, e) => {
-                    console.log(value.value);
-                    dispatch(getDistrict(value.key));
-                  }}
+                  // onChange={(value, e) => {
+                  //   console.log(value.value);
+                  //   dispatch(getDistrict(value.key));
+                  // }}
                   placeholder="Search to Select"
                   optionFilterProp="children"
                   filterOption={(input, option) =>

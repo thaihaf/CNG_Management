@@ -4,7 +4,7 @@ import { CUSTOMER_KEY } from "../constants/customer.key";
 
 import api from "../api/customer.api";
 
-export const CUSTOMER_FEATURE_KEY = CUSTOMER_KEY;
+export const CUSTOMERS_FEATURE_KEY = CUSTOMER_KEY;
 
 export const getCustomers = createAsyncThunk(
   "customer/getCustomers",
@@ -85,7 +85,7 @@ const initialState = {
 };
 
 const customerSlice = createSlice({
-  name: CUSTOMER_FEATURE_KEY,
+  name: CUSTOMERS_FEATURE_KEY,
   initialState,
   reducers: {
     updateErrorProcess: (state, action) => {

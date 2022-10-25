@@ -59,14 +59,7 @@ function CustomerDetailsForm() {
   const [status, setStatus] = useState(null);
   const [birthDay, setBirthDay] = useState(null);
 
-  const defaultValues = {
-    ...dataDetails,
-    apartmentNumber: dataDetails?.address?.apartmentNumber,
-    city: dataDetails?.address?.city,
-    district: dataDetails?.address?.district,
-    ward: dataDetails?.address?.ward,
-  };
-  const initialValues = dataDetails ? defaultValues : dataDetails;
+  const initialValues = dataDetails ? dataDetails : {};
 
   const upLoadImg = async (file) => {
     if (file == null) return;
@@ -80,26 +73,32 @@ function CustomerDetailsForm() {
     });
   };
 
-  const onFinishUpdate = async ({
-    apartmentNumber,
-    city,
-    district,
-    ward,
-    ...args
-  }) => {
+  const onFinishUpdate = async (values)=> {
     dispatch(
       updateDetails({
         id: dataDetails.id,
         data: {
-          address: {
-            city: typeof city === "string" ? city : city.value,
-            district: typeof district === "string" ? district : district.value,
-            ward: typeof ward === "string" ? ward : ward.value,
-            apartmentNumber: apartmentNumber,
-          },
-          ...args,
+          ...values,
+        addressDTO: {
+          ...values.addressDTO,
+          city:
+            typeof values.addressDTO.city === "string"
+              ? values.addressDTO.city
+              : values.addressDTO.city.value,
+          district:
+            typeof values.addressDTO.district === "string"
+              ? values.addressDTO.district
+              : values.addressDTO.district.value,
+          ward:
+            typeof values.addressDTO.ward === "string"
+              ? values.addressDTO.ward
+              : values.addressDTO.ward.value,
+        },
+          // taxCode:"3232401931",
           status: 1,
-          avatarSupplier: imgURL === null ? "" : imgURL,
+          fileAttachDTO: {
+            filePath: imgURL === null ? "" : imgURL,
+       },
         },
       })
     )
@@ -119,7 +118,7 @@ function CustomerDetailsForm() {
   useEffect(() => {
     formCustomer.setFieldsValue(initialValues);
     if (!createMode && initialValues !== null) {
-      setImgUrl(initialValues.avatarSupplier);
+      setImgUrl(initialValues.fileAttachDTO?.filePath);
     }
   }, [dispatch, createMode, initialValues]);
 
@@ -182,7 +181,7 @@ function CustomerDetailsForm() {
           </div>
           <>
             <div className="details__fullname">
-              {`${dataDetails.firstContactName} ${dataDetails.lastContactName}`}
+              {`${dataDetails?.shopName}`}
             </div>
             <div className="details__username">{`@${getUserName()}`}</div>
 
@@ -203,10 +202,10 @@ function CustomerDetailsForm() {
                 <circle cx="12" cy="11" r="3"></circle>
                 <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"></path>
               </svg>
-              {`${dataDetails.address.district}, ${dataDetails.address.city}`}
+              {`${dataDetails?.addressDTO.district}, ${dataDetails?.addressDTO.city}`}
             </div>
 
-            {dataDetails.status === 1 ? (
+            {dataDetails?.status === 1 ? (
               <Tag color="success" className="details__status">
                 Active
               </Tag>
@@ -229,9 +228,37 @@ function CustomerDetailsForm() {
           >
             <div className="details__group">
               <Form.Item
-                name="supplierName"
-                label={<Text>Supplier Name</Text>}
+                name="shopName"
+                label={<Text>Shop Name</Text>}
                 className="details__item"
+                rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Shop Name"
+                      ),
+                    },
+                    {
+                      max: 25,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "Shop Name",
+                        25
+                      ),
+                    },
+                    {
+                      min: 2,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "Shop Name",
+                        2
+                      ),
+                    },
+                  ]}
               >
                 <Input />
               </Form.Item>
@@ -249,8 +276,8 @@ function CustomerDetailsForm() {
 
             <div className="details__group">
               <Form.Item
-                name="firstContactName"
-                label={<Text>First Contact Name</Text>}
+                name="firstName"
+                label={<Text>First Name</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -258,7 +285,7 @@ function CustomerDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "First Contact Name"
+                      "First Name"
                     ),
                   },
                   {
@@ -266,7 +293,7 @@ function CustomerDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "First Contact Name",
+                      "First Name",
                       10
                     ),
                   },
@@ -275,7 +302,7 @@ function CustomerDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "First Contact Name",
+                      "First Name",
                       2
                     ),
                   },
@@ -284,8 +311,8 @@ function CustomerDetailsForm() {
                 <Input />
               </Form.Item>
               <Form.Item
-                name="lastContactName"
-                label={<Text>Last Contact Name</Text>}
+                name="lastName"
+                label={<Text>Last Name</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -293,7 +320,7 @@ function CustomerDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Last Contact Name"
+                      "Last Name"
                     ),
                   },
                   {
@@ -301,7 +328,7 @@ function CustomerDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Last Contact Name",
+                      "Last Name",
                       20
                     ),
                   },
@@ -310,7 +337,7 @@ function CustomerDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Last Contact Name",
+                      "Last Name",
                       2
                     ),
                   },
@@ -322,8 +349,8 @@ function CustomerDetailsForm() {
 
             <div className="details__group">
               <Form.Item
-                name="bankName"
-                label={<Text>Bank Name</Text>}
+                name="phoneNumber"
+                label={<Text>Phone Number</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -331,7 +358,7 @@ function CustomerDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Bank Name"
+                      "Phone Number"
                     ),
                   },
                   {
@@ -339,42 +366,7 @@ function CustomerDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Bank Name",
-                      10
-                    ),
-                  },
-                  {
-                    min: 2,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "Bank Name",
-                      2
-                    ),
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="phoneNumberContact"
-                label={<Text>Phone Number Contact</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "Phone Number Contact"
-                    ),
-                  },
-                  {
-                    max: 10,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "Phone Number Contact",
+                      "Phone Number",
                       10
                     ),
                   },
@@ -383,7 +375,7 @@ function CustomerDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Phone Number Contact",
+                      "Phone Number",
                       9
                     ),
                   },
@@ -391,94 +383,46 @@ function CustomerDetailsForm() {
               >
                 <Input />
               </Form.Item>
+              <Form.Item
+                  name="taxCode"
+                  label={<Text>Tax Code</Text>}
+                  className="details__item"
+                  rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Tax Code"
+                      ),
+                    },
+                    {
+                      max: 13,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "Tax Code",
+                        13
+                      ),
+                    },
+                    {
+                      min: 10,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "Tax Code",
+                        10
+                      ),
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
             </div>
 
             <div className="details__group">
               <Form.Item
-                name="bankAccountNumber"
-                label={<Text>Bank Account Name</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "Bank Account Number"
-                    ),
-                  },
-                  {
-                    max: 14,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "Bank Account Number",
-                      14
-                    ),
-                  },
-                  {
-                    min: 5,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "Bank Account Number",
-                      5
-                    ),
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </div>
-
-            <div className="details__group">
-              <Form.Item
-                name="taxCode"
-                label={<Text>Tax Code</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "Tax Code"
-                    ),
-                  },
-                  {
-                    max: 13,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "Tax Code",
-                      13
-                    ),
-                  },
-                  {
-                    min: 10,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MIN,
-                      MESSAGE_ERROR,
-                      "Tax Code",
-                      10
-                    ),
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                name="description"
-                label={<Text>Description</Text>}
-                className="details__item"
-              >
-                <Input />
-              </Form.Item>
-            </div>
-
-            <div className="details__group">
-              <Form.Item
-                name="apartmentNumber"
+                name={["addressDTO", "apartmentNumber"]}
                 label={<Text>Street Name, House No</Text>}
                 className="details__item"
                 rules={[
@@ -496,7 +440,7 @@ function CustomerDetailsForm() {
               </Form.Item>
 
               <Form.Item
-                name="city"
+                name={["addressDTO", "city"]}
                 label={<Text>City</Text>}
                 className="details__item"
                 rules={[
@@ -543,7 +487,7 @@ function CustomerDetailsForm() {
 
             <div className="details__group">
               <Form.Item
-                name="district"
+                name={["addressDTO", "district"]}
                 label={<Text>District</Text>}
                 className="details__item"
                 rules={[
@@ -588,7 +532,7 @@ function CustomerDetailsForm() {
               </Form.Item>
 
               <Form.Item
-                name="ward"
+                name={["addressDTO", "ward"]}
                 label={<Text>Ward</Text>}
                 className="details__item"
                 rules={[

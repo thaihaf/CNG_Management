@@ -139,9 +139,11 @@ export default function BrandList() {
             dispatch(getBrands())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
+              message.success("Delete success!");
           })
           .catch((error) => {
             console.log(error);
+            message.success("Delete failed!!!");
           });
       },
       onCancel: () => {},

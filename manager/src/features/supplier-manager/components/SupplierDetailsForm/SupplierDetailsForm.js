@@ -177,7 +177,7 @@ function SupplierDetailsForm() {
           </div>
           <>
              <div className="details__fullname">
-              {`${dataDetails.firstContactName} ${dataDetails.lastContactName}`}
+              {`${dataDetails?.supplierName}`}
             </div>
             <div className="details__username">{`@${getUserName()}`}</div>
 

@@ -137,9 +137,11 @@ export default function CategoryList() {
             dispatch(getCategories())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
+              message.success("Delete success!");
           })
           .catch((error) => {
             console.log(error);
+            message.success("Delete failed!!!");
           });
       },
       onCancel: () => {},
