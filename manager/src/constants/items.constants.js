@@ -47,19 +47,6 @@ export const siderBarItems = [
           label: `Customers`,
           role: ["admin", "employee"],
      },
-     //
-     {
-          key: "profile",
-          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Profile`,
-          role: ["employee"],
-     },
-     {
-          key: "settings",
-          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Settings`,
-          role: ["admin", "employee"],
-     },
      {
           key: "warehouse",
           icon: <DatabaseOutlined style={{ fontSize: "1.6rem" }} />,
@@ -71,5 +58,12 @@ export const siderBarItems = [
           icon: <AppstoreOutlined style={{ fontSize: "1.6rem" }} />,
           label: `Categories`,
           role: ["admin", "employee"],
+     },
+     //
+     {
+          key: "profile",
+          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Profile`,
+          role: ["employee"],
      },
 ];

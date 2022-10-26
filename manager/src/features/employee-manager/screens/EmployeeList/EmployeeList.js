@@ -1,33 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
-import queryString from "query-string";
 import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 
 import {
-     CaretUpOutlined,
      DeleteTwoTone,
-     DownloadOutlined,
      DownOutlined,
      ExclamationCircleOutlined,
-     LockOutlined,
      SearchOutlined,
-     UserOutlined,
 } from "@ant-design/icons";
 import {
      Avatar,
      Button,
-     Divider,
      Dropdown,
      Form,
-     Image,
      Input,
      Menu,
-     message,
      Modal,
      Space,
-     Spin,
      Table,
      Tag,
      Typography,
@@ -41,14 +32,7 @@ import {
 
 import avt_default from "assets/images/avt-default.png";
 import "./EmployeeList.css";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import { getMessage } from "helpers/util.helper";
-import {
-     updateErrorProcess,
-     createAccEmployee,
-} from "features/employee-manager/employeeManager";
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 export default function EmployeeList() {
      const { listEmployees, totalElements, totalPages, size } = useSelector(
@@ -63,7 +47,14 @@ export default function EmployeeList() {
      const [searchText, setSearchText] = useState("");
      const [searchedColumn, setSearchedColumn] = useState("");
      const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+     const [currentPage, setCurrentPage] = useState(1);
+     const [pageSize, setPageSize] = useState(2);
      const searchInput = useRef(null);
+
+     const onHandlePagination = (page, size) => {
+          setCurrentPage(page);
+          setPageSize(size);
+     };
 
      const onSelectChange = (newSelectedRowKeys) => {
           setSelectedRowKeys(newSelectedRowKeys);
@@ -440,12 +431,12 @@ export default function EmployeeList() {
                                      showSizeChanger: true,
                                      position: ["bottomCenter"],
                                      size: "default",
-                                     pageSize: 10,
-                                     // current: getPageUrl || pageHead,
+                                     pageSize: pageSize,
+                                     current: currentPage,
                                      totalElements,
-                                     // onChange: (page, size) =>
-                                     // 	onHandlePagination(page, size),
-                                     pageSizeOptions: ["10", "15", "20", "25"],
+                                     onChange: (page, size) =>
+                                          onHandlePagination(page, size),
+                                     pageSizeOptions: ["2", "4", "6"],
                                 }
                               : false
                     }

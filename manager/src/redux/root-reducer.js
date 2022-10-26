@@ -35,7 +35,7 @@ import {
 } from "features/provinces/provinces";
 import {
      PRODUCT_FEATURE_KEY,
-     productsReducer,
+     productReducer,
 } from "features/product-manager/productManager";
 
 const rootReducer = combineReducers({
@@ -48,7 +48,7 @@ const rootReducer = combineReducers({
      [CUSTOMERS_FEATURE_KEY]: customersReducer,
      [PERMISSIONS_FEATURE_KEY]: permissionsReducer,
      [PROVINCES_FEATURE_KEY]: provincesReducer,
-     [PRODUCT_FEATURE_KEY]: productsReducer,
+     [PRODUCT_FEATURE_KEY]: productReducer,
 });
 
 export default rootReducer;

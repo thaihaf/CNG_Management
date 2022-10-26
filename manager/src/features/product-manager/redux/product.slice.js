@@ -52,7 +52,7 @@ const initialState = {
      errorProcess: "",
 };
 
-const productsSlice = createSlice({
+const productSlice = createSlice({
      name: PRODUCT_FEATURE_KEY,
      initialState,
      reducers: {
@@ -73,6 +73,6 @@ const productsSlice = createSlice({
      },
 });
 
-export const {} = productsSlice.actions;
+export const {} = productSlice.actions;
 
-export const productsReducer = productsSlice.reducer;
+export const productReducer = productSlice.reducer;
