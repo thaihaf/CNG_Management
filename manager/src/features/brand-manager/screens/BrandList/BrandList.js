@@ -1,36 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
-import moment from "moment";
-import queryString from "query-string";
 import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { DownOutlined } from "@ant-design/icons";
 import {
-  CameraOutlined,
-  DownloadOutlined,
-  LockOutlined,
   DeleteTwoTone,
   SearchOutlined,
   ExclamationCircleOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
-  Divider,
   Form,
   Input,
   message,
   Modal,
-  Switch,
   Space,
   Table,
   Tag,
   Typography,
   Dropdown,
   Menu,
-  Upload,
   Select,
 } from "antd";
 import {
@@ -45,8 +36,6 @@ import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
 import {
-  updateErrorProcess,
-  createBrand,
   createDetails,
 } from "features/brand-manager/brandManager";
 import {
@@ -301,10 +290,9 @@ export default function BrandList() {
     {
       title: "Supplier Id",
       dataIndex: "supplierId",
-      //dataIndex: "supplierName",
+      // dataIndex: ['supplierId', 'supplierName'],
       key: "supplierName",
-      // render: (listSuppliers) => 
-      // listSuppliers.map(listSuppliers => listSuppliers.supplierName).join(),
+      
       width: "20%",
       ...getColumnSearchProps("supplierId"),
       sorter: (a, b) => a.supplierId - b.supplierId,
@@ -470,7 +458,7 @@ export default function BrandList() {
                 >
                   <Select
                     showSearch
-                    placeholder="Select a person"
+                    placeholder="Select a supplier"
                     optionFilterProp="children"
                     onChange={onChange}
                     onSearch={onSearch}
@@ -481,7 +469,7 @@ export default function BrandList() {
                     }
                   >
                     {listSuppliers.map((s) => (
-                      <Option value={s.id} >
+                      <Option value={s.id} key={s.id}>
                         {s.supplierName}
                       </Option>
                     ))}

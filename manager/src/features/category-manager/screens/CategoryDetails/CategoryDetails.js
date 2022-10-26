@@ -2,7 +2,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Spin } from "antd";
 import { CODE_ERROR } from "constants/errors.constants";
 import { updateError } from "features/auth/auth";
-import { CategoryDetailsForm } from "features/category-manager/commponents";
+import { CategoryDetailsForm } from "features/category-manager/components";
 import { getCategoryDetails } from "features/category-manager/categoryManager";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
