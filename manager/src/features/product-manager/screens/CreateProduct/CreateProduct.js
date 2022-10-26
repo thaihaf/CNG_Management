@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { useDispatch, useSelector } from "react-redux";
+
 import {
-     CameraOutlined,
      CaretUpOutlined,
      HighlightOutlined,
      MinusCircleOutlined,
@@ -9,52 +11,64 @@ import {
 } from "@ant-design/icons";
 import {
      Button,
-     Cascader,
-     Checkbox,
-     DatePicker,
      Form,
      Image,
      Input,
      InputNumber,
-     Radio,
+     message,
      Select,
      Space,
      Spin,
      Steps,
      Switch,
-     TreeSelect,
      Typography,
      Upload,
 } from "antd";
-import ImgCrop from "antd-img-crop";
 
 import { storage } from "firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 
 import "./CreateProduct.css";
-import { useDispatch, useSelector } from "react-redux";
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 
-const { RangePicker } = DatePicker;
+import { getActiveCategories } from "features/category-manager/categoryManager";
+import {
+     getSupplierDetails,
+     getSuppliers,
+} from "features/supplier-manager/supplierManager";
+import {
+     createProduct,
+     ProductManagerPaths,
+		 titleSizeList
+} from "features/product-manager/productManager";
+import { useHistory } from "react-router-dom";
+
 const { TextArea } = Input;
-const { Option } = Select;
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const { Step } = Steps;
 
 export default function CreateProduct() {
      const { provinces } = useSelector((state) => state.provinces);
+     const { listActiveCategories } = useSelector((state) => state.category);
+     const { listSuppliers, dataDetails } = useSelector(
+          (state) => state.supplier
+     );
 
      const dispatch = useDispatch();
+     const history = useHistory();
      const [form] = Form.useForm();
 
      const [isLoading, setIsLoading] = useState(false);
      const [imageList, setImageList] = useState([]);
+     const [brand, setBrand] = useState();
+     const [categories, setCategories] = useState();
+     const [supplier, setSupplier] = useState();
 
      const handleRemoveImageProduct = (image) => {
-          setImageList(imageList.filter((e) => e !== image));
+          setImageList(imageList.filter((e) => e.filePath !== image));
      };
      const handleBeforeUploadImage = async (file) => {
           setIsLoading(true);
@@ -70,8 +84,11 @@ export default function CreateProduct() {
                          );
                          uploadBytes(imgRef, file).then((snapshot) => {
                               getDownloadURL(snapshot.ref).then((url) => {
+                                   setImageList([
+                                        ...imageList,
+                                        { filePath: url },
+                                   ]);
                                    setIsLoading(false);
-                                   setImageList([...imageList, url]);
                               });
                          });
                     }
@@ -80,10 +97,43 @@ export default function CreateProduct() {
           });
      };
      const onFinish = (values) => {
-          console.log("Received values of form:", values);
+          if (imageList.length === 0) {
+               message.error("Please choose image product");
+          } else {
+               setIsLoading(true);
+               let data = {
+                    ...values,
+                    id: values.id.toUpperCase(),
+                    categoryDTO: categories,
+                    supplierDTO: supplier,
+                    brandId: brand,
+                    listImage: imageList,
+               };
+
+               console.log(data);
+               dispatch(
+                    createProduct({
+                         data: data,
+                    })
+               )
+                    .then(unwrapResult)
+                    .then((res) => {
+                         setIsLoading(false);
+                         history.push(ProductManagerPaths.PRODUCT_MANAGER);
+                         message.success("Create details success!");
+                    })
+                    .catch((error) => {
+                         console.log(error);
+                         setIsLoading(false);
+                         message.error("Check error in F12");
+                    });
+          }
      };
 
-     useEffect(() => {}, [dispatch]);
+     useEffect(() => {
+          dispatch(getActiveCategories());
+          dispatch(getSuppliers());
+     }, [dispatch]);
 
      return (
           <Spin spinning={isLoading}>
@@ -108,11 +158,11 @@ export default function CreateProduct() {
                                                   className="image-product"
                                                   key={index}
                                              >
-                                                  <Image src={image} />
+                                                  <Image src={image.filePath} />
                                                   <MinusCircleOutlined
                                                        onClick={() =>
                                                             handleRemoveImageProduct(
-                                                                 image
+                                                                 image.filePath
                                                             )
                                                        }
                                                   />
@@ -145,7 +195,7 @@ export default function CreateProduct() {
                                              <div className="group-data">
                                                   <Form.Item
                                                        label="Code"
-																											 name="id"
+                                                       name="id"
                                                        rules={[
                                                             {
                                                                  required: true,
@@ -166,7 +216,7 @@ export default function CreateProduct() {
                                                   </Form.Item>
                                                   <Form.Item
                                                        label="Name"
-																											 name="productName"
+                                                       name="productName"
                                                        rules={[
                                                             {
                                                                  required: true,
@@ -195,8 +245,16 @@ export default function CreateProduct() {
                                                        ]}
                                                   >
                                                        <Select
-                                                            labelInValue
+                                                            allowClear
                                                             showSearch
+                                                            onChange={(
+                                                                 value,
+                                                                 option
+                                                            ) =>
+                                                                 console.log(
+                                                                      option
+                                                                 )
+                                                            }
                                                        >
                                                             {provinces?.map(
                                                                  (p) => {
@@ -209,7 +267,9 @@ export default function CreateProduct() {
                                                                                      p.code
                                                                                 }
                                                                            >
-                                                                                {`${p.name}`}
+                                                                                {
+                                                                                     p.name
+                                                                                }
                                                                            </Select.Option>
                                                                       );
                                                                  }
@@ -218,7 +278,7 @@ export default function CreateProduct() {
                                                   </Form.Item>
                                                   <Form.Item
                                                        label="Quantity Brick"
-																											 name="quantityBrick"
+                                                       name="quantityBrick"
                                                        rules={[
                                                             {
                                                                  required: true,
@@ -242,8 +302,24 @@ export default function CreateProduct() {
                                         description={
                                              <div className="group-data">
                                                   <Form.Item
+                                                       label="Square Meter Per Box"
+                                                       name="squareMeterPerBox"
+                                                       rules={[
+                                                            {
+                                                                 required: true,
+                                                                 message: getMessage(
+                                                                      CODE_ERROR.ERROR_REQUIRED,
+                                                                      MESSAGE_ERROR,
+                                                                      "Square Meter Per Box"
+                                                                 ),
+                                                            },
+                                                       ]}
+                                                  >
+                                                       <Input />
+                                                  </Form.Item>
+                                                  <Form.Item
                                                        label="Title Surface"
-																											 name="titleSurface"
+                                                       name="titleSurface"
                                                        rules={[
                                                             {
                                                                  required: true,
@@ -259,7 +335,7 @@ export default function CreateProduct() {
                                                   </Form.Item>
                                                   <Form.Item
                                                        label="Brick Material"
-																											 name="brickMaterial"
+                                                       name="brickMaterial"
                                                        rules={[
                                                             {
                                                                  required: true,
@@ -283,26 +359,8 @@ export default function CreateProduct() {
                                         description={
                                              <div className="group-data">
                                                   <Form.Item
-                                                       label="Category"
-                                                       rules={[
-                                                            {
-                                                                 required: true,
-                                                                 message: getMessage(
-                                                                      CODE_ERROR.ERROR_REQUIRED,
-                                                                      MESSAGE_ERROR,
-                                                                      "Product Category"
-                                                                 ),
-                                                            },
-                                                       ]}
-                                                  >
-                                                       <Select>
-                                                            <Select.Option value="demo">
-                                                                 Demo
-                                                            </Select.Option>
-                                                       </Select>
-                                                  </Form.Item>
-                                                  <Form.Item
                                                        label="Supplier"
+                                                       name="supplier"
                                                        rules={[
                                                             {
                                                                  required: true,
@@ -314,15 +372,75 @@ export default function CreateProduct() {
                                                             },
                                                        ]}
                                                   >
-                                                       <Select>
-                                                            <Select.Option value="demo">
-                                                                 Demo
-                                                            </Select.Option>
+                                                       <Select
+                                                            showSearch
+                                                            allowClear
+                                                            onChange={(
+                                                                 value,
+                                                                 option
+                                                            ) => {
+                                                                 setIsLoading(
+                                                                      true
+                                                                 );
+                                                                 dispatch(
+                                                                      getSupplierDetails(
+                                                                           option.id
+                                                                      )
+                                                                 )
+                                                                      .then(
+                                                                           unwrapResult
+                                                                      )
+                                                                      .then(
+                                                                           () => {
+                                                                                setIsLoading(
+                                                                                     false
+                                                                                );
+                                                                                setSupplier(
+                                                                                     option
+                                                                                );
+                                                                           }
+                                                                      )
+                                                                      .catch(
+                                                                           (
+                                                                                error
+                                                                           ) => {
+                                                                                console.log(
+                                                                                     error
+                                                                                );
+                                                                                setIsLoading(
+                                                                                     false
+                                                                                );
+                                                                                message.error(
+                                                                                     "Check error in F12"
+                                                                                );
+                                                                           }
+                                                                      );
+                                                            }}
+                                                       >
+                                                            {listSuppliers.map(
+                                                                 (s) => (
+                                                                      <Select.Option
+                                                                           value={
+                                                                                s.supplierName
+                                                                           }
+                                                                           key={
+                                                                                s.id
+                                                                           }
+                                                                           id={
+                                                                                s.id
+                                                                           }
+                                                                      >
+                                                                           {
+                                                                                s.supplierName
+                                                                           }
+                                                                      </Select.Option>
+                                                                 )
+                                                            )}
                                                        </Select>
                                                   </Form.Item>
                                                   <Form.Item
                                                        label="Brand"
-																											 name="brandId"
+                                                       name="brandId"
                                                        rules={[
                                                             {
                                                                  required: true,
@@ -334,10 +452,87 @@ export default function CreateProduct() {
                                                             },
                                                        ]}
                                                   >
-                                                       <Select>
-                                                            <Select.Option value="demo">
-                                                                 Demo
-                                                            </Select.Option>
+                                                       <Select
+                                                            showSearch
+                                                            allowClear
+                                                            onChange={(
+                                                                 value,
+                                                                 option
+                                                            ) => {
+                                                                 setBrand(
+                                                                      option.id
+                                                                 );
+                                                            }}
+                                                       >
+                                                            {dataDetails?.listBrand?.map(
+                                                                 (data) => {
+                                                                      return (
+                                                                           <Select.Option
+                                                                                value={
+                                                                                     data.brandName
+                                                                                }
+                                                                                key={
+                                                                                     data.id
+                                                                                }
+                                                                                id={
+                                                                                     data.id
+                                                                                }
+                                                                           >
+                                                                                {
+                                                                                     data.brandName
+                                                                                }
+                                                                           </Select.Option>
+                                                                      );
+                                                                 }
+                                                            )}
+                                                       </Select>
+                                                  </Form.Item>
+                                                  <Form.Item
+                                                       label="Categories"
+                                                       name="categoryDTO"
+                                                       rules={[
+                                                            {
+                                                                 required: true,
+                                                                 message: getMessage(
+                                                                      CODE_ERROR.ERROR_REQUIRED,
+                                                                      MESSAGE_ERROR,
+                                                                      "Product Category"
+                                                                 ),
+                                                            },
+                                                       ]}
+                                                  >
+                                                       <Select
+                                                            mode="multiple"
+                                                            maxTagCount="responsive"
+                                                            allowClear
+                                                            onChange={(
+                                                                 value,
+                                                                 option
+                                                            ) => {
+                                                                 setCategories(
+                                                                      option
+                                                                 );
+                                                            }}
+                                                       >
+                                                            {listActiveCategories.map(
+                                                                 (c) => (
+                                                                      <Select.Option
+                                                                           value={
+                                                                                c.categoryName
+                                                                           }
+                                                                           key={
+                                                                                c.id
+                                                                           }
+                                                                           id={
+                                                                                c.id
+                                                                           }
+                                                                      >
+                                                                           {
+                                                                                c.categoryName
+                                                                           }
+                                                                      </Select.Option>
+                                                                 )
+                                                            )}
                                                        </Select>
                                                   </Form.Item>
                                              </div>
@@ -349,12 +544,25 @@ export default function CreateProduct() {
                                         status="finish"
                                         description={
                                              <div className="group-data">
-                                                  <Form.Item label="Brick Texture" name="brickTexture">
+                                                  <Form.Item
+                                                       label="Brick Texture"
+                                                       name="brickTexture"
+                                                       rules={[
+                                                            {
+                                                                 required: true,
+                                                                 message: getMessage(
+                                                                      CODE_ERROR.ERROR_REQUIRED,
+                                                                      MESSAGE_ERROR,
+                                                                      "Supplier"
+                                                                 ),
+                                                            },
+                                                       ]}
+                                                  >
                                                        <Input />
                                                   </Form.Item>
                                                   <Form.Item
                                                        label="Title Size"
-																											 name="titleSize"
+                                                       name="titleSize"
                                                        rules={[
                                                             {
                                                                  required: true,
@@ -367,24 +575,19 @@ export default function CreateProduct() {
                                                        ]}
                                                   >
                                                        <Select>
-                                                            <Select.Option value="20x20">
-                                                                 20x20
-                                                            </Select.Option>
-                                                            <Select.Option value="30x30">
-                                                                 30x30
-                                                            </Select.Option>
-                                                            <Select.Option value="50x50">
-                                                                 50x50
-                                                            </Select.Option>
-                                                            <Select.Option value="60x60">
-                                                                 60x60
-                                                            </Select.Option>
-                                                            <Select.Option value="60x80">
-                                                                 60x80
-                                                            </Select.Option>
-                                                            <Select.Option value="80x80">
-                                                                 80x80
-                                                            </Select.Option>
+                                                            {titleSizeList.map(
+                                                                 (item) => (
+                                                                      <Select.Option
+                                                                           value={
+                                                                                item.value
+                                                                           }
+                                                                      >
+                                                                           {
+                                                                                item.value
+                                                                           }
+                                                                      </Select.Option>
+                                                                 )
+                                                            )}
                                                        </Select>
                                                   </Form.Item>
                                              </div>
@@ -396,20 +599,59 @@ export default function CreateProduct() {
                                         status="finish"
                                         description={
                                              <div className="group-data">
-                                                  <Form.Item label="Bending Strength" name="bendingStrength">
+                                                  <Form.Item
+                                                       label="Bending Strength"
+                                                       name="bendingStrength"
+                                                       rules={[
+                                                            {
+                                                                 required: true,
+                                                                 message: getMessage(
+                                                                      CODE_ERROR.ERROR_REQUIRED,
+                                                                      MESSAGE_ERROR,
+                                                                      "Supplier"
+                                                                 ),
+                                                            },
+                                                       ]}
+                                                  >
                                                        <Input />
                                                   </Form.Item>
-                                                  <Form.Item label="Water Absorption" name="waterAbsorption">
+                                                  <Form.Item
+                                                       label="Water Absorption"
+                                                       name="waterAbsorption"
+                                                       rules={[
+                                                            {
+                                                                 required: true,
+                                                                 message: getMessage(
+                                                                      CODE_ERROR.ERROR_REQUIRED,
+                                                                      MESSAGE_ERROR,
+                                                                      "Supplier"
+                                                                 ),
+                                                            },
+                                                       ]}
+                                                  >
                                                        <Input />
                                                   </Form.Item>
-                                                  <Form.Item label="Abrasion Resistance" name="abrasionResistance">
+                                                  <Form.Item
+                                                       label="Abrasion Resistance"
+                                                       name="abrasionResistance"
+                                                       rules={[
+                                                            {
+                                                                 required: true,
+                                                                 message: getMessage(
+                                                                      CODE_ERROR.ERROR_REQUIRED,
+                                                                      MESSAGE_ERROR,
+                                                                      "Supplier"
+                                                                 ),
+                                                            },
+                                                       ]}
+                                                  >
                                                        <Input />
                                                   </Form.Item>
                                              </div>
                                         }
                                    />
 
-                                   <Step
+                                   {/* <Step
                                         title="6"
                                         status="finish"
                                         description={
@@ -419,12 +661,12 @@ export default function CreateProduct() {
                                                   </Form.Item>
                                              </div>
                                         }
-                                   />
+                                   /> */}
                               </Steps>
                          </div>
                     </div>
 
-                    <div className="product-descriptions">
+                    {/* <div className="product-descriptions">
                          <Title level={3} className="title">
                               Product Descriptions
                          </Title>
@@ -519,7 +761,7 @@ export default function CreateProduct() {
                                    </>
                               )}
                          </Form.List>
-                    </div>
+                    </div> */}
 
                     <div className="product-btn-groups">
                          <Form.Item className="details__item">

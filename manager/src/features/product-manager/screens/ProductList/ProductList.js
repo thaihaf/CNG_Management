@@ -14,6 +14,7 @@ import "./ProductList.css";
 import {
      getProducts,
      ProductManagerPaths,
+		 titleSizeList
 } from "features/product-manager/productManager";
 const { Title } = Typography;
 
@@ -26,18 +27,11 @@ export default function ProductList() {
      const dispatch = useDispatch();
 
      const [isLoading, setIsLoading] = useState(false);
+     const [currentPage, setCurrentPage] = useState(1);
+     const [pageSize, setPageSize] = useState(2);
      const [searchText, setSearchText] = useState("");
      const [searchedColumn, setSearchedColumn] = useState("");
      const searchInput = useRef(null);
-
-     const onRowDetails = (record) => {
-          history.push(
-               EmployeeManagerPaths.EMPLOYEE_DETAILS.replace(
-                    ":employeeId",
-                    record.id || ""
-               )
-          );
-     };
 
      const handleSearch = (selectedKeys, confirm, dataIndex) => {
           confirm();
@@ -165,9 +159,9 @@ export default function ProductList() {
                     <Avatar
                          size={50}
                          src={
-                              record.listImage.filePath === ""
+                              record.listImage[0].filePath === ""
                                    ? avt_default
-                                   : record.listImage.filePath
+                                   : record.listImage[0].filePath
                          }
                     />
                ),
@@ -214,32 +208,7 @@ export default function ProductList() {
                dataIndex: "titleSize",
                key: "titleSize",
                align: "center",
-               filters: [
-                    {
-                         text: "30x30",
-                         value: "30x30",
-                    },
-                    {
-                         text: "30x60",
-                         value: "30x60",
-                    },
-                    {
-                         text: "40x80",
-                         value: "40x80",
-                    },
-                    {
-                         text: "50x50",
-                         value: "50x50",
-                    },
-                    {
-                         text: "60x60",
-                         value: "60x60",
-                    },
-                    {
-                         text: "80x80",
-                         value: "80x80",
-                    },
-               ],
+               filters: titleSizeList,
                onFilter: (value, record) => record.titleSize === value,
                filterSearch: true,
                sorter: (a, b) => {
@@ -311,6 +280,10 @@ export default function ProductList() {
           },
      ];
 
+     const onHandlePagination = (page, size) => {
+          setCurrentPage(page);
+          setPageSize(size);
+     };
      useEffect(() => {
           setIsLoading(true);
           dispatch(getProducts())
@@ -345,12 +318,12 @@ export default function ProductList() {
                                      showSizeChanger: true,
                                      position: ["bottomCenter"],
                                      size: "default",
-                                     pageSize: 10,
-                                     // current: getPageUrl || pageHead,
+                                     pageSize: pageSize,
+                                     current: currentPage,
                                      totalElements,
-                                     // onChange: (page, size) =>
-                                     // 	onHandlePagination(page, size),
-                                     pageSizeOptions: ["10", "15", "20", "25"],
+                                     onChange: (page, size) =>
+                                          onHandlePagination(page, size),
+                                     pageSizeOptions: ["2", "4", "6"],
                                 }
                               : false
                     }

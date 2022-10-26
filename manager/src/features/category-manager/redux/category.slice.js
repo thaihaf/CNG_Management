@@ -14,6 +14,13 @@ export const getCategories = createAsyncThunk(
     return response.data;
   }
 );
+export const getActiveCategories = createAsyncThunk(
+  "category/getActiveCategories",
+  async () => {
+    const response = await api.getActiveCategories();
+    return response.data;
+  }
+);
 export const createCategory = createAsyncThunk(
   "category/createCategory",
   async ({ data }, { rejectWithValue }) => {
@@ -36,8 +43,6 @@ export const getCategoryDetails = createAsyncThunk(
 export const updateDetails = createAsyncThunk(
   "category/updateDetails",
   async ({ id, data }, { rejectWithValue }) => {
-       console.log(id);
-       console.log(data);
        try {
             const response = await api.updateDetails(id, data);
             return response;
@@ -62,7 +67,6 @@ export const deleteCategories = createAsyncThunk(
   async (list, { rejectWithValue }) => {
        try {
             list.forEach(async (id) => {
-                 console.log(id);
                  await api.deleteCategory(id);
             });
             return true;
@@ -87,6 +91,7 @@ export const createDetails = createAsyncThunk(
 
 const initialState = {
   listCategories: [],
+  listActiveCategories: [],
   totalElements: 0,
   totalPages: 0,
   size: 0,
@@ -109,6 +114,9 @@ const categorySlice = createSlice({
       state.totalElements = action.payload.totalElements;
       state.totalPages = action.payload.totalPages;
       state.size = action.payload.size;
+    },
+    [getActiveCategories.fulfilled]: (state, action) => {
+      state.listActiveCategories = action.payload;
     },
     [createCategory.fulfilled]: (state, action) => {
       state.errorProcess = "";
