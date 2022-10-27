@@ -4,6 +4,7 @@ import {
      HomeOutlined,
      BarcodeOutlined,
      SettingOutlined,
+     ExclamationCircleOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -68,9 +69,19 @@ const DefaultLayout = ({ children }) => {
      };
 
      const handleLogout = () => {
-          dispatch({ type: "LOGOUT" });
-          history.push(AuthPaths.LOGIN);
-          localStorage.removeItem("persist:auth");
+          Modal.confirm({
+               title: "Confirm",
+               icon: <ExclamationCircleOutlined />,
+               content: "Are you sure want to Logout",
+               okText: "Logout",
+               cancelText: "Cancel",
+               onOk: () => {
+                    dispatch({ type: "LOGOUT" });
+                    history.push(AuthPaths.LOGIN);
+                    localStorage.removeItem("persist:auth");
+               },
+               onCancel: () => {},
+          });
      };
 
      const handleChangePassword = (values) => {
