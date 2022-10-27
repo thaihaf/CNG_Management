@@ -5,6 +5,10 @@ const getCategories = () => {
      const url = CategoryEndPoints.CATEGORY_MANAGER;
      return api.get(url);
 };
+const getActiveCategories = () => {
+     const url = CategoryEndPoints.CATEGORY_ACTIVE;
+     return api.get(url);
+};
 const createDetails = (data) => {
      const url = CategoryEndPoints.CATEGORY_MANAGER;
      return api.post(url, data);
@@ -36,6 +40,7 @@ const deleteCategory = (id) => {
 };
 const categoryApi = { 
      getCategories, 
+		 getActiveCategories,
      getCategoryDetails,
      createCategory,
      createDetails,

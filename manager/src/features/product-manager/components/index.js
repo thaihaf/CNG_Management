@@ -1,1 +1,2 @@
-// export { default as EmployeeDetailsForm } from "./EmployeeDetailsForm/EmployeeDetailsForm";
+export { default as ProductDetailsForm } from "./ProductDetailsForm/ProductDetailsForm";
+export { default as ActionsModal } from "./ActionsModal/ActionsModal";

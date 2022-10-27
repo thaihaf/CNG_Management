@@ -50,9 +50,10 @@ const initialState = {
      totalPages: 0,
      size: 0,
      errorProcess: "",
+     productDetails: null,
 };
 
-const productsSlice = createSlice({
+const productSlice = createSlice({
      name: PRODUCT_FEATURE_KEY,
      initialState,
      reducers: {
@@ -67,12 +68,15 @@ const productsSlice = createSlice({
                state.totalPages = action.payload.totalPages;
                state.size = action.payload.size;
           },
+          [getDetailsProduct.fulfilled]: (state, action) => {
+               state.productDetails = action.payload;
+          },
           ["LOGOUT"]: (state) => {
                Object.assign(state, initialState);
           },
      },
 });
 
-export const {} = productsSlice.actions;
+export const {} = productSlice.actions;
 
-export const productsReducer = productsSlice.reducer;
+export const productReducer = productSlice.reducer;

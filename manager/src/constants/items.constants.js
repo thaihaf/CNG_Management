@@ -18,6 +18,18 @@ export const siderBarItems = [
           role: ["admin", "employee"],
      },
      {
+          key: "import-product",
+          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Import Product`,
+          role: ["admin", "employee"],
+     },
+    //  {
+    //       key: "export-product",
+    //       icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+    //       label: `Export Product`,
+    //       role: ["admin", "employee"],
+    //  },
+     {
           key: "brand",
           icon: <TagOutlined style={{ fontSize: "1.6rem" }} />,
           label: `Brands`,
@@ -47,19 +59,6 @@ export const siderBarItems = [
           label: `Customers`,
           role: ["admin", "employee"],
      },
-     //
-     {
-          key: "profile",
-          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Profile`,
-          role: ["employee"],
-     },
-     {
-          key: "settings",
-          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Settings`,
-          role: ["admin", "employee"],
-     },
      {
           key: "warehouse",
           icon: <DatabaseOutlined style={{ fontSize: "1.6rem" }} />,
@@ -71,5 +70,12 @@ export const siderBarItems = [
           icon: <AppstoreOutlined style={{ fontSize: "1.6rem" }} />,
           label: `Categories`,
           role: ["admin", "employee"],
+     },
+     //
+     {
+          key: "profile",
+          icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Profile`,
+          role: ["employee"],
      },
 ];
