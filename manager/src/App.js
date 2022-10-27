@@ -23,7 +23,15 @@ function App() {
      }, [dispatch]);
 
      return (
-          <Suspense fallback={<Spin spinning={true} delay={50} />}>
+          <Suspense
+               fallback={
+                    <Spin
+                         spinning={true}
+                         delay={50}
+                         style={{ position: "fixed" , left : "50%", top : "50%", backgroundColor : "transparent"}}
+                    />
+               }
+          >
                <Router>
                     <RoutesApp />
                </Router>

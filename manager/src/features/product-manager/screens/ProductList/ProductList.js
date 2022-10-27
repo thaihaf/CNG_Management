@@ -5,7 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 
 import { SearchOutlined } from "@ant-design/icons";
-import { Avatar, Button, Input, Space, Table, Tag, Typography } from "antd";
+import {
+     Avatar,
+     Button,
+     Input,
+     Space,
+     Table,
+     Tag,
+     Tooltip,
+     Typography,
+} from "antd";
 import { EmployeeManagerPaths } from "features/employee-manager/employeeManager";
 
 import avt_default from "assets/images/avt-default.png";
@@ -14,14 +23,18 @@ import "./ProductList.css";
 import {
      getProducts,
      ProductManagerPaths,
-		 titleSizeList
+     titleSizeList,
 } from "features/product-manager/productManager";
+import { getActiveCategories } from "features/category-manager/categoryManager";
+import { get } from "lodash";
+import { ActionsModal } from "features/product-manager/components";
 const { Title } = Typography;
 
 export default function ProductList() {
      const { listProducts, totalElements, totalPages, size } = useSelector(
           (state) => state.product
      );
+     const { listActiveCategories } = useSelector((state) => state.category);
      const history = useHistory();
      const location = useLocation();
      const dispatch = useDispatch();
@@ -42,7 +55,7 @@ export default function ProductList() {
           clearFilters();
           setSearchText("");
      };
-     const getColumnSearchProps = (dataIndex) => ({
+     const getColumnSearchProps = (dataIndex, nestedValue) => ({
           filterDropdown: ({
                setSelectedKeys,
                selectedKeys,
@@ -123,11 +136,20 @@ export default function ProductList() {
                     }}
                />
           ),
-          onFilter: (value, record) =>
-               record[dataIndex]
-                    .toString()
-                    .toLowerCase()
-                    .includes(value.toLowerCase()),
+          onFilter: (value, record) => {
+               if (typeof record[dataIndex] === "string") {
+                    return record[dataIndex]
+                         .toString()
+                         .toLowerCase()
+                         .includes(value.toLowerCase());
+               } else {
+                    return get(record, dataIndex)
+                         [nestedValue].toString()
+                         .toLowerCase()
+                         .includes(value.toLowerCase());
+               }
+          },
+
           onFilterDropdownOpenChange: (visible) => {
                if (visible) {
                     setTimeout(() => searchInput.current?.select(), 100);
@@ -159,9 +181,9 @@ export default function ProductList() {
                     <Avatar
                          size={50}
                          src={
-                              record.listImage[0].filePath === ""
+                              record?.listImage[0]?.filePath === ""
                                    ? avt_default
-                                   : record.listImage[0].filePath
+                                   : record?.listImage[0]?.filePath
                          }
                     />
                ),
@@ -170,7 +192,7 @@ export default function ProductList() {
                title: "Code",
                dataIndex: "id",
                key: "id",
-               sorter: (a, b) => a.id.length - b.id.length,
+               sorter: (a, b) => a.id > b.id,
                sortDirections: ["descend", "ascend"],
                ...getColumnSearchProps("id"),
           },
@@ -178,15 +200,12 @@ export default function ProductList() {
                title: "Origin",
                dataIndex: "origin",
                key: "origin",
-               sorter: (a, b) => a.origin.length - b.origin.length,
-               sortDirections: ["descend", "ascend"],
                ...getColumnSearchProps("origin"),
           },
           {
                title: "Categories Name",
                dataIndex: "categoriesName",
                key: "categoriesName",
-               ...getColumnSearchProps("categoriesName"),
                render: (_, { categoryDTO }) => (
                     <>
                          {categoryDTO.map((c) => {
@@ -202,6 +221,12 @@ export default function ProductList() {
                          })}
                     </>
                ),
+               filters: listActiveCategories?.map((c) => {
+                    return { text: c.categoryName, value: c.id };
+               }),
+               onFilter: (value, record) =>
+                    record.categoryDTO.find((c) => c.id === value),
+               filterSearch: true,
           },
           {
                title: "Title Size",
@@ -218,15 +243,15 @@ export default function ProductList() {
                     let aVal = Number(aArr[0]) * Number(aArr[1]);
                     let bVal = Number(bArr[0]) * Number(bArr[1]);
 
-                    return aVal > bVal;
+                    return aVal - bVal;
                },
                sortDirections: ["descend", "ascend"],
           },
           {
                title: "Branch Name",
-               dataIndex: "brandName",
+               dataIndex: "brandDTO",
                key: "brandName",
-               ...getColumnSearchProps("brandName"),
+               ...getColumnSearchProps("brandDTO", "brandName"),
                render: (_, { brandDTO }) => (
                     <Tag color="blue" key={brandDTO.id}>
                          {brandDTO.brandName.toUpperCase()}
@@ -235,11 +260,9 @@ export default function ProductList() {
           },
           {
                title: "Supplier Name",
-               dataIndex: "supplierName",
+               dataIndex: "supplierDTO",
                key: "supplierName",
-               sorter: (a, b) => a.supplierName.length - b.supplierName.length,
-               sortDirections: ["descend", "ascend"],
-               ...getColumnSearchProps("supplierName"),
+               ...getColumnSearchProps("supplierDTO", "supplierName"),
                render: (_, { supplierDTO }) => (
                     <Tag color="blue" key={supplierDTO.id}>
                          {supplierDTO.supplierName.toUpperCase()}
@@ -289,12 +312,14 @@ export default function ProductList() {
           dispatch(getProducts())
                .then(unwrapResult)
                .then(() => setIsLoading(false));
+          dispatch(getActiveCategories());
      }, [dispatch, location]);
 
      return (
           <div className="product-list">
                <div className="top">
-                    <Title level={2}>Product List</Title>
+                    <ActionsModal/>
+
                     <Button
                          type="primary"
                          shape={"round"}

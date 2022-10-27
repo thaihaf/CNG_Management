@@ -4,7 +4,7 @@ const { Footer } = Layout;
 export default function FooterComponents() {
      return (
           <Footer style={{ textAlign: "center" }}>
-               Ant Design ©2018 Created by Ant UED
+               CNG Managerment ©2022 Created by G18 Team
           </Footer>
      );
 }

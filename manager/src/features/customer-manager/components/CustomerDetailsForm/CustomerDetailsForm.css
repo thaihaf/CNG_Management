@@ -23,8 +23,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
 }
 .details .details__left .details__avatar .item_choose-avt {
   position: absolute;
@@ -109,4 +107,4 @@
 }
 .details .details__right .details__group .details__item .ant-select-selector, .details .details__right .details__group .details__item .ant-picker.ant-picker-disabled {
   border-radius: 2rem !important;
-}/*# sourceMappingURL=SupplierDetailsForm.css.map */
+}/*# sourceMappingURL=CustomerDetailsForm.css.map */

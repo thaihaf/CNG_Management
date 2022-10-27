@@ -8,6 +8,9 @@ const ProductListScreen = React.lazy(() =>
 const CreateProductScreen = React.lazy(() =>
      import("../screens/CreateProduct/CreateProduct")
 );
+const ProductDetailsScreen = React.lazy(() =>
+     import("../screens/ProductDetails/ProductDetails")
+);
 
 const PRODUCT_LIST_SCREEN = {
      id: "product-list",
@@ -23,7 +26,18 @@ const CREATE_PRODUCT_SCREEN = {
      isPrivateRoute: true,
      pageTitle: "Create Product",
 };
+const PRODUCT_DETAILS_SCREEN = {
+     id: "product-details",
+     path: ProductManagerPaths.PRODUCT_DETAILS,
+     component: ProductDetailsScreen,
+     isPrivateRoute: true,
+     pageTitle: "Product Details",
+};
 
-const PRODUCT_MANAGER_ROUTES = [PRODUCT_LIST_SCREEN, CREATE_PRODUCT_SCREEN];
+const PRODUCT_MANAGER_ROUTES = [
+     CREATE_PRODUCT_SCREEN,
+     PRODUCT_DETAILS_SCREEN,
+     PRODUCT_LIST_SCREEN,
+];
 
 export default PRODUCT_MANAGER_ROUTES;
