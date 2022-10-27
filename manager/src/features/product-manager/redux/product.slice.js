@@ -50,6 +50,7 @@ const initialState = {
      totalPages: 0,
      size: 0,
      errorProcess: "",
+     productDetails: null,
 };
 
 const productSlice = createSlice({
@@ -66,6 +67,9 @@ const productSlice = createSlice({
                state.totalElements = action.payload.totalElements;
                state.totalPages = action.payload.totalPages;
                state.size = action.payload.size;
+          },
+          [getDetailsProduct.fulfilled]: (state, action) => {
+               state.productDetails = action.payload;
           },
           ["LOGOUT"]: (state) => {
                Object.assign(state, initialState);

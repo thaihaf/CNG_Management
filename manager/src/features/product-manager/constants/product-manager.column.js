@@ -24,3 +24,25 @@ export const titleSizeList = [
           value: "80x80",
      },
 ];
+export const abrasionResistanceList = [
+     {
+          text: "PEI I",
+          value: "PEI I",
+     },
+     {
+          text: "PEI II",
+          value: "PEI II",
+     },
+     {
+          text: "PEI III",
+          value: "PEI III",
+     },
+     {
+          text: "PEI IV",
+          value: "PEI IV",
+     },
+     {
+          text: "PEI V",
+          value: "PEI V",
+     },
+];
