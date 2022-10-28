@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import moment from "moment";
 import queryString from "query-string";
 import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -9,22 +8,17 @@ import { DownOutlined } from "@ant-design/icons";
 import ImgCrop from "antd-img-crop";
 import {
   CameraOutlined,
-  DownloadOutlined,
-  LockOutlined,
   DeleteTwoTone,
   ExclamationCircleOutlined,
   SearchOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import {
   Avatar,
   Button,
-  Divider,
   Form,
   Input,
   message,
   Modal,
-  Switch,
   Space,
   Table,
   Tag,
@@ -49,8 +43,6 @@ import { storage } from "firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import {
-  updateErrorProcess,
-  createSupplier,
   createDetails,
 } from "features/supplier-manager/supplierManager";
 import {
@@ -58,7 +50,6 @@ import {
   getProvince,
   getProvinces,
 } from "features/provinces/provinces";
-import { ClassSharp } from "@mui/icons-material";
 const { Title, Text } = Typography;
 const { Option } = Select;
 export default function SupplierList() {
@@ -951,9 +942,6 @@ export default function SupplierList() {
                     }}
                     onChange={(value, e) => {
                       console.log(value.value);
-                      // dispatch(
-                      // 		 getDistrict(value.key)
-                      // );
                     }}
                     placeholder="Search to Select"
                     optionFilterProp="children"

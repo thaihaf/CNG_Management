@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import "./WarehouseDetailsForm.css";
-import {
-  CaretUpOutlined,
-  HighlightOutlined,
-} from "@ant-design/icons";
+import { CaretUpOutlined, HighlightOutlined } from "@ant-design/icons";
 import {
   Form,
   Input,
@@ -16,14 +12,10 @@ import {
   message,
   Spin,
 } from "antd";
-import {
-  updateDetails,
-} from "features/warehouse-manager/warehouseManager";
+import { updateDetails } from "features/warehouse-manager/warehouseManager";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
-import queryString from "query-string";
-import { getUserName } from "helpers/auth.helpers";
 import {
   getDistrict,
   getProvince,
@@ -66,14 +58,14 @@ function WarehouseDetailsForm() {
               typeof values.addressDTO.city === "string"
                 ? values.addressDTO.city
                 : values.addressDTO.city.value,
-                district:
-                typeof values.addressDTO.district === "string"
-                  ? values.addressDTO.district
-                  : values.addressDTO.district.value,
-              ward:
-                typeof values.addressDTO.ward === "string"
-                  ? values.addressDTO.ward
-                  : values.addressDTO.ward.value,
+            district:
+              typeof values.addressDTO.district === "string"
+                ? values.addressDTO.district
+                : values.addressDTO.district.value,
+            ward:
+              typeof values.addressDTO.ward === "string"
+                ? values.addressDTO.ward
+                : values.addressDTO.ward.value,
           },
           status: 1,
         },
@@ -120,33 +112,33 @@ function WarehouseDetailsForm() {
                 label={<Text>Warehouse Name</Text>}
                 className="details__item"
                 rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Warehouse Name"
-                      ),
-                    },
-                    {
-                      max: 25,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Warehouse Name",
-                        25
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Warehouse Name",
-                        2
-                      ),
-                    },
-                  ]}
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Warehouse Name"
+                    ),
+                  },
+                  {
+                    max: 25,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MAX,
+                      MESSAGE_ERROR,
+                      "Warehouse Name",
+                      25
+                    ),
+                  },
+                  {
+                    min: 2,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MIN,
+                      MESSAGE_ERROR,
+                      "Warehouse Name",
+                      2
+                    ),
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -168,33 +160,33 @@ function WarehouseDetailsForm() {
                 label={<Text>Note Warehouse</Text>}
                 className="details__item"
                 rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Note Warehouse"
-                      ),
-                    },
-                    {
-                      max: 25,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Note Warehouse",
-                        25
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Note Warehouse",
-                        2
-                      ),
-                    },
-                  ]}
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Note Warehouse"
+                    ),
+                  },
+                  {
+                    max: 25,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MAX,
+                      MESSAGE_ERROR,
+                      "Note Warehouse",
+                      25
+                    ),
+                  },
+                  {
+                    min: 2,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MIN,
+                      MESSAGE_ERROR,
+                      "Note Warehouse",
+                      2
+                    ),
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -203,33 +195,33 @@ function WarehouseDetailsForm() {
                 label={<Text>Phone Number</Text>}
                 className="details__item"
                 rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Phone Number"
-                      ),
-                    },
-                    {
-                      max: 10,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Phone Number",
-                        10
-                      ),
-                    },
-                    {
-                      min: 9,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Phone Number",
-                        9
-                      ),
-                    },
-                  ]}
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Phone Number"
+                    ),
+                  },
+                  {
+                    max: 10,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MAX,
+                      MESSAGE_ERROR,
+                      "Phone Number",
+                      10
+                    ),
+                  },
+                  {
+                    min: 9,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MIN,
+                      MESSAGE_ERROR,
+                      "Phone Number",
+                      9
+                    ),
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -241,15 +233,15 @@ function WarehouseDetailsForm() {
                 label={<Text>Street Name, House No</Text>}
                 className="details__item"
                 rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Street Name, House No"
-                      ),
-                    },
-                  ]}
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Street Name, House No"
+                    ),
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -259,15 +251,15 @@ function WarehouseDetailsForm() {
                 label={<Text>City</Text>}
                 className="details__item"
                 rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "City"
-                      ),
-                    },
-                  ]}
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "City"
+                    ),
+                  },
+                ]}
               >
                 <Select
                   labelInValue
@@ -306,15 +298,15 @@ function WarehouseDetailsForm() {
                 label={<Text>District</Text>}
                 className="details__item"
                 rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "District"
-                      ),
-                    },
-                  ]}
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "District"
+                    ),
+                  },
+                ]}
               >
                 <Select
                   labelInValue
@@ -351,15 +343,15 @@ function WarehouseDetailsForm() {
                 label={<Text>Ward</Text>}
                 className="details__item"
                 rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Ward"
-                      ),
-                    },
-                  ]}
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Ward"
+                    ),
+                  },
+                ]}
               >
                 <Select
                   labelInValue
@@ -367,10 +359,6 @@ function WarehouseDetailsForm() {
                   style={{
                     width: 200,
                   }}
-                  // onChange={(value, e) => {
-                  //   console.log(value.value);
-                  //   dispatch(getDistrict(value.key));
-                  // }}
                   placeholder="Search to Select"
                   optionFilterProp="children"
                   filterOption={(input, option) =>

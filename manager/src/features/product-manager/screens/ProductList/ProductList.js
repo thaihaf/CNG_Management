@@ -264,8 +264,8 @@ export default function ProductList() {
                key: "supplierName",
                ...getColumnSearchProps("supplierDTO", "supplierName"),
                render: (_, { supplierDTO }) => (
-                    <Tag color="blue" key={supplierDTO.id}>
-                         {supplierDTO.supplierName.toUpperCase()}
+                    <Tag color="blue" key={supplierDTO?.id}>
+                         {supplierDTO?.supplierName.toUpperCase()}
                     </Tag>
                ),
           },

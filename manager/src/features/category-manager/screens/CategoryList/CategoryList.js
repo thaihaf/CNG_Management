@@ -7,30 +7,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { DownOutlined } from "@ant-design/icons";
 import {
-  CameraOutlined,
-  DownloadOutlined,
-  LockOutlined,
   DeleteTwoTone,
   SearchOutlined,
   ExclamationCircleOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
-  Divider,
   Form,
   Input,
   message,
   Modal,
-  Switch,
   Space,
   Table,
   Tag,
   Typography,
   Dropdown,
   Menu,
-  Upload,
   Select,
 } from "antd";
 import {
@@ -44,17 +36,12 @@ import "./CategoryList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
-import {
-  updateErrorProcess,
-  createCategory,
-  createDetails,
-} from "features/category-manager/categoryManager";
+import { createDetails } from "features/category-manager/categoryManager";
 import {
   getDistrict,
   getProvince,
   getProvinces,
 } from "features/provinces/provinces";
-import { ClassSharp } from "@mui/icons-material";
 const { Title, Text } = Typography;
 const { Option } = Select;
 export default function CategoryList() {
@@ -137,7 +124,7 @@ export default function CategoryList() {
             dispatch(getCategories())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
-              message.success("Delete success!");
+            message.success("Delete success!");
           })
           .catch((error) => {
             console.log(error);
@@ -150,9 +137,9 @@ export default function CategoryList() {
   const onRowDetails = (record) => {
     history.push(
       CategoryManagerPaths.CATEGORY_DETAIL.replace(
-        ":categoryId", 
+        ":categoryId",
         record.id || ""
-        )
+      )
     );
   };
 
@@ -378,13 +365,11 @@ export default function CategoryList() {
         console.log(error);
         console.log(args);
         message.error("Create category failed!");
-        //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
       });
   };
 
   useEffect(() => {
     dispatch(getProvinces());
-    // setComponentDisabled(createMode);
   }, [dispatch]);
 
   return (
@@ -399,7 +384,8 @@ export default function CategoryList() {
           >
             {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
           </span>
-          <Button className="btnDelete"
+          <Button
+            className="btnDelete"
             onClick={() => onRowDelete()}
             disabled={!hasSelected}
             loading={isLoading}
