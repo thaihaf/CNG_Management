@@ -6,25 +6,11 @@ import api from "../api/brand.api";
 
 export const BRANDS_FEATURE_KEY = BRAND_KEY;
 
-export const getBrands = createAsyncThunk(
-  "brand/getBrands",
-  async () => {
-    const response = await api.getBrands();
-    console.log(response);
-    return response.data;
-  }
-);
-export const createBrand = createAsyncThunk(
-  "brand/createBrand",
-  async ({ data }, { rejectWithValue }) => {
-    try {
-      const response = await api.createBrand(data);
-      return response;
-    } catch (error) {
-      throw rejectWithValue(error);
-    }
-  }
-);
+export const getBrands = createAsyncThunk("brand/getBrands", async () => {
+  const response = await api.getBrands();
+  console.log(response);
+  return response.data;
+});
 export const getBrandDetails = createAsyncThunk(
   "brand/getBrandDetails",
   async (id) => {
@@ -36,52 +22,52 @@ export const getBrandDetails = createAsyncThunk(
 export const updateDetails = createAsyncThunk(
   "brand/updateDetails",
   async ({ id, data }, { rejectWithValue }) => {
-       console.log(id);
-       console.log(data);
-       try {
-            const response = await api.updateDetails(id, data);
-            return response;
-       } catch (error) {
-            throw rejectWithValue(error);
-       }
+    console.log(id);
+    console.log(data);
+    try {
+      const response = await api.updateDetails(id, data);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 export const deleteBrand = createAsyncThunk(
   "brand/deleteBrand",
   async (id, { rejectWithValue }) => {
-       try {
-            const response = await api.deleteBrand(id);
-            return response;
-       } catch (error) {
-            throw rejectWithValue(error);
-       }
+    try {
+      const response = await api.deleteBrand(id);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 export const deleteBrands = createAsyncThunk(
   "brand/deleteBrands",
   async (list, { rejectWithValue }) => {
-       try {
-            list.forEach(async (id) => {
-                 console.log(id);
-                 await api.deleteBrand(id);
-            });
-            return true;
-       } catch (error) {
-            console.log(error);
-            throw rejectWithValue(error);
-       }
+    try {
+      list.forEach(async (id) => {
+        console.log(id);
+        await api.deleteBrand(id);
+      });
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw rejectWithValue(error);
+    }
   }
 );
 
 export const createDetails = createAsyncThunk(
   "brand/createDetails",
   async ({ data }, { rejectWithValue }) => {
-       try {
-            const response = await api.createDetails(data);
-            return response;
-       } catch (error) {
-            throw rejectWithValue(error);
-       }
+    try {
+      const response = await api.createDetails(data);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 
@@ -110,9 +96,6 @@ const brandSlice = createSlice({
       state.totalPages = action.payload.totalPages;
       state.size = action.payload.size;
     },
-    [createBrand.fulfilled]: (state, action) => {
-      state.errorProcess = "";
-    },
     [getBrandDetails.fulfilled]: (state, action) => {
       state.dataDetails = action.payload;
       state.errorProcess = "";
@@ -121,9 +104,12 @@ const brandSlice = createSlice({
     [getBrandDetails.rejected]: (state, action) => {
       state.createMode = true;
     },
-		["LOGOUT"]: (state) => {
-			Object.assign(state, initialState);
- },
+    [createDetails.fulfilled]: (state, action) => {
+      state.createMode = false;
+    },
+    ["LOGOUT"]: (state) => {
+      Object.assign(state, initialState);
+    },
   },
 });
 export const { updateErrorProcess, updateDataDetails } = brandSlice.actions;

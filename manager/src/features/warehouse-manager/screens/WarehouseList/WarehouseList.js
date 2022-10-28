@@ -8,30 +8,22 @@ import { useHistory, useLocation } from "react-router-dom";
 import { DownOutlined } from "@ant-design/icons";
 import ImgCrop from "antd-img-crop";
 import {
-  CameraOutlined,
-  DownloadOutlined,
-  LockOutlined,
   DeleteTwoTone,
   ExclamationCircleOutlined,
   SearchOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
-  Divider,
   Form,
   Input,
   message,
   Modal,
-  Switch,
   Space,
   Table,
   Tag,
   Typography,
   Dropdown,
   Menu,
-  Upload,
   Select,
 } from "antd";
 import {
@@ -40,25 +32,16 @@ import {
   deleteWarehouse,
   deleteWarehouses,
 } from "features/warehouse-manager/warehouseManager";
-import avt_default from "assets/images/avt-default.png";
 import "./WarehouseList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
-import { storage } from "firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
-import {
-  updateErrorProcess,
-  createWarehouse,
-  createDetails,
-} from "features/warehouse-manager/warehouseManager";
+import { createDetails } from "features/warehouse-manager/warehouseManager";
 import {
   getDistrict,
   getProvince,
   getProvinces,
 } from "features/provinces/provinces";
-import { ClassSharp } from "@mui/icons-material";
 const { Title, Text } = Typography;
 const { Option } = Select;
 export default function WarehouseList() {
@@ -151,7 +134,7 @@ export default function WarehouseList() {
             dispatch(getProvinces())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
-              message.success("Delete success!");
+            message.success("Delete success!");
           })
           .catch((error) => {
             console.log(error);

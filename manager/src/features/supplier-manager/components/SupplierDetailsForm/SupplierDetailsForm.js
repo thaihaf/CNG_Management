@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import "./SupplierDetailsForm.css";
 import avt_default from "assets/images/avt-default.png";
 import {
@@ -25,7 +24,6 @@ import { updateDetails } from "features/supplier-manager/supplierManager";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { getUserName } from "helpers/auth.helpers";
 import { storage } from "firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
@@ -107,7 +105,6 @@ function SupplierDetailsForm() {
         console.log(error);
         console.log(dataDetails.id);
         message.error("Update failed!!!");
-        //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
       });
   };
 
@@ -176,12 +173,12 @@ function SupplierDetailsForm() {
             </Form.Item>
           </div>
           <>
-             <div className="details__fullname">
+            <div className="details__fullname">
               {`${dataDetails?.supplierName}`}
             </div>
-            <div className="details__username">{
-              `${dataDetails?.firstContactName} ${dataDetails?.lastContactName}`}
-              </div>
+            <div className="details__username">
+              {`${dataDetails?.firstContactName} ${dataDetails?.lastContactName}`}
+            </div>
 
             <div className="details__location">
               <svg
@@ -605,10 +602,6 @@ function SupplierDetailsForm() {
                   style={{
                     width: 200,
                   }}
-                  // onChange={(value, e) => {
-                  //   console.log(value.value);
-                  //   dispatch(getDistrict(value.key));
-                  // }}
                   placeholder="Search to Select"
                   optionFilterProp="children"
                   filterOption={(input, option) =>

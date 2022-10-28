@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import moment from "moment";
 import queryString from "query-string";
 import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -49,7 +48,7 @@ import {
   getProvince,
   getProvinces,
 } from "features/provinces/provinces";
-import { ClassSharp } from "@mui/icons-material";
+
 const { Title, Text } = Typography;
 const { Option } = Select;
 export default function CustomerList() {
@@ -152,7 +151,7 @@ export default function CustomerList() {
             dispatch(getProvinces())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
-              message.success("Delete success!");
+            message.success("Delete success!");
           })
           .catch((error) => {
             console.log(error);

@@ -1,51 +1,23 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import "./CategoryDetailsForm.css";
-import avt from "assets/images/avt.jpg";
-import {
-  CameraOutlined,
-  CaretUpOutlined,
-  DownloadOutlined,
-  HighlightOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import { CaretUpOutlined, HighlightOutlined } from "@ant-design/icons";
 
 import {
   Form,
   Input,
   Button,
-  Radio,
   Select,
-  Cascader,
-  DatePicker,
-  InputNumber,
-  TreeSelect,
   Switch,
-  Checkbox,
-  Upload,
-  Tag,
   Divider,
-  List,
   Spin,
   Typography,
   message,
 } from "antd";
-import {
-  getCategoryDetails,
-  createDetails,
-  updateDetails,
-} from "features/category-manager/categoryManager";
+import { updateDetails } from "features/category-manager/categoryManager";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
-import queryString from "query-string";
-import { getUserName } from "helpers/auth.helpers";
-import {
-  getDistrict,
-  getProvince,
-  getProvinces,
-} from "features/provinces/provinces";
+
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
@@ -89,7 +61,6 @@ function CategoryDetailsForm() {
         console.log(error);
         console.log(dataDetails.id);
         message.error("Update failed!!!");
-        //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
       });
   };
 
@@ -173,10 +144,7 @@ function CategoryDetailsForm() {
             </Form.Item>
           </div>
           <div className="details__group">
-            <Form.Item
-              label={<Text>Status</Text>}
-              className="details__item"
-            >
+            <Form.Item label={<Text>Status</Text>} className="details__item">
               <Switch
                 checked={status === null ? initialValues.status : status}
                 onChange={(checked) => setStatus(checked)}

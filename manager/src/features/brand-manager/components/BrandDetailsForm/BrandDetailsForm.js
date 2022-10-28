@@ -1,51 +1,26 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import "./BrandDetailsForm.css";
-import avt from "assets/images/avt.jpg";
 import {
-  CameraOutlined,
   CaretUpOutlined,
-  DownloadOutlined,
   HighlightOutlined,
-  PlusOutlined,
 } from "@ant-design/icons";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-
 import {
   Form,
   Input,
   Button,
-  Radio,
   Select,
-  Cascader,
-  DatePicker,
-  InputNumber,
-  TreeSelect,
   Switch,
-  Checkbox,
-  Upload,
-  Tag,
   Divider,
-  List,
   Spin,
   Typography,
   message,
 } from "antd";
 import {
-  getBrandDetails,
-  createDetails,
   updateDetails,
 } from "features/brand-manager/brandManager";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
-import queryString from "query-string";
-import { getUserName } from "helpers/auth.helpers";
-import {
-  getDistrict,
-  getProvince,
-  getProvinces,
-} from "features/provinces/provinces";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
@@ -55,6 +30,7 @@ const { Paragraph, Text } = Typography;
 
 function BrandDetailsForm() {
   const { dataDetails, createMode } = useSelector((state) => state.brand);
+  const { listSuppliers } = useSelector((state) => state.supplier);
 
   const history = useHistory();
   const location = useLocation();
@@ -89,7 +65,6 @@ function BrandDetailsForm() {
         console.log(error);
         console.log(dataDetails.id);
         message.error("Update failed!!!");
-        //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
       });
   };
 
@@ -100,6 +75,13 @@ function BrandDetailsForm() {
   if (!initialValues) {
     return <Spin spinning={true} />;
   }
+
+  const onChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const onSearch = (value) => {
+    console.log('search:', value);
+  };
 
   return (
     <div className="details">
@@ -156,7 +138,7 @@ function BrandDetailsForm() {
             </Form.Item>
             <Form.Item
               name="supplierId"
-              label={<Text>Supplier Id</Text>}
+              label={<Text>Supplier Name</Text>}
               className="details__item"
               rules={[
                 {
@@ -169,7 +151,23 @@ function BrandDetailsForm() {
                 },
               ]}
             >
-              <Input />
+              <Select
+                    showSearch
+                    optionFilterProp="children"
+                    onChange={onChange}
+                    onSearch={onSearch}
+                    filterOption={(input, option) =>
+                      option.children
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                  >
+                    {listSuppliers.map((s) => (
+                      <Option value={s.id} key={s.id}>
+                        {s.supplierName}
+                      </Option>
+                    ))}
+                  </Select>
             </Form.Item>
           </div>
           <div className="details__group">
