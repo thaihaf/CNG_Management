@@ -8,7 +8,6 @@ import {
   DeleteTwoTone,
   SearchOutlined,
   ExclamationCircleOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -43,7 +42,6 @@ import {
   getProvince,
   getProvinces,
 } from "features/provinces/provinces";
-import { ClassSharp } from "@mui/icons-material";
 import { getSuppliers } from "features/supplier-manager/supplierManager";
 const { Title, Text } = Typography;
 const { Option } = Select;

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import "./CustomerDetailsForm.css";
 import avt_default from "assets/images/avt-default.png";
 import {
@@ -21,9 +20,7 @@ import {
   message,
   Spin,
 } from "antd";
-import {
-  updateDetails,
-} from "features/customer-manager/customerManager";
+import { updateDetails } from "features/customer-manager/customerManager";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -73,32 +70,32 @@ function CustomerDetailsForm() {
     });
   };
 
-  const onFinishUpdate = async (values)=> {
+  const onFinishUpdate = async (values) => {
     dispatch(
       updateDetails({
         id: dataDetails.id,
         data: {
           ...values,
-        addressDTO: {
-          ...values.addressDTO,
-          city:
-            typeof values.addressDTO.city === "string"
-              ? values.addressDTO.city
-              : values.addressDTO.city.value,
-          district:
-            typeof values.addressDTO.district === "string"
-              ? values.addressDTO.district
-              : values.addressDTO.district.value,
-          ward:
-            typeof values.addressDTO.ward === "string"
-              ? values.addressDTO.ward
-              : values.addressDTO.ward.value,
-        },
+          addressDTO: {
+            ...values.addressDTO,
+            city:
+              typeof values.addressDTO.city === "string"
+                ? values.addressDTO.city
+                : values.addressDTO.city.value,
+            district:
+              typeof values.addressDTO.district === "string"
+                ? values.addressDTO.district
+                : values.addressDTO.district.value,
+            ward:
+              typeof values.addressDTO.ward === "string"
+                ? values.addressDTO.ward
+                : values.addressDTO.ward.value,
+          },
           // taxCode:"3232401931",
           status: 1,
           fileAttachDTO: {
             filePath: imgURL === null ? "" : imgURL,
-       },
+          },
         },
       })
     )
@@ -184,9 +181,9 @@ function CustomerDetailsForm() {
               {`${dataDetails?.shopName}`}
             </div>
 
-            <div className="details__username">{
-              `${dataDetails?.firstName} ${dataDetails?.lastName}`}
-              </div>
+            <div className="details__username">
+              {`${dataDetails?.firstName} ${dataDetails?.lastName}`}
+            </div>
 
             <div className="details__location">
               <svg
@@ -235,33 +232,33 @@ function CustomerDetailsForm() {
                 label={<Text>Shop Name</Text>}
                 className="details__item"
                 rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Shop Name"
-                      ),
-                    },
-                    {
-                      max: 25,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Shop Name",
-                        25
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Shop Name",
-                        2
-                      ),
-                    },
-                  ]}
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Shop Name"
+                    ),
+                  },
+                  {
+                    max: 25,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MAX,
+                      MESSAGE_ERROR,
+                      "Shop Name",
+                      25
+                    ),
+                  },
+                  {
+                    min: 2,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MIN,
+                      MESSAGE_ERROR,
+                      "Shop Name",
+                      2
+                    ),
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -387,40 +384,40 @@ function CustomerDetailsForm() {
                 <Input />
               </Form.Item>
               <Form.Item
-                  name="taxCode"
-                  label={<Text>Tax Code</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Tax Code"
-                      ),
-                    },
-                    {
-                      max: 13,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Tax Code",
-                        13
-                      ),
-                    },
-                    {
-                      min: 10,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Tax Code",
-                        10
-                      ),
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
+                name="taxCode"
+                label={<Text>Tax Code</Text>}
+                className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Tax Code"
+                    ),
+                  },
+                  {
+                    max: 13,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MAX,
+                      MESSAGE_ERROR,
+                      "Tax Code",
+                      13
+                    ),
+                  },
+                  {
+                    min: 10,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MIN,
+                      MESSAGE_ERROR,
+                      "Tax Code",
+                      10
+                    ),
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
             </div>
 
             <div className="details__group">

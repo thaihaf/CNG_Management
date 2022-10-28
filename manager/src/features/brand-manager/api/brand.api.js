@@ -9,10 +9,6 @@ const createDetails = (data) => {
      const url = BrandEndPoints.BRAND_MANAGER;
      return api.post(url, data);
 };
-const createBrand = (data) => {
-     const url = BrandEndPoints.CREATE_BRAND;
-     return api.post(url, data);
-};
 const getBrandDetails = (id) => {
      const url = BrandEndPoints.BRAND_DETAIL.replace(
           ":brandId",
@@ -37,7 +33,6 @@ const deleteBrand = (id) => {
 const brandApi = { 
      getBrands, 
      getBrandDetails,
-     createBrand,
      createDetails,
      updateDetails,
      deleteBrand

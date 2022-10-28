@@ -25,52 +25,52 @@ export const getCustomerDetails = createAsyncThunk(
 export const updateDetails = createAsyncThunk(
   "customer/updateDetails",
   async ({ id, data }, { rejectWithValue }) => {
-       console.log(id);
-       console.log(data);
-       try {
-            const response = await api.updateDetails(id, data);
-            return response;
-       } catch (error) {
-            throw rejectWithValue(error);
-       }
+    console.log(id);
+    console.log(data);
+    try {
+      const response = await api.updateDetails(id, data);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 export const deleteCustomer = createAsyncThunk(
   "customer/deleteCustomer",
   async (id, { rejectWithValue }) => {
-       try {
-            const response = await api.deleteCustomer(id);
-            return response;
-       } catch (error) {
-            throw rejectWithValue(error);
-       }
+    try {
+      const response = await api.deleteCustomer(id);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 export const deleteCustomers = createAsyncThunk(
   "customer/deleteCustomers",
   async (list, { rejectWithValue }) => {
-       try {
-            list.forEach(async (id) => {
-                 console.log(id);
-                 await api.deleteCustomer(id);
-            });
-            return true;
-       } catch (error) {
-            console.log(error);
-            throw rejectWithValue(error);
-       }
+    try {
+      list.forEach(async (id) => {
+        console.log(id);
+        await api.deleteCustomer(id);
+      });
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw rejectWithValue(error);
+    }
   }
 );
 
 export const createDetails = createAsyncThunk(
   "customer/createDetails",
   async ({ data }, { rejectWithValue }) => {
-       try {
-            const response = await api.createDetails(data);
-            return response;
-       } catch (error) {
-            throw rejectWithValue(error);
-       }
+    try {
+      const response = await api.createDetails(data);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 
@@ -109,10 +109,10 @@ const customerSlice = createSlice({
     },
     [createDetails.fulfilled]: (state, action) => {
       state.createMode = false;
- },
-		["LOGOUT"]: (state) => {
-			Object.assign(state, initialState);
- },
+    },
+    ["LOGOUT"]: (state) => {
+      Object.assign(state, initialState);
+    },
   },
 });
 export const { updateErrorProcess, updateDataDetails } = customerSlice.actions;

@@ -4,8 +4,6 @@ import {
   CaretUpOutlined,
   HighlightOutlined,
 } from "@ant-design/icons";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-
 import {
   Form,
   Input,
@@ -23,7 +21,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { getUserName } from "helpers/auth.helpers";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
