@@ -33,6 +33,7 @@ import {
   getSuppliers,
   deleteSupplier,
   deleteSuppliers,
+  bankNameList,
 } from "features/supplier-manager/supplierManager";
 import avt_default from "assets/images/avt-default.png";
 import "./SupplierList.css";
@@ -42,9 +43,7 @@ import { getMessage } from "helpers/util.helper";
 import { storage } from "firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
-import {
-  createDetails,
-} from "features/supplier-manager/supplierManager";
+import { createDetails } from "features/supplier-manager/supplierManager";
 import {
   getDistrict,
   getProvince,
@@ -78,7 +77,7 @@ export default function SupplierList() {
   const defaultValues = {
     status: 0,
     gender: true,
-};
+  };
   const initialValues = createMode ? defaultValues : dataDetails;
 
   function refreshPage() {
@@ -90,12 +89,12 @@ export default function SupplierList() {
 
     const imgRef = ref(storage, `images/${file.name + v4()}`);
     uploadBytes(imgRef, file).then((snapshot) => {
-         getDownloadURL(snapshot.ref).then((url) => {
-              setIsLoading(false);
-              setImgUrl(url);
-         });
+      getDownloadURL(snapshot.ref).then((url) => {
+        setIsLoading(false);
+        setImgUrl(url);
+      });
     });
-};
+  };
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -156,7 +155,7 @@ export default function SupplierList() {
             dispatch(getProvinces())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
-              message.success("Delete success!");
+            message.success("Delete success!");
           })
           .catch((error) => {
             console.log(error);
@@ -458,9 +457,9 @@ export default function SupplierList() {
   useEffect(() => {
     form.setFieldsValue(initialValues);
     if (!createMode && initialValues !== null) {
-         setImgUrl(initialValues.avatarSupplier);
+      setImgUrl(initialValues.avatarSupplier);
     }
-}, [dispatch, createMode, initialValues]);
+  }, [dispatch, createMode, initialValues]);
 
   return (
     <div className="employee-list">
@@ -662,7 +661,29 @@ export default function SupplierList() {
                   ]}
                 >
                   <Input placeholder="BankName" />
-                </Form.Item>
+                  {/* <Select
+                    showSearch
+                    style={{
+                      width: 200,
+                    }}
+                    placeholder="Search to Select"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      option.children.includes(input)
+                    }
+                    filterSort={(optionA, optionB) =>
+                      optionA.children
+                        .toLowerCase()
+                        .localeCompare(optionB.children.toLowerCase())
+                    }
+                  >
+                    {bankNameList.map((item) => (
+                      <Select.Option value={item.value} key={item.text}>
+                        {item.value}
+                      </Select.Option>
+                    ))}
+                  </Select>*/}
+                </Form.Item> 
 
                 <Form.Item
                   name="bankAccountNumber"
@@ -826,7 +847,7 @@ export default function SupplierList() {
                     },
                   ]}
                 >
-                  <Input placeholder="Street Name, House No"/>
+                  <Input placeholder="Street Name, House No" />
                 </Form.Item>
                 <Form.Item
                   name="city"
