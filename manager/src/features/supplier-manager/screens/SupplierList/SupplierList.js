@@ -294,7 +294,7 @@ export default function SupplierList() {
       render: (text, record) => {
         return (
           <div>
-            <Avatar size={60} src={record.avatarSupplier} />
+            <Avatar size={50} src={record.avatarSupplier} />
           </div>
         );
       },

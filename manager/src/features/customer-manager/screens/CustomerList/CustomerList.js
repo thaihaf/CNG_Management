@@ -289,8 +289,7 @@ export default function CustomerList() {
       align: "center",
       width: "10%",
       render: (_, record) => (
-        //<Avatar size={60} src={record.avatarSupplier} />
-        <Avatar size={60} src={record.fileAttachDTO.filePath} />
+        <Avatar size={50} src={record.fileAttachDTO.filePath} />
       ),
     },
     {
@@ -492,8 +491,10 @@ export default function CustomerList() {
               colon={false}
               onFinish={onSubmitCreate}
             >
+            {<Text>Avatar</Text>}
               <div className="details__group">
                 <div className="details__avatar">
+                
                   <div className="details__avatar-img">
                     <img
                       src={!imgURL || imgURL === "" ? avt_default : imgURL}
@@ -533,6 +534,7 @@ export default function CustomerList() {
                   </Form.Item>
                 </div>
               </div>
+                            
               <div className="details__group">
                 <Form.Item
                   name="firstName"
