@@ -72,7 +72,14 @@ export default function CustomerList() {
   const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(2);
   const searchInput = useRef(null);
+
+  const onHandlePagination = (page, size) => {
+    setCurrentPage(page);
+    setPageSize(size);
+  };
 
   const defaultValues = {
     status: 0,
@@ -491,10 +498,9 @@ export default function CustomerList() {
               colon={false}
               onFinish={onSubmitCreate}
             >
-            {<Text>Avatar</Text>}
+              {<Text>Avatar</Text>}
               <div className="details__group">
                 <div className="details__avatar">
-                
                   <div className="details__avatar-img">
                     <img
                       src={!imgURL || imgURL === "" ? avt_default : imgURL}
@@ -534,7 +540,7 @@ export default function CustomerList() {
                   </Form.Item>
                 </div>
               </div>
-                            
+
               <div className="details__group">
                 <Form.Item
                   name="firstName"
@@ -911,12 +917,11 @@ export default function CustomerList() {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
                 size: "default",
-                pageSize: 10,
-                // current: getPageUrl || pageHead,
+                pageSize: pageSize,
+                current: currentPage,
                 totalElements,
-                // onChange: (page, size) =>
-                // 	onHandlePagination(page, size),
-                pageSizeOptions: ["10", "15", "20", "25"],
+                onChange: (page, size) => onHandlePagination(page, size),
+                pageSizeOptions: ["2", "6", "10"],
               }
             : false
         }

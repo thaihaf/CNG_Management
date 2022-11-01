@@ -34,9 +34,7 @@ import "./BrandList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
-import {
-  createDetails,
-} from "features/brand-manager/brandManager";
+import { createDetails } from "features/brand-manager/brandManager";
 import {
   getDistrict,
   getProvince,
@@ -65,7 +63,14 @@ export default function BrandList() {
   const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(2);
   const searchInput = useRef(null);
+
+  const onHandlePagination = (page, size) => {
+    setCurrentPage(page);
+    setPageSize(size);
+  };
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -126,7 +131,7 @@ export default function BrandList() {
             dispatch(getBrands())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
-              message.success("Delete success!");
+            message.success("Delete success!");
           })
           .catch((error) => {
             console.log(error);
@@ -160,7 +165,7 @@ export default function BrandList() {
     console.log(`selected ${value}`);
   };
   const onSearch = (value) => {
-    console.log('search:', value);
+    console.log("search:", value);
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -290,7 +295,7 @@ export default function BrandList() {
       dataIndex: "supplierId",
       // dataIndex: ['supplierId', 'supplierName'],
       key: "supplierName",
-      
+
       width: "20%",
       ...getColumnSearchProps("supplierId"),
       sorter: (a, b) => a.supplierId - b.supplierId,
@@ -545,12 +550,11 @@ export default function BrandList() {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
                 size: "default",
-                pageSize: 10,
-                // current: getPageUrl || pageHead,
+                pageSize: pageSize,
+                current: currentPage,
                 totalElements,
-                // onChange: (page, size) =>
-                // 	onHandlePagination(page, size),
-                pageSizeOptions: ["10", "15", "20", "25"],
+                onChange: (page, size) => onHandlePagination(page, size),
+                pageSizeOptions: ["2", "6", "10"],
               }
             : false
         }
