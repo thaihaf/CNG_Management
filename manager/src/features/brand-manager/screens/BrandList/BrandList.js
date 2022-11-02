@@ -64,7 +64,7 @@ export default function BrandList() {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(10);
   const searchInput = useRef(null);
 
   const onHandlePagination = (page, size) => {
@@ -291,14 +291,13 @@ export default function BrandList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Supplier Id",
-      dataIndex: "supplierId",
-      // dataIndex: ['supplierId', 'supplierName'],
+      title: "Supplier Name",
+      dataIndex: "supplierName",
       key: "supplierName",
 
       width: "20%",
-      ...getColumnSearchProps("supplierId"),
-      sorter: (a, b) => a.supplierId - b.supplierId,
+      ...getColumnSearchProps("supplierName"),
+      sorter: (a, b) => a.supplierName - b.supplierName,
       sortDirections: ["descend", "ascend"],
     },
     {

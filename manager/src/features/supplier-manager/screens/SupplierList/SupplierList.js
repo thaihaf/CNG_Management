@@ -73,7 +73,7 @@ export default function SupplierList() {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(10);
   const searchInput = useRef(null);
 
   const onHandlePagination = (page, size) => {

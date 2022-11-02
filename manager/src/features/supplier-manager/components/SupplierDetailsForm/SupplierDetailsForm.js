@@ -226,6 +226,34 @@ function SupplierDetailsForm() {
                 name="supplierName"
                 label={<Text>Supplier Name</Text>}
                 className="details__item"
+                rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Supplier Name"
+                      ),
+                    },
+                    {
+                      max: 25,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "Supplier Name",
+                        25
+                      ),
+                    },
+                    {
+                      min: 2,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "Supplier Name",
+                        2
+                      ),
+                    },
+                  ]}
               >
                 <Input />
               </Form.Item>
