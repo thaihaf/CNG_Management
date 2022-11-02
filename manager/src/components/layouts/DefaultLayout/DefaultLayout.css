@@ -63,14 +63,6 @@
   border-radius: 2rem 2rem 0 0;
 }
 
-.sidebarMenu {
-  height: none !important;
-}
-
-.wrapper_layout {
-  padding-left: 230px;
-}
-
 .header {
   padding: 1rem 2.1rem;
   padding-left: 2.1rem;
@@ -231,4 +223,28 @@
 .modalSetting .details__group .details__item .ant-form-item-explain-error {
   font-size: 1.2rem;
   padding-left: 1rem;
-}/*# sourceMappingURL=DefaultLayout.css.map */
+}
+
+.ant-drawer-content-wrapper {
+  width: -webkit-fit-content !important;
+  width: -moz-fit-content !important;
+  width: fit-content !important;
+  border-radius: 0 2rem 2rem 0;
+}
+.ant-drawer-content-wrapper .ant-drawer-content {
+  width: -webkit-fit-content !important;
+  width: -moz-fit-content !important;
+  width: fit-content !important;
+  border-radius: 0 2rem 2rem 0;
+}
+.ant-drawer-content-wrapper .ant-drawer-content .ant-drawer-body {
+  padding: 2rem 0 !important;
+}
+.ant-drawer-content-wrapper .ant-drawer-content .ant-drawer-body .sidebarMenu {
+  height: 100% !important;
+  width: 26rem !important;
+  margin: 2rem 0 !important;
+}
+.ant-drawer-content-wrapper .ant-drawer-content .ant-drawer-body .sidebarMenu .ant-menu-item {
+  padding-left: 40px !important;
+}
