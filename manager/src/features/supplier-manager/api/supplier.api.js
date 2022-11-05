@@ -5,6 +5,10 @@ const getSuppliers = () => {
   const url = SupplierEndPoints.SUPPLIER_MANAGER;
   return api.get(url);
 };
+const getActiveSuppliers = () => {
+  const url = SupplierEndPoints.SUPPLIER_ACTIVE;
+  return api.get(url);
+};
 const createDetails = (data) => {
   const url = SupplierEndPoints.SUPPLIER_MANAGER;
   return api.post(url, data);
@@ -32,6 +36,7 @@ const deleteSupplier = (id) => {
 };
 const supplierApi = {
   getSuppliers,
+  getActiveSuppliers,
   getSupplierDetails,
   createDetails,
   updateDetails,

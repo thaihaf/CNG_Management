@@ -40,6 +40,7 @@ import {
   getProvince,
   getProvinces,
 } from "features/provinces/provinces";
+import { getActiveSuppliers } from "features/supplier-manager/supplierManager";
 import { getSuppliers } from "features/supplier-manager/supplierManager";
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -48,6 +49,7 @@ export default function BrandList() {
     (state) => state.brand
   );
   const { listSuppliers } = useSelector((state) => state.supplier);
+  const { listActiveSuppliers } = useSelector((state) => state.supplier);
   const { provinces, districts, wards } = useSelector(
     (state) => state.provinces
   );
@@ -149,7 +151,7 @@ export default function BrandList() {
 
   useEffect(() => {
     setIsLoading(true);
-
+    dispatch(getActiveSuppliers());
     dispatch(getBrands())
       .then(unwrapResult)
       .then(() => setIsLoading(false));
@@ -470,7 +472,7 @@ export default function BrandList() {
                         .includes(input.toLowerCase())
                     }
                   >
-                    {listSuppliers.map((s) => (
+                    {listActiveSuppliers.map((s) => (
                       <Option value={s.id} key={s.id}>
                         {s.supplierName}
                       </Option>

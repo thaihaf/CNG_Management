@@ -418,7 +418,7 @@ function SupplierDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="bankAccountNumber"
-                label={<Text>Bank Account Name</Text>}
+                label={<Text>Bank Account Number</Text>}
                 className="details__item"
                 rules={[
                   {
