@@ -24,4 +24,5 @@ export const MESSAGE_ERROR = {
   "0400": "%field% must be a valid date",
   "0500": "%field% must be a boolean",
   "0005": "%field% contains invalid characters.",
+  "1406": "Please enter the correct format %field%.",
 };

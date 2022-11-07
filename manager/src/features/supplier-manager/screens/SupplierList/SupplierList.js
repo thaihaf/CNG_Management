@@ -576,6 +576,14 @@ export default function SupplierList() {
                       ),
                     },
                     {
+                      pattern: /^[a-zA-Z]{2,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
+                        MESSAGE_ERROR,
+                        "First Contact Name"
+                      ),
+                    },
+                    {
                       max: 10,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
@@ -607,6 +615,14 @@ export default function SupplierList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Last Contact Name"
+                      ),
+                    },
+                    {
+                      pattern: /^[a-zA-Z ]{2,20}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
                         "Last Contact Name"
                       ),
@@ -707,6 +723,14 @@ export default function SupplierList() {
                       ),
                     },
                     {
+                      pattern: /^[1-9]{1}[0-9]{5,14}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
+                        MESSAGE_ERROR,
+                        "Bank Account Number"
+                      ),
+                    },
+                    {
                       max: 14,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
@@ -739,6 +763,14 @@ export default function SupplierList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Phone Number Contact"
+                      ),
+                    },
+                    {
+                      pattern: /^[0]{1}[0-9]{9,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
                         "Phone Number Contact"
                       ),
@@ -812,6 +844,14 @@ export default function SupplierList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Tax Code"
+                      ),
+                    },
+                    {
+                      pattern: /^[0-9]{10,13}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER,
                         MESSAGE_ERROR,
                         "Tax Code"
                       ),

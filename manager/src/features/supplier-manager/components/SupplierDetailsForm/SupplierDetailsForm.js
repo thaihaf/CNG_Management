@@ -284,6 +284,14 @@ function SupplierDetailsForm() {
                     ),
                   },
                   {
+                      pattern: /^[a-zA-Z]{2,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
+                        MESSAGE_ERROR,
+                        "First Contact Name"
+                      ),
+                    },
+                  {
                     max: 10,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
@@ -318,6 +326,14 @@ function SupplierDetailsForm() {
                       "Last Contact Name"
                     ),
                   },
+                  {
+                      pattern: /^[a-zA-Z ]{2,20}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
+                        MESSAGE_ERROR,
+                        "Last Contact Name"
+                      ),
+                    },
                   {
                     max: 20,
                     message: getMessage(
@@ -392,6 +408,14 @@ function SupplierDetailsForm() {
                     ),
                   },
                   {
+                      pattern: /^[0]{1}[0-9]{9,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
+                        MESSAGE_ERROR,
+                        "Phone Number Contact"
+                      ),
+                    },
+                  {
                     max: 10,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
@@ -430,6 +454,14 @@ function SupplierDetailsForm() {
                     ),
                   },
                   {
+                      pattern: /^[1-9]{1}[0-9]{5,14}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
+                        MESSAGE_ERROR,
+                        "Bank Account Number"
+                      ),
+                    },
+                  {
                     max: 14,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
@@ -467,6 +499,14 @@ function SupplierDetailsForm() {
                       "Tax Code"
                     ),
                   },
+                  {
+                      pattern: /^[0-9]{10,13}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER,
+                        MESSAGE_ERROR,
+                        "Tax Code"
+                      ),
+                    },
                   {
                     max: 13,
                     message: getMessage(
