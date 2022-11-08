@@ -408,15 +408,7 @@ export default function WarehouseList() {
 
   useEffect(() => {
     dispatch(getProvinces());
-    // setComponentDisabled(createMode);
   }, [dispatch]);
-
-  //   useEffect(() => {
-  //     form.setFieldsValue(initialValues);
-  //     if (!createMode && initialValues !== null) {
-  //          setImgUrl(initialValues.avatarSupplier);
-  //     }
-  // }, [dispatch, createMode, initialValues]);
 
   return (
     <div className="employee-list">
@@ -554,6 +546,14 @@ export default function WarehouseList() {
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
                         "Phone Number"
+                      ),
+                    },
+                    {
+                      pattern: /^[0]{1}[0-9]{9,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
+                        MESSAGE_ERROR,
+                        "Phone Number Contact"
                       ),
                     },
                     {
