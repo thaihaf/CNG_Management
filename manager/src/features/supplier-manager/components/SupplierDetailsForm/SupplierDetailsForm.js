@@ -272,7 +272,7 @@ function SupplierDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="firstContactName"
-                label={<Text>First Contact Name</Text>}
+                label={<Text>First Name</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -280,7 +280,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "First Contact Name"
+                      "First Name"
                     ),
                   },
                   {
@@ -288,7 +288,7 @@ function SupplierDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
-                        "First Contact Name"
+                        "First Name"
                       ),
                     },
                   {
@@ -296,7 +296,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "First Contact Name",
+                      "First Name",
                       10
                     ),
                   },
@@ -305,7 +305,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "First Contact Name",
+                      "First Name",
                       2
                     ),
                   },
@@ -315,7 +315,7 @@ function SupplierDetailsForm() {
               </Form.Item>
               <Form.Item
                 name="lastContactName"
-                label={<Text>Last Contact Name</Text>}
+                label={<Text>Last name</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -323,7 +323,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Last Contact Name"
+                      "Last name"
                     ),
                   },
                   {
@@ -331,7 +331,7 @@ function SupplierDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
-                        "Last Contact Name"
+                        "Last name"
                       ),
                     },
                   {
@@ -339,7 +339,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Last Contact Name",
+                      "Last name",
                       20
                     ),
                   },
@@ -348,7 +348,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Last Contact Name",
+                      "Last name",
                       2
                     ),
                   },
@@ -396,7 +396,7 @@ function SupplierDetailsForm() {
               </Form.Item>
               <Form.Item
                 name="phoneNumberContact"
-                label={<Text>Phone Number Contact</Text>}
+                label={<Text>Phone Number</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -404,7 +404,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Phone Number Contact"
+                      "Phone Number"
                     ),
                   },
                   {
@@ -412,7 +412,7 @@ function SupplierDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
-                        "Phone Number Contact"
+                        "Phone Number"
                       ),
                     },
                   {
@@ -420,7 +420,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Phone Number Contact",
+                      "Phone Number",
                       10
                     ),
                   },
@@ -429,7 +429,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Phone Number Contact",
+                      "Phone Number",
                       9
                     ),
                   },

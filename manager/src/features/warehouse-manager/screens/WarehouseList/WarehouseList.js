@@ -553,7 +553,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
-                        "Phone Number Contact"
+                        "Phone Number"
                       ),
                     },
                     {

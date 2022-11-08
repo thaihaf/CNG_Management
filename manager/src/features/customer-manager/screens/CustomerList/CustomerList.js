@@ -556,6 +556,14 @@ export default function CustomerList() {
                       ),
                     },
                     {
+                      pattern: /^[a-zA-Z]{2,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
+                        MESSAGE_ERROR,
+                        "First Name"
+                      ),
+                    },
+                    {
                       max: 10,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
@@ -587,6 +595,14 @@ export default function CustomerList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Last Name"
+                      ),
+                    },
+                    {
+                      pattern: /^[a-zA-Z ]{2,20}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
                         "Last Name"
                       ),
@@ -624,6 +640,14 @@ export default function CustomerList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Phone Number"
+                      ),
+                    },
+                    {
+                      pattern: /^[0]{1}[0-9]{9,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
                         "Phone Number"
                       ),
@@ -697,6 +721,14 @@ export default function CustomerList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Tax Code"
+                      ),
+                    },
+                    {
+                      pattern: /^[0-9]{10,13}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER,
                         MESSAGE_ERROR,
                         "Tax Code"
                       ),

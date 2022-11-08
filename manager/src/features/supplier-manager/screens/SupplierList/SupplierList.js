@@ -316,7 +316,7 @@ export default function SupplierList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "First Contact Name",
+      title: "First Name",
       dataIndex: "firstContactName",
       key: "firstContactName",
       width: "10%",
@@ -325,7 +325,7 @@ export default function SupplierList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Last Contact Name",
+      title: "Last Name",
       dataIndex: "lastContactName",
       key: "lastContactName",
       width: "10%",
@@ -350,7 +350,7 @@ export default function SupplierList() {
       sorter: (a, b) => a.bankAccountNumber.length - b.bankAccountNumber.length,
     },
     {
-      title: "Phone Number Contact",
+      title: "Phone Number",
       dataIndex: "phoneNumberContact",
       key: "phoneNumberContact",
       width: "10%",
@@ -564,7 +564,7 @@ export default function SupplierList() {
               <div className="details__group">
                 <Form.Item
                   name="firstContactName"
-                  label={<Text>First Contact Name</Text>}
+                  label={<Text>First name</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -572,7 +572,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "First Contact Name"
+                        "First Name"
                       ),
                     },
                     {
@@ -580,7 +580,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
-                        "First Contact Name"
+                        "First Name"
                       ),
                     },
                     {
@@ -588,7 +588,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "First Contact Name",
+                        "First Name",
                         10
                       ),
                     },
@@ -597,18 +597,18 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "First Contact Name",
+                        "First Name",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="FirstContactName" />
+                  <Input placeholder="First name" />
                 </Form.Item>
 
                 <Form.Item
                   name="lastContactName"
-                  label={<Text>Last Contact Name</Text>}
+                  label={<Text>Last name</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -616,7 +616,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Last Contact Name"
+                        "Last name"
                       ),
                     },
                     {
@@ -624,7 +624,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
-                        "Last Contact Name"
+                        "Last name"
                       ),
                     },
                     {
@@ -632,7 +632,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Last Contact Name",
+                        "Last name",
                         20
                       ),
                     },
@@ -641,13 +641,13 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Last Contact Name",
+                        "Last name",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="LastContactName" />
+                  <Input placeholder="Last name" />
                 </Form.Item>
               </div>
               <div className="details__group">
@@ -756,7 +756,7 @@ export default function SupplierList() {
               <div className="details__group">
                 <Form.Item
                   name="phoneNumberContact"
-                  label={<Text>Phone Number Contact</Text>}
+                  label={<Text>Phone Number</Text>}
                   className="details__item"
                   rules={[
                     {
