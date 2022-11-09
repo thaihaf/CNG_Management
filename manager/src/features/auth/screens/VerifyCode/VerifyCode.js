@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from "react";
-import cx from "classnames";
-import { useSelector, useDispatch } from "react-redux";
+import React, {  useState } from "react";
+import {  useDispatch } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 import queryString from "query-string";
 
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Spin } from "antd";
 
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
-import { verifyCode, updateError, AuthPaths } from "../../auth";
+import { verifyCode, AuthPaths } from "../../auth";
 
 import "../ForgotPassword/ForgotPassword.css";
-import { LoadingSpinner } from "components";
 
 export default function VerifyCode() {
      const dispatch = useDispatch();

@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 
 import {
-     BackTop,
+  BackTop,
   Breadcrumb,
   Button,
   Drawer,
@@ -116,9 +116,19 @@ const DefaultLayout = ({ children }) => {
 
   return (
     <Layout className="defaultLayout">
+      <div
+        className="left-bar"
+        onMouseMove={() => setOpen(true)}
+      ></div>
       <BackTop />
 
-      <Drawer placement={"left"} closable={false} onClose={onClose} open={open}>
+      <Drawer
+        placement={"left"}
+        closable={false}
+        onClose={onClose}
+        open={open}
+        className="drawer"
+      >
         <div className="sidebar_children">
           <div className="logo">
             {collapsed ? (
@@ -423,16 +433,16 @@ const DefaultLayout = ({ children }) => {
           }}
         >
           <div className="top2">
-            <Breadcrumb className="breadcrumb">
-              <MenuUnfoldOutlined
-                style={{
-                  fontSize: "22px",
-                  marginRight: "3rem",
-                  color: "black",
-                }}
-                onClick={showDrawer}
-              />
+            <MenuUnfoldOutlined
+              style={{
+                fontSize: "22px",
+                marginRight: "3rem",
+                color: "black",
+              }}
+              onClick={showDrawer}
+            />
 
+            <Breadcrumb className="breadcrumb">
               {location.pathname.split("/").map((item, index) => {
                 if (index === 0) {
                   return (
@@ -457,7 +467,7 @@ const DefaultLayout = ({ children }) => {
             <Tooltip placement="bottomRight" title={"Logout"}>
               <div className="logout" onClick={handleLogout}>
                 <img src={logoutIcon} alt="" />
-                <span> Logout</span>
+                <span>Logout</span>
               </div>
             </Tooltip>
           </div>
