@@ -12,10 +12,7 @@ import {
      Space,
      Table,
      Tag,
-     Tooltip,
-     Typography,
 } from "antd";
-import { EmployeeManagerPaths } from "features/employee-manager/employeeManager";
 
 import avt_default from "assets/images/avt-default.png";
 import "./ProductList.css";
@@ -28,7 +25,6 @@ import {
 import { getActiveCategories } from "features/category-manager/categoryManager";
 import { get } from "lodash";
 import { ActionsModal } from "features/product-manager/components";
-const { Title } = Typography;
 
 export default function ProductList() {
      const { listProducts, totalElements, totalPages, size } = useSelector(
