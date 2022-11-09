@@ -226,6 +226,34 @@ function SupplierDetailsForm() {
                 name="supplierName"
                 label={<Text>Supplier Name</Text>}
                 className="details__item"
+                rules={[
+                    {
+                      required: true,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Supplier Name"
+                      ),
+                    },
+                    {
+                      max: 25,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MAX,
+                        MESSAGE_ERROR,
+                        "Supplier Name",
+                        25
+                      ),
+                    },
+                    {
+                      min: 2,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_MIN,
+                        MESSAGE_ERROR,
+                        "Supplier Name",
+                        2
+                      ),
+                    },
+                  ]}
               >
                 <Input />
               </Form.Item>
@@ -244,7 +272,7 @@ function SupplierDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="firstContactName"
-                label={<Text>First Contact Name</Text>}
+                label={<Text>First Name</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -252,15 +280,23 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "First Contact Name"
+                      "First Name"
                     ),
                   },
+                  {
+                      pattern: /^[a-zA-Z]{2,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
+                        MESSAGE_ERROR,
+                        "First Name"
+                      ),
+                    },
                   {
                     max: 10,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "First Contact Name",
+                      "First Name",
                       10
                     ),
                   },
@@ -269,7 +305,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "First Contact Name",
+                      "First Name",
                       2
                     ),
                   },
@@ -279,7 +315,7 @@ function SupplierDetailsForm() {
               </Form.Item>
               <Form.Item
                 name="lastContactName"
-                label={<Text>Last Contact Name</Text>}
+                label={<Text>Last name</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -287,15 +323,23 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Last Contact Name"
+                      "Last name"
                     ),
                   },
+                  {
+                      pattern: /^[a-zA-Z ]{2,20}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
+                        MESSAGE_ERROR,
+                        "Last name"
+                      ),
+                    },
                   {
                     max: 20,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Last Contact Name",
+                      "Last name",
                       20
                     ),
                   },
@@ -304,7 +348,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Last Contact Name",
+                      "Last name",
                       2
                     ),
                   },
@@ -352,7 +396,7 @@ function SupplierDetailsForm() {
               </Form.Item>
               <Form.Item
                 name="phoneNumberContact"
-                label={<Text>Phone Number Contact</Text>}
+                label={<Text>Phone Number</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -360,15 +404,23 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Phone Number Contact"
+                      "Phone Number"
                     ),
                   },
+                  {
+                      pattern: /^[0]{1}[0-9]{9,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
+                        MESSAGE_ERROR,
+                        "Phone Number"
+                      ),
+                    },
                   {
                     max: 10,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Phone Number Contact",
+                      "Phone Number",
                       10
                     ),
                   },
@@ -377,7 +429,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Phone Number Contact",
+                      "Phone Number",
                       9
                     ),
                   },
@@ -390,7 +442,7 @@ function SupplierDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="bankAccountNumber"
-                label={<Text>Bank Account Name</Text>}
+                label={<Text>Bank Account Number</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -401,6 +453,14 @@ function SupplierDetailsForm() {
                       "Bank Account Number"
                     ),
                   },
+                  {
+                      pattern: /^[1-9]{1}[0-9]{5,14}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
+                        MESSAGE_ERROR,
+                        "Bank Account Number"
+                      ),
+                    },
                   {
                     max: 14,
                     message: getMessage(
@@ -439,6 +499,14 @@ function SupplierDetailsForm() {
                       "Tax Code"
                     ),
                   },
+                  {
+                      pattern: /^[0-9]{10,13}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER,
+                        MESSAGE_ERROR,
+                        "Tax Code"
+                      ),
+                    },
                   {
                     max: 13,
                     message: getMessage(

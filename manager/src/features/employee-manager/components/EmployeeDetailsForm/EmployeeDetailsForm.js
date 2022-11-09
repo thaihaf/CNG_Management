@@ -133,7 +133,7 @@ function EmployeeDetailsForm() {
                               ward:
                                    typeof ward === "string" ? ward : ward.value,
                               ...args,
-                              status: stt,
+                              status: 1,
                               birthDay: bd,
                               fileAttachDTO: {
                                    filePath: imgURL === null ? "" : imgURL,
@@ -320,7 +320,7 @@ function EmployeeDetailsForm() {
                               <div className="details__group">
                                    <Form.Item
                                         name="idNumber"
-                                        label={<Text>Number ID</Text>}
+                                        label={<Text>ID Number</Text>}
                                         className="details__item"
                                         rules={[
                                              {
@@ -328,15 +328,23 @@ function EmployeeDetailsForm() {
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_REQUIRED,
                                                        MESSAGE_ERROR,
-                                                       "Number ID"
+                                                       "ID Number"
                                                   ),
                                              },
+                                             {
+                                                  pattern: /^[0-9]{8,12}$/,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_FORMAT_NUMBER,
+                                                       MESSAGE_ERROR,
+                                                       "ID Number"
+                                                  ),
+                                                  },
                                              {
                                                   max: 12,
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_NUMBER_MAX,
                                                        MESSAGE_ERROR,
-                                                       "Number ID",
+                                                       "ID Number",
                                                        12
                                                   ),
                                              },
@@ -345,7 +353,7 @@ function EmployeeDetailsForm() {
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_NUMBER_MIN,
                                                        MESSAGE_ERROR,
-                                                       "Number ID",
+                                                       "ID Number",
                                                        8
                                                   ),
                                              },
@@ -376,7 +384,7 @@ function EmployeeDetailsForm() {
                               <div className="details__group">
                                    <Form.Item
                                         name="firstName"
-                                        label={<Text>Firstname</Text>}
+                                        label={<Text>First name</Text>}
                                         className="details__item"
                                         rules={[
                                              {
@@ -384,7 +392,15 @@ function EmployeeDetailsForm() {
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_REQUIRED,
                                                        MESSAGE_ERROR,
-                                                       "Firstname"
+                                                       "First name"
+                                                  ),
+                                             },
+                                             {
+                                                  pattern: /^[a-zA-Z]{2,10}$/,
+                                                  message: getMessage(
+                                                  CODE_ERROR.ERROR_FORMAT,
+                                                  MESSAGE_ERROR,
+                                                  "First Name"
                                                   ),
                                              },
                                              {
@@ -392,7 +408,7 @@ function EmployeeDetailsForm() {
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_NUMBER_MAX,
                                                        MESSAGE_ERROR,
-                                                       "Firstname",
+                                                       "First name",
                                                        10
                                                   ),
                                              },
@@ -401,7 +417,7 @@ function EmployeeDetailsForm() {
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_NUMBER_MIN,
                                                        MESSAGE_ERROR,
-                                                       "Firstname",
+                                                       "First name",
                                                        2
                                                   ),
                                              },
@@ -411,7 +427,7 @@ function EmployeeDetailsForm() {
                                    </Form.Item>
                                    <Form.Item
                                         name="lastName"
-                                        label={<Text>Lastname</Text>}
+                                        label={<Text>Last name</Text>}
                                         className="details__item"
                                         rules={[
                                              {
@@ -419,16 +435,24 @@ function EmployeeDetailsForm() {
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_REQUIRED,
                                                        MESSAGE_ERROR,
-                                                       "Lastname"
+                                                       "Last name"
                                                   ),
                                              },
                                              {
-                                                  max: 10,
+                                                  pattern: /^[a-zA-Z ]{2,20}$/,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_FORMAT,
+                                                       MESSAGE_ERROR,
+                                                       "Last name"
+                                                  ),
+                                             },
+                                             {
+                                                  max: 20,
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_NUMBER_MAX,
                                                        MESSAGE_ERROR,
-                                                       "Lastname",
-                                                       10
+                                                       "Last name",
+                                                       20
                                                   ),
                                              },
                                              {
@@ -436,7 +460,7 @@ function EmployeeDetailsForm() {
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_NUMBER_MIN,
                                                        MESSAGE_ERROR,
-                                                       "Lastname",
+                                                       "Last name",
                                                        2
                                                   ),
                                              },
@@ -486,12 +510,29 @@ function EmployeeDetailsForm() {
                                                   ),
                                              },
                                              {
-                                                  max: 50,
+                                                  pattern: /^[0]{1}[0-9]{9,10}$/,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_FORMAT_NUMBER,
+                                                       MESSAGE_ERROR,
+                                                       "Phone"
+                                                  ),
+                                             },
+                                             {
+                                                  max: 10,
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_NUMBER_MAX,
                                                        MESSAGE_ERROR,
-                                                       "Lastname",
-                                                       50
+                                                       "Phone",
+                                                       10
+                                                  ),
+                                             },
+                                             {
+                                                  min: 9,
+                                                  message: getMessage(
+                                                       CODE_ERROR.ERROR_NUMBER_MIN,
+                                                       MESSAGE_ERROR,
+                                                       "Phone",
+                                                       9
                                                   ),
                                              },
                                         ]}
@@ -503,7 +544,7 @@ function EmployeeDetailsForm() {
                               <div className="details__group">
                                    <Form.Item
                                         name="apartmentNumber"
-                                        label={<Text>Street</Text>}
+                                        label={<Text>Street Name, House No</Text>}
                                         className="details__item"
                                         rules={[
                                              {

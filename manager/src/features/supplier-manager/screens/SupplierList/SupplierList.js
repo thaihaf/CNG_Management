@@ -33,6 +33,7 @@ import {
   getSuppliers,
   deleteSupplier,
   deleteSuppliers,
+  bankNameList,
 } from "features/supplier-manager/supplierManager";
 import avt_default from "assets/images/avt-default.png";
 import "./SupplierList.css";
@@ -42,9 +43,7 @@ import { getMessage } from "helpers/util.helper";
 import { storage } from "firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
-import {
-  createDetails,
-} from "features/supplier-manager/supplierManager";
+import { createDetails } from "features/supplier-manager/supplierManager";
 import {
   getDistrict,
   getProvince,
@@ -73,12 +72,19 @@ export default function SupplierList() {
   const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const searchInput = useRef(null);
+
+  const onHandlePagination = (page, size) => {
+    setCurrentPage(page);
+    setPageSize(size);
+  };
 
   const defaultValues = {
     status: 0,
     gender: true,
-};
+  };
   const initialValues = createMode ? defaultValues : dataDetails;
 
   function refreshPage() {
@@ -90,12 +96,12 @@ export default function SupplierList() {
 
     const imgRef = ref(storage, `images/${file.name + v4()}`);
     uploadBytes(imgRef, file).then((snapshot) => {
-         getDownloadURL(snapshot.ref).then((url) => {
-              setIsLoading(false);
-              setImgUrl(url);
-         });
+      getDownloadURL(snapshot.ref).then((url) => {
+        setIsLoading(false);
+        setImgUrl(url);
+      });
     });
-};
+  };
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -156,7 +162,7 @@ export default function SupplierList() {
             dispatch(getProvinces())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
-              message.success("Delete success!");
+            message.success("Delete success!");
           })
           .catch((error) => {
             console.log(error);
@@ -295,7 +301,7 @@ export default function SupplierList() {
       render: (text, record) => {
         return (
           <div>
-            <Avatar size={60} src={record.avatarSupplier} />
+            <Avatar size={50} src={record.avatarSupplier} />
           </div>
         );
       },
@@ -310,7 +316,7 @@ export default function SupplierList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "First Contact Name",
+      title: "First Name",
       dataIndex: "firstContactName",
       key: "firstContactName",
       width: "10%",
@@ -319,7 +325,7 @@ export default function SupplierList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Last Contact Name",
+      title: "Last Name",
       dataIndex: "lastContactName",
       key: "lastContactName",
       width: "10%",
@@ -344,7 +350,7 @@ export default function SupplierList() {
       sorter: (a, b) => a.bankAccountNumber.length - b.bankAccountNumber.length,
     },
     {
-      title: "Phone Number Contact",
+      title: "Phone Number",
       dataIndex: "phoneNumberContact",
       key: "phoneNumberContact",
       width: "10%",
@@ -458,9 +464,9 @@ export default function SupplierList() {
   useEffect(() => {
     form.setFieldsValue(initialValues);
     if (!createMode && initialValues !== null) {
-         setImgUrl(initialValues.avatarSupplier);
+      setImgUrl(initialValues.avatarSupplier);
     }
-}, [dispatch, createMode, initialValues]);
+  }, [dispatch, createMode, initialValues]);
 
   return (
     <div className="employee-list">
@@ -513,6 +519,7 @@ export default function SupplierList() {
               colon={false}
               onFinish={onSubmitCreate}
             >
+              {<Text>Avatar</Text>}
               <div className="details__group">
                 <div className="details__avatar">
                   <div className="details__avatar-img">
@@ -557,7 +564,7 @@ export default function SupplierList() {
               <div className="details__group">
                 <Form.Item
                   name="firstContactName"
-                  label={<Text>First Contact Name</Text>}
+                  label={<Text>First name</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -565,7 +572,15 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "First Contact Name"
+                        "First Name"
+                      ),
+                    },
+                    {
+                      pattern: /^[a-zA-Z]{2,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
+                        MESSAGE_ERROR,
+                        "First Name"
                       ),
                     },
                     {
@@ -573,7 +588,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "First Contact Name",
+                        "First Name",
                         10
                       ),
                     },
@@ -582,18 +597,18 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "First Contact Name",
+                        "First Name",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="FirstContactName" />
+                  <Input placeholder="First name" />
                 </Form.Item>
 
                 <Form.Item
                   name="lastContactName"
-                  label={<Text>Last Contact Name</Text>}
+                  label={<Text>Last name</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -601,7 +616,15 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Last Contact Name"
+                        "Last name"
+                      ),
+                    },
+                    {
+                      pattern: /^[a-zA-Z ]{2,20}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
+                        MESSAGE_ERROR,
+                        "Last name"
                       ),
                     },
                     {
@@ -609,7 +632,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Last Contact Name",
+                        "Last name",
                         20
                       ),
                     },
@@ -618,13 +641,13 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Last Contact Name",
+                        "Last name",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="LastContactName" />
+                  <Input placeholder="Last name" />
                 </Form.Item>
               </div>
               <div className="details__group">
@@ -662,6 +685,28 @@ export default function SupplierList() {
                   ]}
                 >
                   <Input placeholder="BankName" />
+                  {/* <Select
+                    showSearch
+                    style={{
+                      width: 200,
+                    }}
+                    placeholder="Search to Select"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                      option.children.includes(input)
+                    }
+                    filterSort={(optionA, optionB) =>
+                      optionA.children
+                        .toLowerCase()
+                        .localeCompare(optionB.children.toLowerCase())
+                    }
+                  >
+                    {bankNameList.map((item) => (
+                      <Select.Option value={item.value} key={item.text}>
+                        {item.value}
+                      </Select.Option>
+                    ))}
+                  </Select>*/}
                 </Form.Item>
 
                 <Form.Item
@@ -673,6 +718,14 @@ export default function SupplierList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Bank Account Number"
+                      ),
+                    },
+                    {
+                      pattern: /^[1-9]{1}[0-9]{5,14}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
                         "Bank Account Number"
                       ),
@@ -703,13 +756,21 @@ export default function SupplierList() {
               <div className="details__group">
                 <Form.Item
                   name="phoneNumberContact"
-                  label={<Text>Phone Number Contact</Text>}
+                  label={<Text>Phone Number</Text>}
                   className="details__item"
                   rules={[
                     {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Phone Number Contact"
+                      ),
+                    },
+                    {
+                      pattern: /^[0]{1}[0-9]{9,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
                         "Phone Number Contact"
                       ),
@@ -788,6 +849,14 @@ export default function SupplierList() {
                       ),
                     },
                     {
+                      pattern: /^[0-9]{10,13}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER,
+                        MESSAGE_ERROR,
+                        "Tax Code"
+                      ),
+                    },
+                    {
                       max: 13,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
@@ -826,7 +895,7 @@ export default function SupplierList() {
                     },
                   ]}
                 >
-                  <Input placeholder="Street Name, House No"/>
+                  <Input placeholder="Street Name, House No" />
                 </Form.Item>
                 <Form.Item
                   name="city"
@@ -1000,12 +1069,11 @@ export default function SupplierList() {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
                 size: "default",
-                pageSize: 10,
-                // current: getPageUrl || pageHead,
+                pageSize: pageSize,
+                current: currentPage,
                 totalElements,
-                // onChange: (page, size) =>
-                // 	onHandlePagination(page, size),
-                pageSizeOptions: ["10", "15", "20", "25"],
+                onChange: (page, size) => onHandlePagination(page, size),
+                pageSizeOptions: ["2", "6", "10"],
               }
             : false
         }
