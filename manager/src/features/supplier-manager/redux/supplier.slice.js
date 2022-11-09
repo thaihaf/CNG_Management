@@ -14,6 +14,13 @@ export const getSuppliers = createAsyncThunk(
     return response.data;
   }
 );
+export const getActiveSuppliers = createAsyncThunk(
+  "supplier/getActiveSuppliers",
+  async () => {
+    const response = await api.getActiveSuppliers();
+    return response.data;
+  }
+);
 export const getSupplierDetails = createAsyncThunk(
   "supplier/getSupplierDetails",
   async (id) => {
@@ -73,6 +80,7 @@ export const createDetails = createAsyncThunk(
 
 const initialState = {
   listSuppliers: [],
+  listActiveSuppliers: [],
   totalElements: 0,
   totalPages: 0,
   size: 0,
@@ -95,6 +103,9 @@ const supplierSlice = createSlice({
       state.totalElements = action.payload.totalElements;
       state.totalPages = action.payload.totalPages;
       state.size = action.payload.size;
+    },
+    [getActiveSuppliers.fulfilled]: (state, action) => {
+      state.listActiveSuppliers = action.payload;
     },
     [getSupplierDetails.fulfilled]: (state, action) => {
       state.dataDetails = action.payload;

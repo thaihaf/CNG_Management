@@ -72,7 +72,14 @@ export default function CustomerList() {
   const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const searchInput = useRef(null);
+
+  const onHandlePagination = (page, size) => {
+    setCurrentPage(page);
+    setPageSize(size);
+  };
 
   const defaultValues = {
     status: 0,
@@ -289,8 +296,7 @@ export default function CustomerList() {
       align: "center",
       width: "10%",
       render: (_, record) => (
-        //<Avatar size={60} src={record.avatarSupplier} />
-        <Avatar size={60} src={record.fileAttachDTO.filePath} />
+        <Avatar size={50} src={record.fileAttachDTO.filePath} />
       ),
     },
     {
@@ -492,6 +498,7 @@ export default function CustomerList() {
               colon={false}
               onFinish={onSubmitCreate}
             >
+              {<Text>Avatar</Text>}
               <div className="details__group">
                 <div className="details__avatar">
                   <div className="details__avatar-img">
@@ -533,6 +540,7 @@ export default function CustomerList() {
                   </Form.Item>
                 </div>
               </div>
+
               <div className="details__group">
                 <Form.Item
                   name="firstName"
@@ -543,6 +551,14 @@ export default function CustomerList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "First Name"
+                      ),
+                    },
+                    {
+                      pattern: /^[a-zA-Z]{2,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
                         "First Name"
                       ),
@@ -584,6 +600,14 @@ export default function CustomerList() {
                       ),
                     },
                     {
+                      pattern: /^[a-zA-Z ]{2,20}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT,
+                        MESSAGE_ERROR,
+                        "Last Name"
+                      ),
+                    },
+                    {
                       max: 20,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
@@ -616,6 +640,14 @@ export default function CustomerList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Phone Number"
+                      ),
+                    },
+                    {
+                      pattern: /^[0]{1}[0-9]{9,10}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
                         "Phone Number"
                       ),
@@ -689,6 +721,14 @@ export default function CustomerList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Tax Code"
+                      ),
+                    },
+                    {
+                      pattern: /^[0-9]{10,13}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER,
                         MESSAGE_ERROR,
                         "Tax Code"
                       ),
@@ -909,12 +949,11 @@ export default function CustomerList() {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
                 size: "default",
-                pageSize: 10,
-                // current: getPageUrl || pageHead,
+                pageSize: pageSize,
+                current: currentPage,
                 totalElements,
-                // onChange: (page, size) =>
-                // 	onHandlePagination(page, size),
-                pageSizeOptions: ["10", "15", "20", "25"],
+                onChange: (page, size) => onHandlePagination(page, size),
+                pageSizeOptions: ["2", "6", "10"],
               }
             : false
         }

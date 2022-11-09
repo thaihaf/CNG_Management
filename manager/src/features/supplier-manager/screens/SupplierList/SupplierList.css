@@ -42,3 +42,36 @@
 .details__group .details__item .login_input .ant-input {
   margin: 0;
 }
+.details__group .details__avatar {
+  position: relative;
+  width: 20rem;
+  height: 20rem;
+}
+.details__group .details__avatar .details__avatar-img {
+  border-radius: 50%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.details__group .details__avatar .item_choose-avt {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+}
+.details__group .ant-upload.ant-upload-select-picture-card {
+  width: 5rem;
+  height: 5rem;
+  padding: 0.5rem 2rem;
+  border: none;
+  border-radius: 50%;
+  background-color: #52c41a;
+  margin-top: 2rem;
+}
+.details__group .ant-upload.ant-upload-select-picture-card .ant-upload {
+  color: white;
+}
+/*# sourceMappingURL=SupplierList.css.map */
