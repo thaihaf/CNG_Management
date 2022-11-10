@@ -13,6 +13,7 @@ import {
   MinusOutlined,
   PlusOutlined,
   RestTwoTone,
+  SearchOutlined,
   UpCircleTwoTone,
 } from "@ant-design/icons";
 import {
@@ -38,7 +39,8 @@ import {
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-
+import { get } from "lodash";
+import Highlighter from "react-highlight-words";
 import avt_default from "assets/images/avt-default.png";
 import {
   updateListProductLv2,
@@ -54,7 +56,7 @@ const { Text } = Typography;
 export default function ListProductImport({ form }) {
   const { listWarehouses } = useSelector((state) => state.warehouse);
   const { productsImport, listProductLv2 } = useSelector(
-    (state) => state.importProduct
+    (state) => state.productImport
   );
 
   const history = useHistory();
@@ -63,6 +65,10 @@ export default function ListProductImport({ form }) {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(4);
+
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
 
   const onHandlePagination = (page, size) => {
     setCurrentPage(page);
@@ -100,6 +106,7 @@ export default function ListProductImport({ form }) {
               [`${record.id}_${record.index}`, "totalCostPrice"],
               0
             );
+            onHandleCaculatorTotal();
             break;
         }
       },
@@ -120,10 +127,10 @@ export default function ListProductImport({ form }) {
         `${p.id}_${p.index}`,
         "totalCostPrice",
       ]);
-
-      form.setFieldValue("totalQuantityBox", totalQuantityBox);
-      form.setFieldValue("totalCostPrice", totalCostPrice);
     });
+
+    form.setFieldValue("totalQuantityBox", totalQuantityBox);
+    form.setFieldValue("totalCostPrice", parseFloat(totalCostPrice).toFixed(2));
   };
   const onHandleChangeQuantity = (record) => {
     const totalQuantityBox = form
@@ -142,11 +149,11 @@ export default function ListProductImport({ form }) {
     );
     form.setFieldValue(
       [`${record.id}_${record.index}`, "totalSquareMeter"],
-      totalQuantityBox * record.squareMeterPerBox
+      parseFloat(totalQuantityBox * record.squareMeterPerBox).toFixed(2)
     );
     form.setFieldValue(
       [`${record.id}_${record.index}`, "totalCostPrice"],
-      totalQuantityBox * costPerBox
+      parseFloat(totalQuantityBox * costPerBox).toFixed(2)
     );
     onHandleCaculatorTotal();
   };
@@ -164,12 +171,135 @@ export default function ListProductImport({ form }) {
 
       form.setFieldValue(
         [`${record.id}_${record.index}`, "totalCostPrice"],
-        costPerBox * totalQuantityBox
+        parseFloat(costPerBox * totalQuantityBox).toFixed(2)
       );
 
       onHandleCaculatorTotal();
     }
   };
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+  const getColumnSearchProps = (dataIndex, nestedValue) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: "block",
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) => {
+      if (typeof record[dataIndex] !== "object") {
+        return record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase());
+      } else {
+        if (typeof nestedValue === "string") {
+          return get(record, dataIndex)
+            [nestedValue].toString()
+            .toLowerCase()
+            .includes(value.toLowerCase());
+        } else {
+          let parent = get(record, dataIndex);
+          let data = nestedValue.reduce(
+            (previousValue, currentValue) =>
+              previousValue + " " + parent[currentValue],
+            ""
+          );
+          return data.toString().toLowerCase().includes(value.toLowerCase());
+        }
+      }
+    },
+
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
 
   const productColumns = [
     {
@@ -194,7 +324,9 @@ export default function ListProductImport({ form }) {
       dataIndex: "id",
       key: "id",
       align: "center",
-      fixed: "left",
+      sorter: (a, b) => a.id > b.id,
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("id"),
       render: (_, record) => (
         <Tag
           color="processing"
@@ -371,6 +503,10 @@ export default function ListProductImport({ form }) {
       dataIndex: "costPerBox",
       key: "costPerBox",
       align: "center",
+      sorter: (a, b) =>
+        parseFloat(form.getFieldValue([`${a.id}_${a.index}`, "costPerBox"])) <
+        parseFloat(form.getFieldValue([`${b.id}_${b.index}`, "costPerBox"])),
+      sortDirections: ["descend", "ascend"],
       render: (_, record) => (
         <Form.Item
           name={[`${record.id}_${record.index}`, "costPerBox"]}
@@ -385,7 +521,6 @@ export default function ListProductImport({ form }) {
         >
           <InputNumber
             min={1}
-            max={10}
             placeholder={"cost"}
             onStep={() => onHandleChangeCost(record)}
           />
@@ -397,6 +532,14 @@ export default function ListProductImport({ form }) {
       dataIndex: "totalQuantityBox",
       key: "totalQuantityBox",
       align: "center",
+      sorter: (a, b) =>
+        parseFloat(
+          form.getFieldValue([`${a.id}_${a.index}`, "totalQuantityBox"])
+        ) <
+        parseFloat(
+          form.getFieldValue([`${b.id}_${b.index}`, "totalQuantityBox"])
+        ),
+      sortDirections: ["descend", "ascend"],
       render: (_, record) => (
         <Form.Item
           name={[`${record.id}_${record.index}`, "totalQuantityBox"]}
@@ -412,6 +555,14 @@ export default function ListProductImport({ form }) {
       dataIndex: "totalSquareMeter",
       key: "totalSquareMeter",
       align: "center",
+      sorter: (a, b) =>
+        parseFloat(
+          form.getFieldValue([`${a.id}_${a.index}`, "totalSquareMeter"])
+        ) <
+        parseFloat(
+          form.getFieldValue([`${b.id}_${b.index}`, "totalSquareMeter"])
+        ),
+      sortDirections: ["descend", "ascend"],
       render: (_, record) => (
         <Form.Item
           name={[`${record.id}_${record.index}`, "totalSquareMeter"]}
@@ -427,6 +578,10 @@ export default function ListProductImport({ form }) {
       dataIndex: "totalCostPrice",
       key: "totalCostPrice",
       align: "center",
+      sorter: (a, b) =>
+        parseFloat(form.getFieldValue([`${a.id}_${a.index}`, "totalCostPrice"])) <
+        parseFloat(form.getFieldValue([`${b.id}_${b.index}`, "totalCostPrice"])),
+      sortDirections: ["descend", "ascend"],
       render: (_, record) => (
         <Form.Item
           name={[`${record.id}_${record.index}`, "totalCostPrice"]}

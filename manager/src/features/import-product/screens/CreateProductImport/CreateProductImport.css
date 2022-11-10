@@ -1,6 +1,6 @@
 .product {
   display: flex;
-  gap: 3rem;
+  gap: 5rem;
 }
 .product .product-left {
   max-width: 80%;

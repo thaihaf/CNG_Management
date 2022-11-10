@@ -1,1 +1,1 @@
-export const IMPORT_PRODUCT_KEY = "importProduct";
+export const IMPORT_PRODUCT_KEY = "productImport";

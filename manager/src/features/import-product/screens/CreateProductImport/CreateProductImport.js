@@ -35,9 +35,7 @@ const { Option } = Select;
 const { Title } = Typography;
 
 export default function CreateImportProduct() {
-  const { productsImport } = useSelector(
-    (state) => state.importProduct
-  );
+  const { productsImport } = useSelector((state) => state.productImport);
 
   const dispatch = useDispatch();
   const history = useHistory();
