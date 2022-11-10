@@ -334,6 +334,14 @@ export default function AccountList() {
                                                        ),
                                                   },
                                                   {
+                                                       pattern: /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){8,25}$/,
+                                                       message: getMessage(
+                                                            CODE_ERROR.ERROR_FORMAT,
+                                                            MESSAGE_ERROR,
+                                                            "Username"
+                                                       ),
+                                                  },
+                                                  {
                                                        max: 25,
                                                        message: getMessage(
                                                             CODE_ERROR.ERROR_NUMBER_MAX,
@@ -391,6 +399,14 @@ export default function AccountList() {
                                                        required: true,
                                                        message: getMessage(
                                                             CODE_ERROR.ERROR_REQUIRED,
+                                                            MESSAGE_ERROR,
+                                                            "Password"
+                                                       ),
+                                                  },
+                                                  {
+                                                       pattern:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+                                                       message: getMessage(
+                                                            CODE_ERROR.ERROR_FORMAT_PASSWORD,
                                                             MESSAGE_ERROR,
                                                             "Password"
                                                        ),

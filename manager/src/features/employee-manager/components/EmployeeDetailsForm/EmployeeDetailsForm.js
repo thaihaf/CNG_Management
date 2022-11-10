@@ -506,7 +506,7 @@ function EmployeeDetailsForm() {
                                                   message: getMessage(
                                                        CODE_ERROR.ERROR_REQUIRED,
                                                        MESSAGE_ERROR,
-                                                       "Email"
+                                                       "Phone"
                                                   ),
                                              },
                                              {

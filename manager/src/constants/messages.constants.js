@@ -25,4 +25,5 @@ export const MESSAGE_ERROR = {
   "0500": "%field% must be a boolean",
   "0005": "%field% contains invalid characters.",
   "1406": "Please enter the correct format %field%.",
+  "1408": "%field% which contain at least one lowercase letter, one uppercase letter, one numeric digit, one special character",
 };

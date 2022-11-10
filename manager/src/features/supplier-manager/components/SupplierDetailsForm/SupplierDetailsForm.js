@@ -315,7 +315,7 @@ function SupplierDetailsForm() {
               </Form.Item>
               <Form.Item
                 name="lastContactName"
-                label={<Text>Last name</Text>}
+                label={<Text>Last Name</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -323,7 +323,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Last name"
+                      "Last Name"
                     ),
                   },
                   {
@@ -331,7 +331,7 @@ function SupplierDetailsForm() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
-                        "Last name"
+                        "Last Name"
                       ),
                     },
                   {
@@ -339,7 +339,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Last name",
+                      "Last Name",
                       20
                     ),
                   },
@@ -348,7 +348,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Last name",
+                      "Last Name",
                       2
                     ),
                   },
