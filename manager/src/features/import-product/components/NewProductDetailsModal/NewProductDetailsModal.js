@@ -28,7 +28,7 @@ const { Text } = Typography;
 
 export default function NewProductDetailsModal({ record }) {
   const [newProductDetailsForm] = Form.useForm();
-  const { productsImport } = useSelector((state) => state.importProduct);
+  const { productsImport } = useSelector((state) => state.productImport);
 
   const dispatch = useDispatch();
 

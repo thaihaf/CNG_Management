@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { CODE_ERROR } from "constants/errors.constants";
-import { IMPORT_PRODUCT_KEY } from "../constants/import-product.key";
 
 import api from "../api/import-product.api";
+import { IMPORT_PRODUCT_KEY } from "../constants/import-product.key";
 
 export const IMPORT_PRODUCT_FEATURE_KEY = IMPORT_PRODUCT_KEY;
 
 export const createProductImport = createAsyncThunk(
-  "product/createProductImport",
+  "productImport/createProductImport",
   async (data, { rejectWithValue }) => {
     try {
       const response = await api.createProductImport(data);
@@ -17,10 +17,26 @@ export const createProductImport = createAsyncThunk(
     }
   }
 );
+export const getAllProductImport = createAsyncThunk(
+  "productImport/getAllProductImport",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.getAllProductImport();
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
 
 const initialState = {
+  listAllProductImport: [],
   productsImport: [],
   listProductLv2: [],
+  totalElements: 0,
+  totalPages: 0,
+  size: 0,
+  productImportDetails: null,
 };
 
 const importProductSlice = createSlice({
@@ -35,19 +51,19 @@ const importProductSlice = createSlice({
     },
   },
   extraReducers: {
-    // [getProducts.fulfilled]: (state, action) => {
-    //   state.listProducts = action.payload.content;
-    // },
+    [getAllProductImport.fulfilled]: (state, action) => {
+      state.listAllProductImport = action.payload.content;
+      state.totalElements = action.payload.totalElements;
+      state.totalPages = action.payload.totalPages;
+      state.size = action.payload.size;
+    },
     ["LOGOUT"]: (state) => {
       Object.assign(state, initialState);
     },
   },
 });
 
-export const {
-  updateProductImport,
-  updateListProductLv2,
-  updateListProductLv3,
-} = importProductSlice.actions;
+export const { updateProductImport, updateListProductLv2 } =
+  importProductSlice.actions;
 
 export const importProductReducer = importProductSlice.reducer;
