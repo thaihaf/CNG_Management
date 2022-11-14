@@ -79,12 +79,7 @@ export default function NewProductDetailsModal({ record }) {
 
   return (
     <>
-      <Tooltip title="add new product details" color={"cyan"}>
-        <PlusCircleTwoTone
-          onClick={() => setModal1Open(true)}
-          style={{ fontSize: "23px", cursor: "pointer" }}
-        />
-      </Tooltip>
+      <Text onClick={() => setModal1Open(true)}>New Product Details</Text>
 
       <Modal
         title="New Product Details"

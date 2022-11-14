@@ -1,0 +1,31 @@
+.statistic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.statistic-item {
+  border-radius: 2.5rem;
+  padding: 2rem 3rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  min-width: 25rem;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  max-height: 10rem;
+}
+.statistic-item .ant-form-item,
+.statistic-item .ant-statistic-title {
+  margin-bottom: 0;
+}
+.statistic-item .ant-statistic-content-value-int {
+  font-weight: 500;
+}
+.statistic-icon {
+  width: 6rem;
+  height: 6rem;
+  padding: 1.5rem;
+  border-radius: 2rem;
+}

@@ -20,6 +20,7 @@ import {
   Avatar,
   Button,
   Col,
+  DatePicker,
   Divider,
   Dropdown,
   Form,
@@ -30,15 +31,17 @@ import {
   Row,
   Select,
   Space,
+  Spin,
   Statistic,
   Table,
   Tag,
   Tooltip,
   Typography,
 } from "antd";
-import React, { useRef, useState } from "react";
+import moment from "moment";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
 import avt_default from "assets/images/avt-default.png";
@@ -47,15 +50,21 @@ import {
   updateListProductLv3,
   updateProductImport,
 } from "features/import-product/importProduct";
-import "./ListProductImport.css";
+import "./InsertProductTable.css";
 import { unwrapResult } from "@reduxjs/toolkit";
 import NewProductDetailsModal from "../NewProductDetailsModal/NewProductDetailsModal";
-const { Option } = Select;
-const { Text } = Typography;
+import { getMessage } from "helpers/util.helper";
+import { CODE_ERROR } from "constants/errors.constants";
+import { MESSAGE_ERROR } from "constants/messages.constants";
+import { getEmployees } from "features/employee-manager/employeeManager";
+import HeaderTable from "../HeaderTable/HeaderTable";
 
-export default function ListProductImport({ form }) {
+const { Option } = Select;
+const { Text, Title } = Typography;
+
+export default function InsertProductTable({ form, updateMode, openHeader }) {
   const { listWarehouses } = useSelector((state) => state.warehouse);
-  const { productsImport, listProductLv2 } = useSelector(
+  const { productsImport, listProductLv2, productImportDetails } = useSelector(
     (state) => state.productImport
   );
 
@@ -103,7 +112,7 @@ export default function ListProductImport({ form }) {
               0
             );
             form.setFieldValue(
-              [`${record.id}_${record.index}`, "totalCostPrice"],
+              [`${record.id}_${record.index}`, "costPerSquareMeter"],
               0
             );
             onHandleCaculatorTotal();
@@ -115,22 +124,28 @@ export default function ListProductImport({ form }) {
   };
 
   const onHandleCaculatorTotal = () => {
-    let totalQuantityBox = 0;
-    let totalCostPrice = 0;
+    let totalQuantityImport = 0;
+    let totalSquareMeterImport = 0;
+    let totalCostImport = 0;
 
     productsImport.map((p) => {
-      totalQuantityBox += form.getFieldValue([
+      totalQuantityImport += form.getFieldValue([
         `${p.id}_${p.index}`,
         "totalQuantityBox",
       ]);
-      totalCostPrice += form.getFieldValue([
+      totalSquareMeterImport += form.getFieldValue([
         `${p.id}_${p.index}`,
-        "totalCostPrice",
+        "totalSquareMeter",
+      ]);
+      totalCostImport += form.getFieldValue([
+        `${p.id}_${p.index}`,
+        "totalCost",
       ]);
     });
 
-    form.setFieldValue("totalQuantityBox", totalQuantityBox);
-    form.setFieldValue("totalCostPrice", parseFloat(totalCostPrice).toFixed(2));
+    form.setFieldValue("totalQuantityImport", totalQuantityImport);
+    form.setFieldValue("totalSquareMeterImport", totalSquareMeterImport);
+    form.setFieldValue("totalCostImport", totalCostImport);
   };
   const onHandleChangeQuantity = (record) => {
     const totalQuantityBox = form
@@ -138,10 +153,13 @@ export default function ListProductImport({ form }) {
       .reduce(function (result, warehouse) {
         return result + warehouse?.quantityBox;
       }, 0);
-    const costPerBox = form.getFieldValue([
+    const costPerSquareMeter = form.getFieldValue([
       `${record.id}_${record.index}`,
-      "costPerBox",
+      "costPerSquareMeter",
     ]);
+
+    const totalSquareMeter = totalQuantityBox * record.squareMeterPerBox;
+    const totalCost = totalSquareMeter * costPerSquareMeter;
 
     form.setFieldValue(
       [`${record.id}_${record.index}`, "totalQuantityBox"],
@@ -149,29 +167,27 @@ export default function ListProductImport({ form }) {
     );
     form.setFieldValue(
       [`${record.id}_${record.index}`, "totalSquareMeter"],
-      parseFloat(totalQuantityBox * record.squareMeterPerBox).toFixed(2)
+      totalSquareMeter
     );
     form.setFieldValue(
-      [`${record.id}_${record.index}`, "totalCostPrice"],
-      parseFloat(totalQuantityBox * costPerBox).toFixed(2)
+      [`${record.id}_${record.index}`, "totalCost"],
+      totalCost
     );
     onHandleCaculatorTotal();
   };
-  const onHandleChangeCost = (record) => {
+  const onHandleChangeCost = (record, value) => {
     const totalQuantityBox = form.getFieldValue([
       `${record.id}_${record.index}`,
       "totalQuantityBox",
     ]);
 
     if (totalQuantityBox) {
-      const costPerBox = form.getFieldValue([
-        `${record.id}_${record.index}`,
-        "costPerBox",
-      ]);
+      const costPerSquareMeter =
+        typeof value === "number" ? value : Number(value.target.value);
 
       form.setFieldValue(
-        [`${record.id}_${record.index}`, "totalCostPrice"],
-        parseFloat(costPerBox * totalQuantityBox).toFixed(2)
+        [`${record.id}_${record.index}`, "totalCost"],
+        record.squareMeterPerBox * totalQuantityBox * costPerSquareMeter
       );
 
       onHandleCaculatorTotal();
@@ -303,24 +319,17 @@ export default function ListProductImport({ form }) {
 
   const productColumns = [
     {
-      title: "Image",
-      dataIndex: "image",
-      key: "image",
+      title: "Index",
+      dataIndex: "index",
+      key: "index",
       align: "center",
-      fixed: "left",
-      render: (_, record) => (
-        <Avatar
-          size={70}
-          src={
-            record.listImage[0].filePath === ""
-              ? avt_default
-              : record.listImage[0].filePath
-          }
-        />
-      ),
+      sorter: (a, b) => a.index > b.index,
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("index"),
+      render: (_, record) => <Title level={4}>{record.index}</Title>,
     },
     {
-      title: "Product Code",
+      title: "Product",
       dataIndex: "id",
       key: "id",
       align: "center",
@@ -328,207 +337,267 @@ export default function ListProductImport({ form }) {
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("id"),
       render: (_, record) => (
-        <Tag
-          color="processing"
+        <div
           style={{
-            fontSize: "15px",
-            padding: "0.5rem 1.2rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "1.5rem",
+            width: "maxContent",
           }}
         >
-          {record.id}
-        </Tag>
+          <Avatar
+            size={70}
+            src={
+              record.listImage[0].filePath === ""
+                ? avt_default
+                : record.listImage[0].filePath
+            }
+          />
+          <div
+            style={{
+              paddingRight: "2rem",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "0.8rem",
+              width: "maxContent",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "17px",
+                fontWeight: "600",
+              }}
+            >
+              {record.productName}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                gap: "0.6rem",
+                width: "maxContent",
+              }}
+            >
+              <div className="">{`ID: `}</div>
+              <div className="">{record.id}</div>
+            </div>
+          </div>
+        </div>
       ),
     },
     {
-      title: "Shipment",
-      dataIndex: "shipment",
-      key: "shipment",
+      title: "Product Details",
+      dataIndex: "productDetails",
+      key: "productDetails",
       align: "center",
       render: (_, record) => (
-        <Form.Item
-          name={[`${record.id}_${record.index}`, "shipment"]}
-          rules={[
-            {
-              required: true,
-              message: "Missing shipment",
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                let a = productsImport.filter(
-                  (p) =>
-                    p.id === record.id &&
-                    p.index !== record.index &&
-                    getFieldValue([`${p.id}_${p.index}`, "shipment"]) === value
-                );
-
-                if (!value || a.length === 0) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error("The Shipment product be duplicated!")
-                );
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: "1rem",
+          }}
+        >
+          <Form.Item
+            name={[`${record.id}_${record.index}`, "shipment"]}
+            rules={[
+              {
+                required: true,
+                message: "Missing shipment",
               },
-            }),
-          ]}
-        >
-          <Select
-            onChange={(value) => {
-              let productDetailsFilter = record.productDetailDTO?.filter(
-                (item) => item.shipment === value
-              );
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  let a = productsImport.filter(
+                    (p) =>
+                      p.id === record.id &&
+                      p.index !== record.index &&
+                      getFieldValue([`${p.id}_${p.index}`, "shipment"]) ===
+                        value
+                  );
 
-              let ab = productsImport.map((product) => {
-                if (
-                  product.id === record.id &&
-                  product.index === record.index
-                ) {
-                  return { ...record, productDetailDTO: productDetailsFilter };
-                } else {
-                  return product;
-                }
-              });
-
-              form.setFieldValue([`${record.id}_${record.index}`, "type"], "");
-              form.setFieldValue(
-                [`${record.id}_${record.index}`, "color"],
-                productDetailsFilter[0]?.color
-              );
-              dispatch(updateListProductLv2(ab));
-            }}
-            showSearch
-            allowClear
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option?.value ?? "").includes(input)
-            }
-            filterSort={(optionA, optionB) =>
-              (optionA?.value ?? "")
-                .toLowerCase()
-                .localeCompare((optionB?.value ?? "").toLowerCase())
-            }
+                  if (!value || a.length === 0) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("The Shipment product be duplicated!")
+                  );
+                },
+              }),
+            ]}
             style={{
-              minWidth: 150,
+              minWidth: 200,
             }}
           >
-            {record.productDetailDTO?.map((item, index, arr) => {
-              let listItem = arr.filter((i) => i.shipment === item.shipment);
-
-              if (listItem[0].id === item.id) {
-                return (
-                  <Option
-                    value={item.shipment}
-                    key={`${item.id}_${item.shipment}`}
-                  >
-                    {item.shipment}
-                  </Option>
+            <Select
+              placeholder="Shipment"
+              onChange={(value) => {
+                let productDetailsFilter = record.productDetailDTO?.filter(
+                  (item) => item.shipment === value
                 );
-              }
-            })}
-          </Select>
-        </Form.Item>
-      ),
-    },
-    {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-      align: "center",
-      render: (_, record) => (
-        <Form.Item
-          name={[`${record.id}_${record.index}`, "type"]}
-          rules={[
-            {
-              required: true,
-              message: "Missing Type",
-            },
-          ]}
-        >
-          <Select
-            notFoundContent={null}
-            style={{
-              width: 120,
-            }}
-          >
-            {listProductLv2.map((product) => {
-              if (product.id === record.id && product.index === record.index) {
-                return product.productDetailDTO?.map((item, index, arr) => {
-                  let listItem = arr.filter((i) => i.type === item.type);
-                  if (listItem[0].id === item.id) {
-                    return (
-                      <Option
-                        value={`${item.id}_${item.type}`}
-                        key={`${item.id}_${item.type}`}
-                      >
-                        {item.type}
-                      </Option>
-                    );
+
+                let ab = productsImport.map((product) => {
+                  if (
+                    product.id === record.id &&
+                    product.index === record.index
+                  ) {
+                    return {
+                      ...record,
+                      productDetailDTO: productDetailsFilter,
+                    };
+                  } else {
+                    return product;
                   }
                 });
+
+                form.setFieldValue(
+                  [`${record.id}_${record.index}`, "type"],
+                  ""
+                );
+                form.setFieldValue(
+                  [`${record.id}_${record.index}`, "color"],
+                  productDetailsFilter[0]?.color
+                );
+                dispatch(updateListProductLv2(ab));
+              }}
+              showSearch
+              allowClear
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.value ?? "").includes(input)
               }
-            })}
-          </Select>
-        </Form.Item>
-      ),
-    },
-    {
-      title: "Color",
-      dataIndex: "color",
-      key: "color",
-      align: "center",
-      render: (_, record) => (
-        <Form.Item
-          name={[`${record.id}_${record.index}`, "color"]}
-          rules={[
-            {
-              required: true,
-              message: "Missing Color",
-            },
-          ]}
-        >
-          <Input
-            type="text"
-            disabled={true}
-            placeholder="Color"
+              filterSort={(optionA, optionB) =>
+                (optionA?.value ?? "")
+                  .toLowerCase()
+                  .localeCompare((optionB?.value ?? "").toLowerCase())
+              }
+              style={{
+                minWidth: 150,
+              }}
+            >
+              {record.productDetailDTO?.map((item, index, arr) => {
+                let listItem = arr.filter((i) => i.shipment === item.shipment);
+
+                if (listItem[0].id === item.id) {
+                  return (
+                    <Option
+                      value={item.shipment}
+                      key={`${item.id}_${item.shipment}`}
+                    >
+                      {item.shipment}
+                    </Option>
+                  );
+                }
+              })}
+            </Select>
+          </Form.Item>
+
+          <div
             style={{
-              width: 100,
-              color: "black",
-              borderStyle: "dashed",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "2rem",
             }}
-          />
-        </Form.Item>
+          >
+            <Form.Item
+              name={[`${record.id}_${record.index}`, "type"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Missing Type",
+                },
+              ]}
+              style={{
+                minWidth: 100,
+              }}
+            >
+              <Select placeholder="Type" notFoundContent={null}>
+                {listProductLv2.map((product) => {
+                  if (
+                    product.id === record.id &&
+                    product.index === record.index
+                  ) {
+                    return product.productDetailDTO?.map((item, index, arr) => {
+                      let listItem = arr.filter((i) => i.type === item.type);
+                      if (listItem[0].id === item.id) {
+                        return (
+                          <Option
+                            value={`${item.id}_${item.type}`}
+                            key={`${item.id}_${item.type}`}
+                          >
+                            {item.type}
+                          </Option>
+                        );
+                      }
+                    });
+                  }
+                })}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name={[`${record.id}_${record.index}`, "color"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Missing Color",
+                },
+              ]}
+              style={{
+                minWidth: 100,
+              }}
+            >
+              <Input
+                type="text"
+                disabled={true}
+                placeholder="Color"
+                style={{
+                  color: "black",
+                  borderStyle: "dashed",
+                }}
+              />
+            </Form.Item>
+          </div>
+        </div>
       ),
     },
     {
-      title: "Cost per box",
-      dataIndex: "costPerBox",
-      key: "costPerBox",
+      title: "Cost Per Square Meter (vnđ)",
+      dataIndex: "costPerSquareMeter",
+      key: "costPerSquareMeter",
       align: "center",
       sorter: (a, b) =>
-        parseFloat(form.getFieldValue([`${a.id}_${a.index}`, "costPerBox"])) <
-        parseFloat(form.getFieldValue([`${b.id}_${b.index}`, "costPerBox"])),
+        parseFloat(
+          form.getFieldValue([`${a.id}_${a.index}`, "costPerSquareMeter"])
+        ) <
+        parseFloat(
+          form.getFieldValue([`${b.id}_${b.index}`, "costPerSquareMeter"])
+        ),
       sortDirections: ["descend", "ascend"],
       render: (_, record) => (
         <Form.Item
-          name={[`${record.id}_${record.index}`, "costPerBox"]}
+          name={[`${record.id}_${record.index}`, "costPerSquareMeter"]}
           rules={[
             {
               required: true,
-              message: "Missing Cost per box",
+              message: "Missing Cost Per Square Meter",
             },
           ]}
-          onChange={() => onHandleChangeCost(record)}
+          onChange={(value) => onHandleChangeCost(record, value)}
           initialValue={1000}
+          style={{
+            minWidth: 150,
+          }}
         >
           <InputNumber
             min={1}
-            placeholder={"cost"}
-            onStep={() => onHandleChangeCost(record)}
+            onStep={(value) => onHandleChangeCost(record, value)}
           />
         </Form.Item>
       ),
     },
     {
-      title: "Total Quantity Box",
+      title: "Quantity Box",
       dataIndex: "totalQuantityBox",
       key: "totalQuantityBox",
       align: "center",
@@ -545,13 +614,14 @@ export default function ListProductImport({ form }) {
           name={[`${record.id}_${record.index}`, "totalQuantityBox"]}
           onChange={(value) => console.log(value)}
           initialValue={0}
+          style={{ minWidth: "150px" }}
         >
           <Statistic />
         </Form.Item>
       ),
     },
     {
-      title: "Total Square Meter",
+      title: "Square Meter (m2)",
       dataIndex: "totalSquareMeter",
       key: "totalSquareMeter",
       align: "center",
@@ -568,27 +638,44 @@ export default function ListProductImport({ form }) {
           name={[`${record.id}_${record.index}`, "totalSquareMeter"]}
           onChange={(value) => console.log(value)}
           initialValue={0}
+          style={{ minWidth: "150px" }}
         >
           <Statistic />
         </Form.Item>
       ),
     },
     {
-      title: "Total Cost Price",
-      dataIndex: "totalCostPrice",
-      key: "totalCostPrice",
+      title: "Cost (vnđ)",
+      dataIndex: "totalCost",
+      key: "totalCost",
       align: "center",
       sorter: (a, b) =>
-        parseFloat(form.getFieldValue([`${a.id}_${a.index}`, "totalCostPrice"])) <
-        parseFloat(form.getFieldValue([`${b.id}_${b.index}`, "totalCostPrice"])),
+        parseFloat(form.getFieldValue([`${a.id}_${a.index}`, "totalCost"])) <
+        parseFloat(form.getFieldValue([`${b.id}_${b.index}`, "totalCost"])),
       sortDirections: ["descend", "ascend"],
       render: (_, record) => (
         <Form.Item
-          name={[`${record.id}_${record.index}`, "totalCostPrice"]}
+          name={[`${record.id}_${record.index}`, "totalCost"]}
           onChange={(value) => console.log(value)}
           initialValue={0}
         >
-          <Statistic />
+          <Statistic style={{ minWidth: "150px" }} />
+        </Form.Item>
+      ),
+    },
+    {
+      title: "Product Note",
+      dataIndex: "noteImport",
+      key: "noteImport",
+      align: "center",
+      render: (_, record) => (
+        <Form.Item name={[`${record.id}_${record.index}`, "noteImport"]}>
+          <Input.TextArea
+            showCount
+            maxLength={300}
+            style={{ height: "100%", resize: "none", minWidth: "150px" }}
+            placeholder="Product note"
+          />
         </Form.Item>
       ),
     },
@@ -597,24 +684,29 @@ export default function ListProductImport({ form }) {
       dataIndex: "operation",
       key: "operation",
       align: "center",
-      fixed: "right",
+      width: 120,
       render: (_, record) => (
-        <div
-          style={{
-            display: "flex",
-            gap: "3rem",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <NewProductDetailsModal record={record} />
-          <Tooltip title="remove product" color={"magenta"}>
-            <CloseOutlined
-              onClick={() => onRowDelete("deleteProduct", record)}
-              style={{ fontSize: "23px", cursor: "pointer", color: "#eb2f96" }}
+        <Dropdown
+          overlay={
+            <Menu
+              items={[
+                {
+                  key: 1,
+                  label: <NewProductDetailsModal record={record} />,
+                },
+                {
+                  key: 2,
+                  label: "Remove Product",
+                  onClick: () => onRowDelete("deleteProduct", record),
+                },
+              ]}
             />
-          </Tooltip>
-        </div>
+          }
+        >
+          <a>
+            More <DownOutlined />
+          </a>
+        </Dropdown>
       ),
     },
   ];
@@ -622,14 +714,14 @@ export default function ListProductImport({ form }) {
   return (
     <Table
       size="middle"
-      className="listProductImport"
+      className={
+        openHeader ? "listProductImport tranform" : "listProductImport"
+      }
       columns={productColumns}
       dataSource={[...productsImport]}
       rowKey={(record) => `${record.id}-${record.index}`}
       loading={isLoading}
-      scroll={{
-        x: 1700,
-      }}
+      scroll={{ x: "maxContent" }}
       expandable={{
         expandedRowRender: (record) => (
           <>
@@ -744,24 +836,27 @@ export default function ListProductImport({ form }) {
             </Form.List>
           </>
         ),
-        expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-            <CaretUpFilled
-              style={{
-                fontSize: "23px",
-                transition: "all 0.3s ease",
-              }}
-              onClick={(e) => onExpand(record, e)}
-            />
-          ) : (
-            <CaretDownFilled
-              style={{
-                fontSize: "23px",
-                transition: "all 0.3s ease",
-              }}
-              onClick={(e) => onExpand(record, e)}
-            />
-          ),
+        expandIcon: ({ expanded, onExpand, record }) => (
+          <Tooltip placement="topRight" title={"Show warehouse select"}>
+            {expanded ? (
+              <CaretUpFilled
+                style={{
+                  fontSize: "23px",
+                  transition: "all 0.3s ease",
+                }}
+                onClick={(e) => onExpand(record, e)}
+              />
+            ) : (
+              <CaretDownFilled
+                style={{
+                  fontSize: "23px",
+                  transition: "all 0.3s ease",
+                }}
+                onClick={(e) => onExpand(record, e)}
+              />
+            )}
+          </Tooltip>
+        ),
       }}
       pagination={
         productsImport.length !== 0
@@ -773,10 +868,11 @@ export default function ListProductImport({ form }) {
               current: currentPage,
               total: productsImport.length,
               onChange: (page, size) => onHandlePagination(page, size),
-              pageSizeOptions: ["2", "4", "6"],
+              pageSizeOptions: ["2", "5", "10"],
             }
           : false
       }
+      title={() => <HeaderTable form={form} updateMode={updateMode} />}
     />
   );
 }
