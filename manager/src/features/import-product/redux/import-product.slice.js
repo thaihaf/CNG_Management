@@ -6,11 +6,33 @@ import { IMPORT_PRODUCT_KEY } from "../constants/import-product.key";
 
 export const IMPORT_PRODUCT_FEATURE_KEY = IMPORT_PRODUCT_KEY;
 
+export const getProductImportDetails = createAsyncThunk(
+  "productImport/getProductImportDetails",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.getProductImportDetails(id);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
 export const createProductImport = createAsyncThunk(
   "productImport/createProductImport",
   async (data, { rejectWithValue }) => {
     try {
       const response = await api.createProductImport(data);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const updateProductImports = createAsyncThunk(
+  "productImport/updateProductImports",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await api.updateProductImports(id, data);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -56,6 +78,9 @@ const importProductSlice = createSlice({
       state.totalElements = action.payload.totalElements;
       state.totalPages = action.payload.totalPages;
       state.size = action.payload.size;
+    },
+    [getProductImportDetails.fulfilled]: (state, action) => {
+      state.productImportDetails = action.payload;
     },
     ["LOGOUT"]: (state) => {
       Object.assign(state, initialState);

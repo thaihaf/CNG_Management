@@ -1,15 +1,15 @@
 .product {
-  display: flex;
-  gap: 5rem;
+  .actions-group {
+    display: flex;
+    gap: 2rem;
+    padding: 1.7rem 2.5rem;
+    border-radius: 2rem 2rem 0 0;
+    background-color: #fafafa;
+    margin-top: 2rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
-  .product-left {
-    max-width: 80%;
-
-    .actions-group {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
+    .details__item {
+      margin-bottom: 0;
     }
   }
 }

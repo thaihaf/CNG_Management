@@ -48,7 +48,7 @@ export default function ListProductImport() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(4);
-  
+
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -365,17 +365,17 @@ export default function ListProductImport() {
               }
             : false
         }
-        // onRow={(record) => {
-        //   return {
-        //     onClick: () =>
-        //       history.push(
-        //         ProductManagerPaths.PRODUCT_DETAILS.replace(
-        //           ":productId",
-        //           record.id
-        //         )
-        //       ),
-        //   };
-        // }}
+        onRow={(record) => {
+          return {
+            onClick: () =>
+              history.push(
+                ImportProductManagerPaths.DETAILS_PRODUCT_IMPORT.replace(
+                  ":importId",
+                  record.id
+                )
+              ),
+          };
+        }}
       />
     </div>
   );

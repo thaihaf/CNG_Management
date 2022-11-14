@@ -1,15 +1,14 @@
-.product {
+.product .actions-group {
   display: flex;
-  gap: 5rem;
+  gap: 2rem;
+  padding: 1.7rem 2.5rem;
+  border-radius: 2rem 2rem 0 0;
+  background-color: #fafafa;
+  margin-top: 2rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
-.product .product-left {
-  max-width: 80%;
-}
-.product .product-left .actions-group {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
+.product .actions-group .details__item {
+  margin-bottom: 0;
 }
 
 .ant-select-dropdown {
