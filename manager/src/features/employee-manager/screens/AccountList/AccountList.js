@@ -294,7 +294,7 @@ export default function AccountList() {
                          size={"large"}
                          onClick={() => setModal1Open(true)}
                     >
-                         Create New
+                         Create Account
                     </Button>
 
                     <Modal

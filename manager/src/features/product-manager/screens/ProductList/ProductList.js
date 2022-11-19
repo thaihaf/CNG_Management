@@ -328,7 +328,7 @@ export default function ProductList() {
                               history.push(ProductManagerPaths.CREATE_PRODUCT)
                          }
                     >
-                         Create New
+                         Create Product
                     </Button>
                </div>
 
