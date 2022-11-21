@@ -241,6 +241,15 @@ function CustomerDetailsForm() {
                     ),
                   },
                   {
+                      pattern:
+                        /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_LETTER,
+                        MESSAGE_ERROR,
+                        "Shop Name"
+                      ),
+                    },
+                  {
                     max: 25,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
@@ -289,7 +298,8 @@ function CustomerDetailsForm() {
                     ),
                   },
                   {
-                    pattern: /^[a-zA-Z]{2,10}$/,
+                    pattern:
+                      /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,10}$/,
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT,
                       MESSAGE_ERROR,
@@ -332,7 +342,8 @@ function CustomerDetailsForm() {
                     ),
                   },
                   {
-                    pattern: /^[a-zA-Z ]{2,20}$/,
+                    pattern:
+                      /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,20}$/,
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT,
                       MESSAGE_ERROR,
@@ -378,13 +389,13 @@ function CustomerDetailsForm() {
                     ),
                   },
                   {
-                      pattern: /^[0]{1}[0-9]{9,10}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_FORMAT_NUMBER,
-                        MESSAGE_ERROR,
-                        "Phone Number"
-                      ),
-                    },
+                    pattern: /^[0]{1}[0-9]{9,10}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_FORMAT_NUMBER,
+                      MESSAGE_ERROR,
+                      "Phone Number"
+                    ),
+                  },
                   {
                     max: 10,
                     message: getMessage(
@@ -421,13 +432,13 @@ function CustomerDetailsForm() {
                     ),
                   },
                   {
-                      pattern: /^[0-9]{10,13}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER,
-                        MESSAGE_ERROR,
-                        "Tax Code"
-                      ),
-                    },
+                    pattern: /^[0-9]{10,13}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER,
+                      MESSAGE_ERROR,
+                      "Tax Code"
+                    ),
+                  },
                   {
                     max: 13,
                     message: getMessage(

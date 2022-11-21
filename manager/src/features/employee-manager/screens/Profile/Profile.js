@@ -22,7 +22,7 @@ export default function Profile() {
 
      const info = () => {
           Modal.info({
-               title: "Your account dont have infomation details",
+               title: "Your account don't have information details",
                content: (
                     <p style={{ color: "deeppink", textAlign: "center" }}>
                          Let some step to create info details

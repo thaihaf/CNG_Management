@@ -445,6 +445,15 @@ export default function CategoryList() {
                       ),
                     },
                     {
+                      pattern:
+                        /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_LETTER,
+                        MESSAGE_ERROR,
+                        "Category Name"
+                      ),
+                    },
+                    {
                       max: 25,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,

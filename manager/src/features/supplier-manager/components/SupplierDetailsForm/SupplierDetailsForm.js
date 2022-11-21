@@ -227,33 +227,42 @@ function SupplierDetailsForm() {
                 label={<Text>Supplier Name</Text>}
                 className="details__item"
                 rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Supplier Name"
-                      ),
-                    },
-                    {
-                      max: 25,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Supplier Name",
-                        25
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Supplier Name",
-                        2
-                      ),
-                    },
-                  ]}
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Supplier Name"
+                    ),
+                  },
+                  {
+                    pattern:
+                      /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_LETTER,
+                      MESSAGE_ERROR,
+                      "Supplier Name"
+                    ),
+                  },
+                  {
+                    max: 25,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MAX,
+                      MESSAGE_ERROR,
+                      "Supplier Name",
+                      25
+                    ),
+                  },
+                  {
+                    min: 2,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MIN,
+                      MESSAGE_ERROR,
+                      "Supplier Name",
+                      2
+                    ),
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -284,13 +293,14 @@ function SupplierDetailsForm() {
                     ),
                   },
                   {
-                      pattern: /^[a-zA-Z]{2,10}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_FORMAT,
-                        MESSAGE_ERROR,
-                        "First Name"
-                      ),
-                    },
+                    pattern:
+                      /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,10}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_FORMAT,
+                      MESSAGE_ERROR,
+                      "First Name"
+                    ),
+                  },
                   {
                     max: 10,
                     message: getMessage(
@@ -315,7 +325,7 @@ function SupplierDetailsForm() {
               </Form.Item>
               <Form.Item
                 name="lastContactName"
-                label={<Text>Last name</Text>}
+                label={<Text>Last Name</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -323,23 +333,24 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Last name"
+                      "Last Name"
                     ),
                   },
                   {
-                      pattern: /^[a-zA-Z ]{2,20}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_FORMAT,
-                        MESSAGE_ERROR,
-                        "Last name"
-                      ),
-                    },
+                    pattern:
+                      /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,20}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_FORMAT,
+                      MESSAGE_ERROR,
+                      "Last name"
+                    ),
+                  },
                   {
                     max: 20,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Last name",
+                      "Last Name",
                       20
                     ),
                   },
@@ -348,7 +359,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Last name",
+                      "Last Name",
                       2
                     ),
                   },
@@ -408,13 +419,13 @@ function SupplierDetailsForm() {
                     ),
                   },
                   {
-                      pattern: /^[0]{1}[0-9]{9,10}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_FORMAT_NUMBER,
-                        MESSAGE_ERROR,
-                        "Phone Number"
-                      ),
-                    },
+                    pattern: /^[0]{1}[0-9]{9,10}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_FORMAT_NUMBER,
+                      MESSAGE_ERROR,
+                      "Phone Number"
+                    ),
+                  },
                   {
                     max: 10,
                     message: getMessage(
@@ -454,13 +465,13 @@ function SupplierDetailsForm() {
                     ),
                   },
                   {
-                      pattern: /^[1-9]{1}[0-9]{5,14}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_FORMAT_NUMBER,
-                        MESSAGE_ERROR,
-                        "Bank Account Number"
-                      ),
-                    },
+                    pattern: /^[1-9]{1}[0-9]{5,14}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_FORMAT_NUMBER,
+                      MESSAGE_ERROR,
+                      "Bank Account Number"
+                    ),
+                  },
                   {
                     max: 14,
                     message: getMessage(
@@ -500,13 +511,13 @@ function SupplierDetailsForm() {
                     ),
                   },
                   {
-                      pattern: /^[0-9]{10,13}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER,
-                        MESSAGE_ERROR,
-                        "Tax Code"
-                      ),
-                    },
+                    pattern: /^[0-9]{10,13}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER,
+                      MESSAGE_ERROR,
+                      "Tax Code"
+                    ),
+                  },
                   {
                     max: 13,
                     message: getMessage(

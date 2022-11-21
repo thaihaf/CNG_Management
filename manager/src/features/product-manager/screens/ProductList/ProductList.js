@@ -302,17 +302,17 @@ export default function ProductList() {
             Product List
           </Title>
         </Tooltip>
-
-        <Button
-          type="primary"
-          shape={"round"}
-          size={"large"}
-          onClick={() => history.push(ProductManagerPaths.CREATE_PRODUCT)}
-        >
-          Create New
-        </Button>
-      </div>
-
+                    <Button
+                         type="primary"
+                         shape={"round"}
+                         size={"large"}
+                         onClick={() =>
+                              history.push(ProductManagerPaths.CREATE_PRODUCT)
+                         }
+                    >
+                         Create Product
+                    </Button>
+               </div>
       <Table
         rowKey="id"
         columns={columns}
