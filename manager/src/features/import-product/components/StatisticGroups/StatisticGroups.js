@@ -9,7 +9,7 @@ import totalQuantityImg from "assets/gif/calculator.gif";
 import totalSquareMeterImg from "assets/gif/squareMeter.gif";
 import totalCostImg from "assets/gif/purse.gif";
 
-export default function StatisticGroups({ form }) {
+export default function StatisticGroups({ updateMode }) {
   const dispatch = useDispatch();
 
   return (
@@ -34,7 +34,7 @@ export default function StatisticGroups({ form }) {
           <img src={totalSquareMeterImg} alt="" />
         </div>
         <Form.Item name={"totalSquareMeterImport"} initialValue={0}>
-          <Statistic title="Total Square Meter (m2)" />
+          <Statistic title="Total Square Meter (m2)" precision={2} />
         </Form.Item>
       </div>
 
@@ -46,9 +46,26 @@ export default function StatisticGroups({ form }) {
           <img src={totalCostImg} alt="" />
         </div>
         <Form.Item name={"totalCostImport"} initialValue={0}>
-          <Statistic title="Total Cost (vnđ)" />
+          <Statistic title="Total Cost (vnđ)" precision={2} />
         </Form.Item>
       </div>
+
+      {updateMode && (
+        <div
+          className="statistic-item"
+          style={{ backgroundColor: "rgb(255 239 235)" }}
+        >
+          <div
+            className="statistic-icon"
+            style={{ backgroundColor: "#FE6A40" }}
+          >
+            <img src={totalCostImg} alt="" />
+          </div>
+          <Form.Item name={"statusImport"} initialValue={0}>
+            <Statistic title="Status" />
+          </Form.Item>
+        </div>
+      )}
     </div>
   );
 }

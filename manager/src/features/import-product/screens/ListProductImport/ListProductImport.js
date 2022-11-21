@@ -12,6 +12,7 @@ import {
   Input,
   message,
   Space,
+  Statistic,
   Table,
   Tag,
   Tooltip,
@@ -33,6 +34,8 @@ import {
   getAllProductImport,
   ImportProductManagerPaths,
 } from "features/import-product/importProduct";
+import { statusProductImport } from "features/import-product/constants/import-product.constants";
+import { getStatusString } from "helpers/util.helper";
 
 const { Title, Text } = Typography;
 
@@ -209,8 +212,8 @@ export default function ListProductImport() {
       align: "center",
       sorter: (a, b) => moment(a.createAt).isAfter(b.createAt),
       sortDirections: ["descend", "ascend"],
-      render: (_, { createAt }) => {
-        let newDate = moment(new Date(createAt)).format("DD-MM-YYYY HH:mm:ss");
+      render: (_, { createDate }) => {
+        let newDate = moment(new Date(createDate)).format("DD-MM-YYYY");
         return <Text>{newDate}</Text>;
       },
     },
@@ -228,6 +231,9 @@ export default function ListProductImport() {
       align: "center",
       sorter: (a, b) => a.totalQuantityImport > b.totalQuantityImport,
       sortDirections: ["descend", "ascend"],
+      render: (a, { totalQuantityImport }) => {
+        return <Statistic value={totalQuantityImport} />;
+      },
     },
     {
       title: "Total Square Meter Import",
@@ -238,6 +244,9 @@ export default function ListProductImport() {
         parseFloat(a.totalSquareMeterImport) <
         parseFloat(b.totalSquareMeterImport),
       sortDirections: ["descend", "ascend"],
+      render: (a, { totalSquareMeterImport }) => {
+        return <Statistic precision={2} value={totalSquareMeterImport} />;
+      },
     },
     {
       title: "Total Cost Import",
@@ -246,6 +255,9 @@ export default function ListProductImport() {
       align: "center",
       sorter: (a, b) => a.totalCostImport > b.totalCostImport,
       sortDirections: ["descend", "ascend"],
+      render: (a, { totalCostImport }) => {
+        return <Statistic precision={2} value={totalCostImport} />;
+      },
     },
     {
       title: "Supplier Name",
@@ -276,27 +288,17 @@ export default function ListProductImport() {
       dataIndex: "status",
       key: "status",
       align: "center",
-      filters: [
-        {
-          text: "Active",
-          value: 1,
-        },
-        {
-          text: "In Active",
-          value: 0,
-        },
-      ],
+      filters: statusProductImport.map((item) => {
+        return { key: item.key, value: item.value, text: item.label };
+      }),
       onFilter: (value, record) => record.status === value,
       filterSearch: true,
       render: (s) => {
-        let color = s == 1 ? "green" : "volcano";
-        return s == 1 ? (
-          <Tag color={color} key={s}>
-            Active
-          </Tag>
-        ) : (
-          <Tag color={color} key={s}>
-            In Active
+        // let color = s == 1 ? "green" : "volcano";
+
+        return (
+          <Tag color="green" key={s}>
+            {getStatusString(s)}
           </Tag>
         );
       },
@@ -347,6 +349,7 @@ export default function ListProductImport() {
       </div>
 
       <Table
+        size="large"
         rowKey="id"
         columns={columns}
         loading={isLoading}

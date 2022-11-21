@@ -3,9 +3,10 @@
   border-top: 0.5px solid rgb(222, 218, 218);
   padding: 1rem 6rem 1rem 6rem;
   display: grid;
-  gap: 5rem;
+  -moz-column-gap: 5rem;
+       column-gap: 5rem;
   justify-content: center;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 300px));
+  grid-template-columns: repeat(auto-fit, minmax(50px, 300px));
 }
 .headerHidden .details__item .ant-picker {
   border-radius: 2rem !important;
