@@ -55,7 +55,7 @@ export default function NewProductDetailsModal({ record }) {
             : [res];
 
           let ab = productsImport.map((product) => {
-            if (product.id === record.id && product.index === record.index) {
+            if (product.index === record.index) {
               return { ...record, productDetailDTO: newproductDetailDTO };
             } else {
               return product;
@@ -98,7 +98,13 @@ export default function NewProductDetailsModal({ record }) {
             id="newProductDetailsForm"
             colon={false}
             onFinish={hanleSubmit}
-            initialValues={{ productId: record.id }}
+            initialValues={{
+              productId:
+                typeof record.id === "string"
+                  ? record.id
+                  : record.productDetailDTO?.productId ??
+                    record.productDetailDTO[0].productId,
+            }}
           >
             <div className="details__group">
               <Form.Item

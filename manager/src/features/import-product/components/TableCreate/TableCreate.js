@@ -50,7 +50,7 @@ import {
   updateListProductLv3,
   updateProductImport,
 } from "features/import-product/importProduct";
-import "./InsertProductTable.css";
+import "./TableCreate.css";
 import { unwrapResult } from "@reduxjs/toolkit";
 import NewProductDetailsModal from "../NewProductDetailsModal/NewProductDetailsModal";
 import { getMessage } from "helpers/util.helper";
@@ -62,7 +62,7 @@ import HeaderTable from "../HeaderTable/HeaderTable";
 const { Option } = Select;
 const { Text, Title } = Typography;
 
-export default function InsertProductTable({ form, updateMode, openHeader }) {
+export default function TableCreate({ form, updateMode, openHeader }) {
   const { listWarehouses } = useSelector((state) => state.warehouse);
   const { productsImport, listProductLv2, productImportDetails } = useSelector(
     (state) => state.productImport
@@ -640,7 +640,7 @@ export default function InsertProductTable({ form, updateMode, openHeader }) {
           initialValue={0}
           style={{ minWidth: "150px" }}
         >
-          <Statistic />
+          <Statistic precision={2} />
         </Form.Item>
       ),
     },
@@ -659,7 +659,7 @@ export default function InsertProductTable({ form, updateMode, openHeader }) {
           onChange={(value) => console.log(value)}
           initialValue={0}
         >
-          <Statistic style={{ minWidth: "150px" }} />
+          <Statistic style={{ minWidth: "150px" }} precision={2} />
         </Form.Item>
       ),
     },

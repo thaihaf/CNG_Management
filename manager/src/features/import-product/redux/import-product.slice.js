@@ -50,6 +50,39 @@ export const getAllProductImport = createAsyncThunk(
     }
   }
 );
+export const deleteProductImport = createAsyncThunk(
+  "productImport/deleteProductImport",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.deleteProductImport(id);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const deleteProductImportDetail = createAsyncThunk(
+  "productImport/deleteProductImportDetail",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.deleteProductImportDetail(id);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const deleteProductImportDetailWarehouse = createAsyncThunk(
+  "productImport/deleteProductImportDetailWarehouse",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.deleteProductImportDetailWarehouse(id);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
 
 const initialState = {
   listAllProductImport: [],
@@ -71,6 +104,11 @@ const importProductSlice = createSlice({
     updateListProductLv2: (state, action) => {
       state.listProductLv2 = action.payload;
     },
+    clearProductImport: (state, action) => {
+      state.productsImport = [];
+      state.listProductLv2 = [];
+      state.productImportDetails = null;
+    },
   },
   extraReducers: {
     [getAllProductImport.fulfilled]: (state, action) => {
@@ -80,7 +118,13 @@ const importProductSlice = createSlice({
       state.size = action.payload.size;
     },
     [getProductImportDetails.fulfilled]: (state, action) => {
+      let newProductImport = action.payload.importProductDetailDTOS.map(
+        (item, index) => {
+          return { ...item, index: index };
+        }
+      );
       state.productImportDetails = action.payload;
+      state.productsImport = newProductImport;
     },
     ["LOGOUT"]: (state) => {
       Object.assign(state, initialState);
@@ -88,7 +132,7 @@ const importProductSlice = createSlice({
   },
 });
 
-export const { updateProductImport, updateListProductLv2 } =
+export const { updateProductImport, updateListProductLv2, clearProductImport } =
   importProductSlice.actions;
 
 export const importProductReducer = importProductSlice.reducer;

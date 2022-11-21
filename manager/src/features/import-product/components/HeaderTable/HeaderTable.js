@@ -2,12 +2,13 @@ import { DatePicker, Form, Input, Select, Typography } from "antd";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getEmployees } from "features/employee-manager/employeeManager";
-import { getMessage } from "helpers/util.helper";
+import { getMessage, getStatusString } from "helpers/util.helper";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 
 import "./HeaderTable.css";
+import { statusProductImport } from "features/import-product/constants/import-product.constants";
 
 const { Title, Text } = Typography;
 
@@ -103,6 +104,30 @@ export default function HeaderTable({ form, updateMode }) {
           // }}
         />
       </Form.Item>
+      {updateMode && <Form.Item
+        name="status"
+        label={<Text>Status</Text>}
+        className="details__item"
+        rules={[
+          {
+            required: true,
+            message: getMessage(
+              CODE_ERROR.ERROR_REQUIRED,
+              MESSAGE_ERROR,
+              "Status"
+            ),
+          },
+        ]}
+      >
+        <Select
+          showSearch
+          allowClear
+          options={statusProductImport}
+          onChange={(value) =>
+            form.setFieldValue("statusImport", getStatusString(value))
+          }
+        ></Select>
+      </Form.Item>}
     </div>
   );
 }

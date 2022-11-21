@@ -1,4 +1,13 @@
-import { Button, Form, message, Select, Spin, Tooltip, Typography } from "antd";
+import {
+  Button,
+  Form,
+  message,
+  Modal,
+  Select,
+  Spin,
+  Tooltip,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +16,9 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { searchProductBySupplier } from "features/product-manager/productManager";
 
 import {
+  clearProductImport,
   createProductImport,
+  deleteProductImport,
   ImportProductManagerPaths,
   updateProductImport,
   updateProductImports,
@@ -17,13 +28,20 @@ import { getSuppliers } from "features/supplier-manager/supplierManager";
 
 import totalCostImg from "assets/gif/purse.gif";
 
-import { getMessage } from "helpers/util.helper";
+import { getMessage, getStatusString } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
 import moment from "moment";
 import StatisticGroups from "../StatisticGroups/StatisticGroups";
-import InsertProductTable from "../InsertProductTable/InsertProductTable";
+import InsertProductTable from "../TableCreate/TableCreate";
+import TableUpdate from "../TableUpdate/TableUpdate";
+import TableCreate from "../TableCreate/TableCreate";
+import { statusProductImport } from "features/import-product/constants/import-product.constants";
 
 const { Option } = Select;
 
@@ -37,7 +55,7 @@ const ImportWrapper = ({ updateMode }) => {
   const history = useHistory();
   const [form] = Form.useForm();
 
-  const [openHeader, setOpenHeader] = useState(false);
+  const [openHeader, setOpenHeader] = useState(updateMode);
   const [isLoading, setIsLoading] = useState(false);
   const [dataSearch, setDataSearch] = useState([]);
   const [searchProductVal, setSearchProductVal] = useState();
@@ -89,6 +107,32 @@ const ImportWrapper = ({ updateMode }) => {
     );
   };
 
+  const onDeleteProductImport = () => {
+    Modal.confirm({
+      title: "Delete Product Import",
+      icon: <ExclamationCircleOutlined />,
+      content:
+        "Are you really want to Delete Product Import? Action can't revert, scarefully",
+      okText: "Delete",
+      cancelText: "Cancel",
+      onOk: () => {
+        setIsLoading(true);
+        dispatch(deleteProductImport(productImportDetails.id))
+          .then(unwrapResult)
+          .then((res) => {
+            dispatch(clearProductImport());
+            history.push(ImportProductManagerPaths.LIST_PRODUCT_IMPORT);
+            message.success("Delete Product Import successfully");
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            console.log(err);
+            message.error("Error deleting Product Import");
+          });
+      },
+      onCancel: () => {},
+    });
+  };
   const onBeforeSubmit = () => {
     const listHeaderItemValue = form.getFieldsValue([
       "employeeId",
@@ -111,6 +155,7 @@ const ImportWrapper = ({ updateMode }) => {
     }
   };
   const onFinish = (value) => {
+    console.log(value);
     let listProduct = [];
 
     for (const key in value) {
@@ -127,66 +172,85 @@ const ImportWrapper = ({ updateMode }) => {
       }
     }
 
-    if (listProduct.length > 0) {
-      const pLostWarehouse = listProduct.find(
-        (p) => !p.value.warehouse || p.value.warehouse.length === 0
-      );
-      if (pLostWarehouse) {
-        message.warning(
-          `Product Id ${pLostWarehouse.id}, with index of ${pLostWarehouse.index} need select warehouse`
-        );
-      } else {
-        let importProductDetailDTOS = listProduct.map((p) => {
-          const importProductDetailDTO = {
-            ...p.value,
-            importProductDetailWarehouseDTOList: [...p.value.warehouse],
-            noteImport: p.value.noteImport ? p.value.noteImport : "",
-          };
-          return importProductDetailDTO;
-        });
+    console.log(listProduct);
 
-        let exportData = {
-          licensePlates: value.licensePlates,
-          supplierId: value.supplierId,
-          employeeId: value.employeeId,
-          createDate: value.importDate.format("YYYY-MM-DD"),
-          importProductDetailDTOS: importProductDetailDTOS,
-        };
-
-        console.log(exportData);
-        setIsLoading(true);
-        // dispatch(
-        //   updateMode
-        //     ? createProductImport(exportData)
-        //     : updateProductImports({
-        //         id: productImportDetails?.id,
-        //         data: exportData,
-        //       })
-        // )
-        //   .then(unwrapResult)
-        //   .then((res) => {
-        //     console.log(res);
-        //     setIsLoading(false);
-        //     message.success(
-        //       `${updateMode ? "Update" : "Create"} Product Import Successfully!`
-        //     );
-        //     history.push(ImportProductManagerPaths.LIST_PRODUCT_IMPORT);
-        //   })
-        //   .catch((err) => {
-        //     setIsLoading(false);
-        //     console.log(err);
-        //     message.error(err);
-        //   });
-      }
-    } else {
-      message.warning("You must search and insert least once product");
+    if (listProduct.length === 0) {
+      message.warning("You must insert least once product to table");
+      return;
     }
+
+    const pLostWarehouse = listProduct.find((p) => {
+      let warehouse = form.getFieldValue([`${p.id}_${p.index}`, "warehouse"]);
+      return (
+        (!p.value.warehouse || p.value.warehouse.length === 0) &&
+        (!warehouse || warehouse.length === 0)
+      );
+    });
+
+    if (pLostWarehouse) {
+      message.warning(
+        `Product Id ${pLostWarehouse.id}, with index of ${pLostWarehouse.index} need select warehouse`
+      );
+      return;
+    }
+
+    let importProductDetailDTOS = listProduct.map((p) => {
+      const pWithIndex = productsImport.find((item) => item.index === p.index);
+      const importProductDetailDTO = {
+        ...p.value,
+        importProductDetailWarehouseDTOList: form.getFieldValue([
+          `${p.id}_${p.index}`,
+          "warehouse",
+        ]),
+        noteImport: p.value.noteImport ? p.value.noteImport : "",
+        id: typeof pWithIndex.id === "number" ? pWithIndex.id : null,
+      };
+      return importProductDetailDTO;
+    });
+
+    let exportData = {
+      licensePlates: value.licensePlates,
+      supplierId: value.supplierId,
+      employeeId: value.employeeId,
+      createDate: value.importDate.format("YYYY-MM-DD"),
+      status: value.status,
+      importProductDetailDTOS: importProductDetailDTOS,
+    };
+
+    console.log(exportData);
+    setIsLoading(true);
+    dispatch(
+      updateMode
+        ? updateProductImports({
+            id: productImportDetails?.id,
+            data: exportData,
+          })
+        : createProductImport(exportData)
+    )
+      .then(unwrapResult)
+      .then((res) => {
+        console.log(res);
+        setIsLoading(false);
+        message.success(
+          `${updateMode ? "Update" : "Create"} Product Import Successfully!`
+        );
+        history.push(ImportProductManagerPaths.LIST_PRODUCT_IMPORT);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err);
+        message.error(err);
+      });
   };
 
   const initialValues = updateMode ? productImportDetails : null;
 
   useEffect(() => {
     form.setFieldValue(initialValues);
+
+    if (initialValues) {
+      form.setFieldValue("statusImport", getStatusString(initialValues.status));
+    }
   }, [dispatch, updateMode, initialValues]);
 
   if (!initialValues && updateMode == true) {
@@ -204,7 +268,7 @@ const ImportWrapper = ({ updateMode }) => {
         onFinish={onFinish}
         initialValues={initialValues}
       >
-        <StatisticGroups form={form} />
+        <StatisticGroups updateMode={updateMode} />
 
         {/* <Title level={3}>Create Product Import</Title> */}
         <div className="actions-group">
@@ -284,6 +348,7 @@ const ImportWrapper = ({ updateMode }) => {
               minWidth: 200,
               width: 350,
               overflow: "visible",
+              marginRight: "auto",
             }}
             showSearch
             allowClear
@@ -323,6 +388,32 @@ const ImportWrapper = ({ updateMode }) => {
             })}
           </Select>
 
+          {updateMode && (
+            <Button
+              type="danger"
+              shape="round"
+              size={"large"}
+              style={{
+                width: "fitContent",
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                paddingTop: "2.1rem",
+                paddingBottom: "2.1rem",
+                paddingLeft: "2.8rem",
+                paddingRight: "2.8rem",
+                marginLeft: "auto",
+              }}
+              onClick={() => onDeleteProductImport()}
+            >
+              <img
+                src={totalCostImg}
+                alt=""
+                style={{ height: "2.5rem", width: "2.5rem" }}
+              />
+              Delete
+            </Button>
+          )}
           <Button
             type="primary"
             shape="round"
@@ -338,7 +429,6 @@ const ImportWrapper = ({ updateMode }) => {
               paddingBottom: "2.1rem",
               paddingLeft: "2.8rem",
               paddingRight: "2.8rem",
-              marginLeft: "auto",
             }}
             onClick={onBeforeSubmit}
           >
@@ -351,11 +441,19 @@ const ImportWrapper = ({ updateMode }) => {
           </Button>
         </div>
 
-        <InsertProductTable
-          form={form}
-          updateMode={updateMode}
-          openHeader={openHeader}
-        />
+        {updateMode ? (
+          <TableUpdate
+            form={form}
+            updateMode={updateMode}
+            openHeader={openHeader}
+          />
+        ) : (
+          <TableCreate
+            form={form}
+            updateMode={updateMode}
+            openHeader={openHeader}
+          />
+        )}
       </Form>
     </Spin>
   );
