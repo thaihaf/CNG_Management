@@ -120,7 +120,7 @@ const importProductSlice = createSlice({
     [getProductImportDetails.fulfilled]: (state, action) => {
       let newProductImport = action.payload.importProductDetailDTOS.map(
         (item, index) => {
-          return { ...item, index: index };
+          return { ...item, index: index+1 };
         }
       );
       state.productImportDetails = action.payload;

@@ -23,12 +23,12 @@ export const siderBarItems = [
           label: `Import Product`,
           role: ["admin", "employee"],
      },
-    //  {
-    //       key: "export-product",
-    //       icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
-    //       label: `Export Product`,
-    //       role: ["admin", "employee"],
-    //  },
+     {
+          key: "export-product",
+          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Export Product`,
+          role: ["admin", "employee"],
+     },
      {
           key: "brand",
           icon: <TagOutlined style={{ fontSize: "1.6rem" }} />,
