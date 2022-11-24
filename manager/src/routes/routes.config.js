@@ -8,6 +8,7 @@ import { AUTH_ROUTES } from "features/auth/auth";
 import { DASHBOARD_ROUTES } from "features/dashboard/dashboard";
 import { PRODUCT_MANAGER_ROUTES } from "features/product-manager/productManager";
 import { IMPORT_PRODUCT_ROUTES } from "features/import-product/importProduct";
+import { EXPORT_PRODUCT_ROUTES } from "features/export-product/exportProduct";
 
 export const ROOT_ROUTE = "/admin/";
 
@@ -22,4 +23,5 @@ export const ROUTE_LIST = [
   ...CUSTOMER_MANAGER_ROUTES,
   ...PRODUCT_MANAGER_ROUTES,
   ...IMPORT_PRODUCT_ROUTES,
+  ...EXPORT_PRODUCT_ROUTES,
 ];

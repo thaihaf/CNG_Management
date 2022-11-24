@@ -47,9 +47,8 @@ import Highlighter from "react-highlight-words";
 import avt_default from "assets/images/avt-default.png";
 import {
   updateListProductLv2,
-  updateListProductLv3,
-  updateProductImport,
-} from "features/import-product/importProduct";
+  updateProductExport,
+} from "features/export-product/exportProduct";
 import "./TableCreate.css";
 import { unwrapResult } from "@reduxjs/toolkit";
 import NewProductDetailsModal from "../NewProductDetailsModal/NewProductDetailsModal";
@@ -57,15 +56,15 @@ import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getEmployees } from "features/employee-manager/employeeManager";
-import HeaderTable from "../HeaderTable/HeaderTable";
+import HeaderTable from "../../../export-product/components/HeaderTable/HeaderTable";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
 
 export default function TableCreate({ form, updateMode, openHeader }) {
   const { listWarehouses } = useSelector((state) => state.warehouse);
-  const { productsImport, listProductLv2, productImportDetails } = useSelector(
-    (state) => state.productImport
+  const { productsExport, listProductLv2, productExportDetails } = useSelector(
+    (state) => state.productExport
   );
 
   const history = useHistory();
@@ -93,10 +92,10 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       onOk: () => {
         switch (type) {
           case "deleteProduct":
-            const newListProduct = productsImport.filter(
+            const newListProduct = productsExport.filter(
               (p) => p.index !== record.index && p.index !== record.index
             );
-            dispatch(updateProductImport(newListProduct));
+            dispatch(updateProductExport(newListProduct));
             break;
           case "deleteWarehouse":
             form.setFieldValue(
@@ -112,7 +111,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
               0
             );
             form.setFieldValue(
-              [`${record.id}_${record.index}`, "costPerSquareMeter"],
+              [`${record.id}_${record.index}`, "pricePerSquareMeter"],
               0
             );
             onHandleCaculatorTotal();
@@ -124,28 +123,28 @@ export default function TableCreate({ form, updateMode, openHeader }) {
   };
 
   const onHandleCaculatorTotal = () => {
-    let totalQuantityImport = 0;
-    let totalSquareMeterImport = 0;
-    let totalCostImport = 0;
+    let totalQuantityExport = 0;
+    let totalSquareMeterExport = 0;
+    let totalExportOrderPrice = 0;
 
-    productsImport.map((p) => {
-      totalQuantityImport += form.getFieldValue([
+    productsExport.map((p) => {
+      totalQuantityExport += form.getFieldValue([
         `${p.id}_${p.index}`,
         "totalQuantityBox",
       ]);
-      totalSquareMeterImport += form.getFieldValue([
+      totalSquareMeterExport += form.getFieldValue([
         `${p.id}_${p.index}`,
         "totalSquareMeter",
       ]);
-      totalCostImport += form.getFieldValue([
+      totalExportOrderPrice += form.getFieldValue([
         `${p.id}_${p.index}`,
         "totalCost",
       ]);
     });
 
-    form.setFieldValue("totalQuantityImport", totalQuantityImport);
-    form.setFieldValue("totalSquareMeterImport", totalSquareMeterImport);
-    form.setFieldValue("totalCostImport", totalCostImport);
+    form.setFieldValue("totalQuantityExport", totalQuantityExport);
+    form.setFieldValue("totalSquareMeterExport", totalSquareMeterExport);
+    form.setFieldValue("totalExportOrderPrice", totalExportOrderPrice);
   };
   const onHandleChangeQuantity = (record) => {
     const totalQuantityBox = form
@@ -153,13 +152,13 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       .reduce(function (result, warehouse) {
         return result + warehouse?.quantityBox;
       }, 0);
-    const costPerSquareMeter = form.getFieldValue([
+    const pricePerSquareMeter = form.getFieldValue([
       `${record.id}_${record.index}`,
-      "costPerSquareMeter",
+      "pricePerSquareMeter",
     ]);
 
     const totalSquareMeter = totalQuantityBox * record.squareMeterPerBox;
-    const totalCost = totalSquareMeter * costPerSquareMeter;
+    const totalCost = totalSquareMeter * pricePerSquareMeter;
 
     form.setFieldValue(
       [`${record.id}_${record.index}`, "totalQuantityBox"],
@@ -182,12 +181,12 @@ export default function TableCreate({ form, updateMode, openHeader }) {
     ]);
 
     if (totalQuantityBox) {
-      const costPerSquareMeter =
+      const pricePerSquareMeter =
         typeof value === "number" ? value : Number(value.target.value);
 
       form.setFieldValue(
         [`${record.id}_${record.index}`, "totalCost"],
-        record.squareMeterPerBox * totalQuantityBox * costPerSquareMeter
+        record.squareMeterPerBox * totalQuantityBox * pricePerSquareMeter
       );
 
       onHandleCaculatorTotal();
@@ -408,7 +407,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  let a = productsImport.filter(
+                  let a = productsExport.filter(
                     (p) =>
                       p.id === record.id &&
                       p.index !== record.index &&
@@ -436,7 +435,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                   (item) => item.shipment === value
                 );
 
-                let ab = productsImport.map((product) => {
+                let ab = productsExport.map((product) => {
                   if (
                     product.id === record.id &&
                     product.index === record.index
@@ -450,10 +449,11 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                   }
                 });
 
-                form.setFieldValue(
-                  [`${record.id}_${record.index}`, "type"],
-                  ""
-                );
+                form.setFieldValue([
+                  `${record.id}_${record.index}`,
+                  "warehouse",
+                ]);
+                form.setFieldValue([`${record.id}_${record.index}`, "type"]);
                 form.setFieldValue(
                   [`${record.id}_${record.index}`, "color"],
                   productDetailsFilter[0]?.color
@@ -512,7 +512,16 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                 minWidth: 100,
               }}
             >
-              <Select placeholder="Type" notFoundContent={null}>
+              <Select
+                placeholder="Type"
+                notFoundContent={null}
+                onChange={() => {
+                  form.setFieldValue([
+                    `${record.id}_${record.index}`,
+                    "warehouse",
+                  ]);
+                }}
+              >
                 {listProductLv2.map((product) => {
                   if (
                     product.id === record.id &&
@@ -562,21 +571,21 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Cost Per Square Meter (vnđ)",
-      dataIndex: "costPerSquareMeter",
-      key: "costPerSquareMeter",
+      title: "Price Per Square Meter (vnđ)",
+      dataIndex: "pricePerSquareMeter",
+      key: "pricePerSquareMeter",
       align: "center",
       sorter: (a, b) =>
         parseFloat(
-          form.getFieldValue([`${a.id}_${a.index}`, "costPerSquareMeter"])
+          form.getFieldValue([`${a.id}_${a.index}`, "pricePerSquareMeter"])
         ) <
         parseFloat(
-          form.getFieldValue([`${b.id}_${b.index}`, "costPerSquareMeter"])
+          form.getFieldValue([`${b.id}_${b.index}`, "pricePerSquareMeter"])
         ),
       sortDirections: ["descend", "ascend"],
       render: (_, record) => (
         <Form.Item
-          name={[`${record.id}_${record.index}`, "costPerSquareMeter"]}
+          name={[`${record.id}_${record.index}`, "pricePerSquareMeter"]}
           rules={[
             {
               required: true,
@@ -665,11 +674,11 @@ export default function TableCreate({ form, updateMode, openHeader }) {
     },
     {
       title: "Product Note",
-      dataIndex: "noteImport",
-      key: "noteImport",
+      dataIndex: "noteExport",
+      key: "noteExport",
       align: "center",
       render: (_, record) => (
-        <Form.Item name={[`${record.id}_${record.index}`, "noteImport"]}>
+        <Form.Item name={[`${record.id}_${record.index}`, "noteExport"]}>
           <Input.TextArea
             showCount
             maxLength={300}
@@ -718,7 +727,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
         openHeader ? "listProductImport tranform" : "listProductImport"
       }
       columns={productColumns}
-      dataSource={productImportDetails ? null : [...productsImport]}
+      dataSource={productExportDetails ? null : [...productsExport]}
       rowKey={(record) => `${record.id}-${record.index}`}
       loading={isLoading}
       scroll={{ x: "maxContent" }}
@@ -726,113 +735,162 @@ export default function TableCreate({ form, updateMode, openHeader }) {
         expandedRowRender: (record) => (
           <>
             <Form.List name={[`${record.id}_${record.index}`, "warehouse"]}>
-              {(fields, { add, remove }) => (
-                <>
-                  <div className="space-container">
-                    {fields.map(({ key, name, ...restField }) => (
-                      <Space
-                        key={`${key}${name}`}
-                        style={{
-                          display: "flex",
-                        }}
-                        align="center"
-                      >
-                        <Form.Item
-                          {...restField}
-                          label="Warehouse"
-                          name={[name, "warehouseId"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Missing warehouse",
-                            },
-                            ({ getFieldValue }) => ({
-                              validator(_, value) {
-                                let checkExist = getFieldValue([
-                                  `${record.id}_${record.index}`,
-                                  "warehouse",
-                                ]).filter((item) => item.warehouseId === value);
+              {(fields, { add, remove }) => {
+                let detailID = form
+                  .getFieldValue([`${record.id}_${record.index}`, "type"])
+                  ?.split("_")[0];
 
-                                if (!value || checkExist.length === 1) {
-                                  return Promise.resolve();
-                                }
-                                return Promise.reject(
-                                  new Error("The Warehouse be duplicated!")
-                                );
-                              },
-                            }),
-                          ]}
-                        >
-                          <Select
-                            style={{
-                              width: 200,
-                            }}
-                          >
-                            {listWarehouses.map((item) => (
-                              <Option key={item.id} value={item.id}>
-                                {item.warehouseName}
-                              </Option>
-                            ))}
-                          </Select>
-                        </Form.Item>
+                let productDetailDTO = record.productDetailDTO.find(
+                  (item) => item.id.toString() === detailID
+                );
+                let maxLength =
+                  productDetailDTO?.productWarehouseDTOList?.filter(
+                    (item) => item.quantityBox > 0
+                  )?.length;
 
-                        <Form.Item
-                          {...restField}
-                          label="Quantity"
-                          name={[name, "quantityBox"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Missing quantity",
-                            },
-                          ]}
-                          onChange={() => onHandleChangeQuantity(record)}
-                        >
-                          <InputNumber
-                            min={1}
-                            max={10000}
-                            onStep={() => onHandleChangeQuantity(record)}
-                          />
-                        </Form.Item>
-
-                        <MinusCircleOutlined
-                          onClick={() => {
-                            remove(name);
-                            onHandleChangeQuantity(record);
-                          }}
+                return (
+                  <>
+                    <div className="space-container">
+                      {fields.map(({ key, name, ...restField }) => (
+                        <Space
+                          key={`${key}${name}`}
                           style={{
-                            fontSize: "25px",
-                            transition: "all 0.3s ease",
+                            display: "flex",
                           }}
-                        />
-                      </Space>
-                    ))}
-                  </div>
+                          align="center"
+                        >
+                          <Form.Item
+                            {...restField}
+                            label="Warehouse"
+                            name={[name, "productWarehouseId"]}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Missing warehouse",
+                              },
+                              ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                  let checkExist = getFieldValue([
+                                    `${record.id}_${record.index}`,
+                                    "warehouse",
+                                  ]).filter(
+                                    (item) => item.productWarehouseId === value
+                                  );
 
-                  <Form.Item>
-                    {fields.length < listWarehouses.length ? (
+                                  if (!value || checkExist.length === 1) {
+                                    return Promise.resolve();
+                                  }
+                                  return Promise.reject(
+                                    new Error("The Warehouse be duplicated!")
+                                  );
+                                },
+                              }),
+                            ]}
+                          >
+                            <Select
+                              style={{
+                                width: 200,
+                              }}
+                            >
+                              {productDetailDTO?.productWarehouseDTOList?.map(
+                                (item) => (
+                                  <Option
+                                    key={item.id}
+                                    value={item.id}
+                                    disabled={item.quantityBox <= 0}
+                                  >
+                                    {item.wareHouseName}
+                                  </Option>
+                                )
+                              )}
+                            </Select>
+                          </Form.Item>
+
+                          <Form.Item
+                            {...restField}
+                            label="Quantity"
+                            name={[name, "quantityBox"]}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Missing quantity",
+                              },
+                              ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                  let wId = form.getFieldValue([
+                                    `${record.id}_${record.index}`,
+                                    "warehouse",
+                                    name,
+                                  ])?.productWarehouseId;
+
+                                  let warehouse =
+                                    productDetailDTO?.productWarehouseDTOList?.find(
+                                      (item) => item.id === wId
+                                    );
+
+                                  if (!wId) {
+                                    return Promise.reject(
+                                      new Error(
+                                        "Must be choose Warehouse first"
+                                      )
+                                    );
+                                  }
+
+                                  if (value > warehouse?.quantityBox) {
+                                    return Promise.reject(
+                                      new Error(
+                                        `The maximum Quantity is ${warehouse?.quantityBox}`
+                                      )
+                                    );
+                                  }
+
+                                  return Promise.resolve();
+                                },
+                              }),
+                            ]}
+                            onChange={() => onHandleChangeQuantity(record)}
+                            initialValue={1}
+                          >
+                            <InputNumber
+                              min={1}
+                              max={10000}
+                              onStep={() => onHandleChangeQuantity(record)}
+                            />
+                          </Form.Item>
+
+                          <MinusCircleOutlined
+                            onClick={() => {
+                              remove(name);
+                              onHandleChangeQuantity(record);
+                            }}
+                            style={{
+                              fontSize: "25px",
+                              transition: "all 0.3s ease",
+                            }}
+                          />
+                        </Space>
+                      ))}
+                    </div>
+
+                    <Form.Item>
                       <Button
                         type="dashed"
-                        onClick={() => add()}
+                        onClick={() => {
+                          add();
+                          onHandleChangeQuantity(record);
+                        }}
                         block
                         icon={<PlusOutlined />}
+                        disabled={
+                          !detailID || !maxLength || fields.length === maxLength
+                        }
                       >
                         Add new select Warehouse
                       </Button>
-                    ) : (
-                      <Button
-                        type="dashed"
-                        onClick={() => onRowDelete("deleteWarehouse", record)}
-                        block
-                        style={{ color: "red" }}
-                        icon={<RestTwoTone twoToneColor="red" />}
-                      >
-                        Delete all select Warehouse
-                      </Button>
-                    )}
-                  </Form.Item>
-                </>
-              )}
+                    </Form.Item>
+                  </>
+                );
+              }}
             </Form.List>
           </>
         ),
@@ -859,14 +917,14 @@ export default function TableCreate({ form, updateMode, openHeader }) {
         ),
       }}
       pagination={
-        productsImport.length !== 0
+        productsExport.length !== 0
           ? {
               showSizeChanger: true,
               position: ["bottomCenter"],
               size: "default",
               pageSize: pageSize,
               current: currentPage,
-              total: productsImport.length,
+              total: productsExport.length,
               onChange: (page, size) => onHandlePagination(page, size),
               pageSizeOptions: ["2", "5", "10"],
             }

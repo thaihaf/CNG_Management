@@ -1,0 +1,19 @@
+.headerHidden {
+  background-color: #fafafa;
+  border-top: 0.5px solid rgb(222, 218, 218);
+  padding: 1rem 6rem 1rem 6rem;
+  display: grid;
+  -moz-column-gap: 5rem;
+       column-gap: 5rem;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 300px));
+}
+.headerHidden .details__item .ant-picker {
+  border-radius: 2rem !important;
+  width: 100% !important;
+}
+.headerHidden .details__item .ant-picker .ant-picker-input {
+  min-height: 32px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}

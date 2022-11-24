@@ -13,17 +13,12 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getWarehouses } from "features/warehouse-manager/warehouseManager";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { searchProductBySupplier } from "features/product-manager/productManager";
-
 import {
-  clearProductImport,
-  createProductImport,
-  deleteProductImport,
-  ImportProductManagerPaths,
-  updateProductImport,
-  updateProductImports,
-} from "features/import-product/importProduct";
-import "./ImportWrapper.css";
+  searchProduct,
+  searchProductBySupplier,
+} from "features/product-manager/productManager";
+
+import "./ExportWrapper.css";
 import { getSuppliers } from "features/supplier-manager/supplierManager";
 
 import totalCostImg from "assets/gif/purse.gif";
@@ -41,15 +36,21 @@ import StatisticGroups from "../StatisticGroups/StatisticGroups";
 import InsertProductTable from "../TableCreate/TableCreate";
 import TableUpdate from "../TableUpdate/TableUpdate";
 import TableCreate from "../TableCreate/TableCreate";
-import { statusProductImport } from "features/import-product/constants/import-product.constants";
+import {
+  clearProductExport,
+  createProductExport,
+  deleteProductExport,
+  ProductExportManagerPaths,
+  updateProductExport,
+  updateProductExports,
+} from "features/export-product/exportProduct";
 
 const { Option } = Select;
 
-const ImportWrapper = ({ updateMode }) => {
-  const { productsImport, productImportDetails } = useSelector(
-    (state) => state.productImport
+const ExportWrapper = ({ updateMode }) => {
+  const { productsExport, productExportDetails } = useSelector(
+    (state) => state.productExport
   );
-  const { listSuppliers } = useSelector((state) => state.supplier);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -63,7 +64,7 @@ const ImportWrapper = ({ updateMode }) => {
   let timeout;
   let currentValue;
 
-  const fetch = (value, supplierId, callback) => {
+  const fetch = (value, callback) => {
     if (timeout) {
       clearTimeout(timeout);
       timeout = null;
@@ -71,7 +72,7 @@ const ImportWrapper = ({ updateMode }) => {
     currentValue = value;
 
     const fake = () => {
-      dispatch(searchProductBySupplier({ code: value, supplierId: supplierId }))
+      dispatch(searchProduct(value))
         .then(unwrapResult)
         .then((data) => {
           if (currentValue === value) {
@@ -83,51 +84,45 @@ const ImportWrapper = ({ updateMode }) => {
     timeout = setTimeout(fake, 300);
   };
   const handleSearch = (newValue) => {
-    let supplierId = form.getFieldValue("supplierId");
-
-    if (supplierId) {
-      if (newValue) {
-        fetch(newValue, supplierId, setDataSearch);
-      } else {
-        setDataSearch([]);
-      }
+    if (newValue) {
+      fetch(newValue, setDataSearch);
     } else {
-      message.warn("Please choose Supplier first!");
+      setDataSearch([]);
     }
   };
   const handleSelectChange = (newValue, option) => {
-    message.success("Insert Product Import Success");
+    message.success("Insert Product Export Success");
 
     setSearchProductVal(newValue);
     dispatch(
-      updateProductImport([
-        ...productsImport,
-        { ...option.item, index: productsImport.length + 1},
+      updateProductExport([
+        ...productsExport,
+        { ...option.item, index: productsExport.length + 1 },
       ])
     );
   };
 
-  const onDeleteProductImport = () => {
+  const ondeleteProductExport = () => {
     Modal.confirm({
-      title: "Delete Product Import",
+      title: "Delete Product Export",
       icon: <ExclamationCircleOutlined />,
       content:
-        "Are you really want to Delete Product Import? Action can't revert, scarefully",
+        "Are you really want to Delete Product Export? Action can't revert, scarefully",
       okText: "Delete",
       cancelText: "Cancel",
       onOk: () => {
         setIsLoading(true);
-        dispatch(deleteProductImport(productImportDetails.id))
+        dispatch(deleteProductExport(productExportDetails.id))
           .then(unwrapResult)
           .then((res) => {
-            dispatch(clearProductImport());
-            history.push(ImportProductManagerPaths.LIST_PRODUCT_IMPORT);
-            message.success("Delete Product Import successfully");
+            dispatch(clearProductExport());
+            history.push(ProductExportManagerPaths.LIST_PRODUCT_EXPORT);
+            message.success("Delete Product Export successfully");
             setIsLoading(false);
           })
           .catch((err) => {
             console.log(err);
-            message.error("Error deleting Product Import");
+            message.error("Error deleting Product Export");
           });
       },
       onCancel: () => {},
@@ -136,8 +131,9 @@ const ImportWrapper = ({ updateMode }) => {
   const onBeforeSubmit = () => {
     const listHeaderItemValue = form.getFieldsValue([
       "employeeId",
+      "type",
       "licensePlates",
-      "importDate",
+      "exportDate",
     ]);
 
     let firstCheck = true;
@@ -155,7 +151,6 @@ const ImportWrapper = ({ updateMode }) => {
     }
   };
   const onFinish = (value) => {
-    console.log(value);
     let listProduct = [];
 
     for (const key in value) {
@@ -171,8 +166,6 @@ const ImportWrapper = ({ updateMode }) => {
         });
       }
     }
-
-    console.log(listProduct);
 
     if (listProduct.length === 0) {
       message.warning("You must insert least once product to table");
@@ -194,47 +187,58 @@ const ImportWrapper = ({ updateMode }) => {
       return;
     }
 
-    let importProductDetailDTOS = listProduct.map((p) => {
-      const pWithIndex = productsImport.find((item) => item.index === p.index);
-      const importProductDetailDTO = {
+    let exportProductDetailDTOS = listProduct.map((p) => {
+      const pWithIndex = productsExport.find((item) => item.index === p.index);
+
+      const exportProductDetailDTO = {
         ...p.value,
-        importProductDetailWarehouseDTOList: form.getFieldValue([
+        productDetailDTO: {
+          id: p.value.productDetailId,
+          productId: p.id,
+        },
+        exportProductDetailWarehouseList: form.getFieldValue([
           `${p.id}_${p.index}`,
           "warehouse",
         ]),
-        noteImport: p.value.noteImport ? p.value.noteImport : "",
         id: typeof pWithIndex.id === "number" ? pWithIndex.id : null,
+        noteExport: p.value.noteExport ? p.value.noteExport : "",
+        costPerSquareMeter: pWithIndex.costPerSquareMeter,
+        exportProductId: productExportDetails?.id,
       };
-      return importProductDetailDTO;
+      return exportProductDetailDTO;
     });
 
     let exportData = {
+      id: productExportDetails?.id,
       licensePlates: value.licensePlates,
-      supplierId: value.supplierId,
+      customerId: value.customerId,
       employeeId: value.employeeId,
-      createDate: value.importDate.format("YYYY-MM-DD"),
+      createDate: value.exportDate.format("YYYY-MM-DD"),
       status: value.status,
-      importProductDetailDTOS: importProductDetailDTOS,
+      type: value.type,
+      exportProductDetailDTOS: exportProductDetailDTOS,
     };
 
     console.log(exportData);
+
     setIsLoading(true);
     dispatch(
       updateMode
-        ? updateProductImports({
-            id: productImportDetails?.id,
+        ? updateProductExports({
+            id: productExportDetails?.id,
             data: exportData,
           })
-        : createProductImport(exportData)
+        : createProductExport(exportData)
     )
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
+
         setIsLoading(false);
         message.success(
-          `${updateMode ? "Update" : "Create"} Product Import Successfully!`
+          `${updateMode ? "Update" : "Create"} Product Export Successfully!`
         );
-        history.push(ImportProductManagerPaths.LIST_PRODUCT_IMPORT);
+        history.push(ProductExportManagerPaths.LIST_PRODUCT_EXPORT);
       })
       .catch((err) => {
         setIsLoading(false);
@@ -243,13 +247,13 @@ const ImportWrapper = ({ updateMode }) => {
       });
   };
 
-  const initialValues = updateMode ? productImportDetails : null;
+  const initialValues = updateMode ? productExportDetails : null;
 
   useEffect(() => {
     form.setFieldValue(initialValues);
 
     if (initialValues) {
-      form.setFieldValue("statusImport", getStatusString(initialValues.status));
+      form.setFieldValue("statusExport", getStatusString(initialValues.status));
     }
   }, [dispatch, updateMode, initialValues]);
 
@@ -270,7 +274,7 @@ const ImportWrapper = ({ updateMode }) => {
       >
         <StatisticGroups updateMode={updateMode} />
 
-        {/* <Title level={3}>Create Product Import</Title> */}
+        {/* <Title level={3}>Create Product Export</Title> */}
         <div className="actions-group">
           <Tooltip placement="topRight" title={"Show more input"}>
             {openHeader ? (
@@ -292,58 +296,8 @@ const ImportWrapper = ({ updateMode }) => {
             )}
           </Tooltip>
 
-          <Form.Item
-            name="supplierId"
-            className="details__item"
-            rules={[
-              {
-                required: true,
-                message: getMessage(
-                  CODE_ERROR.ERROR_REQUIRED,
-                  MESSAGE_ERROR,
-                  "Supplier"
-                ),
-              },
-            ]}
-          >
-            <Select
-              showSearch
-              allowClear
-              placeholder="Select supplier first"
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                (option?.children ?? "").includes(input)
-              }
-              filterSort={(optionA, optionB) =>
-                (optionA?.children ?? "")
-                  .toLowerCase()
-                  .localeCompare((optionB?.children ?? "").toLowerCase())
-              }
-              style={{
-                width: 180,
-              }}
-              // onChange={() =>
-              //   form.getFieldValue("supplierId") &&
-              //   productsImport.length > 0 &&
-              //   info()
-              // }
-            >
-              {/* let supplierId = form.getFieldValue("supplierId");
-
-                  console.log(supplierId);
-                  if (supplierId && productsImport.length > 0) {
-                    info();
-                  } */}
-              {listSuppliers.map((item) => (
-                <Select.Option value={item.id} key={item.id}>
-                  {item.supplierName}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
           <Select
-            placeholder="Search product by code"
+            placeholder="Search product"
             style={{
               minWidth: 200,
               width: 350,
@@ -361,7 +315,7 @@ const ImportWrapper = ({ updateMode }) => {
             onChange={handleSelectChange}
           >
             {dataSearch?.map((d) => {
-              // let isDisabled = productsImport.find((p) => p.id === d.id);
+              // let isDisabled = productsExport.find((p) => p.id === d.id);
               return (
                 <Option
                   className="searchProduct"
@@ -404,7 +358,7 @@ const ImportWrapper = ({ updateMode }) => {
                 paddingRight: "2.8rem",
                 marginLeft: "auto",
               }}
-              onClick={() => onDeleteProductImport()}
+              onClick={() => ondeleteProductExport()}
             >
               <img
                 src={totalCostImg}
@@ -459,4 +413,4 @@ const ImportWrapper = ({ updateMode }) => {
   );
 };
 
-export default React.memo(ImportWrapper);
+export default React.memo(ExportWrapper);

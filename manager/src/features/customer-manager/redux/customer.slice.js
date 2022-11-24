@@ -10,7 +10,6 @@ export const getCustomers = createAsyncThunk(
   "customer/getCustomers",
   async () => {
     const response = await api.getCustomers();
-    console.log(response);
     return response.data;
   }
 );
@@ -25,8 +24,6 @@ export const getCustomerDetails = createAsyncThunk(
 export const updateDetails = createAsyncThunk(
   "customer/updateDetails",
   async ({ id, data }, { rejectWithValue }) => {
-    console.log(id);
-    console.log(data);
     try {
       const response = await api.updateDetails(id, data);
       return response;
@@ -51,7 +48,6 @@ export const deleteCustomers = createAsyncThunk(
   async (list, { rejectWithValue }) => {
     try {
       list.forEach(async (id) => {
-        console.log(id);
         await api.deleteCustomer(id);
       });
       return true;

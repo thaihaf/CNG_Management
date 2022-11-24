@@ -1,21 +1,11 @@
 import {
-  AppstoreOutlined,
   CaretDownFilled,
-  CaretDownOutlined,
   CaretUpFilled,
-  CaretUpOutlined,
-  CloseOutlined,
-  DeleteFilled,
-  DeleteTwoTone,
-  DownCircleTwoTone,
   DownOutlined,
   ExclamationCircleOutlined,
   MinusCircleOutlined,
-  MinusOutlined,
   PlusOutlined,
-  RestTwoTone,
   SearchOutlined,
-  UpCircleTwoTone,
 } from "@ant-design/icons";
 import {
   Avatar,
@@ -47,13 +37,7 @@ import { useHistory, useLocation, useParams } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
 import avt_default from "assets/images/avt-default.png";
-import {
-  updateListProductLv2,
-  updateListProductLv3,
-  updateProductImport,
-  deleteProductImportDetail,
-  deleteProductImportDetailWarehouse,
-} from "features/import-product/importProduct";
+
 import "./TableUpdate.css";
 import { unwrapResult } from "@reduxjs/toolkit";
 import NewProductDetailsModal from "../NewProductDetailsModal/NewProductDetailsModal";
@@ -63,6 +47,12 @@ import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getEmployees } from "features/employee-manager/employeeManager";
 import HeaderTable from "../HeaderTable/HeaderTable";
 import { getDetailsProduct } from "features/product-manager/productManager";
+import {
+  deleteProductExportDetail,
+  deleteProductExportDetailWarehouse,
+  updateListProductLv2,
+  updateProductExport,
+} from "features/export-product/exportProduct";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -70,8 +60,8 @@ const { Text, Title } = Typography;
 export default function TableUpdate({ form, updateMode, openHeader }) {
   const { listWarehouses } = useSelector((state) => state.warehouse);
   const { productDetails } = useSelector((state) => state.product);
-  const { productsImport, listProductLv2, productImportDetails } = useSelector(
-    (state) => state.productImport
+  const { productsExport, listProductLv2, productExportDetails } = useSelector(
+    (state) => state.productExport
   );
 
   const history = useHistory();
@@ -96,11 +86,11 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
   };
 
   const onHandleCaculatorTotal = (newList) => {
-    let totalQuantityImport = 0;
-    let totalSquareMeterImport = 0;
-    let totalCostImport = 0;
+    let totalQuantityExport = 0;
+    let totalSquareMeterExport = 0;
+    let totalExportOrderPrice = 0;
 
-    let initialList = productsImport;
+    let initialList = productsExport;
     if (newList) {
       initialList = newList;
     }
@@ -112,20 +102,23 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
           : p.productDetailDTO?.productId ?? p.productDetailDTO[0].productId;
       const index = p.index;
 
-      totalQuantityImport += form.getFieldValue([
+      totalQuantityExport += form.getFieldValue([
         `${id}_${index}`,
-        "totalQuantityBox",
+        "quantityBox",
       ]);
-      totalSquareMeterImport += form.getFieldValue([
+      totalSquareMeterExport += form.getFieldValue([
         `${id}_${index}`,
         "totalSquareMeter",
       ]);
-      totalCostImport += form.getFieldValue([`${id}_${index}`, "totalCost"]);
+      totalExportOrderPrice += form.getFieldValue([
+        `${id}_${index}`,
+        "totalPrice",
+      ]);
     });
 
-    form.setFieldValue("totalQuantityImport", totalQuantityImport);
-    form.setFieldValue("totalSquareMeterImport", totalSquareMeterImport);
-    form.setFieldValue("totalCostImport", totalCostImport);
+    form.setFieldValue("totalQuantityExport", totalQuantityExport);
+    form.setFieldValue("totalSquareMeterExport", totalSquareMeterExport);
+    form.setFieldValue("totalExportOrderPrice", totalExportOrderPrice);
   };
   const onHandleChangeQuantity = (record) => {
     const id =
@@ -135,29 +128,26 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
           record.productDetailDTO[0].productId;
     const index = record.index;
 
-    const totalQuantityBox = form
+    const quantityBox = form
       .getFieldValue([`${id}_${index}`, "warehouse"])
       .reduce(function (result, warehouse) {
         let q = warehouse === undefined ? 1 : warehouse?.quantityBox;
         return result + q;
       }, 0);
-    const costPerSquareMeter = form.getFieldValue([
+    const pricePerSquareMeter = form.getFieldValue([
       `${id}_${index}`,
-      "costPerSquareMeter",
+      "pricePerSquareMeter",
     ]);
 
-    const totalSquareMeter = totalQuantityBox * record.squareMeterPerBox;
-    const totalCost = totalSquareMeter * costPerSquareMeter;
+    const totalSquareMeter = quantityBox * record.squareMeterPerBox;
+    const totalPrice = totalSquareMeter * pricePerSquareMeter;
 
-    form.setFieldValue(
-      [`${id}_${index}`, "totalQuantityBox"],
-      totalQuantityBox
-    );
+    form.setFieldValue([`${id}_${index}`, "quantityBox"], quantityBox);
     form.setFieldValue(
       [`${id}_${index}`, "totalSquareMeter"],
       totalSquareMeter
     );
-    form.setFieldValue([`${id}_${index}`, "totalCost"], totalCost);
+    form.setFieldValue([`${id}_${index}`, "totalPrice"], totalPrice);
     onHandleCaculatorTotal();
   };
   const onHandleChangeCost = (record, value) => {
@@ -168,18 +158,15 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
           record.productDetailDTO[0].productId;
     const index = record.index;
 
-    const totalQuantityBox = form.getFieldValue([
-      `${id}_${index}`,
-      "totalQuantityBox",
-    ]);
+    const quantityBox = form.getFieldValue([`${id}_${index}`, "quantityBox"]);
 
-    if (totalQuantityBox) {
-      const costPerSquareMeter =
+    if (quantityBox) {
+      const pricePerSquareMeter =
         typeof value === "number" ? value : Number(value.target.value);
 
       form.setFieldValue(
-        [`${id}_${index}`, "totalCost"],
-        record.squareMeterPerBox * totalQuantityBox * costPerSquareMeter
+        [`${id}_${index}`, "totalPrice"],
+        record.squareMeterPerBox * quantityBox * pricePerSquareMeter
       );
 
       onHandleCaculatorTotal();
@@ -202,59 +189,45 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
       okText: "Delete",
       cancelText: "Cancel",
       onOk: () => {
-        switch (type) {
-          case "deleteProduct":
-            if (typeof record.id === "number") {
-              setIsLoading(true);
-              dispatch(deleteProductImportDetail(record.id))
-                .then(unwrapResult)
-                .then((res) => {
-                  //v1
-                  const newListProduct = productsImport.filter(
-                    (p) => p.index !== record.index
-                  );
-                  const newListProduct1 = newListProduct.map((item, index) => {
-                    return { ...item, index: index + 1 };
-                  });
-
-                  //v2
-                  const newListProductv2 = listProductLv2.filter(
-                    (p) => p.index !== record.index
-                  );
-                  const newListProductv2_1 = newListProductv2.map(
-                    (item, index) => {
-                      return { ...item, index: index + 1 };
-                    }
-                  );
-                  dispatch(updateProductImport(newListProduct1));
-                  dispatch(updateListProductLv2(newListProductv2_1));
-                  message.success(
-                    "Delete Product Import Deatails Successfully"
-                  );
-                  setIsLoading(false);
-                  onHandleCaculatorTotal(newListProduct);
-                })
-                .catch((err) => {
-                  setIsLoading(false);
-                  console.log(err);
-                });
-            } else {
-              const newListProduct = productsImport.filter(
+        if (typeof record.id === "number") {
+          setIsLoading(true);
+          dispatch(deleteProductExportDetail(record.id))
+            .then(unwrapResult)
+            .then((res) => {
+              //v1
+              const newListProduct = productsExport.filter(
                 (p) => p.index !== record.index
               );
               const newListProduct1 = newListProduct.map((item, index) => {
                 return { ...item, index: index + 1 };
               });
-              dispatch(updateProductImport(newListProduct1));
+
+              //v2
+              const newListProductv2 = listProductLv2.filter(
+                (p) => p.index !== record.index
+              );
+              const newListProductv2_1 = newListProductv2.map((item, index) => {
+                return { ...item, index: index + 1 };
+              });
+              dispatch(updateProductExport(newListProduct1));
+              dispatch(updateListProductLv2(newListProductv2_1));
+              message.success("Delete Product Export Deatails Successfully");
+              setIsLoading(false);
               onHandleCaculatorTotal(newListProduct);
-            }
-            break;
-          case "deleteWarehouse":
-            form.setFieldValue([`${id}_${index}`, "warehouse"], []);
-            form.setFieldValue([`${id}_${index}`, "totalQuantityBox"], 0);
-            form.setFieldValue([`${id}_${index}`, "totalSquareMeter"], 0);
-            form.setFieldValue([`${id}_${index}`, "totalCost"], 0);
-            break;
+            })
+            .catch((err) => {
+              setIsLoading(false);
+              console.log(err);
+            });
+        } else {
+          const newListProduct = productsExport.filter(
+            (p) => p.index !== record.index
+          );
+          const newListProduct1 = newListProduct.map((item, index) => {
+            return { ...item, index: index + 1 };
+          });
+          dispatch(updateProductExport(newListProduct1));
+          onHandleCaculatorTotal(newListProduct);
         }
       },
       onCancel: () => {},
@@ -283,7 +256,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
           ]);
 
           //v1
-          let ab = productsImport.map((product) => {
+          let ab = productsExport.map((product) => {
             if (product.index === record.index) {
               return {
                 ...record,
@@ -300,7 +273,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
           let productDetailsFilter = res.productDetailDTO?.filter(
             (item) => item.shipment === shipmentVal
           );
-          let abc = productsImport.map((product) => {
+          let abc = productsExport.map((product) => {
             if (product.index === record.index) {
               return {
                 ...record,
@@ -311,7 +284,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
             }
           });
 
-          dispatch(updateProductImport(ab));
+          dispatch(updateProductExport(ab));
           dispatch(updateListProductLv2(abc));
           setIsLoading(false);
         });
@@ -332,7 +305,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
 
     if (warehouse.id && warehouseInDB.length > 1) {
       Modal.confirm({
-        title: "Delete Product",
+        title: "Delete Product Warehouse",
         icon: <ExclamationCircleOutlined />,
         content:
           "Are you really want to Delete Product Warehouse? Action can't revert, scarefully",
@@ -340,7 +313,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         cancelText: "Cancel",
         onOk: () => {
           setIsLoading(true);
-          dispatch(deleteProductImportDetailWarehouse(warehouse.id))
+          dispatch(deleteProductExportDetailWarehouse(warehouse.id))
             .then((res) => {
               message.success("Delete Warehouse successfully");
               callback(name);
@@ -357,15 +330,18 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
     } else {
       const warehouseNotInDB = form
         .getFieldValue([`${id}_${index}`, "warehouse"])
-        .filter((item) => !item?.id);
+        .find((item) => !item?.id);
 
+      callback(name);
+
+      console.log(form.getFieldValue([`${id}_${index}`, "warehouse"]));
       if (warehouse.id) {
         form.setFieldValue([`${id}_${index}`, "warehouse", 1], {
-          ...warehouseNotInDB[0],
+          ...warehouseNotInDB,
           id: warehouse.id,
         });
       }
-      callback(name);
+
       onHandleChangeQuantity(record);
     }
 
@@ -525,15 +501,15 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
             padding: "0 1.5rem",
           }}
         >
-          <Avatar
+          {/* <Avatar
             size={70}
             src={
-              record.listImage
+              record.listImage || !record.productDetailDTO?.fileAttachDTOList
                 ? record.listImage[0].filePath
                 : record.productDetailDTO?.fileAttachDTOList[0].filePath ??
                   avt_default
             }
-          />
+          /> */}
           <div
             style={{
               display: "flex",
@@ -585,7 +561,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                 },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
-                    let a = productsImport.filter((p) => {
+                    let a = productsExport.filter((p) => {
                       const productIdTemp =
                         typeof p.id === "string"
                           ? p.id
@@ -622,7 +598,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                     let productDetailsFilter = record.productDetailDTO?.filter(
                       (item) => item.shipment === value
                     );
-                    let ab = productsImport.map((product) => {
+                    let ab = productsExport.map((product) => {
                       if (product.index === record.index) {
                         return {
                           ...record,
@@ -633,7 +609,8 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                       }
                     });
 
-                    form.setFieldValue([`${id}_${index}`, "type"], "");
+                    form.setFieldValue([`${id}_${index}`, "warehouse"]);
+                    form.setFieldValue([`${id}_${index}`, "type"]);
                     form.setFieldValue(
                       [`${id}_${index}`, "color"],
                       productDetailsFilter[0]?.color
@@ -708,6 +685,11 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                   placeholder="Type"
                   notFoundContent={null}
                   onChange={(value, option) => {
+                    form.setFieldValue([
+                      `${record.id}_${record.index}`,
+                      "warehouse",
+                    ]);
+
                     listProductLv2.map((product) => {
                       const pid =
                         typeof product.id === "string"
@@ -787,9 +769,9 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
       },
     },
     {
-      title: "Cost Per Square Meter (vnđ)",
-      dataIndex: "costPerSquareMeter",
-      key: "costPerSquareMeter",
+      title: "Price Per Square Meter (vnđ)",
+      dataIndex: "pricePerSquareMeter",
+      key: "pricePerSquareMeter",
       align: "center",
       sorter: (a, b) => {
         const id1 =
@@ -801,10 +783,10 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
 
         return (
           parseFloat(
-            form.getFieldValue([`${id1}_${index1}`, "costPerSquareMeter"])
+            form.getFieldValue([`${id1}_${index1}`, "pricePerSquareMeter"])
           ) <
           parseFloat(
-            form.getFieldValue([`${id2}_${index2}`, "costPerSquareMeter"])
+            form.getFieldValue([`${id2}_${index2}`, "pricePerSquareMeter"])
           )
         );
       },
@@ -819,11 +801,11 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
 
         return (
           <Form.Item
-            name={[`${id}_${index}`, "costPerSquareMeter"]}
+            name={[`${id}_${index}`, "pricePerSquareMeter"]}
             rules={[
               {
                 required: true,
-                message: "Missing Cost Per Square Meter",
+                message: "Missing Price Per Square Meter",
               },
             ]}
             onChange={(value) => onHandleChangeCost(record, value)}
@@ -845,10 +827,8 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               <Input
                 type="text"
                 disabled
-                placeholder="Shipment"
                 style={{
                   color: "black",
-
                   minWidth: 120,
                   width: 120,
                 }}
@@ -860,8 +840,8 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
     },
     {
       title: "Quantity Box",
-      dataIndex: "totalQuantityBox",
-      key: "totalQuantityBox",
+      dataIndex: "quantityBox",
+      key: "quantityBox",
       align: "center",
       sorter: (a, b) => {
         const id1 =
@@ -872,12 +852,8 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         const index2 = b.index;
 
         return (
-          parseFloat(
-            form.getFieldValue([`${id1}_${index1}`, "totalQuantityBox"])
-          ) <
-          parseFloat(
-            form.getFieldValue([`${id2}_${index2}`, "totalQuantityBox"])
-          )
+          parseFloat(form.getFieldValue([`${id1}_${index1}`, "quantityBox"])) <
+          parseFloat(form.getFieldValue([`${id2}_${index2}`, "quantityBox"]))
         );
       },
       sortDirections: ["descend", "ascend"],
@@ -888,7 +864,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               record.productDetailDTO?.productId ??
               record.productDetailDTO[0].productId
             }_${record.index}`,
-            "totalQuantityBox",
+            "quantityBox",
           ]}
           initialValue={0}
           style={{ minWidth: "150px" }}
@@ -936,9 +912,9 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Cost (vnđ)",
-      dataIndex: "totalCost",
-      key: "totalCost",
+      title: "Price (vnđ)",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
       align: "center",
       editable: true,
       sorter: (a, b) => {
@@ -949,8 +925,8 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
           typeof b.id === "string" ? b.id : b.productDetailDTO.productId;
         const index2 = b.index;
         return (
-          parseFloat(form.getFieldValue([`${id1}_${index1}`, "totalCost"])) <
-          parseFloat(form.getFieldValue([`${id2}_${index2}`, "totalCost"]))
+          parseFloat(form.getFieldValue([`${id1}_${index1}`, "totalPrice"])) <
+          parseFloat(form.getFieldValue([`${id2}_${index2}`, "totalPrice"]))
         );
       },
       sortDirections: ["descend", "ascend"],
@@ -961,7 +937,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               record.productDetailDTO?.productId ??
               record.productDetailDTO[0].productId
             }_${record.index}`,
-            "totalCost",
+            "totalPrice",
           ]}
           initialValue={0}
           style={{ padding: "0 1.5rem" }}
@@ -972,8 +948,8 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
     },
     {
       title: "Product Note",
-      dataIndex: "noteImport",
-      key: "noteImport",
+      dataIndex: "noteExport",
+      key: "noteExport",
       align: "center",
       editable: false,
       render: (_, record) => (
@@ -983,7 +959,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               record.productDetailDTO?.productId ??
               record.productDetailDTO[0].productId
             }_${record.index}`,
-            "noteImport",
+            "noteExport",
           ]}
         >
           <Input.TextArea
@@ -1011,9 +987,6 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         <Dropdown
           overlay={
             <Menu>
-              <Menu.Item>
-                <NewProductDetailsModal record={record} />
-              </Menu.Item>
               {typeof record.id === "number" && (
                 <Menu.Item
                   onClick={() => onRowEdit(record)}
@@ -1037,26 +1010,26 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
   ];
 
   useEffect(() => {
-    productsImport.map((product) => {
+    productsExport.map((product) => {
       if (typeof product.id === "number") {
         const index = product.index;
         const id = product.productDetailDTO.productId;
 
         for (const key in product) {
           if (Object.hasOwnProperty.call(product, key)) {
-            if (key.includes("WarehouseDTO")) {
+            if (key === "exportProductDetailWarehouseList") {
               form.setFieldValue(
                 [`${id}_${index}`, "warehouse"],
-                product.importProductDetailWarehouseDTOList
+                product.exportProductDetailWarehouseList
               );
-            } else if (key.includes("DetailDTO")) {
+            } else if (key == "productDetailDTO") {
               let productDetailDTO = product.productDetailDTO;
               if (productDetailDTO.length) {
                 productDetailDTO = editingValue;
               }
 
               for (const key in productDetailDTO) {
-                if (key.includes("type")) {
+                if (key === "type") {
                   form.setFieldValue(
                     [`${id}_${index}`, key],
                     `${productDetailDTO["id"]}_${productDetailDTO[key]}`
@@ -1075,7 +1048,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         }
       }
     });
-  }, [dispatch, productsImport]);
+  }, [dispatch, productsExport]);
 
   return (
     <Table
@@ -1084,7 +1057,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         openHeader ? "listProductImport tranform" : "listProductImport"
       }
       columns={productColumns}
-      dataSource={[...productsImport]}
+      dataSource={[...productsExport]}
       rowKey={(record) => {
         const id =
           typeof record.id === "string"
@@ -1104,11 +1077,25 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               : record.productDetailDTO?.productId ??
                 record.productDetailDTO[0].productId;
           const index = record.index;
-          let isDelete = false;
 
           return (
             <Form.List name={[`${id}_${index}`, "warehouse"]}>
               {(fields, { add, remove }) => {
+                let detailID = form
+                  .getFieldValue([`${id}_${index}`, "type"])
+                  ?.split("_")[0];
+
+                let productDetailDTO = record.productDetailDTO.length
+                  ? record.productDetailDTO.find(
+                      (item) => item.id.toString() === detailID
+                    )
+                  : record.productDetailDTO;
+
+                let maxLength =
+                  productDetailDTO?.productWarehouseDTOList?.filter(
+                    (item) => item.quantityBox > 0
+                  )?.length;
+
                 return (
                   <>
                     <div className="space-container">
@@ -1124,7 +1111,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                             <Form.Item
                               {...restField}
                               label="Warehouse"
-                              name={[name, "warehouseId"]}
+                              name={[name, "productWarehouseId"]}
                               rules={[
                                 {
                                   required: true,
@@ -1136,7 +1123,8 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                                       `${id}_${index}`,
                                       "warehouse",
                                     ]).filter(
-                                      (item) => item.warehouseId === value
+                                      (item) =>
+                                        item.productWarehouseId === value
                                     );
 
                                     if (!value || checkExist.length === 1) {
@@ -1155,11 +1143,17 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                                 }}
                                 disabled={!isEditing(record)}
                               >
-                                {listWarehouses.map((item) => (
-                                  <Option key={item.id} value={item.id}>
-                                    {item.warehouseName}
-                                  </Option>
-                                ))}
+                                {productDetailDTO?.productWarehouseDTOList?.map(
+                                  (item) => (
+                                    <Option
+                                      key={item.id}
+                                      value={item.id}
+                                      disabled={item.quantityBox <= 0}
+                                    >
+                                      {item.wareHouseName}
+                                    </Option>
+                                  )
+                                )}
                               </Select>
                             </Form.Item>
 
@@ -1172,6 +1166,38 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                                   required: true,
                                   message: "Missing quantity",
                                 },
+                                ({ getFieldValue }) => ({
+                                  validator(_, value) {
+                                    let wId = form.getFieldValue([
+                                      `${id}_${index}`,
+                                      "warehouse",
+                                      name,
+                                    ])?.productWarehouseId;
+
+                                    let warehouse =
+                                      productDetailDTO?.productWarehouseDTOList?.find(
+                                        (item) => item.id === wId
+                                      );
+
+                                    if (!wId) {
+                                      return Promise.reject(
+                                        new Error(
+                                          "Must be choose Warehouse first"
+                                        )
+                                      );
+                                    }
+
+                                    if (value > warehouse?.quantityBox) {
+                                      return Promise.reject(
+                                        new Error(
+                                          `The maximum Quantity is ${warehouse?.quantityBox}`
+                                        )
+                                      );
+                                    }
+
+                                    return Promise.resolve();
+                                  },
+                                }),
                               ]}
                               onChange={() => onHandleChangeQuantity(record)}
                               initialValue={1}
@@ -1211,7 +1237,9 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                         icon={<PlusOutlined />}
                         disabled={
                           !isEditing(record) ||
-                          fields.length === listWarehouses.length
+                          !detailID ||
+                          !maxLength ||
+                          fields.length === maxLength
                         }
                       >
                         Add new select Warehouse
@@ -1246,14 +1274,14 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         ),
       }}
       pagination={
-        productsImport.length !== 0
+        productsExport.length !== 0
           ? {
               showSizeChanger: true,
               position: ["bottomCenter"],
               size: "default",
               pageSize: pageSize,
               current: currentPage,
-              total: productsImport.length,
+              total: productsExport.length,
               onChange: (page, size) => onHandlePagination(page, size),
               pageSizeOptions: ["2", "5", "10"],
             }

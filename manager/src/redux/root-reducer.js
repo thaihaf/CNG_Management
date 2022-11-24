@@ -41,6 +41,10 @@ import {
   IMPORT_PRODUCT_FEATURE_KEY,
   importProductReducer,
 } from "features/import-product/importProduct";
+import {
+  EXPORT_PRODUCT_FEATURE_KEY,
+  exportProductReducer,
+} from "features/export-product/exportProduct";
 
 const rootReducer = combineReducers({
   [AUTHEN_FEATURE_KEY]: authReducer,
@@ -54,6 +58,7 @@ const rootReducer = combineReducers({
   [PROVINCES_FEATURE_KEY]: provincesReducer,
   [PRODUCT_FEATURE_KEY]: productReducer,
   [IMPORT_PRODUCT_FEATURE_KEY]: importProductReducer,
+  [EXPORT_PRODUCT_FEATURE_KEY]: exportProductReducer,
 });
 
 export default rootReducer;
