@@ -6,7 +6,7 @@
     border-radius: 2rem 2rem 0 0;
     background-color: #fafafa;
     margin-top: 2rem;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    // box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
     .details__item {
       margin-bottom: 0;
@@ -107,4 +107,22 @@
 .ant-input {
   border-radius: 2rem !important;
   padding: 1rem 2rem;
+}
+
+.ant-tabs {
+  .ant-tabs-nav {
+    background-color: #fafafa;
+    margin: 0;
+
+    .ant-tabs-nav-list {
+      width: 100%;
+      border-top: 0.5px solid #efefef;
+
+      .ant-tabs-tab {
+        width: 50%;
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
 }

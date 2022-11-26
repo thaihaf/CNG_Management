@@ -24,25 +24,24 @@ const getAllProductExport = () => {
   return api.get(url);
 };
 const deleteProductExport = (id) => {
-  const url = ExportProductEndPoints.PRODUCT_EXPORT_DETAILS.replace(
-    ":exportId",
+  const url = ExportProductEndPoints.DELETE_PRODUCT_EXPORT.replace(
+    ":id",
     id || ""
   );
+
   return api.delete(url);
 };
 const deleteProductExportDetail = (id) => {
-  const url = ExportProductEndPoints.PRODUCT_EXPORT_DETAIL.replace(
-    ":detailId",
-    id || ""
-  );
-  return api.delete(url);
-};
-const deleteProductExportDetailWarehouse = (id) => {
-  const url = ExportProductEndPoints.PRODUCT_EXPORT_DETAIL_WAREHOUSE.replace(
+  const url = ExportProductEndPoints.DELETE_DETAILS_PRODUCT_EXPORT.replace(
     ":id",
     id || ""
   );
   return api.delete(url);
+};
+const deleteProductExportDetailWarehouse = (data) => {
+  console.log(data)
+  const url = ExportProductEndPoints.DELETE_WAREHOUSE_PRODUCT_EXPORT;
+  return api.delete(url, data);
 };
 
 const exportProductApi = {

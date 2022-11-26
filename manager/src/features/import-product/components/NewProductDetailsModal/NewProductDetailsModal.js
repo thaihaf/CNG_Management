@@ -38,10 +38,7 @@ export default function NewProductDetailsModal({ record }) {
   const hanleSubmit = (value) => {
     console.log(value);
     let checkExist = record.productDetailDTO?.find(
-      (item) =>
-        item.shipment === value.shipment &&
-        item.type === value.type &&
-        item.color === value.color
+      (item) => item.shipment === value.shipment && item.type === value.type
     );
 
     if (!value || !checkExist) {
@@ -183,38 +180,6 @@ export default function NewProductDetailsModal({ record }) {
                       .toLowerCase()
                       .localeCompare((optionB?.label ?? "").toLowerCase())
                   }
-                />
-              </Form.Item>
-            </div>
-            <div className="details__group">
-              <Form.Item
-                name="color"
-                label={<Text>Color</Text>}
-                className="details__item"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "Color"
-                    ),
-                  },
-                  {
-                    max: 25,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_MAX_LENGTH,
-                      MESSAGE_ERROR,
-                      "Color",
-                      25
-                    ),
-                  },
-                ]}
-              >
-                <Input
-                  type="text"
-                  className="login_input pass"
-                  placeholder="enter color"
                 />
               </Form.Item>
             </div>

@@ -186,7 +186,7 @@ export default function ListProductExport() {
       dataIndex: "index",
       key: "index",
       align: "center",
-      render: (a, b, index) => <Text>{index}</Text>,
+      render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
       title: "Type",
