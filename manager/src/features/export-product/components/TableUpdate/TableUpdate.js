@@ -537,14 +537,6 @@ export default function TableUpdate({ form, updateMode }) {
               >
                 {id}
               </div>
-              <div
-                style={{
-                  fontSize: "15px",
-                  color: "gray",
-                }}
-              >
-                {record.color}
-              </div>
             </div>
           </div>
         );

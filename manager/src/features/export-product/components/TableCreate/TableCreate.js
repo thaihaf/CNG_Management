@@ -354,14 +354,6 @@ export default function TableCreate({ form, updateMode, openHeader }) {
               >
                 {record.id}
               </div>
-              <div
-                style={{
-                  fontSize: "15px",
-                  color: "gray",
-                }}
-              >
-                {record.color}
-              </div>
             </div>
           </div>
         );
