@@ -5,9 +5,10 @@ import { updateProductImport } from "features/import-product/importProduct";
 import { useDispatch, useSelector } from "react-redux";
 import "./StatisticGroups.css";
 
-import totalQuantityImg from "assets/gif/calculator.gif";
-import totalSquareMeterImg from "assets/gif/squareMeter.gif";
-import totalCostImg from "assets/gif/purse.gif";
+import boxesImg from "assets/icons/boxes.png";
+import squareMeterImg from "assets/icons/squareMeter.png";
+import packageImg from "assets/icons/package.png";
+import statusImg from "assets/icons/status.png";
 
 export default function StatisticGroups({ updateMode }) {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ export default function StatisticGroups({ updateMode }) {
           className="statistic-icon"
           style={{ backgroundColor: "darkseagreen" }}
         >
-          <img src={totalQuantityImg} alt="" />
+          <img src={boxesImg} alt="" />
         </div>
         <Form.Item name={"totalQuantityImport"} initialValue={0}>
           <Statistic title="Total Quantity Box" />
@@ -31,7 +32,7 @@ export default function StatisticGroups({ updateMode }) {
         style={{ backgroundColor: "rgb(226 245 255)" }}
       >
         <div className="statistic-icon" style={{ backgroundColor: "#15AFFF" }}>
-          <img src={totalSquareMeterImg} alt="" />
+          <img src={squareMeterImg} alt="" />
         </div>
         <Form.Item name={"totalSquareMeterImport"} initialValue={0}>
           <Statistic title="Total Square Meter (m2)" precision={2} />
@@ -43,7 +44,7 @@ export default function StatisticGroups({ updateMode }) {
         style={{ backgroundColor: "rgb(255 239 235)" }}
       >
         <div className="statistic-icon" style={{ backgroundColor: "#FE6A40" }}>
-          <img src={totalCostImg} alt="" />
+          <img src={packageImg} alt="" />
         </div>
         <Form.Item name={"totalCostImport"} initialValue={0}>
           <Statistic title="Total Cost (vnđ)" precision={2} />
@@ -59,7 +60,7 @@ export default function StatisticGroups({ updateMode }) {
             className="statistic-icon"
             style={{ backgroundColor: "#FE6A40" }}
           >
-            <img src={totalCostImg} alt="" />
+            <img src={statusImg} alt="" />
           </div>
           <Form.Item name={"statusImport"} initialValue={0}>
             <Statistic title="Status" />

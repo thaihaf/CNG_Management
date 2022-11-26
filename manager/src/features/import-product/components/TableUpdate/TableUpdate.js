@@ -63,6 +63,7 @@ import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getEmployees } from "features/employee-manager/employeeManager";
 import HeaderTable from "../HeaderTable/HeaderTable";
 import { getDetailsProduct } from "features/product-manager/productManager";
+import SearchProduct from "../SearchProduct/SearchProduct";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -515,39 +516,62 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         a.productDetailDTO.productId > b.productDetailDTO.productId,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("product ID", "productDetailDTO", "productId"),
-      render: (_, record) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "1.5rem",
-            padding: "0 1.5rem",
-          }}
-        >
-          <Avatar
-            size={70}
-            src={
-              record.listImage
-                ? record.listImage[0].filePath
-                : record.productDetailDTO?.fileAttachDTOList[0].filePath ??
-                  avt_default
-            }
-          />
+      render: (_, record) => {
+        const id =
+          typeof record.id === "string"
+            ? record.id
+            : record.productDetailDTO?.productId ??
+              record.productDetailDTO[0].productId;
+
+        return (
           <div
             style={{
               display: "flex",
-              gap: "0.6rem",
-              width: "maxContent",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "1.5rem",
+              padding: "0 1.5rem",
             }}
           >
-            {typeof record.id === "string"
-              ? record.id
-              : record.productDetailDTO?.productId ??
-                record.productDetailDTO[0].productId}
+            <Avatar
+              size={70}
+              src={
+                record.listImage || !record.productDetailDTO?.fileAttachDTOList
+                  ? record.listImage[0].filePath
+                  : record.productDetailDTO?.fileAttachDTOList[0].filePath ??
+                    avt_default
+              }
+            />
+            <div
+              style={{
+                paddingRight: "2rem",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "0.5rem",
+                width: "maxContent",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "17px",
+                  fontWeight: "600",
+                }}
+              >
+                {id}
+              </div>
+              <div
+                style={{
+                  fontSize: "15px",
+                  color: "gray",
+                }}
+              >
+                {record.color}
+              </div>
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       title: "Product Details",
@@ -583,36 +607,9 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                   required: true,
                   message: "Missing shipment",
                 },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    let a = productsImport.filter((p) => {
-                      const productIdTemp =
-                        typeof p.id === "string"
-                          ? p.id
-                          : p.productDetailDTO?.productId ??
-                            p.productDetailDTO[0].productId;
-
-                      return (
-                        productIdTemp === id &&
-                        p.index !== index &&
-                        getFieldValue([
-                          `${productIdTemp}_${p.index}`,
-                          "shipment",
-                        ]) === value
-                      );
-                    });
-
-                    if (!value || a.length === 0) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(
-                      new Error("The Shipment product be duplicated!")
-                    );
-                  },
-                }),
               ]}
               style={{
-                minWidth: 200,
+                minWidth: 150,
               }}
             >
               {record.productDetailDTO?.length && isEditing(record) ? (
@@ -633,11 +630,8 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                       }
                     });
 
-                    form.setFieldValue([`${id}_${index}`, "type"], "");
-                    form.setFieldValue(
-                      [`${id}_${index}`, "color"],
-                      productDetailsFilter[0]?.color
-                    );
+                    form.setFieldValue([`${id}_${index}`, "type"]);
+
                     dispatch(updateListProductLv2(ab));
                   }}
                   showSearch
@@ -683,105 +677,102 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               )}
             </Form.Item>
 
-            <div
+            <Form.Item
+              name={[`${id}_${index}`, "type"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Missing Type",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    let a = productsImport.filter((p) => {
+                      const productIdTemp =
+                        typeof p.id === "string"
+                          ? p.id
+                          : p.productDetailDTO?.productId ??
+                            p.productDetailDTO[0].productId;
+
+                      return (
+                        productIdTemp === id &&
+                        p.index !== index &&
+                        getFieldValue([
+                          `${productIdTemp}_${p.index}`,
+                          "type",
+                        ]) === value
+                      );
+                    });
+
+                    if (!value || a.length === 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Product Details duplicated!")
+                    );
+                  },
+                }),
+              ]}
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "2rem",
+                minWidth: 100,
+                width: "100%",
               }}
             >
-              <Form.Item
-                name={[`${id}_${index}`, "type"]}
-                rules={[
-                  {
-                    required: true,
-                    message: "Missing Type",
-                  },
-                ]}
-                style={{
-                  minWidth: 100,
-                  width: "100%",
+              <Select
+                placeholder="Type"
+                notFoundContent={null}
+                onChange={(value, option) => {
+                  listProductLv2.map((product) => {
+                    const pid =
+                      typeof product.id === "string"
+                        ? product.id
+                        : product.productDetailDTO?.productId ??
+                          product.productDetailDTO[0].productId;
+
+                    if (product.index === index && pid === id) {
+                      const a = product.productDetailDTO?.find(
+                        (item) => item.id === option.id
+                      );
+                    }
+                  });
                 }}
+                disabled={!isEditing(record)}
               >
-                <Select
-                  placeholder="Type"
-                  notFoundContent={null}
-                  onChange={(value, option) => {
-                    listProductLv2.map((product) => {
-                      const pid =
-                        typeof product.id === "string"
-                          ? product.id
-                          : product.productDetailDTO?.productId ??
-                            product.productDetailDTO[0].productId;
+                {record.productDetailDTO?.length && isEditing(record) ? (
+                  listProductLv2.map((product) => {
+                    const pid =
+                      typeof product.id === "string"
+                        ? product.id
+                        : product.productDetailDTO?.productId ??
+                          product.productDetailDTO[0].productId;
 
-                      if (product.index === index && pid === id) {
-                        const a = product.productDetailDTO?.find(
-                          (item) => item.id === option.id
-                        );
-                      }
-                    });
-                  }}
-                  disabled={!isEditing(record)}
-                >
-                  {record.productDetailDTO?.length && isEditing(record) ? (
-                    listProductLv2.map((product) => {
-                      const pid =
-                        typeof product.id === "string"
-                          ? product.id
-                          : product.productDetailDTO?.productId ??
-                            product.productDetailDTO[0].productId;
-
-                      if (product.index === index && pid === id) {
-                        return product.productDetailDTO?.map(
-                          (item, index, arr) => {
-                            let listItem = arr.filter(
-                              (i) => i.type === item.type
+                    if (product.index === index && pid === id) {
+                      return product.productDetailDTO?.map(
+                        (item, index, arr) => {
+                          let listItem = arr.filter(
+                            (i) => i.type === item.type
+                          );
+                          if (listItem[0].id === item.id) {
+                            return (
+                              <Option
+                                value={`${item.id}_${item.type}`}
+                                key={`${item.id}_${item.type}`}
+                                id={item.id}
+                              >
+                                {item.type}
+                              </Option>
                             );
-                            if (listItem[0].id === item.id) {
-                              return (
-                                <Option
-                                  value={`${item.id}_${item.type}`}
-                                  key={`${item.id}_${item.type}`}
-                                  id={item.id}
-                                >
-                                  {item.type}
-                                </Option>
-                              );
-                            }
                           }
-                        );
-                      }
-                    })
-                  ) : (
-                    <Option value={typeOfInitialValues || ""}>
-                      {typeOfInitialValues?.split("_")[1]}
-                    </Option>
-                  )}
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name={[`${id}_${index}`, "color"]}
-                rules={[
-                  {
-                    required: true,
-                    message: "Missing Color",
-                  },
-                ]}
-                style={{
-                  minWidth: 100,
-                }}
-              >
-                <Input
-                  type="text"
-                  disabled
-                  placeholder="Color"
-                  style={{
-                    color: "black",
-                  }}
-                />
-              </Form.Item>
-            </div>
+                        }
+                      );
+                    }
+                  })
+                ) : (
+                  <Option value={typeOfInitialValues || ""}>
+                    {typeOfInitialValues?.split("_")[1]}
+                  </Option>
+                )}
+              </Select>
+            </Form.Item>
           </div>
         );
       },
@@ -1259,7 +1250,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
             }
           : false
       }
-      title={() => <HeaderTable form={form} updateMode={updateMode} />}
+      title={() => <SearchProduct />}
     />
   );
 }

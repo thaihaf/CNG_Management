@@ -181,13 +181,11 @@ export default function ListProductImport() {
 
   const columns = [
     {
-      title: "Code",
-      dataIndex: "id",
-      key: "id",
+      title: "Index",
+      dataIndex: "index",
+      key: "index",
       align: "center",
-      sorter: (a, b) => a.id > b.id,
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("id"),
+      render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
       title: "Image",

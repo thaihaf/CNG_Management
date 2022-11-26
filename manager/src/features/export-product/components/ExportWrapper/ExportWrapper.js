@@ -1,39 +1,17 @@
-import {
-  Button,
-  Form,
-  message,
-  Modal,
-  Select,
-  Spin,
-  Tooltip,
-  Typography,
-} from "antd";
+import { Button, Form, message, Modal, Spin, Tabs, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getWarehouses } from "features/warehouse-manager/warehouseManager";
 import { unwrapResult } from "@reduxjs/toolkit";
-import {
-  searchProduct,
-  searchProductBySupplier,
-} from "features/product-manager/productManager";
 
 import "./ExportWrapper.css";
-import { getSuppliers } from "features/supplier-manager/supplierManager";
 
-import totalCostImg from "assets/gif/purse.gif";
+import deleteFileImg from "assets/icons/deleteFile.png";
+import uploadFileImg from "assets/icons/uploadFile.png";
 
-import { getMessage, getStatusString } from "helpers/util.helper";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import {
-  CaretDownFilled,
-  CaretUpFilled,
-  ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import moment from "moment";
+import { getStatusString } from "helpers/util.helper";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import StatisticGroups from "../StatisticGroups/StatisticGroups";
-import InsertProductTable from "../TableCreate/TableCreate";
 import TableUpdate from "../TableUpdate/TableUpdate";
 import TableCreate from "../TableCreate/TableCreate";
 import {
@@ -41,11 +19,11 @@ import {
   createProductExport,
   deleteProductExport,
   ProductExportManagerPaths,
-  updateProductExport,
   updateProductExports,
 } from "features/export-product/exportProduct";
+import HeaderTable from "../HeaderTable/HeaderTable";
 
-const { Option } = Select;
+const { Title } = Typography;
 
 const ExportWrapper = ({ updateMode }) => {
   const { productsExport, productExportDetails } = useSelector(
@@ -56,53 +34,10 @@ const ExportWrapper = ({ updateMode }) => {
   const history = useHistory();
   const [form] = Form.useForm();
 
-  const [openHeader, setOpenHeader] = useState(updateMode);
+  const [activeTab, setActiveTab] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const [dataSearch, setDataSearch] = useState([]);
-  const [searchProductVal, setSearchProductVal] = useState();
 
-  let timeout;
-  let currentValue;
-
-  const fetch = (value, callback) => {
-    if (timeout) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-    currentValue = value;
-
-    const fake = () => {
-      dispatch(searchProduct(value))
-        .then(unwrapResult)
-        .then((data) => {
-          if (currentValue === value) {
-            callback(data);
-          }
-        });
-    };
-
-    timeout = setTimeout(fake, 300);
-  };
-  const handleSearch = (newValue) => {
-    if (newValue) {
-      fetch(newValue, setDataSearch);
-    } else {
-      setDataSearch([]);
-    }
-  };
-  const handleSelectChange = (newValue, option) => {
-    message.success("Insert Product Export Success");
-
-    setSearchProductVal(newValue);
-    dispatch(
-      updateProductExport([
-        ...productsExport,
-        { ...option.item, index: productsExport.length + 1 },
-      ])
-    );
-  };
-
-  const ondeleteProductExport = () => {
+  const onDeleteProductExport = () => {
     Modal.confirm({
       title: "Delete Product Export",
       icon: <ExclamationCircleOutlined />,
@@ -122,6 +57,7 @@ const ExportWrapper = ({ updateMode }) => {
           })
           .catch((err) => {
             console.log(err);
+            setIsLoading(false);
             message.error("Error deleting Product Export");
           });
       },
@@ -130,6 +66,7 @@ const ExportWrapper = ({ updateMode }) => {
   };
   const onBeforeSubmit = () => {
     const listHeaderItemValue = form.getFieldsValue([
+      "customerId",
       "employeeId",
       "type",
       "licensePlates",
@@ -145,9 +82,9 @@ const ExportWrapper = ({ updateMode }) => {
     }
 
     if (firstCheck) {
-      setOpenHeader(false);
+      setActiveTab("table");
     } else {
-      setOpenHeader(true);
+      setActiveTab("details");
     }
   };
   const onFinish = (value) => {
@@ -274,79 +211,73 @@ const ExportWrapper = ({ updateMode }) => {
       >
         <StatisticGroups updateMode={updateMode} />
 
-        {/* <Title level={3}>Create Product Export</Title> */}
         <div className="actions-group">
-          <Tooltip placement="topRight" title={"Show more input"}>
-            {openHeader ? (
-              <CaretUpFilled
-                style={{
-                  fontSize: "23px",
-                  transition: "all 0.3s ease",
-                }}
-                onClick={(e) => setOpenHeader(false)}
-              />
-            ) : (
-              <CaretDownFilled
-                style={{
-                  fontSize: "23px",
-                  transition: "all 0.3s ease",
-                }}
-                onClick={(e) => setOpenHeader(true)}
-              />
-            )}
-          </Tooltip>
+          <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
+            Export Product Details
+          </Title>
 
-          <Select
-            placeholder="Search product"
-            style={{
-              minWidth: 200,
-              width: 350,
-              overflow: "visible",
-              marginRight: "auto",
-            }}
-            showSearch
-            allowClear
-            optionLabelProp="label"
-            filterOption={false}
-            notFoundContent={null}
-            defaultActiveFirstOption={false}
-            value={searchProductVal}
-            onSearch={handleSearch}
-            onChange={handleSelectChange}
-          >
-            {dataSearch?.map((d) => {
-              // let isDisabled = productsExport.find((p) => p.id === d.id);
-              return (
-                <Option
-                  className="searchProduct"
-                  value={`${d.id} - ${d.productName} - ${d.titleSize}`}
-                  lable={`${d.id} - ${d.productName} - ${d.titleSize}`}
-                  key={d.id}
-                  item={d}
-                  // disabled={isDisabled}
+          {updateMode &&
+            typeof productExportDetails?.status === "number" &&
+            productExportDetails?.status !== 2 && (
+              <>
+                <Button
+                  type="danger"
+                  shape="round"
+                  size={"large"}
+                  style={{
+                    width: "fitContent",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    paddingTop: "2.1rem",
+                    paddingBottom: "2.1rem",
+                    paddingLeft: "2.8rem",
+                    paddingRight: "2.8rem",
+                  }}
+                  onClick={() => onDeleteProductExport()}
                 >
-                  <div className="search-img">
-                    <img src={d.listImage[0].filePath} alt="" />
-                  </div>
-                  <div className="search-details">
-                    <div className="search-name">
-                      Name : {d.productName.toUpperCase()}
-                    </div>
-                    <div className="search-code">
-                      {d.id} - {d.titleSize}
-                    </div>
-                    <div className="search-origin">Origin : {d.origin}</div>
-                  </div>
-                </Option>
-              );
-            })}
-          </Select>
+                  <img
+                    src={deleteFileImg}
+                    alt=""
+                    style={{ height: "2.5rem", width: "2.5rem" }}
+                  />
+                  Delete
+                </Button>
+                <Button
+                  type="primary"
+                  shape="round"
+                  // icon={<CaretUpOutlined />}
+                  size={"large"}
+                  htmlType="submit"
+                  style={{
+                    width: "fitContent",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    paddingTop: "2.1rem",
+                    paddingBottom: "2.1rem",
+                    paddingLeft: "2.8rem",
+                    paddingRight: "2.8rem",
+                  }}
+                  onClick={onBeforeSubmit}
+                >
+                  <img
+                    src={uploadFileImg}
+                    alt=""
+                    style={{ height: "2.5rem", width: "2.5rem" }}
+                  />
+                  "Update"
+                </Button>
+              </>
+            )}
 
-          {updateMode && (
+          {!updateMode && (
             <Button
-              type="danger"
+              type="primary"
               shape="round"
+              // icon={<CaretUpOutlined />}
               size={"large"}
+              htmlType="submit"
               style={{
                 width: "fitContent",
                 display: "flex",
@@ -356,58 +287,40 @@ const ExportWrapper = ({ updateMode }) => {
                 paddingBottom: "2.1rem",
                 paddingLeft: "2.8rem",
                 paddingRight: "2.8rem",
-                marginLeft: "auto",
               }}
-              onClick={() => ondeleteProductExport()}
+              onClick={onBeforeSubmit}
             >
               <img
-                src={totalCostImg}
+                src={uploadFileImg}
                 alt=""
                 style={{ height: "2.5rem", width: "2.5rem" }}
               />
-              Delete
+              "Create"
             </Button>
           )}
-          <Button
-            type="primary"
-            shape="round"
-            // icon={<CaretUpOutlined />}
-            size={"large"}
-            htmlType="submit"
-            style={{
-              width: "fitContent",
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              paddingTop: "2.1rem",
-              paddingBottom: "2.1rem",
-              paddingLeft: "2.8rem",
-              paddingRight: "2.8rem",
-            }}
-            onClick={onBeforeSubmit}
-          >
-            <img
-              src={totalCostImg}
-              alt=""
-              style={{ height: "2.5rem", width: "2.5rem" }}
-            />
-            {updateMode ? "Update" : "Create"}
-          </Button>
         </div>
 
-        {updateMode ? (
-          <TableUpdate
-            form={form}
-            updateMode={updateMode}
-            openHeader={openHeader}
-          />
-        ) : (
-          <TableCreate
-            form={form}
-            updateMode={updateMode}
-            openHeader={openHeader}
-          />
-        )}
+        <Tabs
+          defaultActiveKey={`table`}
+          activeKey={activeTab}
+          onTabClick={(key) => setActiveTab(key)}
+          items={[
+            {
+              label: `Tab 1`,
+              key: `table`,
+              children: updateMode ? (
+                <TableUpdate form={form} updateMode={updateMode} />
+              ) : (
+                <TableCreate form={form} updateMode={updateMode} />
+              ),
+            },
+            {
+              label: `Tab 2`,
+              key: `details`,
+              children: <HeaderTable form={form} updateMode={updateMode} />,
+            },
+          ]}
+        />
       </Form>
     </Spin>
   );

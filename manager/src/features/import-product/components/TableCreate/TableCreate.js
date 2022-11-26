@@ -58,6 +58,7 @@ import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getEmployees } from "features/employee-manager/employeeManager";
 import HeaderTable from "../HeaderTable/HeaderTable";
+import SearchProduct from "../SearchProduct/SearchProduct";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -336,54 +337,55 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       sorter: (a, b) => a.id > b.id,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("id"),
-      render: (_, record) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1.5rem",
-            width: "maxContent",
-          }}
-        >
-          <Avatar
-            size={70}
-            src={
-              record.listImage[0].filePath === ""
-                ? avt_default
-                : record.listImage[0].filePath
-            }
-          />
+      render: (_, record) => {
+        return (
           <div
             style={{
-              paddingRight: "2rem",
               display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: "0.8rem",
-              width: "maxContent",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "1.5rem",
+              padding: "0 1.5rem",
             }}
           >
+            <Avatar
+              size={70}
+              src={
+                record.listImage[0].filePath === ""
+                  ? avt_default
+                  : record.listImage[0].filePath
+              }
+            />
             <div
               style={{
-                fontSize: "17px",
-                fontWeight: "600",
-              }}
-            >
-              {record.productName}
-            </div>
-            <div
-              style={{
+                paddingRight: "2rem",
                 display: "flex",
-                gap: "0.6rem",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "0.5rem",
                 width: "maxContent",
               }}
             >
-              <div className="">{`ID: `}</div>
-              <div className="">{record.id}</div>
+              <div
+                style={{
+                  fontSize: "17px",
+                  fontWeight: "600",
+                }}
+              >
+                {record.id}
+              </div>
+              <div
+                style={{
+                  fontSize: "15px",
+                  color: "gray",
+                }}
+              >
+                {record.color}
+              </div>
             </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       title: "Product Details",
@@ -406,24 +408,6 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                 required: true,
                 message: "Missing shipment",
               },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  let a = productsImport.filter(
-                    (p) =>
-                      p.id === record.id &&
-                      p.index !== record.index &&
-                      getFieldValue([`${p.id}_${p.index}`, "shipment"]) ===
-                        value
-                  );
-
-                  if (!value || a.length === 0) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error("The Shipment product be duplicated!")
-                  );
-                },
-              }),
             ]}
             style={{
               minWidth: 200,
@@ -450,14 +434,8 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                   }
                 });
 
-                form.setFieldValue(
-                  [`${record.id}_${record.index}`, "type"],
-                  ""
-                );
-                form.setFieldValue(
-                  [`${record.id}_${record.index}`, "color"],
-                  productDetailsFilter[0]?.color
-                );
+                form.setFieldValue([`${record.id}_${record.index}`, "type"]);
+
                 dispatch(updateListProductLv2(ab));
               }}
               showSearch
@@ -492,72 +470,67 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             </Select>
           </Form.Item>
 
-          <div
+          <Form.Item
+            name={[`${record.id}_${record.index}`, "type"]}
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "2rem",
+              minWidth: 100,
+              width: "100%",
             }}
-          >
-            <Form.Item
-              name={[`${record.id}_${record.index}`, "type"]}
-              rules={[
-                {
-                  required: true,
-                  message: "Missing Type",
-                },
-              ]}
-              style={{
-                minWidth: 100,
-              }}
-            >
-              <Select placeholder="Type" notFoundContent={null}>
-                {listProductLv2.map((product) => {
-                  if (
-                    product.id === record.id &&
-                    product.index === record.index
-                  ) {
-                    return product.productDetailDTO?.map((item, index, arr) => {
-                      let listItem = arr.filter((i) => i.type === item.type);
-                      if (listItem[0].id === item.id) {
-                        return (
-                          <Option
-                            value={`${item.id}_${item.type}`}
-                            key={`${item.id}_${item.type}`}
-                          >
-                            {item.type}
-                          </Option>
-                        );
-                      }
-                    });
+            rules={[
+              {
+                required: true,
+                message: "Missing Type",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  let a = productsImport.filter((p) => {
+                    const productIdTemp =
+                      typeof p.id === "string"
+                        ? p.id
+                        : p.productDetailDTO?.productId ??
+                          p.productDetailDTO[0].productId;
+
+                    return (
+                      productIdTemp === record.id &&
+                      p.index !== record.index &&
+                      getFieldValue([`${productIdTemp}_${p.index}`, "type"]) ===
+                        value
+                    );
+                  });
+
+                  if (!value || a.length === 0) {
+                    return Promise.resolve();
                   }
-                })}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name={[`${record.id}_${record.index}`, "color"]}
-              rules={[
-                {
-                  required: true,
-                  message: "Missing Color",
+                  return Promise.reject(
+                    new Error("Product Details duplicated!")
+                  );
                 },
-              ]}
-              style={{
-                minWidth: 100,
-              }}
-            >
-              <Input
-                type="text"
-                disabled={true}
-                placeholder="Color"
-                style={{
-                  color: "black",
-                  borderStyle: "dashed",
-                }}
-              />
-            </Form.Item>
-          </div>
+              }),
+            ]}
+          >
+            <Select placeholder="Type" notFoundContent={null}>
+              {listProductLv2.map((product) => {
+                if (
+                  product.id === record.id &&
+                  product.index === record.index
+                ) {
+                  return product.productDetailDTO?.map((item, index, arr) => {
+                    let listItem = arr.filter((i) => i.type === item.type);
+                    if (listItem[0].id === item.id) {
+                      return (
+                        <Option
+                          value={`${item.id}_${item.type}`}
+                          key={`${item.id}_${item.type}`}
+                        >
+                          {item.type}
+                        </Option>
+                      );
+                    }
+                  });
+                }
+              })}
+            </Select>
+          </Form.Item>
         </div>
       ),
     },
@@ -872,7 +845,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             }
           : false
       }
-      title={() => <HeaderTable form={form} updateMode={updateMode} />}
+      title={() => <SearchProduct />}
     />
   );
 }

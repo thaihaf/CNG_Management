@@ -74,9 +74,10 @@ export const deleteProductExportDetail = createAsyncThunk(
 );
 export const deleteProductExportDetailWarehouse = createAsyncThunk(
   "productExport/deleteProductExportDetailWarehouse",
-  async (id, { rejectWithValue }) => {
+  async (warehouse, { rejectWithValue }) => {
+    console.log(warehouse);
     try {
-      const response = await api.deleteProductExportDetailWarehouse(id);
+      const response = await api.deleteProductExportDetailWarehouse(warehouse);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);

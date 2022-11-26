@@ -40,12 +40,6 @@ import avt_default from "assets/images/avt-default.png";
 
 import "./TableUpdate.css";
 import { unwrapResult } from "@reduxjs/toolkit";
-import NewProductDetailsModal from "../NewProductDetailsModal/NewProductDetailsModal";
-import { getMessage } from "helpers/util.helper";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import { getEmployees } from "features/employee-manager/employeeManager";
-import HeaderTable from "../HeaderTable/HeaderTable";
 import { getDetailsProduct } from "features/product-manager/productManager";
 import {
   deleteProductExportDetail,
@@ -53,13 +47,12 @@ import {
   updateListProductLv2,
   updateProductExport,
 } from "features/export-product/exportProduct";
+import SearchProduct from "../SearchProduct/SearchProduct";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
 
-export default function TableUpdate({ form, updateMode, openHeader }) {
-  const { listWarehouses } = useSelector((state) => state.warehouse);
-  const { productDetails } = useSelector((state) => state.product);
+export default function TableUpdate({ form, updateMode }) {
   const { productsExport, listProductLv2, productExportDetails } = useSelector(
     (state) => state.productExport
   );
@@ -298,12 +291,17 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
           record.productDetailDTO[0].productId;
     const index = record.index;
 
-    const warehouse = form.getFieldValue([`${id}_${index}`, "warehouse", name]);
+    const warehouseDelete = form.getFieldValue([
+      `${id}_${index}`,
+      "warehouse",
+      name,
+    ]);
+    const warehouseList = form.getFieldValue([`${id}_${index}`, "warehouse"]);
     const warehouseInDB = form
       .getFieldValue([`${id}_${index}`, "warehouse"])
       .filter((item) => item?.id);
 
-    if (warehouse.id && warehouseInDB.length > 1) {
+    if (warehouseDelete.id && warehouseInDB.length > 1) {
       Modal.confirm({
         title: "Delete Product Warehouse",
         icon: <ExclamationCircleOutlined />,
@@ -313,7 +311,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         cancelText: "Cancel",
         onOk: () => {
           setIsLoading(true);
-          dispatch(deleteProductExportDetailWarehouse(warehouse.id))
+          dispatch(deleteProductExportDetailWarehouse(warehouseDelete))
             .then((res) => {
               message.success("Delete Warehouse successfully");
               callback(name);
@@ -328,20 +326,23 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         onCancel: () => {},
       });
     } else {
-      const warehouseNotInDB = form
-        .getFieldValue([`${id}_${index}`, "warehouse"])
-        .find((item) => !item?.id);
+      let firstLoop = true;
 
-      callback(name);
+      if (warehouseDelete.id) {
+        warehouseList.map((w, index2) => {
+          if (!w?.id && firstLoop) {
+            form.setFieldValue([`${id}_${index}`, "warehouse", index2], {
+              ...w,
+              id: warehouseDelete.id,
+              exportProductDetailId: warehouseDelete.exportProductDetailId,
+            });
 
-      console.log(form.getFieldValue([`${id}_${index}`, "warehouse"]));
-      if (warehouse.id) {
-        form.setFieldValue([`${id}_${index}`, "warehouse", 1], {
-          ...warehouseNotInDB,
-          id: warehouse.id,
+            firstLoop = false;
+          }
         });
       }
 
+      callback(name);
       onHandleChangeQuantity(record);
     }
 
@@ -491,39 +492,63 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         a.productDetailDTO.productId > b.productDetailDTO.productId,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("product ID", "productDetailDTO", "productId"),
-      render: (_, record) => (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "1.5rem",
-            padding: "0 1.5rem",
-          }}
-        >
-          {/* <Avatar
-            size={70}
-            src={
-              record.listImage || !record.productDetailDTO?.fileAttachDTOList
-                ? record.listImage[0].filePath
-                : record.productDetailDTO?.fileAttachDTOList[0].filePath ??
-                  avt_default
-            }
-          /> */}
+      render: (_, record) => {
+        const id =
+          typeof record.id === "string"
+            ? record.id
+            : record.productDetailDTO?.productId ??
+              record.productDetailDTO[0].productId;
+        const index = record.index;
+
+        return (
           <div
             style={{
               display: "flex",
-              gap: "0.6rem",
-              width: "maxContent",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "1.5rem",
+              padding: "0 1.5rem",
             }}
           >
-            {typeof record.id === "string"
-              ? record.id
-              : record.productDetailDTO?.productId ??
-                record.productDetailDTO[0].productId}
+            <Avatar
+              size={70}
+              src={
+                record.listImage || !record.productDetailDTO?.fileAttachDTOList
+                  ? record.listImage[0].filePath
+                  : record.productDetailDTO?.fileAttachDTOList[0].filePath ??
+                    avt_default
+              }
+            />
+            <div
+              style={{
+                paddingRight: "2rem",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "0.5rem",
+                width: "maxContent",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "17px",
+                  fontWeight: "600",
+                }}
+              >
+                {id}
+              </div>
+              <div
+                style={{
+                  fontSize: "15px",
+                  color: "gray",
+                }}
+              >
+                {record.color}
+              </div>
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       title: "Product Details",
@@ -559,36 +584,9 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                   required: true,
                   message: "Missing shipment",
                 },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    let a = productsExport.filter((p) => {
-                      const productIdTemp =
-                        typeof p.id === "string"
-                          ? p.id
-                          : p.productDetailDTO?.productId ??
-                            p.productDetailDTO[0].productId;
-
-                      return (
-                        productIdTemp === id &&
-                        p.index !== index &&
-                        getFieldValue([
-                          `${productIdTemp}_${p.index}`,
-                          "shipment",
-                        ]) === value
-                      );
-                    });
-
-                    if (!value || a.length === 0) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(
-                      new Error("The Shipment product be duplicated!")
-                    );
-                  },
-                }),
               ]}
               style={{
-                minWidth: 200,
+                minWidth: 150,
               }}
             >
               {record.productDetailDTO?.length && isEditing(record) ? (
@@ -611,10 +609,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
 
                     form.setFieldValue([`${id}_${index}`, "warehouse"]);
                     form.setFieldValue([`${id}_${index}`, "type"]);
-                    form.setFieldValue(
-                      [`${id}_${index}`, "color"],
-                      productDetailsFilter[0]?.color
-                    );
+
                     dispatch(updateListProductLv2(ab));
                   }}
                   showSearch
@@ -660,110 +655,107 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               )}
             </Form.Item>
 
-            <div
+            <Form.Item
+              name={[`${id}_${index}`, "type"]}
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "2rem",
+                minWidth: 100,
+                width: "100%",
               }}
-            >
-              <Form.Item
-                name={[`${id}_${index}`, "type"]}
-                rules={[
-                  {
-                    required: true,
-                    message: "Missing Type",
-                  },
-                ]}
-                style={{
-                  minWidth: 100,
-                  width: "100%",
-                }}
-              >
-                <Select
-                  placeholder="Type"
-                  notFoundContent={null}
-                  onChange={(value, option) => {
-                    form.setFieldValue([
-                      `${record.id}_${record.index}`,
-                      "warehouse",
-                    ]);
+              rules={[
+                {
+                  required: true,
+                  message: "Missing Type",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    let a = productsExport.filter((p) => {
+                      const productIdTemp =
+                        typeof p.id === "string"
+                          ? p.id
+                          : p.productDetailDTO?.productId ??
+                            p.productDetailDTO[0].productId;
 
-                    listProductLv2.map((product) => {
-                      const pid =
-                        typeof product.id === "string"
-                          ? product.id
-                          : product.productDetailDTO?.productId ??
-                            product.productDetailDTO[0].productId;
-
-                      if (product.index === index && pid === id) {
-                        const a = product.productDetailDTO?.find(
-                          (item) => item.id === option.id
-                        );
-                      }
+                      return (
+                        productIdTemp === id &&
+                        p.index !== index &&
+                        getFieldValue([
+                          `${productIdTemp}_${p.index}`,
+                          "type",
+                        ]) === value
+                      );
                     });
-                  }}
-                  disabled={!isEditing(record)}
-                >
-                  {record.productDetailDTO?.length && isEditing(record) ? (
-                    listProductLv2.map((product) => {
-                      const pid =
-                        typeof product.id === "string"
-                          ? product.id
-                          : product.productDetailDTO?.productId ??
-                            product.productDetailDTO[0].productId;
 
-                      if (product.index === index && pid === id) {
-                        return product.productDetailDTO?.map(
-                          (item, index, arr) => {
-                            let listItem = arr.filter(
-                              (i) => i.type === item.type
-                            );
-                            if (listItem[0].id === item.id) {
-                              return (
-                                <Option
-                                  value={`${item.id}_${item.type}`}
-                                  key={`${item.id}_${item.type}`}
-                                  id={item.id}
-                                >
-                                  {item.type}
-                                </Option>
-                              );
-                            }
-                          }
-                        );
-                      }
-                    })
-                  ) : (
-                    <Option value={typeOfInitialValues || ""}>
-                      {typeOfInitialValues?.split("_")[1]}
-                    </Option>
-                  )}
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name={[`${id}_${index}`, "color"]}
-                rules={[
-                  {
-                    required: true,
-                    message: "Missing Color",
+                    if (!value || a.length === 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Product Details duplicated!")
+                    );
                   },
-                ]}
-                style={{
-                  minWidth: 100,
+                }),
+              ]}
+            >
+              <Select
+                placeholder="Type"
+                notFoundContent={null}
+                onChange={(value, option) => {
+                  form.setFieldValue([
+                    `${record.id}_${record.index}`,
+                    "warehouse",
+                  ]);
+
+                  listProductLv2.map((product) => {
+                    const pid =
+                      typeof product.id === "string"
+                        ? product.id
+                        : product.productDetailDTO?.productId ??
+                          product.productDetailDTO[0].productId;
+
+                    if (product.index === index && pid === id) {
+                      const a = product.productDetailDTO?.find(
+                        (item) => item.id === option.id
+                      );
+                    }
+                  });
                 }}
+                disabled={!isEditing(record)}
               >
-                <Input
-                  type="text"
-                  disabled
-                  placeholder="Color"
-                  style={{
-                    color: "black",
-                  }}
-                />
-              </Form.Item>
-            </div>
+                {record.productDetailDTO?.length && isEditing(record) ? (
+                  listProductLv2.map((product) => {
+                    const pid =
+                      typeof product.id === "string"
+                        ? product.id
+                        : product.productDetailDTO?.productId ??
+                          product.productDetailDTO[0].productId;
+
+                    if (product.index === index && pid === id) {
+                      return product.productDetailDTO?.map(
+                        (item, index, arr) => {
+                          let listItem = arr.filter(
+                            (i) => i.type === item.type
+                          );
+                          if (listItem[0].id === item.id) {
+                            return (
+                              <Option
+                                value={`${item.id}_${item.type}`}
+                                key={`${item.id}_${item.type}`}
+                                id={item.id}
+                              >
+                                {item.type}
+                              </Option>
+                            );
+                          }
+                        }
+                      );
+                    }
+                  })
+                ) : (
+                  <Option value={typeOfInitialValues || ""}>
+                    {typeOfInitialValues?.split("_")[1]}
+                  </Option>
+                )}
+              </Select>
+            </Form.Item>
           </div>
         );
       },
@@ -857,21 +849,24 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         );
       },
       sortDirections: ["descend", "ascend"],
-      render: (_, record) => (
-        <Form.Item
-          name={[
-            `${
-              record.productDetailDTO?.productId ??
-              record.productDetailDTO[0].productId
-            }_${record.index}`,
-            "quantityBox",
-          ]}
-          initialValue={0}
-          style={{ minWidth: "150px" }}
-        >
-          <Statistic />
-        </Form.Item>
-      ),
+      render: (_, record) => {
+        const id =
+          typeof record.id === "string"
+            ? record.id
+            : record.productDetailDTO?.productId ??
+              record.productDetailDTO[0].productId;
+        const index = record.index;
+
+        return (
+          <Form.Item
+            name={[`${id}_${index}`, "quantityBox"]}
+            initialValue={0}
+            style={{ minWidth: "150px" }}
+          >
+            <Statistic />
+          </Form.Item>
+        );
+      },
     },
     {
       title: "Square Meter (m2)",
@@ -895,21 +890,24 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         );
       },
       sortDirections: ["descend", "ascend"],
-      render: (_, record) => (
-        <Form.Item
-          name={[
-            `${
-              record.productDetailDTO?.productId ??
-              record.productDetailDTO[0].productId
-            }_${record.index}`,
-            "totalSquareMeter",
-          ]}
-          initialValue={0}
-          style={{ padding: "0 1.5rem" }}
-        >
-          <Statistic precision={2} />
-        </Form.Item>
-      ),
+      render: (_, record) => {
+        const id =
+          typeof record.id === "string"
+            ? record.id
+            : record.productDetailDTO?.productId ??
+              record.productDetailDTO[0].productId;
+        const index = record.index;
+
+        return (
+          <Form.Item
+            name={[`${id}_${index}`, "totalSquareMeter"]}
+            initialValue={0}
+            style={{ padding: "0 1.5rem" }}
+          >
+            <Statistic precision={2} />
+          </Form.Item>
+        );
+      },
     },
     {
       title: "Price (vnđ)",
@@ -930,21 +928,24 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         );
       },
       sortDirections: ["descend", "ascend"],
-      render: (_, record) => (
-        <Form.Item
-          name={[
-            `${
-              record.productDetailDTO?.productId ??
-              record.productDetailDTO[0].productId
-            }_${record.index}`,
-            "totalPrice",
-          ]}
-          initialValue={0}
-          style={{ padding: "0 1.5rem" }}
-        >
-          <Statistic style={{ minWidth: "150px" }} precision={2} />
-        </Form.Item>
-      ),
+      render: (_, record) => {
+        const id =
+          typeof record.id === "string"
+            ? record.id
+            : record.productDetailDTO?.productId ??
+              record.productDetailDTO[0].productId;
+        const index = record.index;
+
+        return (
+          <Form.Item
+            name={[`${id}_${index}`, "totalPrice"]}
+            initialValue={0}
+            style={{ padding: "0 1.5rem" }}
+          >
+            <Statistic style={{ minWidth: "150px" }} precision={2} />
+          </Form.Item>
+        );
+      },
     },
     {
       title: "Product Note",
@@ -952,30 +953,31 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
       key: "noteExport",
       align: "center",
       editable: false,
-      render: (_, record) => (
-        <Form.Item
-          name={[
-            `${
-              record.productDetailDTO?.productId ??
-              record.productDetailDTO[0].productId
-            }_${record.index}`,
-            "noteExport",
-          ]}
-        >
-          <Input.TextArea
-            showCount
-            maxLength={300}
-            placeholder="Product note"
-            disabled={!isEditing(record)}
-            style={{
-              height: "100%",
-              resize: "none",
-              minWidth: "200px",
-              color: "black",
-            }}
-          />
-        </Form.Item>
-      ),
+      render: (_, record) => {
+        const id =
+          typeof record.id === "string"
+            ? record.id
+            : record.productDetailDTO?.productId ??
+              record.productDetailDTO[0].productId;
+        const index = record.index;
+
+        return (
+          <Form.Item name={[`${id}_${index}`, "noteExport"]}>
+            <Input.TextArea
+              showCount
+              maxLength={300}
+              placeholder="Product note"
+              disabled={!isEditing(record)}
+              style={{
+                height: "100%",
+                resize: "none",
+                minWidth: "200px",
+                color: "black",
+              }}
+            />
+          </Form.Item>
+        );
+      },
     },
     {
       title: "Actions",
@@ -990,7 +992,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               {typeof record.id === "number" && (
                 <Menu.Item
                   onClick={() => onRowEdit(record)}
-                  disabled={isEditing(record)}
+                  disabled={isEditing(record) || productsExport.length <= 1}
                 >
                   Edit Product
                 </Menu.Item>
@@ -1053,9 +1055,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
   return (
     <Table
       size="middle"
-      className={
-        openHeader ? "listProductImport tranform" : "listProductImport"
-      }
+      className="listProductImport"
       columns={productColumns}
       dataSource={[...productsExport]}
       rowKey={(record) => {
@@ -1287,7 +1287,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
             }
           : false
       }
-      title={() => <HeaderTable form={form} updateMode={updateMode} />}
+      title={() => <SearchProduct />}
     />
   );
 }
