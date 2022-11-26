@@ -326,12 +326,17 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
           record.productDetailDTO[0].productId;
     const index = record.index;
 
-    const warehouse = form.getFieldValue([`${id}_${index}`, "warehouse", name]);
+    const warehouseDelete = form.getFieldValue([
+      `${id}_${index}`,
+      "warehouse",
+      name,
+    ]);
+    const warehouseList = form.getFieldValue([`${id}_${index}`, "warehouse"]);
     const warehouseInDB = form
       .getFieldValue([`${id}_${index}`, "warehouse"])
       .filter((item) => item?.id);
 
-    if (warehouse.id && warehouseInDB.length > 1) {
+    if (warehouseDelete.id && warehouseInDB.length > 1) {
       Modal.confirm({
         title: "Delete Product",
         icon: <ExclamationCircleOutlined />,
@@ -341,7 +346,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         cancelText: "Cancel",
         onOk: () => {
           setIsLoading(true);
-          dispatch(deleteProductImportDetailWarehouse(warehouse.id))
+          dispatch(deleteProductImportDetailWarehouse(warehouseDelete.id))
             .then((res) => {
               message.success("Delete Warehouse successfully");
               callback(name);
@@ -356,21 +361,24 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         onCancel: () => {},
       });
     } else {
-      const warehouseNotInDB = form
-        .getFieldValue([`${id}_${index}`, "warehouse"])
-        .filter((item) => !item?.id);
+      let firstLoop = true;
 
-      if (warehouse.id) {
-        form.setFieldValue([`${id}_${index}`, "warehouse", 1], {
-          ...warehouseNotInDB[0],
-          id: warehouse.id,
+      if (warehouseDelete.id) {
+        warehouseList.map((w, index2) => {
+          if (!w?.id && firstLoop) {
+            form.setFieldValue([`${id}_${index}`, "warehouse", index2], {
+              ...w,
+              id: warehouseDelete.id,
+            });
+
+            firstLoop = false;
+          }
         });
       }
+
       callback(name);
       onHandleChangeQuantity(record);
     }
-
-    // console.log(form.getFieldValue([`${id}_${index}`, "warehouse"]));
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
