@@ -34,14 +34,13 @@ import "./BrandList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
-import {
-  createDetails,
-} from "features/brand-manager/brandManager";
+import { createDetails } from "features/brand-manager/brandManager";
 import {
   getDistrict,
   getProvince,
   getProvinces,
 } from "features/provinces/provinces";
+import { getActiveSuppliers } from "features/supplier-manager/supplierManager";
 import { getSuppliers } from "features/supplier-manager/supplierManager";
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -50,6 +49,7 @@ export default function BrandList() {
     (state) => state.brand
   );
   const { listSuppliers } = useSelector((state) => state.supplier);
+  const { listActiveSuppliers } = useSelector((state) => state.supplier);
   const { provinces, districts, wards } = useSelector(
     (state) => state.provinces
   );
@@ -65,7 +65,14 @@ export default function BrandList() {
   const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const searchInput = useRef(null);
+
+  const onHandlePagination = (page, size) => {
+    setCurrentPage(page);
+    setPageSize(size);
+  };
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -126,7 +133,7 @@ export default function BrandList() {
             dispatch(getBrands())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
-              message.success("Delete success!");
+            message.success("Delete success!");
           })
           .catch((error) => {
             console.log(error);
@@ -144,7 +151,7 @@ export default function BrandList() {
 
   useEffect(() => {
     setIsLoading(true);
-
+    dispatch(getActiveSuppliers());
     dispatch(getBrands())
       .then(unwrapResult)
       .then(() => setIsLoading(false));
@@ -160,7 +167,7 @@ export default function BrandList() {
     console.log(`selected ${value}`);
   };
   const onSearch = (value) => {
-    console.log('search:', value);
+    console.log("search:", value);
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -286,14 +293,13 @@ export default function BrandList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Supplier Id",
-      dataIndex: "supplierId",
-      // dataIndex: ['supplierId', 'supplierName'],
+      title: "Supplier Name",
+      dataIndex: "supplierName",
       key: "supplierName",
-      
+
       width: "20%",
-      ...getColumnSearchProps("supplierId"),
-      sorter: (a, b) => a.supplierId - b.supplierId,
+      ...getColumnSearchProps("supplierName"),
+      sorter: (a, b) => a.supplierName - b.supplierName,
       sortDirections: ["descend", "ascend"],
     },
     {
@@ -466,7 +472,7 @@ export default function BrandList() {
                         .includes(input.toLowerCase())
                     }
                   >
-                    {listSuppliers.map((s) => (
+                    {listActiveSuppliers.map((s) => (
                       <Option value={s.id} key={s.id}>
                         {s.supplierName}
                       </Option>
@@ -482,6 +488,15 @@ export default function BrandList() {
                       required: true,
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
+                        MESSAGE_ERROR,
+                        "Brand Name"
+                      ),
+                    },
+                    {
+                      pattern:
+                        /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                      message: getMessage(
+                        CODE_ERROR.ERROR_NUMBER_LETTER,
                         MESSAGE_ERROR,
                         "Brand Name"
                       ),
@@ -545,12 +560,11 @@ export default function BrandList() {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
                 size: "default",
-                pageSize: 10,
-                // current: getPageUrl || pageHead,
+                pageSize: pageSize,
+                current: currentPage,
                 totalElements,
-                // onChange: (page, size) =>
-                // 	onHandlePagination(page, size),
-                pageSizeOptions: ["10", "15", "20", "25"],
+                onChange: (page, size) => onHandlePagination(page, size),
+                pageSizeOptions: ["2", "6", "10"],
               }
             : false
         }

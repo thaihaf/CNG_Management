@@ -7,74 +7,107 @@ import api from "../api/product.api";
 export const PRODUCT_FEATURE_KEY = PRODUCT_KEY;
 
 export const getProducts = createAsyncThunk("product/getProducts", async () => {
-     const response = await api.getProducts();
-     return response.data;
+  const response = await api.getProducts();
+  return response.data;
 });
 export const getDetailsProduct = createAsyncThunk(
-     "product/getDetailsProduct",
-     async (id, { rejectWithValue }) => {
-          try {
-               const response = await api.getDetailsProduct(id);
-               return response.data;
-          } catch (error) {
-               throw rejectWithValue(error);
-          }
-     }
+  "product/getDetailsProduct",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.getDetailsProduct(id);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
 );
 export const createProduct = createAsyncThunk(
-     "product/createProduct",
-     async ({ data }, { rejectWithValue }) => {
-          try {
-               const response = await api.createProduct(data);
-               return response;
-          } catch (error) {
-               throw rejectWithValue(error);
-          }
-     }
+  "product/createProduct",
+  async ({ data }, { rejectWithValue }) => {
+    try {
+      const response = await api.createProduct(data);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
 );
 export const updateProduct = createAsyncThunk(
-     "product/updateProduct",
-     async ({ id, data }, { rejectWithValue }) => {
-          try {
-               const response = await api.updateProduct(id, data);
-               return response;
-          } catch (error) {
-               throw rejectWithValue(error);
-          }
-     }
+  "product/updateProduct",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await api.updateProduct(id, data);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const searchProduct = createAsyncThunk(
+  "product/searchProduct",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.searchProduct(id);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const searchProductBySupplier = createAsyncThunk(
+  "product/searchProductBySupplier",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await api.searchProductBySupplier(data);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const createDetailsProduct = createAsyncThunk(
+  "product/createDetailsProduct",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await api.createDetailsProduct(data);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error.response.data.Error);
+    }
+  }
 );
 
 const initialState = {
-     listProducts: [],
-     totalElements: 0,
-     totalPages: 0,
-     size: 0,
-     errorProcess: "",
-     productDetails: null,
+  listProducts: [],
+  totalElements: 0,
+  totalPages: 0,
+  size: 0,
+  errorProcess: "",
+  productDetails: null,
 };
 
 const productSlice = createSlice({
-     name: PRODUCT_FEATURE_KEY,
-     initialState,
-     reducers: {
-          updateErrorProcess: (state, action) => {
-               state.errorProcess = action.payload;
-          },
-     },
-     extraReducers: {
-          [getProducts.fulfilled]: (state, action) => {
-               state.listProducts = action.payload.content;
-               state.totalElements = action.payload.totalElements;
-               state.totalPages = action.payload.totalPages;
-               state.size = action.payload.size;
-          },
-          [getDetailsProduct.fulfilled]: (state, action) => {
-               state.productDetails = action.payload;
-          },
-          ["LOGOUT"]: (state) => {
-               Object.assign(state, initialState);
-          },
-     },
+  name: PRODUCT_FEATURE_KEY,
+  initialState,
+  reducers: {
+    updateErrorProcess: (state, action) => {
+      state.errorProcess = action.payload;
+    },
+  },
+  extraReducers: {
+    [getProducts.fulfilled]: (state, action) => {
+      state.listProducts = action.payload.content;
+      state.totalElements = action.payload.totalElements;
+      state.totalPages = action.payload.totalPages;
+      state.size = action.payload.size;
+    },
+    [getDetailsProduct.fulfilled]: (state, action) => {
+      state.productDetails = action.payload;
+    },
+    ["LOGOUT"]: (state) => {
+      Object.assign(state, initialState);
+    },
+  },
 });
 
 export const {} = productSlice.actions;

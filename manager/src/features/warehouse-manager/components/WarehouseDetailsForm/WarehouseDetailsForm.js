@@ -121,6 +121,15 @@ function WarehouseDetailsForm() {
                     ),
                   },
                   {
+                    pattern:
+                      /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_LETTER,
+                      MESSAGE_ERROR,
+                      "Warehouse Name"
+                    ),
+                  },
+                  {
                     max: 25,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
@@ -199,6 +208,14 @@ function WarehouseDetailsForm() {
                     required: true,
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Phone Number"
+                    ),
+                  },
+                  {
+                    pattern: /^[0]{1}[0-9]{9,10}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_FORMAT_NUMBER,
                       MESSAGE_ERROR,
                       "Phone Number"
                     ),

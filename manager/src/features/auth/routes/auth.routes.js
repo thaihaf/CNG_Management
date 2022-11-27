@@ -1,4 +1,3 @@
-import { AuthLayout } from "components";
 import React from "react";
 import { AuthPaths } from "../constants/auth.paths";
 

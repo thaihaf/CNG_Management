@@ -10,7 +10,6 @@ export const getWarehouses = createAsyncThunk(
   "warehouse/getWarehouses",
   async () => {
     const response = await api.getWarehouses();
-    console.log(response);
     return response.data;
   }
 );
@@ -25,8 +24,6 @@ export const getWarehouseDetails = createAsyncThunk(
 export const updateDetails = createAsyncThunk(
   "warehouse/updateDetails",
   async ({ id, data }, { rejectWithValue }) => {
-    console.log(id);
-    console.log(data);
     try {
       const response = await api.updateDetails(id, data);
       return response;
@@ -51,12 +48,10 @@ export const deleteWarehouses = createAsyncThunk(
   async (list, { rejectWithValue }) => {
     try {
       list.forEach(async (id) => {
-        console.log(id);
         await api.deleteWarehouse(id);
       });
       return true;
     } catch (error) {
-      console.log(error);
       throw rejectWithValue(error);
     }
   }

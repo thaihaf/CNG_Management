@@ -28,7 +28,8 @@ import {
 import { getActiveCategories } from "features/category-manager/categoryManager";
 import { get } from "lodash";
 import { ActionsModal } from "features/product-manager/components";
-const { Title } = Typography;
+
+const { Title, Text } = Typography;
 
 export default function ProductList() {
   const { listProducts, totalElements, totalPages, size } = useSelector(

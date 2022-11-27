@@ -1,4 +1,3 @@
-import { api } from "api/api";
 import { ProvincesEndPoint } from "../provinces";
 
 const getProvinces = async () => {

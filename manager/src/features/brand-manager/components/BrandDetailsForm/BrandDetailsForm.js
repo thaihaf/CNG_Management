@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./BrandDetailsForm.css";
-import {
-  CaretUpOutlined,
-  HighlightOutlined,
-} from "@ant-design/icons";
+import { CaretUpOutlined, HighlightOutlined } from "@ant-design/icons";
 import {
   Form,
   Input,
@@ -15,9 +12,7 @@ import {
   Typography,
   message,
 } from "antd";
-import {
-  updateDetails,
-} from "features/brand-manager/brandManager";
+import { updateDetails } from "features/brand-manager/brandManager";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -80,7 +75,7 @@ function BrandDetailsForm() {
     console.log(`selected ${value}`);
   };
   const onSearch = (value) => {
-    console.log('search:', value);
+    console.log("search:", value);
   };
 
   return (
@@ -110,6 +105,15 @@ function BrandDetailsForm() {
                   required: true,
                   message: getMessage(
                     CODE_ERROR.ERROR_REQUIRED,
+                    MESSAGE_ERROR,
+                    "Brand Name"
+                  ),
+                },
+                {
+                  pattern:
+                    /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                  message: getMessage(
+                    CODE_ERROR.ERROR_NUMBER_LETTER,
                     MESSAGE_ERROR,
                     "Brand Name"
                   ),
@@ -152,22 +156,20 @@ function BrandDetailsForm() {
               ]}
             >
               <Select
-                    showSearch
-                    optionFilterProp="children"
-                    onChange={onChange}
-                    onSearch={onSearch}
-                    filterOption={(input, option) =>
-                      option.children
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                  >
-                    {listSuppliers.map((s) => (
-                      <Option value={s.id} key={s.id}>
-                        {s.supplierName}
-                      </Option>
-                    ))}
-                  </Select>
+                showSearch
+                optionFilterProp="children"
+                onChange={onChange}
+                onSearch={onSearch}
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {listSuppliers.map((s) => (
+                  <Option value={s.id} key={s.id}>
+                    {s.supplierName}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
           </div>
           <div className="details__group">

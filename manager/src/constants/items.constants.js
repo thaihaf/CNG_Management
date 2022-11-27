@@ -8,27 +8,37 @@ import {
      DatabaseOutlined,
      TagOutlined,
      UserOutlined,
+     UserAddOutlined,
+     InboxOutlined,
+     ImportOutlined,
+     DashboardOutlined,
 } from "@ant-design/icons/";
 
 export const siderBarItems = [
      {
+          key: "dashboard",
+          icon: <DashboardOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Dashboard`,
+          role: ["admin", "employee"],
+     },
+     {
           key: "product",
-          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          icon: <InboxOutlined style={{ fontSize: "1.6rem" }} />,
           label: `Products`,
           role: ["admin", "employee"],
      },
      {
           key: "import-product",
-          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          icon: <ImportOutlined style={{ fontSize: "1.6rem" }} />,
           label: `Import Product`,
           role: ["admin", "employee"],
      },
-    //  {
-    //       key: "export-product",
-    //       icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
-    //       label: `Export Product`,
-    //       role: ["admin", "employee"],
-    //  },
+     {
+          key: "export-product",
+          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Export Product`,
+          role: ["admin", "employee"],
+     },
      {
           key: "brand",
           icon: <TagOutlined style={{ fontSize: "1.6rem" }} />,
@@ -37,7 +47,7 @@ export const siderBarItems = [
      },
      {
           key: "accounts",
-          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          icon: <UserAddOutlined style={{ fontSize: "1.6rem" }} />,
           label: `Accounts`,
           role: ["admin"],
      },

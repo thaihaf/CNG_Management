@@ -48,6 +48,13 @@ export default function AccountList() {
      const [searchText, setSearchText] = useState("");
      const [searchedColumn, setSearchedColumn] = useState("");
      const searchInput = useRef(null);
+     const [currentPage, setCurrentPage] = useState(1);
+     const [pageSize, setPageSize] = useState(2);
+     
+     const onHandlePagination = (page, size) => {
+          setCurrentPage(page);
+          setPageSize(size);
+        };
 
      useEffect(() => {
           const query = queryString.parse(location.search);
@@ -294,7 +301,7 @@ export default function AccountList() {
                          size={"large"}
                          onClick={() => setModal1Open(true)}
                     >
-                         Create New
+                         Create Account
                     </Button>
 
                     <Modal
@@ -329,6 +336,14 @@ export default function AccountList() {
                                                        required: true,
                                                        message: getMessage(
                                                             CODE_ERROR.ERROR_REQUIRED,
+                                                            MESSAGE_ERROR,
+                                                            "Username"
+                                                       ),
+                                                  },
+                                                  {
+                                                       pattern: /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){8,25}$/,
+                                                       message: getMessage(
+                                                            CODE_ERROR.ERROR_FORMAT,
                                                             MESSAGE_ERROR,
                                                             "Username"
                                                        ),
@@ -391,6 +406,14 @@ export default function AccountList() {
                                                        required: true,
                                                        message: getMessage(
                                                             CODE_ERROR.ERROR_REQUIRED,
+                                                            MESSAGE_ERROR,
+                                                            "Password"
+                                                       ),
+                                                  },
+                                                  {
+                                                       pattern:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+                                                       message: getMessage(
+                                                            CODE_ERROR.ERROR_FORMAT_PASSWORD,
                                                             MESSAGE_ERROR,
                                                             "Password"
                                                        ),
@@ -512,15 +535,14 @@ export default function AccountList() {
                     pagination={
                          listAccounts.length !== 0
                               ? {
-                                     showSizeChanger: true,
-                                     position: ["bottomCenter"],
-                                     size: "default",
-                                     pageSize: 2,
-                                     // current: getPageUrl || pageHead,
-                                     totalElements,
-                                     // onChange: (page, size) =>
-                                     // 	onHandlePagination(page, size),
-                                     pageSizeOptions: ["2", "10", "15", "25"],
+                                   showSizeChanger: true,
+                                   position: ["bottomCenter"],
+                                   size: "default",
+                                   pageSize: pageSize,
+                                   current: currentPage,
+                                   total: totalElements,
+                                   onChange: (page, size) => onHandlePagination(page, size),
+                                   pageSizeOptions: ["2", "4", "6"],
                                 }
                               : false
                     }

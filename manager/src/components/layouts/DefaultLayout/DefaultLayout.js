@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 
 import {
-     BackTop,
+  BackTop,
   Breadcrumb,
   Button,
   Drawer,
@@ -116,9 +116,19 @@ const DefaultLayout = ({ children }) => {
 
   return (
     <Layout className="defaultLayout">
+      <div
+        className="left-bar"
+        onMouseMove={() => setOpen(true)}
+      ></div>
       <BackTop />
 
-      <Drawer placement={"left"} closable={false} onClose={onClose} open={open}>
+      <Drawer
+        placement={"left"}
+        closable={false}
+        onClose={onClose}
+        open={open}
+        className="drawer"
+      >
         <div className="sidebar_children">
           <div className="logo">
             {collapsed ? (
@@ -232,6 +242,14 @@ const DefaultLayout = ({ children }) => {
                                   ),
                                 },
                                 {
+                                    pattern:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+                                    message: getMessage(
+                                      CODE_ERROR.ERROR_FORMAT_PASSWORD,
+                                      MESSAGE_ERROR,
+                                      "Current Password"
+                                  ),
+                                },
+                                {
                                   max: 25,
                                   message: getMessage(
                                     CODE_ERROR.ERROR_MAX_LENGTH,
@@ -271,6 +289,14 @@ const DefaultLayout = ({ children }) => {
                                     CODE_ERROR.ERROR_REQUIRED,
                                     MESSAGE_ERROR,
                                     "New Password"
+                                  ),
+                                },
+                                {
+                                    pattern:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+                                    message: getMessage(
+                                      CODE_ERROR.ERROR_FORMAT_PASSWORD,
+                                      MESSAGE_ERROR,
+                                      "New Password"
                                   ),
                                 },
                                 {
@@ -328,6 +354,14 @@ const DefaultLayout = ({ children }) => {
                                     CODE_ERROR.ERROR_REQUIRED,
                                     MESSAGE_ERROR,
                                     "Confirm New Password"
+                                  ),
+                                },
+                                {
+                                    pattern:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+                                    message: getMessage(
+                                      CODE_ERROR.ERROR_FORMAT_PASSWORD,
+                                      MESSAGE_ERROR,
+                                      "Confirm New Password"
                                   ),
                                 },
                                 {
@@ -423,16 +457,16 @@ const DefaultLayout = ({ children }) => {
           }}
         >
           <div className="top2">
-            <Breadcrumb className="breadcrumb">
-              <MenuUnfoldOutlined
-                style={{
-                  fontSize: "22px",
-                  marginRight: "3rem",
-                  color: "black",
-                }}
-                onClick={showDrawer}
-              />
+            <MenuUnfoldOutlined
+              style={{
+                fontSize: "22px",
+                marginRight: "3rem",
+                color: "black",
+              }}
+              onClick={showDrawer}
+            />
 
+            <Breadcrumb className="breadcrumb">
               {location.pathname.split("/").map((item, index) => {
                 if (index === 0) {
                   return (
@@ -457,7 +491,7 @@ const DefaultLayout = ({ children }) => {
             <Tooltip placement="bottomRight" title={"Logout"}>
               <div className="logout" onClick={handleLogout}>
                 <img src={logoutIcon} alt="" />
-                <span> Logout</span>
+                <span>Logout</span>
               </div>
             </Tooltip>
           </div>
