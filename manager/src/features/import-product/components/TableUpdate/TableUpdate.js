@@ -757,6 +757,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                                 value={`${item.id}_${item.type}`}
                                 key={`${item.id}_${item.type}`}
                                 id={item.id}
+                                disabled={item.status === 0 ? true : false}
                               >
                                 {item.type}
                               </Option>
