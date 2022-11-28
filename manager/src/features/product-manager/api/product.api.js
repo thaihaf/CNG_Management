@@ -31,8 +31,16 @@ const searchProductBySupplier = (data) => {
   return api.get(url);
 };
 const createDetailsProduct = (data) => {
-  const url = ProductEndPoints.CREATE_DETAILS_PRODUCT;
+  const url = ProductEndPoints.DETAILS_PRODUCT;
   return api.post(url, data);
+};
+const updateDetailsProduct = (id, data) => {
+  const url = ProductEndPoints.DETAILS_PRODUCT_MANAGER.replace(":id", id);
+  return api.put(url, data);
+};
+const deleteDetailsProduct = (id) => {
+  const url = ProductEndPoints.DETAILS_PRODUCT_MANAGER.replace(":id", id);
+  return api.delete(url);
 };
 
 const productApi = {
@@ -42,6 +50,8 @@ const productApi = {
   getDetailsProduct,
   searchProduct,
   createDetailsProduct,
+  updateDetailsProduct,
+  deleteDetailsProduct,
   searchProductBySupplier,
 };
 export default productApi;

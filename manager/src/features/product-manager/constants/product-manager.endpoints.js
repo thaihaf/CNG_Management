@@ -6,5 +6,6 @@ export const ProductEndPoints = {
   SEARCH_PRODUCT: "/product/search-by-code/:productId",
   SEARCH_PRODUCT_BY_SUPPLIER:
     "/product/search-by-supplier/:productId/:supplierId",
-  CREATE_DETAILS_PRODUCT: "/product-detail",
+  DETAILS_PRODUCT: "/product-detail",
+  DETAILS_PRODUCT_MANAGER: "/product-detail/:id",
 };
