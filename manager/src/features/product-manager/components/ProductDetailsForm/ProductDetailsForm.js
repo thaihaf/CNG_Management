@@ -48,6 +48,15 @@ import {
 } from "features/product-manager/productManager";
 import { useHistory } from "react-router-dom";
 
+import newFileImg from "assets/icons/newFile.png";
+import deleteFileImg from "assets/icons/deleteFile.png";
+import uploadFileImg from "assets/icons/uploadFile.png";
+import uploadImageImg from "assets/icons/uploadImage.png";
+import resetFileImg from "assets/icons/resetFile.png";
+import minusButtonImg from "assets/icons/minusButton.png";
+import TableDetails from "../TableDetails/TableDetails";
+import DetailsModal from "../DetailsModal/DetailsModal";
+
 const { Title } = Typography;
 const { Step } = Steps;
 
@@ -193,9 +202,112 @@ const ProductDetailsForm = ({ updateMode }) => {
         initialValues={initialValues}
       >
         <div className="product-details">
-          <Title level={2} className="title">
-            {updateMode ? "Details Product" : "Create Product"}
-          </Title>
+          <div className="actions-group">
+            <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
+              {updateMode ? "Product Details" : "Create Product"}
+            </Title>
+
+            <Button
+              type="primary"
+              shape="round"
+              size={"large"}
+              htmlType="reset"
+              style={{
+                width: "fitContent",
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                paddingTop: "2.1rem",
+                paddingBottom: "2.1rem",
+                paddingLeft: "2.8rem",
+                paddingRight: "2.8rem",
+              }}
+            >
+              <img
+                src={resetFileImg}
+                alt=""
+                style={{ height: "2.5rem", width: "2.5rem" }}
+              />
+              Reset
+            </Button>
+
+            {updateMode && (
+              <>
+                <Button
+                  type="danger"
+                  shape="round"
+                  size={"large"}
+                  style={{
+                    width: "fitContent",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    paddingTop: "2.1rem",
+                    paddingBottom: "2.1rem",
+                    paddingLeft: "2.8rem",
+                    paddingRight: "2.8rem",
+                  }}
+                  //    onClick={() => onDeleteProductExport()}
+                >
+                  <img
+                    src={deleteFileImg}
+                    alt=""
+                    style={{ height: "2.5rem", width: "2.5rem" }}
+                  />
+                  Delete
+                </Button>
+                <Button
+                  type="primary"
+                  shape="round"
+                  size={"large"}
+                  htmlType="submit"
+                  style={{
+                    width: "fitContent",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    paddingTop: "2.1rem",
+                    paddingBottom: "2.1rem",
+                    paddingLeft: "2.8rem",
+                    paddingRight: "2.8rem",
+                  }}
+                >
+                  <img
+                    src={uploadFileImg}
+                    alt=""
+                    style={{ height: "2.5rem", width: "2.5rem" }}
+                  />
+                  Update
+                </Button>
+              </>
+            )}
+
+            {!updateMode && (
+              <Button
+                type="primary"
+                shape="round"
+                size={"large"}
+                htmlType="submit"
+                style={{
+                  width: "fitContent",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1rem",
+                  paddingTop: "2.1rem",
+                  paddingBottom: "2.1rem",
+                  paddingLeft: "2.8rem",
+                  paddingRight: "2.8rem",
+                }}
+              >
+                <img
+                  src={newFileImg}
+                  alt=""
+                  style={{ height: "2.5rem", width: "2.5rem" }}
+                />
+                Create
+              </Button>
+            )}
+          </div>
 
           <div className="details">
             <div className="list-images">
@@ -203,8 +315,12 @@ const ProductDetailsForm = ({ updateMode }) => {
                 {imageList?.map((image, index) => (
                   <div className="image-product" key={index}>
                     <Image src={image.filePath} />
-                    <MinusCircleOutlined
+                    <img
+                      src={minusButtonImg}
+                      alt=""
                       onClick={() => handleRemoveImageProduct(image.filePath)}
+                      className="minusImg"
+                      style={{ width: "3rem", height: "3rem" }}
                     />
                   </div>
                 ))}
@@ -216,10 +332,21 @@ const ProductDetailsForm = ({ updateMode }) => {
                   className="btnUploadImage"
                 >
                   {imageList?.length < 6 && (
-                    <>
-                      <UploadOutlined />
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "1rem",
+                        justifyContent: "center",
+                        alignContent: "center",
+                      }}
+                    >
+                      <img
+                        src={uploadImageImg}
+                        alt=""
+                        style={{ width: "3rem", height: "3rem" }}
+                      />
                       Add Image
-                    </>
+                    </div>
                   )}
                 </Upload>
               </Form.Item>
@@ -227,7 +354,7 @@ const ProductDetailsForm = ({ updateMode }) => {
 
             <Steps direction="vertical" className="list-data">
               <Step
-                title="1"
+                title="Product Information"
                 status="finish"
                 description={
                   <div className="group-data">
@@ -268,6 +395,22 @@ const ProductDetailsForm = ({ updateMode }) => {
                       <Input />
                     </Form.Item>
                     <Form.Item
+                      label="Color"
+                      name="color"
+                      rules={[
+                        {
+                          required: true,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_REQUIRED,
+                            MESSAGE_ERROR,
+                            "Color"
+                          ),
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
                       label="Origin"
                       name="origin"
                       rules={[
@@ -291,72 +434,6 @@ const ProductDetailsForm = ({ updateMode }) => {
                         })}
                       </Select>
                     </Form.Item>
-                    <Form.Item
-                      label="Color"
-                      name="color"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Color"
-                          ),
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                  </div>
-                }
-              />
-
-              <Step
-                title="2"
-                status="finish"
-                description={
-                  <div className="group-data">
-                    <Form.Item
-                      label="Title Surface"
-                      name="titleSurface"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Title Surface"
-                          ),
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      label="Brick Material"
-                      name="brickMaterial"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Brick Material"
-                          ),
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                  </div>
-                }
-              />
-
-              <Step
-                title="3"
-                status="finish"
-                description={
-                  <div className="group-data">
                     <Form.Item
                       label="Supplier"
                       name={["supplierDTO", "supplierName"]}
@@ -468,31 +545,22 @@ const ProductDetailsForm = ({ updateMode }) => {
                         ))}
                       </Select>
                     </Form.Item>
+                    <Form.Item
+                      valuePropName="checked"
+                      name="status"
+                      label="Active Status"
+                    >
+                      <Switch />
+                    </Form.Item>
                   </div>
                 }
               />
 
               <Step
-                title="4"
+                title="Product Characteristics"
                 status="finish"
                 description={
                   <div className="group-data">
-                    <Form.Item
-                      label="Brick Texture"
-                      name="brickTexture"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Supplier"
-                          ),
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
                     <Form.Item
                       label="Title Size"
                       name="titleSize"
@@ -515,15 +583,54 @@ const ProductDetailsForm = ({ updateMode }) => {
                         ))}
                       </Select>
                     </Form.Item>
-                  </div>
-                }
-              />
-
-              <Step
-                title="5"
-                status="finish"
-                description={
-                  <div className="group-data">
+                    <Form.Item
+                      label="Title Surface"
+                      name="titleSurface"
+                      rules={[
+                        {
+                          required: true,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_REQUIRED,
+                            MESSAGE_ERROR,
+                            "Title Surface"
+                          ),
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Brick Material"
+                      name="brickMaterial"
+                      rules={[
+                        {
+                          required: true,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_REQUIRED,
+                            MESSAGE_ERROR,
+                            "Brick Material"
+                          ),
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Brick Texture"
+                      name="brickTexture"
+                      rules={[
+                        {
+                          required: true,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_REQUIRED,
+                            MESSAGE_ERROR,
+                            "Supplier"
+                          ),
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
                     <Form.Item
                       label="Bending Strength"
                       name="bendingStrength"
@@ -599,55 +706,26 @@ const ProductDetailsForm = ({ updateMode }) => {
               />
 
               <Step
-                title="6"
-                status="finish"
-                description={
-                  <div className="group-data">
-                    <Form.Item
-                      valuePropName="checked"
-                      name="status"
-                      label="Active Status"
-                    >
-                      <Switch />
-                    </Form.Item>
+                title={
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "100%",
+                    }}
+                  >
+                    <div>Product Shipment and Type</div>
+                    <DetailsModal type={"create"} record={initialValues} />
                   </div>
                 }
+                status="finish"
+                description={<TableDetails />}
               />
+
+              <Step title="" status="finish" />
             </Steps>
           </div>
-        </div>
-
-        <div className="product-btn-groups">
-          <Form.Item className="details__item">
-            <Button
-              type="primary"
-              shape="round"
-              icon={<CaretUpOutlined />}
-              size={"large"}
-              htmlType="submit"
-              style={{
-                width: "100%",
-                height: "45px",
-              }}
-            >
-              {updateMode ? "Update" : "Create"}
-            </Button>
-          </Form.Item>
-          <Form.Item className="details__item">
-            <Button
-              type="primary"
-              shape="round"
-              icon={<HighlightOutlined />}
-              size={"large"}
-              htmlType="reset"
-              style={{
-                width: "100%",
-                height: "45px",
-              }}
-            >
-              Reset
-            </Button>
-          </Form.Item>
         </div>
       </Form>
     </Spin>

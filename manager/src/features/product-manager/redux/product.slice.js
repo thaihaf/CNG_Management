@@ -76,6 +76,29 @@ export const createDetailsProduct = createAsyncThunk(
     }
   }
 );
+export const updateDetailsProduct = createAsyncThunk(
+  "product/updateDetailsProduct",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await api.updateDetailsProduct(id, data);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error.response.data.Error);
+    }
+  }
+);
+export const deleteDetailsProduct = createAsyncThunk(
+  "product/deleteDetailsProduct",
+  async (id, { rejectWithValue }) => {
+    try {
+      console.log(id);
+      const response = await api.deleteDetailsProduct(id);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error.response.data.Error);
+    }
+  }
+);
 
 const initialState = {
   listProducts: [],
@@ -84,6 +107,7 @@ const initialState = {
   size: 0,
   errorProcess: "",
   productDetails: null,
+  detailDTOList: [],
 };
 
 const productSlice = createSlice({
@@ -92,6 +116,14 @@ const productSlice = createSlice({
   reducers: {
     updateErrorProcess: (state, action) => {
       state.errorProcess = action.payload;
+    },
+    updateDetails: (state, action) => {
+      console.log(state.detailDTOList);
+      state.detailDTOList = state.detailDTOList.filter(
+        (item) => {
+          console.log(item.id !== action.payload.id);
+        }
+      );
     },
   },
   extraReducers: {
@@ -103,6 +135,28 @@ const productSlice = createSlice({
     },
     [getDetailsProduct.fulfilled]: (state, action) => {
       state.productDetails = action.payload;
+      state.detailDTOList = action.payload.productDetailDTO;
+    },
+    [createDetailsProduct.fulfilled]: (state, action) => {
+      state.detailDTOList = [...state.detailDTOList, action.payload];
+    },
+    [updateDetailsProduct.fulfilled]: (state, action) => {
+      state.detailDTOList = state.detailDTOList.map((item) => {
+        if (item.id === action.payload.id) {
+          return action.payload;
+        } else {
+          return item;
+        }
+      });
+    },
+    [deleteDetailsProduct.fulfilled]: (state, action) => {
+      state.detailDTOList = state.detailDTOList.map((item) => {
+        if (item.id === action.payload.id) {
+          return action.payload;
+        } else {
+          return item;
+        }
+      });
     },
     ["LOGOUT"]: (state) => {
       Object.assign(state, initialState);
@@ -110,6 +164,6 @@ const productSlice = createSlice({
   },
 });
 
-export const {} = productSlice.actions;
+export const { updateDetails } = productSlice.actions;
 
 export const productReducer = productSlice.reducer;

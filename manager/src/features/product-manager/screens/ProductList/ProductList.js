@@ -5,7 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 
 import { SearchOutlined } from "@ant-design/icons";
-import { Avatar, Button, Input, Space, Table, Tag, Tooltip, Typography } from "antd";
+import {
+  Avatar,
+  Button,
+  Input,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+  Typography,
+} from "antd";
+import { EmployeeManagerPaths } from "features/employee-manager/employeeManager";
 
 import avt_default from "assets/images/avt-default.png";
 import "./ProductList.css";
@@ -176,6 +186,14 @@ export default function ProductList() {
       ...getColumnSearchProps("id"),
     },
     {
+      title: "Color",
+      dataIndex: "color",
+      key: "color",
+      sorter: (a, b) => a.color > b.color,
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("color"),
+    },
+    {
       title: "Origin",
       dataIndex: "origin",
       key: "origin",
@@ -297,22 +315,18 @@ export default function ProductList() {
   return (
     <div className="product-list">
       <div className="top">
-        <Tooltip placement="topLeft" title={"Click to show Actions Modal"}>
-          <Title level={2} style={{ cursor: "pointer" }}>
-            Product List
-          </Title>
-        </Tooltip>
-                    <Button
-                         type="primary"
-                         shape={"round"}
-                         size={"large"}
-                         onClick={() =>
-                              history.push(ProductManagerPaths.CREATE_PRODUCT)
-                         }
-                    >
-                         Create Product
-                    </Button>
-               </div>
+        <ActionsModal />
+
+        <Button
+          type="primary"
+          shape={"round"}
+          size={"large"}
+          onClick={() => history.push(ProductManagerPaths.CREATE_PRODUCT)}
+        >
+          Create New
+        </Button>
+      </div>
+
       <Table
         rowKey="id"
         columns={columns}
