@@ -46,8 +46,6 @@ export default function DetailsModal({ record, type }) {
   };
 
   const hanleSubmit = (value) => {
-    console.log(record);
-
     setIsLoadingModal(true);
 
     dispatch(

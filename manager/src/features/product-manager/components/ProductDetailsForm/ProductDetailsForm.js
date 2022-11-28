@@ -720,7 +720,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                   </div>
                 }
                 status="finish"
-                description={<TableDetails />}
+                description={<TableDetails form={form}/>}
               />
 
               <Step title="" status="finish" />
