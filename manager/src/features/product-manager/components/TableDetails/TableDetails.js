@@ -3,6 +3,7 @@ import {
   CaretUpFilled,
   DownOutlined,
   ExclamationCircleOutlined,
+  MinusCircleOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import {
@@ -34,14 +35,14 @@ import "./TableDetails.css";
 import DetailsModal from "../DetailsModal/DetailsModal";
 import {
   deleteDetailsProduct,
-  updateDetails,
+  updateProductDetails,
 } from "features/product-manager/productManager";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
 
-export default function TableDetails({ form, updateMode, openHeader }) {
+export default function TableDetails({ form }) {
   const { listWarehouses } = useSelector((state) => state.warehouse);
   const { productDetails, detailDTOList } = useSelector(
     (state) => state.product
@@ -74,9 +75,15 @@ export default function TableDetails({ form, updateMode, openHeader }) {
         dispatch(deleteDetailsProduct(record?.id))
           .then(unwrapResult)
           .then((res) => {
-            console.log(res)
-            updateDetails(record);
+            let ab = detailDTOList.map((item) => {
+              if (item.id === record.id) {
+                return { ...item, status: 0 };
+              } else {
+                return item;
+              }
+            });
 
+            dispatch(updateProductDetails(ab));
             setIsLoading(false);
             message.success(`Delete Product Details success!`);
           })
@@ -212,6 +219,15 @@ export default function TableDetails({ form, updateMode, openHeader }) {
       ),
   });
 
+  useEffect(() => {
+    detailDTOList.map((item) => {
+      form.setFieldValue(
+        [item.id, "productWarehouseDTOList"],
+        item.productWarehouseDTOList
+      );
+    });
+  }, [dispatch]);
+
   const productColumns = [
     {
       title: "Index",
@@ -302,22 +318,10 @@ export default function TableDetails({ form, updateMode, openHeader }) {
       expandable={{
         expandedRowRender: (record) => (
           <>
-            {/* <Form.List name={[`${record.id}_${record.index}`, "warehouse"]}>
+            <Form.List name={[record.id, "productWarehouseDTOList"]}>
               {(fields, { add, remove }) => {
-                let detailID = form
-                  .getFieldValue([`${record.id}_${record.index}`, "type"])
-                  ?.split("_")[0];
-
-                let productDetailDTO = record.productDetailDTO.find(
-                  (item) => item.id.toString() === detailID
-                );
-                let maxLength =
-                  productDetailDTO?.productWarehouseDTOList?.filter(
-                    (item) => item.quantityBox > 0
-                  )?.length;
-
-                return (
-                  <>
+                if (fields.length > 0) {
+                  return (
                     <div className="space-container">
                       {fields.map(({ key, name, ...restField }) => (
                         <Space
@@ -330,136 +334,27 @@ export default function TableDetails({ form, updateMode, openHeader }) {
                           <Form.Item
                             {...restField}
                             label="Warehouse"
-                            name={[name, "productWarehouseId"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing warehouse",
-                              },
-                              ({ getFieldValue }) => ({
-                                validator(_, value) {
-                                  let checkExist = getFieldValue([
-                                    `${record.id}_${record.index}`,
-                                    "warehouse",
-                                  ]).filter(
-                                    (item) => item.productWarehouseId === value
-                                  );
-
-                                  if (!value || checkExist.length === 1) {
-                                    return Promise.resolve();
-                                  }
-                                  return Promise.reject(
-                                    new Error("The Warehouse be duplicated!")
-                                  );
-                                },
-                              }),
-                            ]}
+                            name={[name, "wareHouseName"]}
                           >
-                            <Select
-                              style={{
-                                width: 200,
-                              }}
-                            >
-                              {productDetailDTO?.productWarehouseDTOList?.map(
-                                (item) => (
-                                  <Option
-                                    key={item.id}
-                                    value={item.id}
-                                    disabled={item.quantityBox <= 0}
-                                  >
-                                    {item.wareHouseName}
-                                  </Option>
-                                )
-                              )}
-                            </Select>
+                            <Input />
                           </Form.Item>
 
                           <Form.Item
                             {...restField}
                             label="Quantity"
                             name={[name, "quantityBox"]}
-                            rules={[
-                              {
-                                required: true,
-                                message: "Missing quantity",
-                              },
-                              ({ getFieldValue }) => ({
-                                validator(_, value) {
-                                  let wId = form.getFieldValue([
-                                    `${record.id}_${record.index}`,
-                                    "warehouse",
-                                    name,
-                                  ])?.productWarehouseId;
-
-                                  let warehouse =
-                                    productDetailDTO?.productWarehouseDTOList?.find(
-                                      (item) => item.id === wId
-                                    );
-
-                                  if (!wId) {
-                                    return Promise.reject(
-                                      new Error(
-                                        "Must be choose Warehouse first"
-                                      )
-                                    );
-                                  }
-
-                                  if (value > warehouse?.quantityBox) {
-                                    return Promise.reject(
-                                      new Error(
-                                        `The maximum Quantity is ${warehouse?.quantityBox}`
-                                      )
-                                    );
-                                  }
-
-                                  return Promise.resolve();
-                                },
-                              }),
-                            ]}
-                            onChange={() => onHandleChangeQuantity(record)}
-                            initialValue={1}
                           >
-                            <InputNumber
-                              min={1}
-                              max={10000}
-                              onStep={() => onHandleChangeQuantity(record)}
-                            />
+                            <Input />
                           </Form.Item>
-
-                          <MinusCircleOutlined
-                            onClick={() => {
-                              remove(name);
-                              onHandleChangeQuantity(record);
-                            }}
-                            style={{
-                              fontSize: "25px",
-                              transition: "all 0.3s ease",
-                            }}
-                          />
                         </Space>
                       ))}
                     </div>
-
-                    <Form.Item>
-                      <Button
-                        type="dashed"
-                        onClick={() => {
-                          add();
-                          onHandleChangeQuantity(record);
-                        }}
-                        block
-                        icon={<PlusOutlined />}
-                        disabled={
-                          !detailID || !maxLength || fields.length === maxLength
-                        }
-                      >
-                        Add new select Warehouse
-                      </Button>
-                    </Form.Item>
-                  </>
-                );
+                  );
+                }else{
+                  return <Text>The Details dont have any warehouse</Text>
+                }
               }}
-            </Form.List> */}
+            </Form.List>
           </>
         ),
         expandIcon: ({ expanded, onExpand, record }) => (

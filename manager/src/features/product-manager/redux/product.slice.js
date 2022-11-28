@@ -117,13 +117,8 @@ const productSlice = createSlice({
     updateErrorProcess: (state, action) => {
       state.errorProcess = action.payload;
     },
-    updateDetails: (state, action) => {
-      console.log(state.detailDTOList);
-      state.detailDTOList = state.detailDTOList.filter(
-        (item) => {
-          console.log(item.id !== action.payload.id);
-        }
-      );
+    updateProductDetails: (state, action) => {
+      state.detailDTOList = action.payload;
     },
   },
   extraReducers: {
@@ -149,21 +144,12 @@ const productSlice = createSlice({
         }
       });
     },
-    [deleteDetailsProduct.fulfilled]: (state, action) => {
-      state.detailDTOList = state.detailDTOList.map((item) => {
-        if (item.id === action.payload.id) {
-          return action.payload;
-        } else {
-          return item;
-        }
-      });
-    },
     ["LOGOUT"]: (state) => {
       Object.assign(state, initialState);
     },
   },
 });
 
-export const { updateDetails } = productSlice.actions;
+export const { updateProductDetails } = productSlice.actions;
 
 export const productReducer = productSlice.reducer;
