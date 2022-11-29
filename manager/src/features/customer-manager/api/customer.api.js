@@ -30,11 +30,40 @@ const deleteCustomer = (id) => {
   );
   return api.delete(url);
 };
+
+// debt
+const getDebtCustomers = () => {
+  const url = CustomerEndPoints.DEBT_MANAGER;
+  return api.get(url);
+};
+const getDeptCustomerDetails = (id) => {
+  const url = CustomerEndPoints.DEBT_MANAGER_DETAILS.replace(":id", id);
+  return api.get(url);
+};
+const createDeptCustomer = (data) => {
+  const url = CustomerEndPoints.DEBT_MANAGER;
+  console.log(data)
+  return api.post(url, data);
+};
+const updateDeptCustomer = (id, data) => {
+  const url = CustomerEndPoints.DEBT_MANAGER_DETAILS.replace(":id", id);
+  return api.put(url, data);
+};
+const deleteDeptCustomer = (id) => {
+  const url = CustomerEndPoints.DEBT_MANAGER_DETAILS.replace(":id", id);
+  return api.delete(url);
+};
+
 const customerApi = {
   getCustomers,
   getCustomerDetails,
   createDetails,
   updateDetails,
   deleteCustomer,
+  getDebtCustomers,
+  getDeptCustomerDetails,
+  deleteDeptCustomer,
+  updateDeptCustomer,
+  createDeptCustomer,
 };
 export default customerApi;

@@ -814,20 +814,6 @@ function SupplierDetailsForm() {
           </div>
         </div>
       </Form>
-
-      {/* <div className="details">
-        <div className="details__right">
-          <Form
-            form={formSupplier}
-            layout="horizontal"
-            name="form"
-            initialValues={initialValues}
-            onFinish={onFinishUpdate}
-            colon={false}
-          >
-          </Form>
-        </div>
-      </div> */}
     </Spin>
   );
 }
