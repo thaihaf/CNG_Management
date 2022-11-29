@@ -112,5 +112,6 @@
 .ant-steps-item-title {
   width: 100%;
 }
-=======
-/*# sourceMappingURL=SupplierDetailsForm.css.map */
+.details .details__right .details__group .details__item .ant-select-selector, .details .details__right .details__group .details__item .ant-picker.ant-picker-disabled {
+  border-radius: 2rem !important;
+}/*# sourceMappingURL=SupplierDetailsForm.css.map */
