@@ -33,7 +33,7 @@ export default function VerifyCode() {
                     history.push(AuthPaths.RESET_PASSWORD, {id : query.accountId});
                })
                .catch((error) => {
-                    message.error("Code not correct, try again");
+                    message.error("Code not correct, try again!");
                     setLoading(false);
                });
      };

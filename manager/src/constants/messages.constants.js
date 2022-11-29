@@ -4,6 +4,7 @@ export const MESSAGE_ERROR = {
   "1003": "An error occurred while processing.",
   "1004": "An error occurred while processing create.",
   "0001": "Please enter %field%.",
+  "0002": "Please select %field%.",
   "0101": "Please enter in email address format.",
   "0100": "%field% must be a string",
   "0102": "Please enter %field%.",
