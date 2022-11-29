@@ -517,7 +517,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                         {
                           required: true,
                           message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
+                            CODE_ERROR.ERROR_REQUIRED_SELECT,
                             MESSAGE_ERROR,
                             "Product Category"
                           ),
@@ -624,7 +624,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Supplier"
+                            "Brick Texture"
                           ),
                         },
                       ]}
@@ -640,7 +640,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Supplier"
+                            "Bending Strength"
                           ),
                         },
                       ]}
@@ -656,7 +656,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Supplier"
+                            "Water Absorption"
                           ),
                         },
                       ]}
@@ -672,7 +672,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Supplier"
+                            "Abrasion Resistance"
                           ),
                         },
                       ]}
