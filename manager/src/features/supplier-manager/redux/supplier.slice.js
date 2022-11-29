@@ -78,6 +78,65 @@ export const createDetails = createAsyncThunk(
   }
 );
 
+// debt
+export const getDebtSuppliers = createAsyncThunk(
+  "supplier/getDebtSuppliers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.getDebtSuppliers();
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const getDeptSupplierDetails = createAsyncThunk(
+  "supplier/getDeptSupplierDetails",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.getDeptSupplierDetails(id);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+
+export const updateDeptSupplier = createAsyncThunk(
+  "supplier/updateDeptSupplier",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await api.updateDeptSupplier(id, data);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const deleteDeptSupplier = createAsyncThunk(
+  "supplier/deleteDeptSupplier",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.deleteDeptSupplier(id);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+
+export const createDeptSupplier = createAsyncThunk(
+  "supplier/createDeptSupplier",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await api.createDeptSupplier(data);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+
 const initialState = {
   listSuppliers: [],
   listActiveSuppliers: [],
@@ -87,6 +146,8 @@ const initialState = {
   dataDetails: null,
   errorProcess: "",
   createMode: false,
+  listDebtSupplier: [],
+  debtDataDetails: null,
 };
 
 const supplierSlice = createSlice({
@@ -95,6 +156,9 @@ const supplierSlice = createSlice({
   reducers: {
     updateErrorProcess: (state, action) => {
       state.errorProcess = action.payload;
+    },
+    updateDebtSuppliers: (state, action) => {
+      state.listDebtSupplier = action.payload;
     },
   },
   extraReducers: {
@@ -118,11 +182,36 @@ const supplierSlice = createSlice({
     [createDetails.fulfilled]: (state, action) => {
       state.createMode = false;
     },
+    // debt
+    [createDeptSupplier.fulfilled]: (state, action) => {
+      state.listDebtSupplier = [...state.listDebtSupplier, action.payload.data];
+    },
+    [updateDeptSupplier.fulfilled]: (state, action) => {
+      state.listDebtSupplier = state.listDebtSupplier.map((item) => {
+        if (item.id === action.payload.data.id) {
+          return action.payload.data;
+        } else {
+          return item;
+        }
+      });
+    },
+    [getDebtSuppliers.fulfilled]: (state, action) => {
+      state.listDebtSupplier = action.payload.content;
+      state.totalElements = action.payload.totalElements;
+      state.totalPages = action.payload.totalPages;
+      state.size = action.payload.size;
+    },
+    [getDeptSupplierDetails.fulfilled]: (state, action) => {
+      state.debtDataDetails = action.payload;
+      state.errorProcess = "";
+      state.createMode = false;
+    },
     ["LOGOUT"]: (state) => {
       Object.assign(state, initialState);
     },
   },
 });
-export const { updateErrorProcess, updateDataDetails } = supplierSlice.actions;
+export const { updateErrorProcess, updateDataDetails, updateDebtSuppliers } =
+  supplierSlice.actions;
 
 export const suppliersReducer = supplierSlice.reducer;
