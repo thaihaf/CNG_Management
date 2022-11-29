@@ -423,7 +423,7 @@ export default function AccountList() {
                                                        message: getMessage(
                                                             CODE_ERROR.ERROR_MAX_LENGTH,
                                                             MESSAGE_ERROR,
-                                                            "Password",
+                                                            "Passwords",
                                                             25
                                                        ),
                                                   },
@@ -432,7 +432,7 @@ export default function AccountList() {
                                                        message: getMessage(
                                                             CODE_ERROR.ERROR_MIN_LENGTH,
                                                             MESSAGE_ERROR,
-                                                            "Password",
+                                                            "Passwords",
                                                             8
                                                        ),
                                                   },
@@ -455,7 +455,7 @@ export default function AccountList() {
                                                        message: getMessage(
                                                             CODE_ERROR.ERROR_REQUIRED,
                                                             MESSAGE_ERROR,
-                                                            "Re-password"
+                                                            "a Re-password"
                                                        ),
                                                   },
                                                   {

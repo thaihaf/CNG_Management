@@ -453,7 +453,7 @@ export default function BrandList() {
                     {
                       required: true,
                       message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
+                        CODE_ERROR.ERROR_REQUIRED_SELECT,
                         MESSAGE_ERROR,
                         "Supplier Name"
                       ),
