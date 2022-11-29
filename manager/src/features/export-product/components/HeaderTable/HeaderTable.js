@@ -63,7 +63,7 @@ export default function HeaderTable({ form, updateMode }) {
       </Form.Item>
       <Form.Item
         name="employeeId"
-        label={<Text>Employee</Text>}
+        label={<Text>Seller</Text>}
         className="details__item"
         rules={[
           {

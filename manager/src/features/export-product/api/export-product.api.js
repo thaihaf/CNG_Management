@@ -38,10 +38,12 @@ const deleteProductExportDetail = (id) => {
   );
   return api.delete(url);
 };
-const deleteProductExportDetailWarehouse = (data) => {
-  console.log(data)
-  const url = ExportProductEndPoints.DELETE_WAREHOUSE_PRODUCT_EXPORT;
-  return api.delete(url, data);
+const deleteProductExportDetailWarehouse = (id) => {
+  const url = ExportProductEndPoints.DELETE_WAREHOUSE_PRODUCT_EXPORT.replace(
+    ":id",
+    id || ""
+  );
+  return api.delete(url);
 };
 
 const exportProductApi = {

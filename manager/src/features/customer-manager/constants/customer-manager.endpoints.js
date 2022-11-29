@@ -1,7 +1,7 @@
 export const CustomerEndPoints = {
-     CUSTOMER_MANAGER: "/customer",
-     CREATE_CUSTOMER: "/customer",
-     CUSTOMER_DETAIL: "/customer/:customerId",
-     // GET_BY_ID: "supplier-detail",
-     // EDIT_SUPPLIER: "edit-supplier",
+  CUSTOMER_MANAGER: "/customer",
+  CREATE_CUSTOMER: "/customer",
+  CUSTOMER_DETAIL: "/customer/:customerId",
+  DEBT_MANAGER: "/debt-customer",
+  DEBT_MANAGER_DETAILS: "/debt-customer/:id",
 };

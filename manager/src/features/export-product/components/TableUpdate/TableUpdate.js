@@ -311,7 +311,7 @@ export default function TableUpdate({ form, updateMode }) {
         cancelText: "Cancel",
         onOk: () => {
           setIsLoading(true);
-          dispatch(deleteProductExportDetailWarehouse(warehouseDelete))
+          dispatch(deleteProductExportDetailWarehouse(warehouseDelete.id))
             .then((res) => {
               message.success("Delete Warehouse successfully");
               callback(name);
@@ -732,6 +732,7 @@ export default function TableUpdate({ form, updateMode }) {
                                 value={`${item.id}_${item.type}`}
                                 key={`${item.id}_${item.type}`}
                                 id={item.id}
+                                disabled={item.status === 0 ? true : false}
                               >
                                 {item.type}
                               </Option>
@@ -984,12 +985,15 @@ export default function TableUpdate({ form, updateMode }) {
               {typeof record.id === "number" && (
                 <Menu.Item
                   onClick={() => onRowEdit(record)}
-                  disabled={isEditing(record) || productsExport.length <= 1}
+                  disabled={isEditing(record)}
                 >
                   Edit Product
                 </Menu.Item>
               )}
-              <Menu.Item onClick={() => onRowDelete("deleteProduct", record)}>
+              <Menu.Item
+                onClick={() => onRowDelete("deleteProduct", record)}
+                disabled={productsExport.length <= 1}
+              >
                 Remove Product
               </Menu.Item>
             </Menu>

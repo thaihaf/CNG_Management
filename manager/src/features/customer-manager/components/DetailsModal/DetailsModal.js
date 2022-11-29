@@ -2,8 +2,10 @@ import { PlusCircleTwoTone } from "@ant-design/icons";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
   Button,
+  DatePicker,
   Form,
   Input,
+  InputNumber,
   message,
   Modal,
   Select,
@@ -14,6 +16,7 @@ import {
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { typeDetails } from "features/import-product/constants/import-product.constants";
+import moment from "moment";
 import {
   updateListProductLv2,
   updateProductImport,
@@ -29,39 +32,43 @@ import "./DetailsModal.css";
 
 import editImg from "assets/icons/edit.png";
 import newFileImg from "assets/icons/newFile.png";
+import { createDeptCustomer, updateDeptCustomer } from "features/customer-manager/customerManager";
+
 
 const { Text } = Typography;
+const { TextArea } = Input;
 
-export default function DetailsModal({ record, type }) {
-  const [newProductDetailsForm] = Form.useForm();
-  const { productsImport } = useSelector((state) => state.productImport);
+export default function DetailsModal({ record, updateMode }) {
+  const [debtCustomerForm] = Form.useForm();
 
   const dispatch = useDispatch();
 
   const [modal1Open, setModal1Open] = useState(false);
   const [isLoadingModal, setIsLoadingModal] = useState(false);
 
-  const handleEdit = (record) => {
-    console.log(record);
-  };
-
   const hanleSubmit = (value) => {
     setIsLoadingModal(true);
 
+    const formatedValue = {
+      ...value,
+      note: value.note ? value.note : "",
+      debtDay: value.debtDate.format("DD/MM/YYYY"),
+    };
+
     dispatch(
-      type === "create"
-        ? createDetailsProduct(value)
-        : updateDetailsProduct({ id: record.id, data: value })
+      updateMode
+        ? updateDeptCustomer({ id: record.id, data: formatedValue })
+        : createDeptCustomer(formatedValue)
     )
       .then(unwrapResult)
       .then((res) => {
         setIsLoadingModal(false);
         setModal1Open(false);
+        debtCustomerForm.resetFields();
 
-        newProductDetailsForm.resetFields();
-
-        let mess = type === "create" ? "Create New" : "Update";
-        message.success(`${mess} Product Details success!`);
+        message.success(
+          `${updateMode ? "Update" : "Create New"} Product Details success!`
+        );
       })
       .catch((error) => {
         setIsLoadingModal(false);
@@ -69,15 +76,24 @@ export default function DetailsModal({ record, type }) {
       });
   };
 
-  const initialValues =
-    type === "create"
-      ? {
-          productId: record?.id,
-        }
-      : { ...record };
+  const initialValues = updateMode
+    ? {
+        ...record,
+      }
+    : { customerId: record?.id };
+
   return (
     <>
-      {type === "create" ? (
+      {updateMode ? (
+        <img
+          src={editImg}
+          alt=""
+          style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+          onClick={() => {
+            setModal1Open(true);
+          }}
+        />
+      ) : (
         <Button
           type="primary"
           shape="round"
@@ -103,19 +119,10 @@ export default function DetailsModal({ record, type }) {
           />
           Create
         </Button>
-      ) : (
-        <img
-          src={editImg}
-          alt=""
-          style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
-          onClick={() => {
-            setModal1Open(true);
-          }}
-        />
       )}
 
       <Modal
-        title="New Product Details"
+        title={`${updateMode ? "Update" : "Create New"} Debt Customer`}
         style={{ top: 20 }}
         open={modal1Open}
         onOk={() => setModal1Open(false)}
@@ -125,19 +132,29 @@ export default function DetailsModal({ record, type }) {
       >
         <Spin spinning={isLoadingModal}>
           <Form
-            form={newProductDetailsForm}
+            form={debtCustomerForm}
             layout="horizontal"
-            name="newProductDetailsForm"
-            id="newProductDetailsForm"
+            name="debtCustomerForm"
+            id="debtCustomerForm"
             colon={false}
             onFinish={hanleSubmit}
             initialValues={initialValues}
           >
             <div className="details__group">
               <Form.Item
-                name="productId"
-                label={<Text>Product ID</Text>}
+                name="customerId"
+                label={<Text>Customer ID</Text>}
                 className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Customer ID"
+                    ),
+                  },
+                ]}
               >
                 <Input
                   type="text"
@@ -146,25 +163,10 @@ export default function DetailsModal({ record, type }) {
                 />
               </Form.Item>
             </div>
-            {type === "edit" && (
-              <div className="details__group">
-                <Form.Item
-                  name="costPerSquareMeter"
-                  label={<Text>Cost Per Square Meter</Text>}
-                  className="details__item"
-                >
-                  <Input
-                    type="text"
-                    className="login_input pass"
-                    disabled={true}
-                  />
-                </Form.Item>
-              </div>
-            )}
             <div className="details__group">
               <Form.Item
-                name="shipment"
-                label={<Text>Shipment</Text>}
+                name="paymentAmount"
+                label={<Text>Payment Amount</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -172,31 +174,19 @@ export default function DetailsModal({ record, type }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Shipment"
-                    ),
-                  },
-                  {
-                    max: 25,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_MAX_LENGTH,
-                      MESSAGE_ERROR,
-                      "Shipment",
-                      25
+                      "Payment Amount"
                     ),
                   },
                 ]}
+                initialValue={1}
               >
-                <Input
-                  type="text"
-                  className="details__item"
-                  placeholder="enter shipment"
-                />
+                <InputNumber min={1} max={10000} className="details__item" />
               </Form.Item>
             </div>
             <div className="details__group">
               <Form.Item
-                name="type"
-                label={<Text>Type</Text>}
+                name="paymentType"
+                label={<Text>Payment Type</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -204,17 +194,24 @@ export default function DetailsModal({ record, type }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Type"
+                      "Payment Type"
                     ),
                   },
                 ]}
               >
                 <Select
-                  placeholder="select type"
+                  placeholder="Select Payment Type"
                   style={{
                     width: 200,
                   }}
-                  options={typeDetails}
+                  options={[
+                    {
+                      key: "Chuyển khoản",
+                      value: "Chuyển khoản",
+                      label: "Chuyển khoản",
+                    },
+                    { key: "Tiền mặt", value: "Tiền mặt", label: "Tiền mặt" },
+                  ]}
                   showSearch
                   optionFilterProp="children"
                   filterOption={(input, option) =>
@@ -228,36 +225,46 @@ export default function DetailsModal({ record, type }) {
                 />
               </Form.Item>
             </div>
-            {type === "edit" && (
-              <div className="details__group">
-                <Form.Item
-                  name="status"
-                  label={<Text>Status</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Status"
-                      ),
-                    },
-                  ]}
-                >
-                  <Select
-                    placeholder="select status"
-                    style={{
-                      width: 200,
-                    }}
-                    options={[
-                      { key: "active", value: 1, label: "Active" },
-                      { key: "inActive", value: 0, label: "InActive" },
-                    ]}
-                  />
-                </Form.Item>
-              </div>
-            )}
+            <div className="details__group">
+              <Form.Item
+                name="debtDate"
+                label={<Text>Debt Day</Text>}
+                className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Debt Day"
+                    ),
+                  },
+                ]}
+                initialValue={
+                  updateMode ? moment(record?.debtDay, "DD/MM/YYYY") : moment()
+                }
+              >
+                <DatePicker format="DD/MM/YYYY" />
+              </Form.Item>
+            </div>
+            <div className="details__group">
+              <Form.Item
+                name="note"
+                label={<Text>Note</Text>}
+                className="details__item"
+              >
+                <TextArea
+                  showCount
+                  maxLength={300}
+                  style={{
+                    height: "100%",
+                    resize: "none",
+                    minWidth: "200px",
+                  }}
+                />
+              </Form.Item>
+            </div>
+
             <div className="btns">
               <Button
                 key="back"
@@ -265,7 +272,7 @@ export default function DetailsModal({ record, type }) {
                 htmlType="reset"
                 onClick={() => {
                   setModal1Open(false);
-                  newProductDetailsForm.resetFields();
+                  debtCustomerForm.resetFields();
                 }}
               >
                 Cancel

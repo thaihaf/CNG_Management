@@ -54,6 +54,7 @@ import uploadFileImg from "assets/icons/uploadFile.png";
 import uploadImageImg from "assets/icons/uploadImage.png";
 import resetFileImg from "assets/icons/resetFile.png";
 import minusButtonImg from "assets/icons/minusButton.png";
+
 import TableDetails from "../TableDetails/TableDetails";
 import DetailsModal from "../DetailsModal/DetailsModal";
 
@@ -720,7 +721,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                   </div>
                 }
                 status="finish"
-                description={<TableDetails />}
+                description={<TableDetails form={form}/>}
               />
 
               <Step title="" status="finish" />
