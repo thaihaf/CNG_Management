@@ -35,7 +35,7 @@ export default function ResetPassword() {
                .then(unwrapResult)
                .then((res) => {
                     console.log(res);
-                    message.success("Reset password successfull!");
+                    message.success("Reset password successful!");
                     history.push(AuthPaths.LOGIN);
                })
                .catch((error) => {

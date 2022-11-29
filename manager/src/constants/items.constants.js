@@ -12,6 +12,7 @@ import {
      InboxOutlined,
      ImportOutlined,
      DashboardOutlined,
+     ExportOutlined,
 } from "@ant-design/icons/";
 
 export const siderBarItems = [
@@ -35,7 +36,7 @@ export const siderBarItems = [
      },
      {
           key: "export-product",
-          icon: <TeamOutlined style={{ fontSize: "1.6rem" }} />,
+          icon: <ExportOutlined style={{ fontSize: "1.6rem" }} />,
           label: `Export Product`,
           role: ["admin", "employee"],
      },
