@@ -237,22 +237,22 @@ function SupplierDetailsForm() {
                   },
                   {
                     pattern:
-                      /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                      /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,}$/,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_LETTER,
                       MESSAGE_ERROR,
                       "Supplier Name"
                     ),
                   },
-                  {
-                    max: 25,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_NUMBER_MAX,
-                      MESSAGE_ERROR,
-                      "Supplier Name",
-                      25
-                    ),
-                  },
+                  // {
+                  //   max: 25,
+                  //   message: getMessage(
+                  //     CODE_ERROR.ERROR_NUMBER_MAX,
+                  //     MESSAGE_ERROR,
+                  //     "Supplier Name",
+                  //     25
+                  //   ),
+                  // },
                   {
                     min: 2,
                     message: getMessage(
@@ -419,7 +419,7 @@ function SupplierDetailsForm() {
                     ),
                   },
                   {
-                    pattern: /^[0]{1}[0-9]{9,10}$/,
+                    pattern: /^[0]{1}[0-9]{9,11}$/,
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT_NUMBER,
                       MESSAGE_ERROR,
@@ -427,12 +427,12 @@ function SupplierDetailsForm() {
                     ),
                   },
                   {
-                    max: 10,
+                    max: 11,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
                       "Phone Number",
-                      10
+                      11
                     ),
                   },
                   {
