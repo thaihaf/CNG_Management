@@ -213,7 +213,7 @@ function WarehouseDetailsForm() {
                     ),
                   },
                   {
-                    pattern: /^[0]{1}[0-9]{9,10}$/,
+                    pattern: /^[0]{1}[0-9]{9,11}$/,
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT_NUMBER,
                       MESSAGE_ERROR,
@@ -221,12 +221,12 @@ function WarehouseDetailsForm() {
                     ),
                   },
                   {
-                    max: 10,
+                    max: 11,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
                       "Phone Number",
-                      10
+                      11
                     ),
                   },
                   {
