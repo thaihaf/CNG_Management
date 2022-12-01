@@ -270,16 +270,16 @@ function SupplierDetailsForm() {
                 valuePropName="fileList"
                 className="item_choose-avt"
                 name="avt"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "Ảnh đại diện"
-                    ),
-                  },
-                ]}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: getMessage(
+                //       CODE_ERROR.ERROR_REQUIRED,
+                //       MESSAGE_ERROR,
+                //       "Avatar"
+                //     ),
+                //   },
+                // ]}
               >
                 <ImgCrop rotate>
                   <Upload
@@ -330,22 +330,22 @@ function SupplierDetailsForm() {
                         },
                         {
                           pattern:
-                            /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                            /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,}$/,
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_LETTER,
                             MESSAGE_ERROR,
                             "Tên Nhà cung cấp"
                           ),
                         },
-                        {
-                          max: 25,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_NUMBER_MAX,
-                            MESSAGE_ERROR,
-                            "Tên Nhà cung cấp",
-                            25
-                          ),
-                        },
+                        // {
+                        //   max: 25,
+                        //   message: getMessage(
+                        //     CODE_ERROR.ERROR_NUMBER_MAX,
+                        //     MESSAGE_ERROR,
+                        //     "Supplier Name",
+                        //     25
+                        //   ),
+                        // },
                         {
                           min: 2,
                           message: getMessage(
@@ -461,7 +461,7 @@ function SupplierDetailsForm() {
                           ),
                         },
                         {
-                          pattern: /^[0]{1}[0-9]{9,10}$/,
+                          pattern: /^[0]{1}[0-9]{9,11}$/,
                           message: getMessage(
                             CODE_ERROR.ERROR_FORMAT_NUMBER,
                             MESSAGE_ERROR,
@@ -469,12 +469,12 @@ function SupplierDetailsForm() {
                           ),
                         },
                         {
-                          max: 10,
+                          max: 11,
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MAX,
                             MESSAGE_ERROR,
                             "Số điện thoại",
-                            10
+                            11
                           ),
                         },
                         {

@@ -32,7 +32,10 @@ import { get } from "lodash";
 import { ActionsModal } from "features/product-manager/components";
 
 import { getStatusString } from "helpers/util.helper";
-import { statusProductExport } from "features/export-product/constants/export-product.constants";
+import {
+  statusProductExport,
+  statusProductReExport,
+} from "features/export-product/constants/export-product.constants";
 import {
   getAllProductExport,
   ProductExportManagerPaths,
@@ -285,17 +288,23 @@ export default function ListProductExport() {
       dataIndex: "status",
       key: "status",
       align: "center",
-      filters: statusProductExport.map((item) => {
-        return { key: item.key, value: item.value, text: item.label };
-      }),
+      filters: [...statusProductExport, ...statusProductReExport].map(
+        (item) => {
+          return { key: item.key, value: item.value, text: item.label };
+        }
+      ),
       onFilter: (value, record) => record.status === value,
       filterSearch: true,
-      render: (s) => {
+      render: (s, record) => {
         // let color = s == 1 ? "green" : "volcano";
-
         return (
           <Tag color="green" key={s}>
-            {getStatusString(s)}
+            {getStatusString(
+              s,
+              record.type !== "RE-EXPORT"
+                ? statusProductExport
+                : statusProductReExport
+            )}
           </Tag>
         );
       },

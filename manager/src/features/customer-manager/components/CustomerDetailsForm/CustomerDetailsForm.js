@@ -274,16 +274,16 @@ function CustomerDetailsForm() {
                 valuePropName="fileList"
                 className="item_choose-avt"
                 name="avt"
-                rules={[
-                  {
-                    required: true,
-                    message: getMessage(
-                      CODE_ERROR.ERROR_REQUIRED,
-                      MESSAGE_ERROR,
-                      "Ảnh đại diện"
-                    ),
-                  },
-                ]}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: getMessage(
+                //       CODE_ERROR.ERROR_REQUIRED,
+                //       MESSAGE_ERROR,
+                //       "Avatar"
+                //     ),
+                //   },
+                // ]}
               >
                 <ImgCrop rotate>
                   <Upload
@@ -334,22 +334,22 @@ function CustomerDetailsForm() {
                         },
                         {
                           pattern:
-                            /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                            /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,}$/,
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_LETTER,
                             MESSAGE_ERROR,
                             "Tên Cửa hàng"
                           ),
                         },
-                        {
-                          max: 25,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_NUMBER_MAX,
-                            MESSAGE_ERROR,
-                            "Tên Cửa hàng",
-                            25
-                          ),
-                        },
+                        // {
+                        //   max: 25,
+                        //   message: getMessage(
+                        //     CODE_ERROR.ERROR_NUMBER_MAX,
+                        //     MESSAGE_ERROR,
+                        //     "Shop Name",
+                        //     25
+                        //   ),
+                        // },
                         {
                           min: 2,
                           message: getMessage(
@@ -465,7 +465,7 @@ function CustomerDetailsForm() {
                           ),
                         },
                         {
-                          pattern: /^[0]{1}[0-9]{9,10}$/,
+                          pattern: /^[0]{1}[0-9]{9,11}$/,
                           message: getMessage(
                             CODE_ERROR.ERROR_FORMAT_NUMBER,
                             MESSAGE_ERROR,
@@ -473,12 +473,12 @@ function CustomerDetailsForm() {
                           ),
                         },
                         {
-                          max: 10,
+                          max: 11,
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MAX,
                             MESSAGE_ERROR,
                             "Số điện thoại",
-                            10
+                            11
                           ),
                         },
                         {

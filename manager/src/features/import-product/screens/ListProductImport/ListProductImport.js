@@ -289,7 +289,7 @@ export default function ListProductImport() {
 
         return (
           <Tag color="green" key={s}>
-            {getStatusString(s)}
+            {getStatusString(s, statusProductImport)}
           </Tag>
         );
       },
