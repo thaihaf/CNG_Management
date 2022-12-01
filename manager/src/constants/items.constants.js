@@ -65,9 +65,15 @@ export const siderBarItems = [
           role: ["admin", "employee"],
      },
      {
-          key: "customer",
+          key: "supplier-debt",
+          icon: <ContactsOutlined style={{ fontSize: "1.6rem" }} />,
+          label: `Công nợ Nhà cung cấp`,
+          role: ["admin", "employee"],
+     },
+     {
+          key: "customer-debt",
           icon: <UserOutlined style={{ fontSize: "1.6rem" }} />,
-          label: `Khách hàng`,
+          label: `Công nợ Khách hàng`,
           role: ["admin", "employee"],
      },
      {
