@@ -195,7 +195,9 @@ const ImportWrapper = ({ updateMode }) => {
         setIsLoading(false);
         notification.success({
           message: "Đơn nhập",
-          description:  `${updateMode ? "Cập nhật" : "Tạo mới"} Đơn nhập thành công!`
+          description: `${
+            updateMode ? "Cập nhật" : "Tạo mới"
+          } Đơn nhập thành công!`,
         });
         history.push(ImportProductManagerPaths.LIST_PRODUCT_IMPORT);
       })
@@ -204,7 +206,9 @@ const ImportWrapper = ({ updateMode }) => {
         console.log(err);
         notification.error({
           message: "Đơn nhập",
-          description:  `${updateMode ? "Cập nhật" : "Tạo mới"} Đơn nhập thất bại!`
+          description: `${
+            updateMode ? "Cập nhật" : "Tạo mới"
+          } Đơn nhập thất bại!`,
         });
       });
   };
@@ -215,7 +219,10 @@ const ImportWrapper = ({ updateMode }) => {
     form.setFieldValue(initialValues);
 
     if (initialValues) {
-      form.setFieldValue("statusImport", getStatusString(initialValues.status));
+      form.setFieldValue(
+        "statusImport",
+        getStatusString(initialValues.status, statusProductImport)
+      );
     }
   }, [dispatch, updateMode, initialValues]);
 

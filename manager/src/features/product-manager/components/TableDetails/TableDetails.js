@@ -36,7 +36,7 @@ import "./TableDetails.css";
 import DetailsModal from "../DetailsModal/DetailsModal";
 import {
   deleteDetailsProduct,
-  updateProductDetails,
+  updateProductDetails,         
 } from "features/product-manager/productManager";
 import { unwrapResult } from "@reduxjs/toolkit";
 
@@ -233,7 +233,7 @@ export default function TableDetails({ form }) {
         item.productWarehouseDTOList
       );
     });
-  }, [dispatch]);
+  }, [dispatch, detailDTOList, productDetails]);
 
   const productColumns = [
     {
@@ -262,6 +262,14 @@ export default function TableDetails({ form }) {
       align: "center",
       sorter: (a, b) =>
         parseFloat(a.costPerSquareMeter) < parseFloat(b.costPerSquareMeter),
+      sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Tổng số lượng hộp",
+      dataIndex: "totalQuantityBox",
+      key: "totalQuantityBox",
+      align: "center",
+      sorter: (a, b) => a.totalQuantityBox - b.totalQuantityBox,
       sortDirections: ["descend", "ascend"],
     },
     {
@@ -343,7 +351,7 @@ export default function TableDetails({ form }) {
                             label="Kho hàng"
                             name={[name, "wareHouseName"]}
                           >
-                            <Input />
+                            <Input disabled />
                           </Form.Item>
 
                           <Form.Item
@@ -351,14 +359,18 @@ export default function TableDetails({ form }) {
                             label="Số lượng"
                             name={[name, "quantityBox"]}
                           >
-                            <Input />
+                            <Input disabled />
                           </Form.Item>
                         </Space>
                       ))}
                     </div>
                   );
-                }else{
-                  return <Text>Số lô và loại sản phẩm này chưa có trong Kho hàng nào</Text>
+                } else {
+                  return (
+                    <Text>
+                      Số lô và loại sản phẩm này chưa có trong Kho hàng nào
+                    </Text>
+                  );
                 }
               }}
             </Form.List>

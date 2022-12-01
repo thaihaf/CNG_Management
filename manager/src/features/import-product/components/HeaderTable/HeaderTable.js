@@ -125,7 +125,10 @@ export default function HeaderTable({ form, updateMode }) {
             allowClear
             options={statusProductImport}
             onChange={(value) =>
-              form.setFieldValue("statusImport", getStatusString(value))
+              form.setFieldValue(
+                "statusImport",
+                getStatusString(value, statusProductImport)
+              )
             }
           ></Select>
         </Form.Item>
