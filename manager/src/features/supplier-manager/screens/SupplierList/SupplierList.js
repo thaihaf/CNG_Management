@@ -303,6 +303,13 @@ export default function SupplierList() {
 
   const columns = [
     {
+      title: "Vị trí",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (a, b, index) => <Text>{index + 1}</Text>,
+    },
+    {
       title: "Ảnh đại diện",
       dataIndex: "avatarSupplier",
       key: "avatarSupplier",

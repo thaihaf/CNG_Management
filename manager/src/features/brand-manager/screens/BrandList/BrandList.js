@@ -283,13 +283,11 @@ export default function BrandList() {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-      width: "20%",
-      ...getColumnSearchProps("id"),
-      sorter: (a, b) => a.id - b.id,
-      sortDirections: ["descend", "ascend"],
+      title: "Vị trí",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
       title: "Tên Nhãn hàng",

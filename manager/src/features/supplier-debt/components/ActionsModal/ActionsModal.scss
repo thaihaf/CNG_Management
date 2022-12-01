@@ -1,0 +1,12 @@
+.ant-modal-content{
+	.ant-modal-body{
+		padding: 0 50px !important;
+
+		.ant-spin-nested-loading{
+			box-shadow : none  !important;
+		}
+		.ant-tabs-tabpane{
+			padding : 0  !important;
+		}
+	}
+}

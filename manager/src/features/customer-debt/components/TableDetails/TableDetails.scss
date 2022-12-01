@@ -1,0 +1,28 @@
+.ant-table-container {
+    transition: all 0.3s ease;
+    background-color: $white-color;
+  }
+
+  .ant-table-title {
+    padding: 0 !important;
+  }
+  .ant-table-row {
+    // .ant-form-item{
+    //   min-width: 200px;
+    // }
+  }
+  .ant-select-selector {
+    color: $black-color !important;
+    border: 1px solid rgb(211, 211, 211) !important;
+    border-radius: 2rem !important;
+  }
+
+.ant-table-title {
+  background-color: #fafafa;
+  display: flex;
+  justify-content: flex-end;
+
+  .ant-select {
+    margin: 1rem 2rem !important;
+  }
+}
