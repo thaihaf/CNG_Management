@@ -493,7 +493,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Phone",
+                      "Số điện thoại",
                       11
                     ),
                   },

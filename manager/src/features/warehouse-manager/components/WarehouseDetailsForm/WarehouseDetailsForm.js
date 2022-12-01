@@ -232,7 +232,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Phone Number",
+                      "Số điện thoại",
                       11
                     ),
                   },
