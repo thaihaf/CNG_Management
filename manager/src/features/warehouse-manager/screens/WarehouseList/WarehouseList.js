@@ -25,6 +25,7 @@ import {
   Dropdown,
   Menu,
   Select,
+  notification,
 } from "antd";
 import {
   WarehouseManagerPaths,
@@ -123,11 +124,11 @@ export default function WarehouseList() {
 
   const onRowDelete = (record) => {
     Modal.confirm({
-      title: "Confirm",
+      title: "Xác nhận",
       icon: <ExclamationCircleOutlined />,
-      content: "Delete can't revert, scarefully",
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: "Bạn chắc chắn muốn xoá không?",
+      okText: "Xoá",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
         dispatch(
@@ -140,12 +141,20 @@ export default function WarehouseList() {
             console.log(res);
             dispatch(getProvinces())
               .then(unwrapResult)
-              .then(() => setIsLoading(false));
-            message.success("Delete success!");
+              .then(() => {
+                notification.success({
+                  message: "Xoá Kho",
+                  description: "Xoá Kho thành công",
+                });
+                setIsLoading(false);
+              });
           })
           .catch((error) => {
             console.log(error);
-            message.success("Delete failed!!!");
+            notification.error({
+              message: "Xoá Kho",
+              description: "Xoá Kho thất bại",
+            });
           });
       },
       onCancel: () => {},
@@ -273,7 +282,7 @@ export default function WarehouseList() {
 
   const columns = [
     {
-      title: "Id",
+      title: "Mã Kho",
       dataIndex: "id",
       key: "id",
       width: "20%",
@@ -282,7 +291,7 @@ export default function WarehouseList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Warehouse Name",
+      title: "Tên Kho",
       dataIndex: "warehouseName",
       key: "warehouseName",
       width: "20%",
@@ -291,7 +300,7 @@ export default function WarehouseList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Note Warehouse",
+      title: "Ghi chú",
       dataIndex: "noteWarehouse",
       key: "noteWarehouse",
       width: "20%",
@@ -300,7 +309,7 @@ export default function WarehouseList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Phone Number",
+      title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       width: "20%",
@@ -309,16 +318,16 @@ export default function WarehouseList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       filters: [
         {
-          text: "Active",
+          text: "Hoạt động",
           value: 1,
         },
         {
-          text: "In Active",
+          text: "Không hoạt động",
           value: 0,
         },
       ],
@@ -328,11 +337,11 @@ export default function WarehouseList() {
         let color = s === 1 ? "green" : "volcano";
         return s === 1 ? (
           <Tag color={color} key={s}>
-            Active
+            Hoạt động
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            In Active
+            Không hoạt động
           </Tag>
         );
       },
@@ -341,7 +350,7 @@ export default function WarehouseList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Actions",
+      title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       render: (_, record) => (
@@ -351,12 +360,12 @@ export default function WarehouseList() {
               items={[
                 {
                   key: 1,
-                  label: "View Details and Update",
+                  label: "Xem chi tiết và Cập nhật",
                   onClick: () => onRowDetails(record),
                 },
                 {
                   key: 2,
-                  label: "Delete Warehouse",
+                  label: "Xoá Kho",
                   onClick: () => onRowDelete(record),
                 },
               ]}
@@ -364,7 +373,7 @@ export default function WarehouseList() {
           }
         >
           <a>
-            More <DownOutlined />
+            Xem thêm <DownOutlined />
           </a>
         </Dropdown>
       ),
@@ -396,13 +405,18 @@ export default function WarehouseList() {
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
-        message.success("Create warehouse success!");
+        notification.success({
+          message: "Tạo Kho",
+          description: "Tạo Kho thành công",
+        });
       })
       .catch((error) => {
         console.log(error);
         console.log(args);
-        message.error("Create warehouse failed!");
-        //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
+        notification.error({
+          message: "Tạo Kho",
+          description: "Tạo Kho thất bại",
+        });
       });
   };
 
@@ -413,14 +427,14 @@ export default function WarehouseList() {
   return (
     <div className="employee-list">
       <div className="top">
-        <Title level={2}>Warehouse List</Title>
+        <Title level={2}>Danh sách Kho</Title>
         <div>
           <span
             style={{
               marginRight: 9,
             }}
           >
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
           </span>
           <Button
             className="btnDelete"
@@ -430,7 +444,7 @@ export default function WarehouseList() {
             shape="round"
             icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
           >
-            Delete
+            Xoá bỏ
           </Button>
           <Button
             type="primary"
@@ -438,7 +452,7 @@ export default function WarehouseList() {
             size={"large"}
             onClick={() => setModal1Open(true)}
           >
-            Create Warehouse
+            Tạo mới
           </Button>
           <Modal
             title="Create New Warehouse"
@@ -464,7 +478,7 @@ export default function WarehouseList() {
               <div className="details__group">
                 <Form.Item
                   name="warehouseName"
-                  label={<Text>Warehouse Name</Text>}
+                  label={<Text>Tên kho</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -472,7 +486,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Warehouse Name"
+                        "Tên kho"
                       ),
                     },
                     {
@@ -481,7 +495,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_LETTER,
                         MESSAGE_ERROR,
-                        "Warehouse Name"
+                        "Tên kho"
                       ),
                     },
                     {
@@ -489,7 +503,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Warehouse Name",
+                        "Tên kho",
                         25
                       ),
                     },
@@ -498,18 +512,18 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Warehouse Name",
+                        "Tên kho",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="WarehouseName" />
+                  <Input placeholder="Tên kho" />
                 </Form.Item>
 
                 <Form.Item
                   name="noteWarehouse"
-                  label={<Text>Note Warehouse</Text>}
+                  label={<Text>Ghi chú</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -517,7 +531,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Note Warehouse"
+                        "Ghi chú"
                       ),
                     },
                     {
@@ -525,7 +539,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Note Warehouse",
+                        "Ghi chú",
                         25
                       ),
                     },
@@ -534,19 +548,19 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Note Warehouse",
+                        "Ghi chú",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="NoteWarehouse" />
+                  <Input placeholder="Ghi chú" />
                 </Form.Item>
               </div>
               <div className="details__group">
                 <Form.Item
                   name="phoneNumber"
-                  label={<Text>Phone Number</Text>}
+                  label={<Text>Số điện thoại</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -554,7 +568,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Phone Number"
+                        "Số điện thoại"
                       ),
                     },
                     {
@@ -562,7 +576,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
-                        "Phone Number"
+                        "Số điện thoại"
                       ),
                     },
                     {
@@ -570,7 +584,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Phone Number",
+                        "Số điện thoại",
                         10
                       ),
                     },
@@ -579,19 +593,19 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Phone Number",
+                        "Số điện thoại",
                         9
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="PhoneNumber" />
+                  <Input placeholder="Số điện thoại" />
                 </Form.Item>
               </div>
               <div className="details__group">
                 <Form.Item
                   name="apartmentNumber"
-                  label={<Text>Street Name, House No</Text>}
+                  label={<Text>Tên đường, số nhà</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -599,7 +613,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Street Name, House No"
+                        "Tên đường, Số nhà"
                       ),
                     },
                   ]}
@@ -608,7 +622,7 @@ export default function WarehouseList() {
                 </Form.Item>
                 <Form.Item
                   name="city"
-                  label={<Text>City</Text>}
+                  label={<Text>Tỉnh, Thành phố</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -616,7 +630,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "City"
+                        "Tỉnh, Thành phố"
                       ),
                     },
                   ]}
@@ -654,7 +668,7 @@ export default function WarehouseList() {
               <div className="details__group">
                 <Form.Item
                   name="district"
-                  label={<Text>District</Text>}
+                  label={<Text>Quận, Huyện</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -662,7 +676,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "District"
+                        "Quận, Huyện"
                       ),
                     },
                   ]}
@@ -699,7 +713,7 @@ export default function WarehouseList() {
 
                 <Form.Item
                   name="ward"
-                  label={<Text>Ward</Text>}
+                  label={<Text>Xã, Phường</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -707,7 +721,7 @@ export default function WarehouseList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Ward"
+                        "Xã, Phường"
                       ),
                     },
                   ]}
@@ -755,7 +769,7 @@ export default function WarehouseList() {
                     form.resetFields();
                   }}
                 >
-                  Cancel
+                  Huỷ bỏ
                 </Button>
                 <Button
                   key="submit"
@@ -763,7 +777,7 @@ export default function WarehouseList() {
                   type="primary"
                   htmlType="submit"
                 >
-                  Submit
+                  Gửi đi
                 </Button>
               </div>
             </Form>

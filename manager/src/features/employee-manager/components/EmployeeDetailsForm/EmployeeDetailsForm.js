@@ -22,6 +22,7 @@ import {
   Typography,
   message,
   Spin,
+  notification,
 } from "antd";
 import {
   createDetails,
@@ -106,13 +107,19 @@ function EmployeeDetailsForm() {
             })
             .then(() => {
               setIsLoading(false);
-              message.success("Create details success!");
+              notification.success({
+                message: "Thông tin nhân viên",
+                description: "Tạo thông tin Nhân viên thành công",
+              });
             });
         })
         .catch((error) => {
           console.log(error);
           setIsLoading(false);
-          message.error("Check error in F12");
+          notification.error({
+            message: "Thông tin nhân viên",
+            description: "Tạo thông tin Nhân viên thất bại",
+          });
         });
     } else {
       const bd = birthDay === null ? initialValues.birthDay : birthDay;
@@ -145,13 +152,19 @@ function EmployeeDetailsForm() {
             })
             .then(() => {
               setIsLoading(false);
-              message.success("Update details success!");
+              notification.success({
+                message: "Thông tin nhân viên",
+                description: "Cập nhật thông tin Nhân viên thành công",
+              });
             });
         })
         .catch((error) => {
           console.log(error);
           setIsLoading(false);
-          message.error("Check error in F12");
+          notification.success({
+            message: "Thông tin nhân viên",
+            description: "Cập nhật thông tin Nhân viên thất bại",
+          });
           //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
         });
     }
@@ -197,7 +210,7 @@ function EmployeeDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_REQUIRED,
                     MESSAGE_ERROR,
-                    "Avatar"
+                    "Ảnh đại diện"
                   ),
                 },
               ]}
@@ -259,11 +272,11 @@ function EmployeeDetailsForm() {
 
               {dataDetails?.status === 1 ? (
                 <Tag color="success" className="details__status">
-                  Active
+                  Hoạt động
                 </Tag>
               ) : (
                 <Tag color="error" className="details__status">
-                  Inactive
+                  Không hoạt động
                 </Tag>
               )}
             </>
@@ -282,7 +295,7 @@ function EmployeeDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="idNumber"
-                label={<Text>ID Number</Text>}
+                label={<Text>Mã số</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -290,7 +303,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "ID Number"
+                      "Mã số"
                     ),
                   },
                   {
@@ -298,7 +311,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT_NUMBER,
                       MESSAGE_ERROR,
-                      "ID Number"
+                      "Mã số"
                     ),
                   },
                   {
@@ -306,7 +319,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "ID Number",
+                      "Mã số",
                       12
                     ),
                   },
@@ -315,7 +328,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "ID Number",
+                      "Mã số",
                       8
                     ),
                   },
@@ -325,7 +338,7 @@ function EmployeeDetailsForm() {
               </Form.Item>
               {!createMode && (
                 <Form.Item
-                  label={<Text>Active Status</Text>}
+                  label={<Text>Trạng thái Hoạt động</Text>}
                   className="details__item"
                 >
                   <Switch
@@ -340,7 +353,7 @@ function EmployeeDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="firstName"
-                label={<Text>First name</Text>}
+                label={<Text>Họ</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -348,7 +361,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "First name"
+                      "Họ"
                     ),
                   },
                   {
@@ -357,7 +370,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT,
                       MESSAGE_ERROR,
-                      "First Name"
+                      "Họ"
                     ),
                   },
                   {
@@ -365,7 +378,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "First name",
+                      "Họ",
                       10
                     ),
                   },
@@ -374,7 +387,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "First name",
+                      "Họ",
                       2
                     ),
                   },
@@ -384,7 +397,7 @@ function EmployeeDetailsForm() {
               </Form.Item>
               <Form.Item
                 name="lastName"
-                label={<Text>Last name</Text>}
+                label={<Text>Tên</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -392,7 +405,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Last name"
+                      "Tên"
                     ),
                   },
                   {
@@ -401,7 +414,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT,
                       MESSAGE_ERROR,
-                      "Last name"
+                      "Tên"
                     ),
                   },
                   {
@@ -409,7 +422,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Last name",
+                      "Tên",
                       20
                     ),
                   },
@@ -418,7 +431,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Last name",
+                      "Tên",
                       2
                     ),
                   },
@@ -456,7 +469,7 @@ function EmployeeDetailsForm() {
               </Form.Item>
               <Form.Item
                 name="phoneNumber"
-                label={<Text>Phone</Text>}
+                label={<Text>Số điện thoại</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -464,7 +477,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Phone"
+                      "Số điện thoại"
                     ),
                   },
                   {
@@ -472,7 +485,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT_NUMBER,
                       MESSAGE_ERROR,
-                      "Phone"
+                      "Số điện thoại"
                     ),
                   },
                   {
@@ -489,7 +502,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Phone",
+                      "Số điện thoại",
                       9
                     ),
                   },
@@ -502,7 +515,7 @@ function EmployeeDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="apartmentNumber"
-                label={<Text>Street Name, House No</Text>}
+                label={<Text>Tên đường, Số nhà</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -510,7 +523,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "City"
+                      "Tên đường, Số nhà"
                     ),
                   },
                 ]}
@@ -520,12 +533,12 @@ function EmployeeDetailsForm() {
 
               <Form.Item
                 name="gender"
-                label={<Text>Gender</Text>}
+                label={<Text>Giới tính</Text>}
                 className="details__item"
               >
                 <Radio.Group>
-                  <Radio value={true}>Male</Radio>
-                  <Radio value={false}>Female</Radio>
+                  <Radio value={true}>Nam</Radio>
+                  <Radio value={false}>Nữ</Radio>
                 </Radio.Group>
               </Form.Item>
             </div>
@@ -533,7 +546,7 @@ function EmployeeDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="city"
-                label={<Text>City</Text>}
+                label={<Text>Tỉnh, Thành phố</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -541,7 +554,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "City"
+                      "Tỉnh, Thành phố"
                     ),
                   },
                 ]}
@@ -577,7 +590,7 @@ function EmployeeDetailsForm() {
               </Form.Item>
 
               <Form.Item
-                label={<Text>Date of birth</Text>}
+                label={<Text>Ngày sinh</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -585,7 +598,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Date of birth"
+                      "Ngày sinh"
                     ),
                   },
                 ]}
@@ -605,7 +618,7 @@ function EmployeeDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="district"
-                label={<Text>District</Text>}
+                label={<Text>Quận, Huyện</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -613,7 +626,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "District"
+                      "Quận, Huyện"
                     ),
                   },
                 ]}
@@ -650,7 +663,7 @@ function EmployeeDetailsForm() {
 
               <Form.Item
                 name="ward"
-                label={<Text>Ward</Text>}
+                label={<Text>Xã, Phường</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -658,7 +671,7 @@ function EmployeeDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Ward"
+                      "Xã, Phường"
                     ),
                   },
                 ]}
@@ -712,7 +725,7 @@ function EmployeeDetailsForm() {
                     height: "45px",
                   }}
                 >
-                  {createMode ? "Create" : "Update"}
+                  {createMode ? "Tạo mới" : "Cập nhật"}
                 </Button>
               </Form.Item>
               <Form.Item className="details__item">
@@ -727,7 +740,7 @@ function EmployeeDetailsForm() {
                     height: "45px",
                   }}
                 >
-                  Reset
+                  Đặt lại
                 </Button>
               </Form.Item>
             </div>

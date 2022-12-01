@@ -8,23 +8,23 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 export default function WarehouseDetails() {
-     const { warehouseId } = useParams();
+  const { warehouseId } = useParams();
 
-     const dispatch = useDispatch();
-     const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
 
-     useEffect(() => {
-          dispatch(getWarehouseDetails(warehouseId))
-               .then(unwrapResult)
-               .then(() => setIsLoading(false))
-               .catch(() => {
-                    dispatch(updateError(CODE_ERROR.ERROR_PROCESS));
-               });
-     }, [dispatch, warehouseId]);
+  useEffect(() => {
+    dispatch(getWarehouseDetails(warehouseId))
+      .then(unwrapResult)
+      .then(() => setIsLoading(false))
+      .catch(() => {
+        dispatch(updateError(CODE_ERROR.ERROR_PROCESS));
+      });
+  }, [dispatch, warehouseId]);
 
-     return (
-          <Spin spinning={isLoading}>
-               <WarehouseDetailsForm isCreateMode={false} />
-          </Spin>
-     );
+  return (
+    <Spin spinning={isLoading}>
+      <WarehouseDetailsForm isCreateMode={false} />
+    </Spin>
+  );
 }

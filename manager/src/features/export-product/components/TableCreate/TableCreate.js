@@ -66,11 +66,11 @@ export default function TableCreate({ form, updateMode, openHeader }) {
   };
   const onRowDelete = (type, record) => {
     Modal.confirm({
-      title: "Confirm",
+      title: `Xác nhận xoá ${type}`,
       icon: <ExclamationCircleOutlined />,
-      content: "Delete can't revert, scarefully",
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: `Bạn có chắc chắn muốn xoá ${type} không?`,
+      okText: "Xoá bỏ",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         switch (type) {
           case "deleteProduct":
@@ -300,7 +300,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
 
   const productColumns = [
     {
-      title: "Index",
+      title: "Vị trí",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -310,7 +310,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       render: (_, record) => <Title level={4}>{record.index}</Title>,
     },
     {
-      title: "Product",
+      title: "Sản phẩm",
       dataIndex: "id",
       key: "id",
       align: "center",
@@ -360,7 +360,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       },
     },
     {
-      title: "Product Details",
+      title: "Chi tiết sản phẩm",
       dataIndex: "productDetails",
       key: "productDetails",
       align: "center",
@@ -378,7 +378,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             rules={[
               {
                 required: true,
-                message: "Missing shipment",
+                message: "Lô hàng bị thiếu",
               },
             ]}
             style={{
@@ -386,7 +386,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             }}
           >
             <Select
-              placeholder="Shipment"
+              placeholder="Số lô"
               onChange={(value) => {
                 let productDetailsFilter = record.productDetailDTO?.filter(
                   (item) => item.shipment === value
@@ -454,7 +454,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             rules={[
               {
                 required: true,
-                message: "Missing Type",
+                message: "Loại sản phẩm bị thiếu",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -476,9 +476,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                   if (!value || a.length === 0) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(
-                    new Error("Product Details duplicated!")
-                  );
+                  return Promise.reject(new Error("Loại sản phẩm bị lặp lại!"));
                 },
               }),
             ]}
@@ -487,7 +485,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             }}
           >
             <Select
-              placeholder="Type"
+              placeholder="Loại sản phẩm"
               notFoundContent={null}
               onChange={() => {
                 form.setFieldValue([
@@ -522,7 +520,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Price Per Square Meter (vnđ)",
+      title: "Giá mỗi mét vuông (vnđ)",
       dataIndex: "pricePerSquareMeter",
       key: "pricePerSquareMeter",
       align: "center",
@@ -540,7 +538,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           rules={[
             {
               required: true,
-              message: "Missing Cost Per Square Meter",
+              message: "Giá mỗi mét vuông bị thiếu",
             },
           ]}
           onChange={(value) => onHandleChangeCost(record, value)}
@@ -557,7 +555,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Quantity Box",
+      title: "Hộp số lượng",
       dataIndex: "totalQuantityBox",
       key: "totalQuantityBox",
       align: "center",
@@ -581,7 +579,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Square Meter (m2)",
+      title: "Mét vuông (m2)",
       dataIndex: "totalSquareMeter",
       key: "totalSquareMeter",
       align: "center",
@@ -605,7 +603,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Cost (vnđ)",
+      title: "Chi phí(vnđ)",
       dataIndex: "totalCost",
       key: "totalCost",
       align: "center",
@@ -624,7 +622,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Product Note",
+      title: "Ghi chú",
       dataIndex: "noteExport",
       key: "noteExport",
       align: "center",
@@ -634,13 +632,13 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             showCount
             maxLength={300}
             style={{ height: "100%", resize: "none", minWidth: "150px" }}
-            placeholder="Product note"
+            placeholder="Ghi chú"
           />
         </Form.Item>
       ),
     },
     {
-      title: "Actions",
+      title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       align: "center",
@@ -652,7 +650,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
               items={[
                 {
                   key: 2,
-                  label: "Remove Product",
+                  label: "Xoá sản phẩm",
                   onClick: () => onRowDelete("deleteProduct", record),
                 },
               ]}
@@ -660,7 +658,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           }
         >
           <a>
-            More <DownOutlined />
+            Xem thêm <DownOutlined />
           </a>
         </Dropdown>
       ),
@@ -706,12 +704,12 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                         >
                           <Form.Item
                             {...restField}
-                            label="Warehouse"
+                            label="Kho hàng"
                             name={[name, "productWarehouseId"]}
                             rules={[
                               {
                                 required: true,
-                                message: "Missing warehouse",
+                                message: "Kho hàng bị thiếu",
                               },
                               ({ getFieldValue }) => ({
                                 validator(_, value) {
@@ -726,7 +724,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                                     return Promise.resolve();
                                   }
                                   return Promise.reject(
-                                    new Error("The Warehouse be duplicated!")
+                                    new Error("Kho hàng đã được chọn")
                                   );
                                 },
                               }),
@@ -753,12 +751,12 @@ export default function TableCreate({ form, updateMode, openHeader }) {
 
                           <Form.Item
                             {...restField}
-                            label="Quantity"
+                            label="Số lượng"
                             name={[name, "quantityBox"]}
                             rules={[
                               {
                                 required: true,
-                                message: "Missing quantity",
+                                message: "Số lượng bị thiếu",
                               },
                               ({ getFieldValue }) => ({
                                 validator(_, value) {
@@ -776,7 +774,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                                   if (!wId) {
                                     return Promise.reject(
                                       new Error(
-                                        "Must be choose Warehouse first"
+                                        "Vui lòng chọn Kho hàng trước"
                                       )
                                     );
                                   }
@@ -784,7 +782,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                                   if (value > warehouse?.quantityBox) {
                                     return Promise.reject(
                                       new Error(
-                                        `The maximum Quantity is ${warehouse?.quantityBox}`
+                                        `Số lượng tối đa của kho là ${warehouse?.quantityBox}`
                                       )
                                     );
                                   }
@@ -830,7 +828,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                           !detailID || !maxLength || fields.length === maxLength
                         }
                       >
-                        Add new select Warehouse
+                        Chọn thêm Kho hàng
                       </Button>
                     </Form.Item>
                   </>
@@ -840,7 +838,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           </>
         ),
         expandIcon: ({ expanded, onExpand, record }) => (
-          <Tooltip placement="topRight" title={"Show warehouse select"}>
+          <Tooltip placement="topRight" title={"Hiển thị tất cả kho hàng"}>
             {expanded ? (
               <CaretUpFilled
                 style={{

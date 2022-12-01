@@ -6,6 +6,7 @@ import {
   Input,
   message,
   Modal,
+  notification,
   Select,
   Spin,
   Tooltip,
@@ -60,12 +61,20 @@ export default function DetailsModal({ record, type }) {
 
         newProductDetailsForm.resetFields();
 
-        let mess = type === "create" ? "Create New" : "Update";
-        message.success(`${mess} Product Details success!`);
+        notification.success({
+          message: "Lô hàng và loại sản phẩm",
+          description: `${
+            type !== "create" ? "Cập nhật" : "Tạo mới"
+          } Lô hàng và loại sản phẩm thành công!`,
+        });
       })
       .catch((error) => {
         setIsLoadingModal(false);
         message.error(error.message);
+        notification.error({
+          message: "Lô hàng và loại sản phẩm",
+          description: error.message,
+        });
       });
   };
 
@@ -101,7 +110,7 @@ export default function DetailsModal({ record, type }) {
             alt=""
             style={{ height: "2.2rem", width: "2.2rem" }}
           />
-          Create
+          Tạo mới
         </Button>
       ) : (
         <img
@@ -115,7 +124,7 @@ export default function DetailsModal({ record, type }) {
       )}
 
       <Modal
-        title="New Product Details"
+        title="Tạo mới Lô hàng và loại sản phẩm"
         style={{ top: 20 }}
         open={modal1Open}
         onOk={() => setModal1Open(false)}
@@ -136,7 +145,7 @@ export default function DetailsModal({ record, type }) {
             <div className="details__group">
               <Form.Item
                 name="productId"
-                label={<Text>Product ID</Text>}
+                label={<Text>Mã sản phẩm</Text>}
                 className="details__item"
               >
                 <Input
@@ -150,7 +159,7 @@ export default function DetailsModal({ record, type }) {
               <div className="details__group">
                 <Form.Item
                   name="costPerSquareMeter"
-                  label={<Text>Cost Per Square Meter</Text>}
+                  label={<Text>Chi phí trên mỗi mét vuông</Text>}
                   className="details__item"
                 >
                   <Input
@@ -164,7 +173,7 @@ export default function DetailsModal({ record, type }) {
             <div className="details__group">
               <Form.Item
                 name="shipment"
-                label={<Text>Shipment</Text>}
+                label={<Text>Số lô</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -172,7 +181,7 @@ export default function DetailsModal({ record, type }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Shipment"
+                      "Số lô"
                     ),
                   },
                   {
@@ -180,7 +189,7 @@ export default function DetailsModal({ record, type }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_MAX_LENGTH,
                       MESSAGE_ERROR,
-                      "Shipment",
+                      "Số lô",
                       25
                     ),
                   },
@@ -189,14 +198,14 @@ export default function DetailsModal({ record, type }) {
                 <Input
                   type="text"
                   className="details__item"
-                  placeholder="enter shipment"
+                  placeholder="Nhập số lô"
                 />
               </Form.Item>
             </div>
             <div className="details__group">
               <Form.Item
                 name="type"
-                label={<Text>Type</Text>}
+                label={<Text>Loại sản phẩm</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -204,13 +213,13 @@ export default function DetailsModal({ record, type }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Type"
+                      "Loại sản phẩm"
                     ),
                   },
                 ]}
               >
                 <Select
-                  placeholder="select type"
+                  placeholder="Chọn Loại sản phẩm"
                   style={{
                     width: 200,
                   }}
@@ -232,7 +241,7 @@ export default function DetailsModal({ record, type }) {
               <div className="details__group">
                 <Form.Item
                   name="status"
-                  label={<Text>Status</Text>}
+                  label={<Text>Trạng thái</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -240,19 +249,19 @@ export default function DetailsModal({ record, type }) {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Status"
+                        "Trạng thái"
                       ),
                     },
                   ]}
                 >
                   <Select
-                    placeholder="select status"
+                    placeholder="select Trạng thái"
                     style={{
                       width: 200,
                     }}
                     options={[
-                      { key: "active", value: 1, label: "Active" },
-                      { key: "inActive", value: 0, label: "InActive" },
+                      { key: "active", value: 1, label: "Hoạt động" },
+                      { key: "inActive", value: 0, label: "Không hoạt động" },
                     ]}
                   />
                 </Form.Item>
@@ -268,7 +277,7 @@ export default function DetailsModal({ record, type }) {
                   newProductDetailsForm.resetFields();
                 }}
               >
-                Cancel
+                Huỷ bỏ
               </Button>
               <Button
                 key="submit"
@@ -276,7 +285,7 @@ export default function DetailsModal({ record, type }) {
                 type="primary"
                 htmlType="submit"
               >
-                Submit
+                Gửi đi
               </Button>
             </div>
           </Form>

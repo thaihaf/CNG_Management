@@ -24,6 +24,7 @@ import {
   Dropdown,
   Menu,
   Select,
+  notification,
 } from "antd";
 import {
   CategoryManagerPaths,
@@ -115,11 +116,11 @@ export default function CategoryList() {
 
   const onRowDelete = (record) => {
     Modal.confirm({
-      title: "Confirm",
+      title: "Xác nhận",
       icon: <ExclamationCircleOutlined />,
-      content: "Delete can't revert, scarefully",
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: "Bạn chắc chắn muốn xoá không?",
+      okText: "Xoá",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
         dispatch(
@@ -130,12 +131,20 @@ export default function CategoryList() {
             console.log(res);
             dispatch(getCategories())
               .then(unwrapResult)
-              .then(() => setIsLoading(false));
-            message.success("Delete success!");
+              .then(() => {
+                notification.success({
+                  message: "Chức năng",
+                  description: "Xoá Chức năng thành công",
+                });
+                setIsLoading(false);
+              });
           })
           .catch((error) => {
             console.log(error);
-            message.success("Delete failed!!!");
+            notification.error({
+              message: "Chức năng",
+              description: "Xoá Chức năng thất bại",
+            });
           });
       },
       onCancel: () => {},
@@ -263,7 +272,7 @@ export default function CategoryList() {
 
   const columns = [
     {
-      title: "Category Id",
+      title: "Mã Chức năng",
       dataIndex: "id",
       key: "id",
       width: "20%",
@@ -272,7 +281,7 @@ export default function CategoryList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Category Name",
+      title: "Tên Chức năng",
       dataIndex: "categoryName",
       key: "categoryName",
       width: "20%",
@@ -281,7 +290,7 @@ export default function CategoryList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Description",
+      title: "Miêu tả",
       dataIndex: "description",
       key: "description",
       width: "20%",
@@ -290,16 +299,16 @@ export default function CategoryList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       filters: [
         {
-          text: "Active",
+          text: "Hoạt động",
           value: 1,
         },
         {
-          text: "In Active",
+          text: "Không hoạt động",
           value: 0,
         },
       ],
@@ -309,11 +318,11 @@ export default function CategoryList() {
         let color = s === 1 ? "green" : "volcano";
         return s === 1 ? (
           <Tag color={color} key={s}>
-            Active
+            Hoạt động
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            In Active
+            Không hoạt động
           </Tag>
         );
       },
@@ -322,7 +331,7 @@ export default function CategoryList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Actions",
+      title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       render: (_, record) => (
@@ -332,12 +341,12 @@ export default function CategoryList() {
               items={[
                 {
                   key: 1,
-                  label: "View Details and Update",
+                  label: "Xem chi tiết và Cập nhật",
                   onClick: () => onRowDetails(record),
                 },
                 {
                   key: 2,
-                  label: "Delete Category",
+                  label: "Xoá Chức năng",
                   onClick: () => onRowDelete(record),
                 },
               ]}
@@ -345,7 +354,7 @@ export default function CategoryList() {
           }
         >
           <a>
-            More <DownOutlined />
+            Xem thêm <DownOutlined />
           </a>
         </Dropdown>
       ),
@@ -366,12 +375,18 @@ export default function CategoryList() {
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
-        message.success("Create category success!");
+        notification.success({
+          message: "Tạo Chức năng",
+          description: "Tạo chức năng thành công",
+        });
       })
       .catch((error) => {
         console.log(error);
         console.log(args);
-        message.error("Create category failed!");
+        notification.error({
+          message: "Tạo Chức năng",
+          description: "Tạo chức năng thất bại",
+        });
       });
   };
 
@@ -382,14 +397,14 @@ export default function CategoryList() {
   return (
     <div className="employee-list">
       <div className="top">
-        <Title level={2}>Categories List</Title>
+        <Title level={2}>Danh sách Chức năng</Title>
         <div>
           <span
             style={{
               marginRight: 9,
             }}
           >
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
           </span>
           <Button
             className="btnDelete"
@@ -399,7 +414,7 @@ export default function CategoryList() {
             shape="round"
             icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
           >
-            Delete
+            Xoá
           </Button>
           <Button
             type="primary"
@@ -407,10 +422,10 @@ export default function CategoryList() {
             size={"large"}
             onClick={() => setModal1Open(true)}
           >
-            Create Category
+            Tạo Chức năng
           </Button>
           <Modal
-            title="Create New Category"
+            title="Tạo Chức năg"
             style={{ top: 20 }}
             open={modal1Open}
             onOk={() => setModal1Open(false)}
@@ -433,7 +448,7 @@ export default function CategoryList() {
               <div className="details__group">
                 <Form.Item
                   name="categoryName"
-                  label={<Text>Category Name</Text>}
+                  label={<Text>Tên Chức năng</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -441,7 +456,7 @@ export default function CategoryList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Category Name"
+                        "Tên Chức năng"
                       ),
                     },
                     {
@@ -450,7 +465,7 @@ export default function CategoryList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_LETTER,
                         MESSAGE_ERROR,
-                        "Category Name"
+                        "Tên Chức năng"
                       ),
                     },
                     {
@@ -458,7 +473,7 @@ export default function CategoryList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Category Name",
+                        "Tên Chức năng",
                         25
                       ),
                     },
@@ -467,18 +482,18 @@ export default function CategoryList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Category Name",
+                        "Tên Chức năng",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="Category Name" />
+                  <Input placeholder="Tên Chức năng" />
                 </Form.Item>
 
                 <Form.Item
                   name="description"
-                  label={<Text>Description</Text>}
+                  label={<Text>Mô tả</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -486,12 +501,12 @@ export default function CategoryList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Description"
+                        "Mô tả"
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="Description" />
+                  <Input placeholder="Mô tả" />
                 </Form.Item>
               </div>
               <div className="btns">
@@ -504,7 +519,7 @@ export default function CategoryList() {
                     form.resetFields();
                   }}
                 >
-                  Cancel
+                  Huỷ bỏ
                 </Button>
                 <Button
                   key="submit"
@@ -512,7 +527,7 @@ export default function CategoryList() {
                   type="primary"
                   htmlType="submit"
                 >
-                  Submit
+                  Gửi
                 </Button>
               </div>
             </Form>
@@ -529,7 +544,7 @@ export default function CategoryList() {
             ? {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
-                size: "default",
+                size: "mặc định",
                 pageSize: pageSize,
                 current: currentPage,
                 totalElements,

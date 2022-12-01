@@ -18,6 +18,7 @@ import {
   Input,
   Menu,
   Modal,
+  notification,
   Space,
   Table,
   Tag,
@@ -99,11 +100,11 @@ export default function EmployeeList() {
 
   const onRowDelete = (record) => {
     Modal.confirm({
-      title: "Confirm",
+      title: "Xác nhận",
       icon: <ExclamationCircleOutlined />,
-      content: "Delete can't revert, scarefully",
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: "Bạn chắc chắn muốn xoá không?",
+      okText: "Xoá",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
         dispatch(
@@ -114,10 +115,20 @@ export default function EmployeeList() {
             console.log(res);
             dispatch(getEmployees())
               .then(unwrapResult)
-              .then(() => setIsLoading(false));
+              .then(() => {
+                notification.success({
+                  message: "Chức năng",
+                  description: "Xoá Chức năng thành công",
+                });
+                setIsLoading(false);
+              });
           })
           .catch((error) => {
             console.log(error);
+            notification.error({
+              message: "Chức năng",
+              description: "Xoá Chức năng thất bại",
+            });
           });
       },
       onCancel: () => {},
@@ -235,7 +246,7 @@ export default function EmployeeList() {
 
   const columns = [
     {
-      title: "Avatar",
+      title: "Ảnh đại diện",
       dataIndex: "avatar",
       key: "avatar",
       align: "center",
@@ -251,7 +262,7 @@ export default function EmployeeList() {
       ),
     },
     {
-      title: "Firstname",
+      title: "Họ",
       dataIndex: "firstName",
       key: "firstName",
       sorter: (a, b) => a.firstName.length - b.firstName.length,
@@ -259,7 +270,7 @@ export default function EmployeeList() {
       ...getColumnSearchProps("firstName"),
     },
     {
-      title: "Lastname",
+      title: "Tên",
       dataIndex: "lastName",
       key: "lastName",
       sorter: (a, b) => a.lastName.length - b.lastName.length,
@@ -267,28 +278,28 @@ export default function EmployeeList() {
       ...getColumnSearchProps("lastName"),
     },
     {
-      title: "Gender",
+      title: "Giới tính",
       dataIndex: "gender",
       key: "gender",
       align: "center",
       filters: [
         {
-          text: "Male",
+          text: "Nam",
           value: true,
         },
         {
-          text: "Female",
+          text: "Nữ",
           value: false,
         },
       ],
       onFilter: (value, record) => record.gender == value,
       filterSearch: true,
-      render: (s) => (s ? "Male" : "Female"),
+      render: (s) => (s ? "Nam" : "Nữ"),
       sorter: (a, b) => a.gender.length - b.gender.length,
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Phone",
+      title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       ...getColumnSearchProps("phoneNumber"),
@@ -302,17 +313,17 @@ export default function EmployeeList() {
       ...getColumnSearchProps("email"),
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       align: "center",
       filters: [
         {
-          text: "Active",
+          text: "Hoạt động",
           value: 1,
         },
         {
-          text: "In Active",
+          text: "Không hoạt động",
           value: 0,
         },
       ],
@@ -322,11 +333,11 @@ export default function EmployeeList() {
         let color = s == 1 ? "green" : "volcano";
         return s == 1 ? (
           <Tag color={color} key={s}>
-            Active
+            Hoạt động
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            In Active
+            Không hoạt động
           </Tag>
         );
       },
@@ -334,7 +345,7 @@ export default function EmployeeList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Actions",
+      title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       render: (_, record) => (
@@ -344,12 +355,12 @@ export default function EmployeeList() {
               items={[
                 {
                   key: 1,
-                  label: "View Details and Update",
+                  label: "Xem Chi tiết và Cập nhật",
                   onClick: () => onRowDetails(record),
                 },
                 {
                   key: 2,
-                  label: "Delete Employee",
+                  label: "Xoá Nhân viên",
                   onClick: () => onRowDelete(record),
                 },
               ]}
@@ -357,7 +368,7 @@ export default function EmployeeList() {
           }
         >
           <a>
-            More <DownOutlined />
+            Xem thêm <DownOutlined />
           </a>
         </Dropdown>
       ),
@@ -375,14 +386,14 @@ export default function EmployeeList() {
   return (
     <div className="employee-list">
       <div className="top">
-        <Title level={2}>Employee List</Title>
+        <Title level={2}>Danh sách Nhân viên</Title>
         <div>
           <span
             style={{
               marginRight: 9,
             }}
           >
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
           </span>
           <Button
             onClick={() => onRowDelete()}
@@ -391,7 +402,7 @@ export default function EmployeeList() {
             shape="round"
             icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
           >
-            Delete
+            Xoá bỏ
           </Button>
         </div>
       </div>
@@ -406,7 +417,7 @@ export default function EmployeeList() {
             ? {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
-                size: "default",
+                size: "mặc định",
                 pageSize: pageSize,
                 current: currentPage,
                 total: totalElements,

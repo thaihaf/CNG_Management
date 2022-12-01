@@ -182,14 +182,14 @@ export default function ListProductExport() {
 
   const columns = [
     {
-      title: "Index",
+      title: "Vị trí",
       dataIndex: "index",
       key: "index",
       align: "center",
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Type",
+      title: "Loại đơn",
       dataIndex: "type",
       key: "type",
       align: "center",
@@ -201,7 +201,7 @@ export default function ListProductExport() {
       ),
     },
     {
-      title: "Create Date",
+      title: "Ngày xuất",
       dataIndex: "createAt",
       key: "createAt",
       align: "center",
@@ -213,14 +213,14 @@ export default function ListProductExport() {
       },
     },
     {
-      title: "License Plates",
+      title: "Biển số xe",
       dataIndex: "licensePlates",
       key: "licensePlates",
       align: "center",
       ...getColumnSearchProps("licensePlates"),
     },
     {
-      title: "Total Quantity",
+      title: "Tổng số lượng nhập",
       dataIndex: "totalQuantityExport",
       key: "totalQuantityExport",
       align: "center",
@@ -231,7 +231,7 @@ export default function ListProductExport() {
       },
     },
     {
-      title: "Total Square Meter",
+      title: "Tổng số mét vuông nhập",
       dataIndex: "totalSquareMeterExport",
       key: "totalSquareMeterExport",
       align: "center",
@@ -244,7 +244,7 @@ export default function ListProductExport() {
       },
     },
     {
-      title: "Total Order Price",
+      title: "Tổng giá nhập",
       dataIndex: "totalExportOrderPrice",
       key: "totalExportOrderPrice",
       align: "center",
@@ -257,7 +257,7 @@ export default function ListProductExport() {
       },
     },
     {
-      title: "Customer",
+      title: "Khách hàng",
       dataIndex: "customerId",
       key: "customerId",
       align: "center",
@@ -269,7 +269,7 @@ export default function ListProductExport() {
       ),
     },
     {
-      title: "Employee",
+      title: "Người bán",
       dataIndex: "employeeId",
       key: "employeeId",
       align: "center",
@@ -281,7 +281,7 @@ export default function ListProductExport() {
       ),
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       align: "center",
@@ -330,7 +330,7 @@ export default function ListProductExport() {
     <div className="product-list">
       <div className="top">
         <Title level={2} style={{ cursor: "pointer" }}>
-          Product Export List
+          Danh sách Đơn xuất
         </Title>
 
         <Button
@@ -341,7 +341,7 @@ export default function ListProductExport() {
             history.push(ProductExportManagerPaths.CREATE_PRODUCT_EXPORT)
           }
         >
-          Create New
+          Tạo mới
         </Button>
       </div>
 

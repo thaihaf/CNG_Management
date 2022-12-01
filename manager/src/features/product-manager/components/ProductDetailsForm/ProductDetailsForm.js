@@ -16,6 +16,7 @@ import {
   Input,
   InputNumber,
   message,
+  notification,
   Select,
   Space,
   Spin,
@@ -103,7 +104,10 @@ const ProductDetailsForm = ({ updateMode }) => {
   };
   const onFinish = (values) => {
     if (imageList.length === 0) {
-      message.error("Please choose image product");
+      notification.success({
+        message: "Chi tiết sản phầm",
+        description: "Vui lòng chọn ít nhất một ảnh",
+      });
     } else {
       setIsLoading(true);
 
@@ -136,12 +140,18 @@ const ProductDetailsForm = ({ updateMode }) => {
           .then(unwrapResult)
           .then((res) => {
             setIsLoading(false);
-            message.success("Update details success!");
+            notification.success({
+              message: "Chi tiết sản phầm",
+              description: "Cập nhật thông tin sản phẩm thành công!",
+            });
           })
           .catch((error) => {
             console.log(error);
             setIsLoading(false);
-            message.error("Check error in F12");
+            notification.error({
+              message: "Chi tiết sản phầm",
+              description: "Cập nhật thông tin sản phẩm thất bại!",
+            });
           });
       } else {
         let data = {
@@ -165,12 +175,18 @@ const ProductDetailsForm = ({ updateMode }) => {
           .then((res) => {
             setIsLoading(false);
             history.push(ProductManagerPaths.PRODUCT_MANAGER);
-            message.success("Create details success!");
+            notification.success({
+              message: "Tạo sản phầm",
+              description: "Tạo sản phẩm thành công!",
+            });
           })
           .catch((error) => {
             console.log(error);
             setIsLoading(false);
-            message.error("Check error in F12");
+            notification.error({
+              message: "Tạo sản phầm",
+              description: "Tạo sản phẩm thất bại!",
+            });
           });
       }
     }
@@ -205,7 +221,7 @@ const ProductDetailsForm = ({ updateMode }) => {
         <div className="product-details">
           <div className="actions-group">
             <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-              {updateMode ? "Product Details" : "Create Product"}
+              {updateMode ? "Chi tiết sản phẩm" : "Tạo sản phẩm"}
             </Title>
 
             <Button
@@ -229,7 +245,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                 alt=""
                 style={{ height: "2.5rem", width: "2.5rem" }}
               />
-              Reset
+              Đặt lại
             </Button>
 
             {updateMode && (
@@ -255,7 +271,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                     alt=""
                     style={{ height: "2.5rem", width: "2.5rem" }}
                   />
-                  Delete
+                  Xoá bỏ
                 </Button>
                 <Button
                   type="primary"
@@ -278,7 +294,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                     alt=""
                     style={{ height: "2.5rem", width: "2.5rem" }}
                   />
-                  Update
+                  Cập nhật
                 </Button>
               </>
             )}
@@ -305,7 +321,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                   alt=""
                   style={{ height: "2.5rem", width: "2.5rem" }}
                 />
-                Create
+                Tạo mới
               </Button>
             )}
           </div>
@@ -346,7 +362,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                         alt=""
                         style={{ width: "3rem", height: "3rem" }}
                       />
-                      Add Image
+                      Thêm ảnh
                     </div>
                   )}
                 </Upload>
@@ -355,12 +371,12 @@ const ProductDetailsForm = ({ updateMode }) => {
 
             <Steps direction="vertical" className="list-data">
               <Step
-                title="Product Information"
+                title="Thông tin sản phẩm"
                 status="finish"
                 description={
                   <div className="group-data">
                     <Form.Item
-                      label="Code"
+                      label="Mã sản phẩm"
                       name="id"
                       rules={[
                         {
@@ -368,7 +384,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Product Code"
+                            "Mã sản phẩm"
                           ),
                         },
                       ]}
@@ -380,7 +396,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       />
                     </Form.Item>
                     <Form.Item
-                      label="Name"
+                      label="Tên sản phẩm"
                       name="productName"
                       rules={[
                         {
@@ -388,7 +404,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Product Name"
+                            "Tên sản phẩm"
                           ),
                         },
                       ]}
@@ -396,7 +412,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       <Input />
                     </Form.Item>
                     <Form.Item
-                      label="Color"
+                      label="Màu"
                       name="color"
                       rules={[
                         {
@@ -404,7 +420,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Color"
+                            "Màu"
                           ),
                         },
                       ]}
@@ -412,7 +428,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       <Input />
                     </Form.Item>
                     <Form.Item
-                      label="Origin"
+                      label="Nơi sản xuất"
                       name="origin"
                       rules={[
                         {
@@ -420,7 +436,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Product Origin"
+                            "Nơi sản xuất"
                           ),
                         },
                       ]}
@@ -436,7 +452,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       </Select>
                     </Form.Item>
                     <Form.Item
-                      label="Supplier"
+                      label="Nhà cung cấp"
                       name={["supplierDTO", "supplierName"]}
                       rules={[
                         {
@@ -444,7 +460,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Supplier"
+                            "Nhà cung cấp"
                           ),
                         },
                       ]}
@@ -479,7 +495,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       </Select>
                     </Form.Item>
                     <Form.Item
-                      label="Brand"
+                      label="Nhãn hàng"
                       name={["brandDTO", "brandName"]}
                       rules={[
                         {
@@ -487,7 +503,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Brand"
+                            "Nhãn hàng"
                           ),
                         },
                       ]}
@@ -513,14 +529,14 @@ const ProductDetailsForm = ({ updateMode }) => {
                       </Select>
                     </Form.Item>
                     <Form.Item
-                      label="Categories"
+                      label="Chức năng"
                       rules={[
                         {
                           required: true,
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED_SELECT,
                             MESSAGE_ERROR,
-                            "Product Category"
+                            "Chức năng"
                           ),
                         },
                       ]}
@@ -549,7 +565,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                     <Form.Item
                       valuePropName="checked"
                       name="status"
-                      label="Active Status"
+                      label="Trạng thái hoạt động"
                     >
                       <Switch />
                     </Form.Item>
@@ -558,12 +574,12 @@ const ProductDetailsForm = ({ updateMode }) => {
               />
 
               <Step
-                title="Product Characteristics"
+                title="Thống kê sản phẩm"
                 status="finish"
                 description={
                   <div className="group-data">
                     <Form.Item
-                      label="Title Size"
+                      label="Kích thước"
                       name="titleSize"
                       rules={[
                         {
@@ -571,7 +587,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Title Size"
+                            "Kích thước"
                           ),
                         },
                       ]}
@@ -585,7 +601,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       </Select>
                     </Form.Item>
                     <Form.Item
-                      label="Title Surface"
+                      label="Bề mặt"
                       name="titleSurface"
                       rules={[
                         {
@@ -593,7 +609,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Title Surface"
+                            "Bề mặt"
                           ),
                         },
                       ]}
@@ -601,7 +617,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       <Input />
                     </Form.Item>
                     <Form.Item
-                      label="Brick Material"
+                      label="Chất liệu gạch"
                       name="brickMaterial"
                       rules={[
                         {
@@ -609,7 +625,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Brick Material"
+                            "Chất liệu gạch"
                           ),
                         },
                       ]}
@@ -617,7 +633,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       <Input />
                     </Form.Item>
                     <Form.Item
-                      label="Brick Texture"
+                      label="Kết cấu gạch"
                       name="brickTexture"
                       rules={[
                         {
@@ -625,7 +641,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Brick Texture"
+                            "Kết cấu gạch"
                           ),
                         },
                       ]}
@@ -633,7 +649,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       <Input />
                     </Form.Item>
                     <Form.Item
-                      label="Bending Strength"
+                      label="Lực bẻ cong"
                       name="bendingStrength"
                       rules={[
                         {
@@ -641,7 +657,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Bending Strength"
+                            "Lực bẻ cong"
                           ),
                         },
                       ]}
@@ -649,7 +665,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       <InputNumber />
                     </Form.Item>
                     <Form.Item
-                      label="Water Absorption"
+                      label="Hấp thụ nước"
                       name="waterAbsorption"
                       rules={[
                         {
@@ -657,7 +673,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Water Absorption"
+                            "Hấp thụ nước"
                           ),
                         },
                       ]}
@@ -665,7 +681,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       <InputNumber />
                     </Form.Item>
                     <Form.Item
-                      label="Abrasion Resistance"
+                      label="Chịu mài mòn"
                       name="abrasionResistance"
                       rules={[
                         {
@@ -673,7 +689,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Abrasion Resistance"
+                            "Chịu mài mòn"
                           ),
                         },
                       ]}
@@ -687,7 +703,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       </Select>
                     </Form.Item>
                     <Form.Item
-                      label="Quantity Brick"
+                      label="Số lượng gạch"
                       name="quantityBrick"
                       rules={[
                         {
@@ -695,7 +711,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Quantity Brick"
+                            "Số lượng gạch"
                           ),
                         },
                       ]}
@@ -706,23 +722,25 @@ const ProductDetailsForm = ({ updateMode }) => {
                 }
               />
 
-              <Step
-                title={
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      width: "100%",
-                    }}
-                  >
-                    <div>Product Shipment and Type</div>
-                    <DetailsModal type={"create"} record={initialValues} />
-                  </div>
-                }
-                status="finish"
-                description={<TableDetails form={form}/>}
-              />
+              {updateMode && (
+                <Step
+                  title={
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <div>Lô hàng và loại sản phẩm</div>
+                      <DetailsModal type={"create"} record={initialValues} />
+                    </div>
+                  }
+                  status="finish"
+                  description={<TableDetails form={form} />}
+                />
+              )}
 
               <Step title="" status="finish" />
             </Steps>

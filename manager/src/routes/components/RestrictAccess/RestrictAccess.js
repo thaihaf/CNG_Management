@@ -19,10 +19,10 @@ const RestrictAccess = () => {
           <Result
                status="403"
                title="403"
-               subTitle="Sorry, you are not authorized to access this page."
+               subTitle="Xin lỗi, bạn không đủ quyền để truy cập vào trang này"
                extra={
                     <Link to="/">
-                         <Button type="primary">Back Home</Button>
+                         <Button type="primary">Trở về Trang chủ</Button>
                     </Link>
                }
           />

@@ -27,6 +27,7 @@ import {
   Menu,
   Upload,
   Select,
+  notification,
 } from "antd";
 import {
   CustomerManagerPaths,
@@ -111,7 +112,7 @@ export default function CustomerList() {
       Table.SELECTION_NONE,
       {
         key: "odd",
-        text: "Select Odd Row",
+        text: "Chọn hàng lẻ",
         onSelect: (changableRowKeys) => {
           let newSelectedRowKeys = [];
           newSelectedRowKeys = changableRowKeys.filter((_, index) => {
@@ -125,7 +126,7 @@ export default function CustomerList() {
       },
       {
         key: "even",
-        text: "Select Even Row",
+        text: "Chọn hàng chẵn",
         onSelect: (changableRowKeys) => {
           let newSelectedRowKeys = [];
           newSelectedRowKeys = changableRowKeys.filter((_, index) => {
@@ -142,11 +143,11 @@ export default function CustomerList() {
 
   const onRowDelete = (record) => {
     Modal.confirm({
-      title: "Confirm",
+      title: "Xác nhận",
       icon: <ExclamationCircleOutlined />,
-      content: "Delete can't revert, scarefully",
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: "Bạn chắc chắn muốn xoá không?",
+      okText: "Xoá",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
         dispatch(
@@ -158,11 +159,17 @@ export default function CustomerList() {
             dispatch(getProvinces())
               .then(unwrapResult)
               .then(() => setIsLoading(false));
-            message.success("Delete success!");
+            notification.success({
+              message: "Khách hàng",
+              description: "Xoá Khách hàng thành công",
+            });
           })
           .catch((error) => {
             console.log(error);
-            message.success("Delete failed!!!");
+            notification.success({
+              message: "Khách hàng",
+              description: "Xoá Khách hàng thất bại",
+            });
           });
       },
       onCancel: () => {},
@@ -290,7 +297,7 @@ export default function CustomerList() {
 
   const columns = [
     {
-      title: "Avatar",
+      title: "Ảnh đại diện",
       dataIndex: "avatar",
       key: "avatar",
       align: "center",
@@ -300,7 +307,7 @@ export default function CustomerList() {
       ),
     },
     {
-      title: "Shop Name",
+      title: "Tên cửa hàng",
       dataIndex: "shopName",
       key: "shopName",
       width: "20%",
@@ -309,7 +316,7 @@ export default function CustomerList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "First Name",
+      title: "Họ tên",
       dataIndex: "firstName",
       key: "firstName",
       width: "20%",
@@ -318,7 +325,7 @@ export default function CustomerList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Last Name",
+      title: "Tên đệm",
       dataIndex: "lastName",
       key: "lastName",
       width: "20%",
@@ -327,23 +334,23 @@ export default function CustomerList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Phone Number",
+      title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       width: "20%",
       ...getColumnSearchProps("phoneNumber"),
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       filters: [
         {
-          text: "Active",
+          text: "Hoạt động",
           value: 1,
         },
         {
-          text: "In Active",
+          text: "Không hoạt động",
           value: 0,
         },
       ],
@@ -353,11 +360,11 @@ export default function CustomerList() {
         let color = s === 1 ? "green" : "volcano";
         return s === 1 ? (
           <Tag color={color} key={s}>
-            Active
+            Hoạt động
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            In Active
+            Không hoạt động
           </Tag>
         );
       },
@@ -366,7 +373,7 @@ export default function CustomerList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Actions",
+      title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       render: (_, record) => (
@@ -376,12 +383,12 @@ export default function CustomerList() {
               items={[
                 {
                   key: 1,
-                  label: "View Details and Update",
+                  label: "Xem chi tiết và Chỉnh sửa",
                   onClick: () => onRowDetails(record),
                 },
                 {
                   key: 2,
-                  label: "Delete Customer",
+                  label: "Xoá Khách hàng",
                   onClick: () => onRowDelete(record),
                 },
               ]}
@@ -389,7 +396,7 @@ export default function CustomerList() {
           }
         >
           <a>
-            More <DownOutlined />
+            Nhiều hơn <DownOutlined />
           </a>
         </Dropdown>
       ),
@@ -425,12 +432,18 @@ export default function CustomerList() {
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
-        message.success("Create customer success!");
+        notification.success({
+          message: "Khách hàng",
+          description: "Tạo khách hàng thành công",
+        });
       })
       .catch((error) => {
         console.log(error);
         console.log(args);
-        message.error("Create customer failed!");
+        notification.success({
+          message: "Khách hàng",
+          description: "Tạo khách hàng thất bại",
+        });
         //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
       });
   };
@@ -450,14 +463,14 @@ export default function CustomerList() {
   return (
     <div className="employee-list">
       <div className="top">
-        <Title level={2}>Customers List</Title>
+        <Title level={2}>Danh sách Khách hàng</Title>
         <div>
           <span
             style={{
               marginRight: 9,
             }}
           >
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
           </span>
           <Button
             className="btnDelete"
@@ -467,7 +480,7 @@ export default function CustomerList() {
             shape="round"
             icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
           >
-            Delete
+            Xoá bỏ
           </Button>
           <Button
             type="primary"
@@ -475,10 +488,10 @@ export default function CustomerList() {
             size={"large"}
             onClick={() => setModal1Open(true)}
           >
-            Create Customer
+            Tạo mới
           </Button>
           <Modal
-            title="Create New Customer"
+            title="Tạo mới Khách hàng"
             style={{ top: 20 }}
             open={modal1Open}
             onOk={() => setModal1Open(false)}
@@ -498,7 +511,6 @@ export default function CustomerList() {
               colon={false}
               onFinish={onSubmitCreate}
             >
-              {<Text>Avatar</Text>}
               <div className="details__group">
                 <div className="details__avatar">
                   <div className="details__avatar-img">
@@ -544,7 +556,7 @@ export default function CustomerList() {
               <div className="details__group">
                 <Form.Item
                   name="firstName"
-                  label={<Text>First Name</Text>}
+                  label={<Text>Tên</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -552,7 +564,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "First Name"
+                        "Tên"
                       ),
                     },
                     {
@@ -561,7 +573,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
-                        "First Name"
+                        "Tên"
                       ),
                     },
                     {
@@ -569,7 +581,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "First Name",
+                        "Tên",
                         10
                       ),
                     },
@@ -578,18 +590,18 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "First Name",
+                        "Tên",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="FirstName" />
+                  <Input placeholder="Tên" />
                 </Form.Item>
 
                 <Form.Item
                   name="lastName"
-                  label={<Text>Last Name</Text>}
+                  label={<Text>Tên đệm</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -597,7 +609,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Last Name"
+                        "Tên đệm"
                       ),
                     },
                     {
@@ -606,7 +618,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
-                        "Last Name"
+                        "Tên đệm"
                       ),
                     },
                     {
@@ -614,7 +626,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Last Name",
+                        "Tên đệm",
                         20
                       ),
                     },
@@ -623,7 +635,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Last Name",
+                        "Tên đệm",
                         2
                       ),
                     },
@@ -635,7 +647,7 @@ export default function CustomerList() {
               <div className="details__group">
                 <Form.Item
                   name="phoneNumber"
-                  label={<Text>Phone Number</Text>}
+                  label={<Text>Số điện thoại</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -643,7 +655,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Phone Number"
+                        "Số điện thoại"
                       ),
                     },
                     {
@@ -651,7 +663,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
-                        "Phone Number"
+                        "Số điện thoại"
                       ),
                     },
                     {
@@ -659,7 +671,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Phone Number",
+                        "Số điện thoại",
                         10
                       ),
                     },
@@ -668,18 +680,18 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Phone Number",
+                        "Số điện thoại",
                         9
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="PhoneNumber" />
+                  <Input placeholder="Số điện thoại" />
                 </Form.Item>
 
                 <Form.Item
                   name="shopName"
-                  label={<Text>Shop Name</Text>}
+                  label={<Text>Tên cửa hàng</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -687,7 +699,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Shop Name"
+                        "Tên cửa hàng"
                       ),
                     },
                     {
@@ -696,7 +708,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_LETTER,
                         MESSAGE_ERROR,
-                        "Shop Name"
+                        "Tên cửa hàng"
                       ),
                     },
                     {
@@ -704,7 +716,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Shop Name",
+                        "Tên cửa hàng",
                         25
                       ),
                     },
@@ -713,19 +725,19 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Shop Name",
+                        "Tên cửa hàng",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="ShopName" />
+                  <Input placeholder="Tên cửa hàng" />
                 </Form.Item>
               </div>
               <div className="details__group">
                 <Form.Item
                   name="taxCode"
-                  label={<Text>Tax Code</Text>}
+                  label={<Text>Mã số thuế</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -733,7 +745,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Tax Code"
+                        "Mã số thuế"
                       ),
                     },
                     {
@@ -741,7 +753,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER,
                         MESSAGE_ERROR,
-                        "Tax Code"
+                        "Mã số thuế"
                       ),
                     },
                     {
@@ -749,7 +761,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Tax Code",
+                        "Mã số thuế",
                         13
                       ),
                     },
@@ -758,19 +770,19 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Tax Code",
+                        "Mã số thuế",
                         10
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="TaxCode" />
+                  <Input placeholder="Mã số thuế" />
                 </Form.Item>
               </div>
               <div className="details__group">
                 <Form.Item
                   name="apartmentNumber"
-                  label={<Text>Street Name, House No</Text>}
+                  label={<Text>Tên đường, Số nhà</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -778,16 +790,16 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Street Name, House No"
+                        "Tên đường, Số nhà"
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="Street Name, House No" />
+                  <Input placeholder="Tên đường, Số nhà" />
                 </Form.Item>
                 <Form.Item
                   name="city"
-                  label={<Text>City</Text>}
+                  label={<Text>Tỉnh, Thành Phố</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -795,7 +807,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "City"
+                        "Tỉnh, Thành Phố"
                       ),
                     },
                   ]}
@@ -833,7 +845,7 @@ export default function CustomerList() {
               <div className="details__group">
                 <Form.Item
                   name="district"
-                  label={<Text>District</Text>}
+                  label={<Text>Quận, Huyện</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -841,7 +853,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "District"
+                        "Quận, Huyện"
                       ),
                     },
                   ]}
@@ -878,7 +890,7 @@ export default function CustomerList() {
 
                 <Form.Item
                   name="ward"
-                  label={<Text>Ward</Text>}
+                  label={<Text>Phường, Xã</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -886,7 +898,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Ward"
+                        "Phường, Xã"
                       ),
                     },
                   ]}
@@ -934,7 +946,7 @@ export default function CustomerList() {
                     form.resetFields();
                   }}
                 >
-                  Cancel
+                  Huỷ bỏ
                 </Button>
                 <Button
                   key="submit"
@@ -942,7 +954,7 @@ export default function CustomerList() {
                   type="primary"
                   htmlType="submit"
                 >
-                  Submit
+                  Gửi đi
                 </Button>
               </div>
             </Form>
@@ -959,7 +971,7 @@ export default function CustomerList() {
             ? {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
-                size: "default",
+                size: "mặc định",
                 pageSize: pageSize,
                 current: currentPage,
                 totalElements,

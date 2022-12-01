@@ -11,6 +11,7 @@ import {
   Typography,
   message,
   Spin,
+  notification,
 } from "antd";
 import { updateDetails } from "features/warehouse-manager/warehouseManager";
 import { useDispatch, useSelector } from "react-redux";
@@ -74,12 +75,18 @@ function WarehouseDetailsForm() {
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
-        message.success("Update success!");
+        notification.success({
+          message: "Kho",
+          description: "Cập nhật Kho thành công",
+        });
       })
       .catch((error) => {
         console.log(error);
         console.log(dataDetails.id);
-        message.error("Update failed!!!");
+        notification.error({
+          message: "Kho",
+          description: "Cập nhật Kho thất bại",
+        });
       });
   };
 
@@ -109,7 +116,7 @@ function WarehouseDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="warehouseName"
-                label={<Text>Warehouse Name</Text>}
+                label={<Text>Tên kho</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -117,7 +124,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Warehouse Name"
+                      "Tên kho"
                     ),
                   },
                   {
@@ -126,7 +133,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_LETTER,
                       MESSAGE_ERROR,
-                      "Warehouse Name"
+                      "Tên kho"
                     ),
                   },
                   {
@@ -134,7 +141,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Warehouse Name",
+                      "Tên kho",
                       25
                     ),
                   },
@@ -143,7 +150,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Warehouse Name",
+                      "Tên kho",
                       2
                     ),
                   },
@@ -152,7 +159,7 @@ function WarehouseDetailsForm() {
                 <Input />
               </Form.Item>
               <Form.Item
-                label={<Text>Active Status</Text>}
+                label={<Text>Trạng thái hoạt động</Text>}
                 className="details__item"
               >
                 <Switch
@@ -166,7 +173,7 @@ function WarehouseDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name="noteWarehouse"
-                label={<Text>Note Warehouse</Text>}
+                label={<Text>Ghi chú</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -174,7 +181,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Note Warehouse"
+                      "Ghi chú"
                     ),
                   },
                   {
@@ -182,7 +189,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Note Warehouse",
+                      "Ghi chú",
                       25
                     ),
                   },
@@ -191,7 +198,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Note Warehouse",
+                      "Ghi chú",
                       2
                     ),
                   },
@@ -201,7 +208,7 @@ function WarehouseDetailsForm() {
               </Form.Item>
               <Form.Item
                 name="phoneNumber"
-                label={<Text>Phone Number</Text>}
+                label={<Text>Số điện thoại</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -209,7 +216,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Phone Number"
+                      "Số điện thoại"
                     ),
                   },
                   {
@@ -217,7 +224,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT_NUMBER,
                       MESSAGE_ERROR,
-                      "Phone Number"
+                      "Số điện thoại"
                     ),
                   },
                   {
@@ -234,7 +241,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Phone Number",
+                      "Số điện thoại",
                       9
                     ),
                   },
@@ -247,7 +254,7 @@ function WarehouseDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name={["addressDTO", "apartmentNumber"]}
-                label={<Text>Street Name, House No</Text>}
+                label={<Text>Tên đường, Số nhà</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -255,7 +262,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Street Name, House No"
+                      "Tên đường, Số nhà"
                     ),
                   },
                 ]}
@@ -265,7 +272,7 @@ function WarehouseDetailsForm() {
 
               <Form.Item
                 name={["addressDTO", "city"]}
-                label={<Text>City</Text>}
+                label={<Text>Tỉnh, Thành phố</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -273,7 +280,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "City"
+                      "Tỉnh, Thành phố"
                     ),
                   },
                 ]}
@@ -312,7 +319,7 @@ function WarehouseDetailsForm() {
             <div className="details__group">
               <Form.Item
                 name={["addressDTO", "district"]}
-                label={<Text>District</Text>}
+                label={<Text>Quận, Huyện</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -320,7 +327,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "District"
+                      "Quận, Huyện"
                     ),
                   },
                 ]}
@@ -357,7 +364,7 @@ function WarehouseDetailsForm() {
 
               <Form.Item
                 name={["addressDTO", "ward"]}
-                label={<Text>Ward</Text>}
+                label={<Text>Xã, Phường</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -365,7 +372,7 @@ function WarehouseDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Ward"
+                      "Xã, Phường"
                     ),
                   },
                 ]}
@@ -413,7 +420,7 @@ function WarehouseDetailsForm() {
                     height: "45px",
                   }}
                 >
-                  Update
+                  Cập nhật
                 </Button>
               </Form.Item>
               <Form.Item className="details__item">
@@ -428,7 +435,7 @@ function WarehouseDetailsForm() {
                     height: "45px",
                   }}
                 >
-                  Reset
+                  Đặt lại
                 </Button>
               </Form.Item>
             </div>

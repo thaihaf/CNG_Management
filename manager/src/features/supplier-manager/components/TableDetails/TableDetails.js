@@ -14,6 +14,7 @@ import {
   Menu,
   message,
   Modal,
+  notification,
   Select,
   Space,
   Statistic,
@@ -65,11 +66,11 @@ export default function TableDetails({ form }) {
   };
   const handleDelete = (record) => {
     Modal.confirm({
-      title: "Delete Debt Suppplier",
+      title: "Xoá Công nợ",
       icon: <ExclamationCircleOutlined />,
-      content: `Delete Debt Suppplier can't revert, scarefully`,
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: `Bạn có chắc chắn muốn xoá Công nợ không?`,
+      okText: "Xoá bỏ",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
         dispatch(deleteDeptSupplier(record?.id))
@@ -78,11 +79,17 @@ export default function TableDetails({ form }) {
             let ab = listDebtSupplier.filter((item) => item.id !== record?.id);
             dispatch(updateDebtSuppliers(ab));
             setIsLoading(false);
-            message.success(`Delete Product Details success!`);
+            notification.success({
+              message: "Công nợ",
+              description: "Xoá Công nợ thành công!",
+            });
           })
           .catch((error) => {
             setIsLoading(false);
-            message.error(error.message);
+            notification.error({
+              message: "Công nợ",
+              description: "Xoá Công nợ thất bại",
+            });
           });
       },
       onCancel: () => {},
@@ -214,20 +221,20 @@ export default function TableDetails({ form }) {
 
   const productColumns = [
     {
-      title: "Index",
+      title: "Vị trí",
       dataIndex: "index",
       key: "index",
       align: "center",
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Debt Day",
+      title: "Ngày tạo",
       dataIndex: "debtDay",
       key: "debtDay",
       align: "center",
     },
     {
-      title: "Payment Amount",
+      title: "Số tiền Thanh toán",
       dataIndex: "paymentAmount",
       key: "paymentAmount",
       align: "center",
@@ -236,19 +243,19 @@ export default function TableDetails({ form }) {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Payment Type",
+      title: "Loại Thanh toán",
       dataIndex: "paymentType",
       key: "paymentType",
       align: "center",
     },
     {
-      title: "Note",
+      title: "Ghi chú",
       dataIndex: "note",
       key: "note",
       align: "center",
     },
     {
-      title: "Actions",
+      title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       align: "center",
@@ -282,76 +289,12 @@ export default function TableDetails({ form }) {
       rowKey={(record) => record.id}
       loading={isLoading}
       scroll={{ x: "maxContent" }}
-      // expandable={{
-      //   expandedRowRender: (record) => (
-      //     <>
-      //       <Form.List name={[record.id, "productWarehouseDTOList"]}>
-      //         {(fields, { add, remove }) => {
-      //           if (fields.length > 0) {
-      //             return (
-      //               <div className="space-container">
-      //                 {fields.map(({ key, name, ...restField }) => (
-      //                   <Space
-      //                     key={`${key}${name}`}
-      //                     style={{
-      //                       display: "flex",
-      //                     }}
-      //                     align="center"
-      //                   >
-      //                     <Form.Item
-      //                       {...restField}
-      //                       label="Warehouse"
-      //                       name={[name, "wareHouseName"]}
-      //                     >
-      //                       <Input />
-      //                     </Form.Item>
-
-      //                     <Form.Item
-      //                       {...restField}
-      //                       label="Quantity"
-      //                       name={[name, "quantityBox"]}
-      //                     >
-      //                       <Input />
-      //                     </Form.Item>
-      //                   </Space>
-      //                 ))}
-      //               </div>
-      //             );
-      //           } else {
-      //             return <Text>The Details dont have any warehouse</Text>;
-      //           }
-      //         }}
-      //       </Form.List>
-      //     </>
-      //   ),
-      //   expandIcon: ({ expanded, onExpand, record }) => (
-      //     <Tooltip placement="topRight" title={"Show warehouse select"}>
-      //       {expanded ? (
-      //         <CaretUpFilled
-      //           style={{
-      //             fontSize: "23px",
-      //             transition: "all 0.3s ease",
-      //           }}
-      //           onClick={(e) => onExpand(record, e)}
-      //         />
-      //       ) : (
-      //         <CaretDownFilled
-      //           style={{
-      //             fontSize: "23px",
-      //             transition: "all 0.3s ease",
-      //           }}
-      //           onClick={(e) => onExpand(record, e)}
-      //         />
-      //       )}
-      //     </Tooltip>
-      //   ),
-      // }}
       pagination={
         listDebtSupplier.length !== 0
           ? {
               showSizeChanger: true,
               position: ["bottomCenter"],
-              size: "default",
+              size: "mặc định",
               pageSize: pageSize,
               current: currentPage,
               total: listDebtSupplier.length,

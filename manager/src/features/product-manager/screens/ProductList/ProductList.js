@@ -162,7 +162,14 @@ export default function ProductList() {
 
   const columns = [
     {
-      title: "Image",
+      title: "Vị trí",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (a, b, index) => <Text>{index + 1}</Text>,
+    },
+    {
+      title: "Ảnh sản phẩm",
       dataIndex: "image",
       key: "image",
       align: "center",
@@ -178,7 +185,7 @@ export default function ProductList() {
       ),
     },
     {
-      title: "Code",
+      title: "Mã sản phần",
       dataIndex: "id",
       key: "id",
       sorter: (a, b) => a.id > b.id,
@@ -186,7 +193,7 @@ export default function ProductList() {
       ...getColumnSearchProps("id"),
     },
     {
-      title: "Color",
+      title: "Màu sản phẩm",
       dataIndex: "color",
       key: "color",
       sorter: (a, b) => a.color > b.color,
@@ -194,13 +201,13 @@ export default function ProductList() {
       ...getColumnSearchProps("color"),
     },
     {
-      title: "Origin",
+      title: "Nơi sản xuất",
       dataIndex: "origin",
       key: "origin",
       ...getColumnSearchProps("origin"),
     },
     {
-      title: "Categories Name",
+      title: "Tên chức năng",
       dataIndex: "categoriesName",
       key: "categoriesName",
       render: (_, { categoryDTO }) => (
@@ -226,7 +233,7 @@ export default function ProductList() {
       filterSearch: true,
     },
     {
-      title: "Title Size",
+      title: "Kích thước",
       dataIndex: "titleSize",
       key: "titleSize",
       align: "center",
@@ -245,7 +252,7 @@ export default function ProductList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Branch Name",
+      title: "Tên Nhãn hàng",
       dataIndex: "brandDTO",
       key: "brandName",
       ...getColumnSearchProps("brandDTO", "brandName"),
@@ -256,7 +263,7 @@ export default function ProductList() {
       ),
     },
     {
-      title: "Supplier Name",
+      title: "Tên Nhà cung cấp",
       dataIndex: "supplierDTO",
       key: "supplierName",
       ...getColumnSearchProps("supplierDTO", "supplierName"),
@@ -267,17 +274,17 @@ export default function ProductList() {
       ),
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       align: "center",
       filters: [
         {
-          text: "Active",
+          text: "Hoạt động",
           value: 1,
         },
         {
-          text: "In Active",
+          text: "Không hoạt động",
           value: 0,
         },
       ],
@@ -287,11 +294,11 @@ export default function ProductList() {
         let color = s == 1 ? "green" : "volcano";
         return s == 1 ? (
           <Tag color={color} key={s}>
-            Active
+            Hoạt động
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            In Active
+            Không hoạt động
           </Tag>
         );
       },
@@ -323,7 +330,7 @@ export default function ProductList() {
           size={"large"}
           onClick={() => history.push(ProductManagerPaths.CREATE_PRODUCT)}
         >
-          Create New
+          Tạo mới
         </Button>
       </div>
 

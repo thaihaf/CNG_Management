@@ -6,6 +6,7 @@ import {
   Input,
   message,
   Modal,
+  notification,
   Select,
   Spin,
   Tooltip,
@@ -63,23 +64,31 @@ export default function NewProductDetailsModal({ record }) {
           setIsLoadingModal(false);
           setModal1Open(false);
           newProductDetailsForm.resetFields();
-          message.success("Create New Product Details success!");
+          notification.success({
+            message: "Số lô và loại sản phẩm",
+            description: "Tạo mới Số lô và loại sản phẩm thành công!",
+          });
         })
         .catch((error) => {
           setIsLoadingModal(false);
-          message.error(error.message);
+          notification.error({
+            message: "Số lô và loại sản phẩm",
+            description: "Tạo mới Số lô và loại sản phẩm thất bại!",
+          });
         });
     } else {
-      message.error("Product Details existed!");
+      message.error("Số lô và loại sản phẩm đã tồn tại!");
     }
   };
 
   return (
     <>
-      <Text onClick={() => setModal1Open(true)}>New Product Details</Text>
+      <Text onClick={() => setModal1Open(true)}>
+        Tạo mới Số lô và loại sản phẩm
+      </Text>
 
       <Modal
-        title="New Product Details"
+        title="Tạo mới Số lô và loại sản phẩm"
         style={{ top: 20 }}
         open={modal1Open}
         onOk={() => setModal1Open(false)}
@@ -106,7 +115,7 @@ export default function NewProductDetailsModal({ record }) {
             <div className="details__group">
               <Form.Item
                 name="productId"
-                label={<Text>Product ID</Text>}
+                label={<Text>Mã sản phẩm</Text>}
                 className="details__item"
               >
                 <Input
@@ -119,7 +128,7 @@ export default function NewProductDetailsModal({ record }) {
             <div className="details__group">
               <Form.Item
                 name="shipment"
-                label={<Text>Shipment</Text>}
+                label={<Text>Số lô</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -127,7 +136,7 @@ export default function NewProductDetailsModal({ record }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Shipment"
+                      "Số lô"
                     ),
                   },
                   {
@@ -135,7 +144,7 @@ export default function NewProductDetailsModal({ record }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_MAX_LENGTH,
                       MESSAGE_ERROR,
-                      "Shipment",
+                      "Số lô",
                       25
                     ),
                   },
@@ -144,14 +153,14 @@ export default function NewProductDetailsModal({ record }) {
                 <Input
                   type="text"
                   className="login_input pass"
-                  placeholder="enter shipment"
+                  placeholder="nhập Số lô"
                 />
               </Form.Item>
             </div>
             <div className="details__group">
               <Form.Item
                 name="type"
-                label={<Text>Type</Text>}
+                label={<Text>Loại sản phẩm</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -159,13 +168,13 @@ export default function NewProductDetailsModal({ record }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Type"
+                      "Loại sản phẩm"
                     ),
                   },
                 ]}
               >
                 <Select
-                  placeholder="select type"
+                  placeholder="Chọn Loại sản phẩm"
                   style={{
                     width: 200,
                   }}
@@ -194,7 +203,7 @@ export default function NewProductDetailsModal({ record }) {
                   newProductDetailsForm.resetFields();
                 }}
               >
-                Cancel
+                Huỷ bỏ
               </Button>
               <Button
                 key="submit"
@@ -202,7 +211,7 @@ export default function NewProductDetailsModal({ record }) {
                 type="primary"
                 htmlType="submit"
               >
-                Submit
+                Gửi đi
               </Button>
             </div>
           </Form>

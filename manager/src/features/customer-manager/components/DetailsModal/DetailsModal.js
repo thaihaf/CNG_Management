@@ -8,6 +8,7 @@ import {
   InputNumber,
   message,
   Modal,
+  notification,
   Select,
   Spin,
   Tooltip,
@@ -32,8 +33,10 @@ import "./DetailsModal.css";
 
 import editImg from "assets/icons/edit.png";
 import newFileImg from "assets/icons/newFile.png";
-import { createDeptCustomer, updateDeptCustomer } from "features/customer-manager/customerManager";
-
+import {
+  createDeptCustomer,
+  updateDeptCustomer,
+} from "features/customer-manager/customerManager";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -66,13 +69,21 @@ export default function DetailsModal({ record, updateMode }) {
         setModal1Open(false);
         debtCustomerForm.resetFields();
 
-        message.success(
-          `${updateMode ? "Update" : "Create New"} Product Details success!`
-        );
+        notification.success({
+          message: "Công nợ",
+          description: `${
+            updateMode ? "Cập nhật" : "Tạo mới"
+          } Công nợ thành công!`,
+        });
       })
       .catch((error) => {
         setIsLoadingModal(false);
-        message.error(error.message);
+        notification.error({
+          message: "Công nợ",
+          description: `${
+            updateMode ? "Cập nhật" : "Tạo mới"
+          } Công nợ thất bại!`,
+        });
       });
   };
 
@@ -117,12 +128,12 @@ export default function DetailsModal({ record, updateMode }) {
             alt=""
             style={{ height: "2.2rem", width: "2.2rem" }}
           />
-          Create
+          Tạo mới Công nợ
         </Button>
       )}
 
       <Modal
-        title={`${updateMode ? "Update" : "Create New"} Debt Customer`}
+        title={`${updateMode ? "Cập nhật" : "Tạo mới"} Công nợ`}
         style={{ top: 20 }}
         open={modal1Open}
         onOk={() => setModal1Open(false)}
@@ -143,7 +154,7 @@ export default function DetailsModal({ record, updateMode }) {
             <div className="details__group">
               <Form.Item
                 name="customerId"
-                label={<Text>Customer ID</Text>}
+                label={<Text>Mã Khách hàng</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -151,7 +162,7 @@ export default function DetailsModal({ record, updateMode }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Customer ID"
+                      "Mã Khách hàng"
                     ),
                   },
                 ]}
@@ -166,7 +177,7 @@ export default function DetailsModal({ record, updateMode }) {
             <div className="details__group">
               <Form.Item
                 name="paymentAmount"
-                label={<Text>Payment Amount</Text>}
+                label={<Text>Số tiền thanh toán</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -174,7 +185,7 @@ export default function DetailsModal({ record, updateMode }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Payment Amount"
+                      "Số tiền thanh toán"
                     ),
                   },
                 ]}
@@ -186,7 +197,7 @@ export default function DetailsModal({ record, updateMode }) {
             <div className="details__group">
               <Form.Item
                 name="paymentType"
-                label={<Text>Payment Type</Text>}
+                label={<Text>Loại Thanh toán</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -194,13 +205,13 @@ export default function DetailsModal({ record, updateMode }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Payment Type"
+                      "Loại Thanh toán"
                     ),
                   },
                 ]}
               >
                 <Select
-                  placeholder="Select Payment Type"
+                  placeholder="Chọn Loại Thanh toán"
                   style={{
                     width: 200,
                   }}
@@ -228,7 +239,7 @@ export default function DetailsModal({ record, updateMode }) {
             <div className="details__group">
               <Form.Item
                 name="debtDate"
-                label={<Text>Debt Day</Text>}
+                label={<Text>Ngày tạo</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -236,7 +247,7 @@ export default function DetailsModal({ record, updateMode }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Debt Day"
+                      "Ngày tạo"
                     ),
                   },
                 ]}
@@ -250,7 +261,7 @@ export default function DetailsModal({ record, updateMode }) {
             <div className="details__group">
               <Form.Item
                 name="note"
-                label={<Text>Note</Text>}
+                label={<Text>Ghi chú</Text>}
                 className="details__item"
               >
                 <TextArea
@@ -275,7 +286,7 @@ export default function DetailsModal({ record, updateMode }) {
                   debtCustomerForm.resetFields();
                 }}
               >
-                Cancel
+                Huỷ bỏ
               </Button>
               <Button
                 key="submit"
@@ -283,7 +294,7 @@ export default function DetailsModal({ record, updateMode }) {
                 type="primary"
                 htmlType="submit"
               >
-                Submit
+                Gửi đi
               </Button>
             </div>
           </Form>

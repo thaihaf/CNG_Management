@@ -20,6 +20,7 @@ import {
   message,
   Spin,
   Steps,
+  notification,
 } from "antd";
 import { updateDetails } from "features/customer-manager/customerManager";
 import { useDispatch, useSelector } from "react-redux";
@@ -115,12 +116,18 @@ function CustomerDetailsForm() {
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
-        message.success("Update success!");
+        notification.success({
+          message: "Khách hàng",
+          description: "Khách hàng thành công",
+        });
       })
       .catch((error) => {
         console.log(error);
         console.log(dataDetails.id);
-        message.error("Update failed!!!");
+        notification.error({
+          message: "Khách hàng",
+          description: "Khách hàng thất bại",
+        });
         //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
       });
   };
@@ -150,7 +157,7 @@ function CustomerDetailsForm() {
         <div className="product-details">
           <div className="actions-group">
             <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-              {createMode ? "Create Customer" : "Customer Details"}
+              {createMode ? "Tạo Khách hàng" : "Chi tiết Khách hàng"}
             </Title>
 
             <Button
@@ -174,7 +181,7 @@ function CustomerDetailsForm() {
                 alt=""
                 style={{ height: "2.5rem", width: "2.5rem" }}
               />
-              Reset
+              Đặt lại
             </Button>
 
             {!createMode && (
@@ -200,7 +207,7 @@ function CustomerDetailsForm() {
                     alt=""
                     style={{ height: "2.5rem", width: "2.5rem" }}
                   />
-                  Delete
+                  Xoá bỏ
                 </Button>
                 <Button
                   type="primary"
@@ -223,7 +230,7 @@ function CustomerDetailsForm() {
                     alt=""
                     style={{ height: "2.5rem", width: "2.5rem" }}
                   />
-                  Update
+                  Cập nhật
                 </Button>
               </>
             )}
@@ -250,7 +257,7 @@ function CustomerDetailsForm() {
                   alt=""
                   style={{ height: "2.5rem", width: "2.5rem" }}
                 />
-                Create
+                Tạo mới
               </Button>
             )}
           </div>
@@ -308,13 +315,13 @@ function CustomerDetailsForm() {
 
             <Steps direction="vertical" className="list-data">
               <Step
-                title="Customer Information"
+                title="Thông tin liên hệ"
                 status="finish"
                 description={
                   <div className="group-data">
                     <Form.Item
                       name="shopName"
-                      label={<Text>Shop Name</Text>}
+                      label={<Text>Tên Cửa hàng</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -322,7 +329,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Shop Name"
+                            "Tên Cửa hàng"
                           ),
                         },
                         {
@@ -331,7 +338,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_LETTER,
                             MESSAGE_ERROR,
-                            "Shop Name"
+                            "Tên Cửa hàng"
                           ),
                         },
                         // {
@@ -348,7 +355,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MIN,
                             MESSAGE_ERROR,
-                            "Shop Name",
+                            "Tên Cửa hàng",
                             2
                           ),
                         },
@@ -358,7 +365,7 @@ function CustomerDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name="firstName"
-                      label={<Text>First Name</Text>}
+                      label={<Text>Họ</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -366,7 +373,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "First Name"
+                            "Họ"
                           ),
                         },
                         {
@@ -375,7 +382,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_FORMAT,
                             MESSAGE_ERROR,
-                            "First Name"
+                            "Họ"
                           ),
                         },
                         {
@@ -383,7 +390,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MAX,
                             MESSAGE_ERROR,
-                            "First Name",
+                            "Họ",
                             10
                           ),
                         },
@@ -392,7 +399,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MIN,
                             MESSAGE_ERROR,
-                            "First Name",
+                            "Họ",
                             2
                           ),
                         },
@@ -402,7 +409,7 @@ function CustomerDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name="lastName"
-                      label={<Text>Last Name</Text>}
+                      label={<Text>Tên</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -410,7 +417,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Last Name"
+                            "Tên"
                           ),
                         },
                         {
@@ -419,7 +426,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_FORMAT,
                             MESSAGE_ERROR,
-                            "Last Name"
+                            "Tên"
                           ),
                         },
                         {
@@ -427,7 +434,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MAX,
                             MESSAGE_ERROR,
-                            "Last Name",
+                            "Tên",
                             20
                           ),
                         },
@@ -436,7 +443,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MIN,
                             MESSAGE_ERROR,
-                            "Last Name",
+                            "Tên",
                             2
                           ),
                         },
@@ -446,7 +453,7 @@ function CustomerDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name="phoneNumber"
-                      label={<Text>Phone Number</Text>}
+                      label={<Text>Số điện thoại</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -454,7 +461,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Phone Number"
+                            "Số điện thoại"
                           ),
                         },
                         {
@@ -462,7 +469,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_FORMAT_NUMBER,
                             MESSAGE_ERROR,
-                            "Phone Number"
+                            "Số điện thoại"
                           ),
                         },
                         {
@@ -479,7 +486,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MIN,
                             MESSAGE_ERROR,
-                            "Phone Number",
+                            "Số điện thoại",
                             9
                           ),
                         },
@@ -487,18 +494,9 @@ function CustomerDetailsForm() {
                     >
                       <Input />
                     </Form.Item>
-                  </div>
-                }
-              />
-
-              <Step
-                title="Customer Characteristics"
-                status="finish"
-                description={
-                  <div className="group-data">
                     <Form.Item
                       name="taxCode"
-                      label={<Text>Tax Code</Text>}
+                      label={<Text>Mã số thuế</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -506,7 +504,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Tax Code"
+                            "Mã số thuế"
                           ),
                         },
                         {
@@ -514,7 +512,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER,
                             MESSAGE_ERROR,
-                            "Tax Code"
+                            "Mã số thuế"
                           ),
                         },
                         {
@@ -522,7 +520,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MAX,
                             MESSAGE_ERROR,
-                            "Tax Code",
+                            "Mã số thuế",
                             13
                           ),
                         },
@@ -531,7 +529,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MIN,
                             MESSAGE_ERROR,
-                            "Tax Code",
+                            "Mã số thuế",
                             10
                           ),
                         },
@@ -540,8 +538,29 @@ function CustomerDetailsForm() {
                       <Input />
                     </Form.Item>
                     <Form.Item
+                      label={<Text>Active Status</Text>}
+                      className="details__item"
+                    >
+                      <Switch
+                        checked={
+                          status === null ? initialValues.status : status
+                        }
+                        onChange={(checked) => setStatus(checked)}
+                        disabled={false}
+                      />
+                    </Form.Item>
+                  </div>
+                }
+              />
+
+              <Step
+                title="Địa chỉ Khách hàng"
+                status="finish"
+                description={
+                  <div className="group-data">
+                    <Form.Item
                       name={["addressDTO", "apartmentNumber"]}
-                      label={<Text>Street Name, House No</Text>}
+                      label={<Text>Tên đường, số nhà</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -549,7 +568,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Street Name, House No"
+                            "Tên đường, số nhà"
                           ),
                         },
                       ]}
@@ -558,7 +577,7 @@ function CustomerDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name={["addressDTO", "city"]}
-                      label={<Text>City</Text>}
+                      label={<Text>Tỉnh, Thành phố</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -566,7 +585,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "City"
+                            "Tỉnh, Thành phố"
                           ),
                         },
                       ]}
@@ -602,7 +621,7 @@ function CustomerDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name={["addressDTO", "district"]}
-                      label={<Text>District</Text>}
+                      label={<Text>Quận, Huyện</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -610,7 +629,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "District"
+                            "Quận, Huyện"
                           ),
                         },
                       ]}
@@ -646,7 +665,7 @@ function CustomerDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name={["addressDTO", "ward"]}
-                      label={<Text>Ward</Text>}
+                      label={<Text>Xã, Phường</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -654,7 +673,7 @@ function CustomerDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Ward"
+                            "Xã, Phường"
                           ),
                         },
                       ]}
@@ -689,18 +708,6 @@ function CustomerDetailsForm() {
                         })}
                       </Select>
                     </Form.Item>
-                    <Form.Item
-                      label={<Text>Active Status</Text>}
-                      className="details__item"
-                    >
-                      <Switch
-                        checked={
-                          status === null ? initialValues.status : status
-                        }
-                        onChange={(checked) => setStatus(checked)}
-                        disabled={false}
-                      />
-                    </Form.Item>
                   </div>
                 }
               />
@@ -715,7 +722,7 @@ function CustomerDetailsForm() {
                       width: "100%",
                     }}
                   >
-                    <div>Dept Customer</div>
+                    <div>Công nợ Khách hàng</div>
                     <DetailsModal updateMode={false} record={initialValues} />
                   </div>
                 }
