@@ -58,7 +58,8 @@
     "eject": "react-scripts eject",
     "build:staging": "env-cmd -f .env.staging react-scripts build",
     "build:production": "env-cmd -f .env.production react-scripts build",
-    "proxy": "http://localhost:3000"
+    "proxy": "http://localhost:3000",
+    "deploy": "sh ./deploy-surge.sh"
   },
   "eslintConfig": {
     "ignorePatterns": [
