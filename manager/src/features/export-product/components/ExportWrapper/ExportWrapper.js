@@ -1,4 +1,13 @@
-import { Button, Form, message, Modal, notification, Spin, Tabs, Typography } from "antd";
+import {
+  Button,
+  Form,
+  message,
+  Modal,
+  notification,
+  Spin,
+  Tabs,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +31,10 @@ import {
   updateProductExports,
 } from "features/export-product/exportProduct";
 import HeaderTable from "../HeaderTable/HeaderTable";
+import {
+  statusProductExport,
+  statusProductReExport,
+} from "features/export-product/constants/export-product.constants";
 
 const { Title } = Typography;
 
@@ -60,10 +73,10 @@ const ExportWrapper = ({ updateMode }) => {
           .catch((err) => {
             console.log(err);
             setIsLoading(false);
-           notification.error({
-             message: "Xoá Đơn xuất",
-             description: "Xoá Đơn xuất thất bại",
-           });
+            notification.error({
+              message: "Xoá Đơn xuất",
+              description: "Xoá Đơn xuất thất bại",
+            });
           });
       },
       onCancel: () => {},
@@ -207,7 +220,15 @@ const ExportWrapper = ({ updateMode }) => {
     form.setFieldValue(initialValues);
 
     if (initialValues) {
-      form.setFieldValue("statusExport", getStatusString(initialValues.status));
+      let arr =
+        initialValues.type === "EXPORT"
+          ? statusProductExport
+          : statusProductReExport;
+
+      form.setFieldValue(
+        "statusExport",
+        getStatusString(initialValues.status, arr)
+      );
     }
   }, [dispatch, updateMode, initialValues]);
 
@@ -331,7 +352,7 @@ const ExportWrapper = ({ updateMode }) => {
                 <TableCreate form={form} updateMode={updateMode} />
               ),
             },
-            { 
+            {
               label: `Thông tin khác`,
               key: `details`,
               children: <HeaderTable form={form} updateMode={updateMode} />,

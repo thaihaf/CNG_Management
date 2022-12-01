@@ -8,7 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 
 import "./HeaderTable.css";
-import { statusProductExport, typeExport } from "features/export-product/constants/export-product.constants";
+import {
+  statusProductExport,
+  statusProductReExport,
+  typeExport,
+} from "features/export-product/constants/export-product.constants";
+import { useState } from "react";
 
 const { Title, Text } = Typography;
 
@@ -19,6 +24,7 @@ export default function HeaderTable({ form, updateMode }) {
 
   const dispatch = useDispatch();
 
+  const [statusByType, setStatusByType] = useState("EXPORT");
   useEffect(() => {
     dispatch(getEmployees());
   }, [dispatch, productExportDetails, form]);
@@ -126,7 +132,13 @@ export default function HeaderTable({ form, updateMode }) {
           }
           placeholder="Select type"
           options={typeExport}
-        ></Select>
+          disabled={updateMode ? true : false}
+          onChange={(value) => {
+            if (value === "EXPORT") {
+              setStatusByType(value);
+            }
+          }}
+        />
       </Form.Item>
       <Form.Item
         name="licensePlates"
@@ -186,9 +198,21 @@ export default function HeaderTable({ form, updateMode }) {
           <Select
             showSearch
             allowClear
-            options={statusProductExport}
+            options={
+              statusByType !== "RE-EXPORT"
+                ? statusProductExport
+                : statusProductReExport
+            }
             onChange={(value) =>
-              form.setFieldValue("statusExport", getStatusString(value))
+              form.setFieldValue(
+                "statusExport",
+                getStatusString(
+                  value,
+                  statusByType !== "RE-EXPORT"
+                    ? statusProductExport
+                    : statusProductReExport
+                )
+              )
             }
           ></Select>
         </Form.Item>

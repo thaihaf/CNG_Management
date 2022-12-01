@@ -207,6 +207,33 @@ export default function ProductList() {
       ...getColumnSearchProps("origin"),
     },
     {
+      title: "Kích thước",
+      dataIndex: "titleSize",
+      key: "titleSize",
+      align: "center",
+      filters: titleSizeList,
+      onFilter: (value, record) => record.titleSize === value,
+      filterSearch: true,
+      sorter: (a, b) => {
+        let aArr = a.titleSize.split("x");
+        let bArr = b.titleSize.split("x");
+
+        let aVal = Number(aArr[0]) * Number(aArr[1]);
+        let bVal = Number(bArr[0]) * Number(bArr[1]);
+
+        return aVal - bVal;
+      },
+      sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Tổng số lượng hộp",
+      dataIndex: "totalQuantityBox",
+      key: "totalQuantityBox",
+      align: "center",
+      sorter: (a, b) => a.totalQuantityBox - b.totalQuantityBox,
+      sortDirections: ["descend", "ascend"],
+    },
+    {
       title: "Tên chức năng",
       dataIndex: "categoriesName",
       key: "categoriesName",
@@ -231,25 +258,6 @@ export default function ProductList() {
       onFilter: (value, record) =>
         record.categoryDTO.find((c) => c.id === value),
       filterSearch: true,
-    },
-    {
-      title: "Kích thước",
-      dataIndex: "titleSize",
-      key: "titleSize",
-      align: "center",
-      filters: titleSizeList,
-      onFilter: (value, record) => record.titleSize === value,
-      filterSearch: true,
-      sorter: (a, b) => {
-        let aArr = a.titleSize.split("x");
-        let bArr = b.titleSize.split("x");
-
-        let aVal = Number(aArr[0]) * Number(aArr[1]);
-        let bVal = Number(bArr[0]) * Number(bArr[1]);
-
-        return aVal - bVal;
-      },
-      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Tên Nhãn hàng",

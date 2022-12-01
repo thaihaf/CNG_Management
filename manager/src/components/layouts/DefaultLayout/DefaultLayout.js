@@ -74,7 +74,7 @@ const DefaultLayout = ({ children }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     dispatch(getAccountAvatar());
-  }, [dispatch]);
+  }, [dispatch, location]);
 
   const getSelect = ({ key }) => {
     history.push(`/${key}`);
