@@ -185,7 +185,7 @@ export default function ProductList() {
       ),
     },
     {
-      title: "Mã sản phần",
+      title: "Mã sản phẩm",
       dataIndex: "id",
       key: "id",
       sorter: (a, b) => a.id > b.id,
@@ -260,7 +260,7 @@ export default function ProductList() {
       filterSearch: true,
     },
     {
-      title: "Tên Nhãn hàng",
+      title: "Tên nhãn hàng",
       dataIndex: "brandDTO",
       key: "brandName",
       ...getColumnSearchProps("brandDTO", "brandName"),
@@ -271,7 +271,7 @@ export default function ProductList() {
       ),
     },
     {
-      title: "Tên Nhà cung cấp",
+      title: "Tên nhà cung cấp",
       dataIndex: "supplierDTO",
       key: "supplierName",
       ...getColumnSearchProps("supplierDTO", "supplierName"),

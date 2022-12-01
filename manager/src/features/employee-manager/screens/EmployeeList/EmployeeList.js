@@ -3,7 +3,6 @@ import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-
 import {
   DeleteTwoTone,
   DownOutlined,
@@ -33,7 +32,7 @@ import {
 
 import avt_default from "assets/images/avt-default.png";
 import "./EmployeeList.css";
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export default function EmployeeList() {
   const { listEmployees, totalElements, totalPages, size } = useSelector(
@@ -245,6 +244,13 @@ export default function EmployeeList() {
   });
 
   const columns = [
+    {
+      title: "Vị trí",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (a, b, index) => <Text>{index + 1}</Text>,
+    },
     {
       title: "Ảnh đại diện",
       dataIndex: "avatar",
