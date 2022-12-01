@@ -22,14 +22,7 @@ import {
 import avt_default from "assets/images/avt-default.png";
 import "./ListProductImport.css";
 
-import {
-  getProducts,
-  ProductManagerPaths,
-  titleSizeList,
-} from "features/product-manager/productManager";
-import { getActiveCategories } from "features/category-manager/categoryManager";
 import { get } from "lodash";
-import { ActionsModal } from "features/product-manager/components";
 import {
   getAllProductImport,
   ImportProductManagerPaths,
@@ -181,14 +174,14 @@ export default function ListProductImport() {
 
   const columns = [
     {
-      title: "Index",
+      title: "Vị trí",
       dataIndex: "index",
       key: "index",
       align: "center",
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Image",
+      title: "Ảnh sản phẩm",
       dataIndex: "image",
       key: "image",
       align: "center",
@@ -204,7 +197,7 @@ export default function ListProductImport() {
       ),
     },
     {
-      title: "Create At",
+      title: "Ngày nhập",
       dataIndex: "createAt",
       key: "createAt",
       align: "center",
@@ -216,14 +209,14 @@ export default function ListProductImport() {
       },
     },
     {
-      title: "License Plates",
+      title: "Biển số xe",
       dataIndex: "licensePlates",
       key: "licensePlates",
       align: "center",
       ...getColumnSearchProps("licensePlates"),
     },
     {
-      title: "Total Quantity Import",
+      title: "Tổng số lượng nhập",
       dataIndex: "totalQuantityImport",
       key: "totalQuantityImport",
       align: "center",
@@ -234,7 +227,7 @@ export default function ListProductImport() {
       },
     },
     {
-      title: "Total Square Meter Import",
+      title: "Tổng số mét vuông nhập",
       dataIndex: "totalSquareMeterImport",
       key: "totalSquareMeterImport",
       align: "center",
@@ -247,7 +240,7 @@ export default function ListProductImport() {
       },
     },
     {
-      title: "Total Cost Import",
+      title: "Tổng chi phí nhập",
       dataIndex: "totalCostImport",
       key: "totalCostImport",
       align: "center",
@@ -258,7 +251,7 @@ export default function ListProductImport() {
       },
     },
     {
-      title: "Supplier Name",
+      title: "Nhà cung cấp",
       dataIndex: "supplierDTO",
       key: "supplierName",
       align: "center",
@@ -270,7 +263,7 @@ export default function ListProductImport() {
       ),
     },
     {
-      title: "Employee Name",
+      title: "Nhân viên",
       dataIndex: "employeeDTO",
       key: "employeeName",
       align: "center",
@@ -282,7 +275,7 @@ export default function ListProductImport() {
       ),
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       align: "center",
@@ -331,7 +324,7 @@ export default function ListProductImport() {
     <div className="product-list">
       <div className="top">
         <Title level={2} style={{ cursor: "pointer" }}>
-          Product Import List
+          Danh sách Đơn nhập
         </Title>
 
         <Button
@@ -342,7 +335,7 @@ export default function ListProductImport() {
             history.push(ImportProductManagerPaths.CREATE_PRODUCT_IMPORT)
           }
         >
-          Create New
+          Tạo mới
         </Button>
       </div>
 

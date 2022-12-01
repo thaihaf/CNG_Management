@@ -12,6 +12,7 @@ import {
   Spin,
   Typography,
   message,
+  notification,
 } from "antd";
 import { updateDetails } from "features/category-manager/categoryManager";
 import { useDispatch, useSelector } from "react-redux";
@@ -55,12 +56,18 @@ function CategoryDetailsForm() {
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
-        message.success("Update success!");
+        notification.success({
+          message: "Chức năg",
+          description: "Cập nhật Chức năng thành công",
+        });
       })
       .catch((error) => {
         console.log(error);
         console.log(dataDetails.id);
-        message.error("Update failed!!!");
+        notification.error({
+          message: "Chức năg",
+          description: "Cập nhật Chức năng thất bại",
+        });
       });
   };
 
@@ -92,7 +99,7 @@ function CategoryDetailsForm() {
           <div className="details__group">
             <Form.Item
               name="categoryName"
-              label={<Text>Category Name</Text>}
+              label={<Text>Tên Chức năng</Text>}
               className="details__item"
               rules={[
                 {
@@ -100,7 +107,7 @@ function CategoryDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_REQUIRED,
                     MESSAGE_ERROR,
-                    "Category Name"
+                    "Tên Chức năng"
                   ),
                 },
                 {
@@ -109,7 +116,7 @@ function CategoryDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_NUMBER_LETTER,
                     MESSAGE_ERROR,
-                    "Category Name"
+                    "Tên Chức năng"
                   ),
                 },
                 {
@@ -117,7 +124,7 @@ function CategoryDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_NUMBER_MAX,
                     MESSAGE_ERROR,
-                    "Category Name",
+                    "Tên Chức năng",
                     25
                   ),
                 },
@@ -126,7 +133,7 @@ function CategoryDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_NUMBER_MIN,
                     MESSAGE_ERROR,
-                    "Category Name",
+                    "Tên Chức năng",
                     2
                   ),
                 },
@@ -136,7 +143,7 @@ function CategoryDetailsForm() {
             </Form.Item>
             <Form.Item
               name="description"
-              label={<Text>Description</Text>}
+              label={<Text>Mô tả</Text>}
               className="details__item"
               // rules={[
               //   {
@@ -153,7 +160,7 @@ function CategoryDetailsForm() {
             </Form.Item>
           </div>
           <div className="details__group">
-            <Form.Item label={<Text>Status</Text>} className="details__item">
+            <Form.Item label={<Text>Trạng thái</Text>} className="details__item">
               <Switch
                 checked={status === null ? initialValues.status : status}
                 onChange={(checked) => setStatus(checked)}
@@ -173,7 +180,7 @@ function CategoryDetailsForm() {
                 size={"large"}
                 htmlType="submit"
               >
-                Update
+                Cập nhật
               </Button>
             </Form.Item>
             <Form.Item className="details__item">
@@ -184,7 +191,7 @@ function CategoryDetailsForm() {
                 size={"large"}
                 htmlType="reset"
               >
-                Reset
+                Đặt lại
               </Button>
             </Form.Item>
           </div>

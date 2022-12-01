@@ -14,6 +14,7 @@ import {
   Menu,
   message,
   Modal,
+  notification,
   Select,
   Space,
   Statistic,
@@ -65,11 +66,11 @@ export default function TableDetails({ form }) {
   };
   const handleDelete = (record) => {
     Modal.confirm({
-      title: "Delete Product Details",
+      title: "Xoá Lô hàng và loại sản phẩm",
       icon: <ExclamationCircleOutlined />,
-      content: `Delete Product Details can't revert, scarefully`,
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: `Bạn có chắc chắn muốn xoá Lô hàng và loại sản phẩm không?`,
+      okText: "Xoá bỏ",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
         dispatch(deleteDetailsProduct(record?.id))
@@ -85,11 +86,17 @@ export default function TableDetails({ form }) {
 
             dispatch(updateProductDetails(ab));
             setIsLoading(false);
-            message.success(`Delete Product Details success!`);
+            notification.success({
+              message: "Lô hàng và loại sản phẩm",
+              description: "Xoá Lô hàng và loại sản phẩm thành công!",
+            });
           })
           .catch((error) => {
             setIsLoading(false);
-            message.error(error.message);
+            notification.error({
+              message: "Lô hàng và loại sản phẩm",
+              description: "Xoá Lô hàng và loại sản phẩm thất bại",
+            });
           });
       },
       onCancel: () => {},
@@ -230,26 +237,26 @@ export default function TableDetails({ form }) {
 
   const productColumns = [
     {
-      title: "Index",
+      title: "Vị trí",
       dataIndex: "index",
       key: "index",
       align: "center",
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Shipment",
+      title: "Số lô hàng",
       dataIndex: "shipment",
       key: "shipment",
       align: "center",
     },
     {
-      title: "Type",
+      title: "Loại sản phẩm",
       dataIndex: "type",
       key: "type",
       align: "center",
     },
     {
-      title: "Cost Per Square Meter (vnđ)",
+      title: "Chi phí trên mỗi mét vuông (vnđ)",
       dataIndex: "costPerSquareMeter",
       key: "costPerSquareMeter",
       align: "center",
@@ -258,7 +265,7 @@ export default function TableDetails({ form }) {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       align: "center",
@@ -269,7 +276,7 @@ export default function TableDetails({ form }) {
       filterSearch: true,
       render: (s) => {
         let color = s == 1 ? "green" : "volcano";
-        let text = s == 1 ? "Active" : "Inactive";
+        let text = s == 1 ? "Hoạt động" : "Không hoạt động";
 
         return (
           <Tag color={color} key={s}>
@@ -281,7 +288,7 @@ export default function TableDetails({ form }) {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Actions",
+      title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       align: "center",
@@ -333,7 +340,7 @@ export default function TableDetails({ form }) {
                         >
                           <Form.Item
                             {...restField}
-                            label="Warehouse"
+                            label="Kho hàng"
                             name={[name, "wareHouseName"]}
                           >
                             <Input />
@@ -341,7 +348,7 @@ export default function TableDetails({ form }) {
 
                           <Form.Item
                             {...restField}
-                            label="Quantity"
+                            label="Số lượng"
                             name={[name, "quantityBox"]}
                           >
                             <Input />
@@ -351,7 +358,7 @@ export default function TableDetails({ form }) {
                     </div>
                   );
                 }else{
-                  return <Text>The Details dont have any warehouse</Text>
+                  return <Text>Số lô và loại sản phẩm này chưa có trong Kho hàng nào</Text>
                 }
               }}
             </Form.List>

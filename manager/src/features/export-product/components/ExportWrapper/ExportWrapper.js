@@ -1,4 +1,4 @@
-import { Button, Form, message, Modal, Spin, Tabs, Typography } from "antd";
+import { Button, Form, message, Modal, notification, Spin, Tabs, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,12 +39,11 @@ const ExportWrapper = ({ updateMode }) => {
 
   const onDeleteProductExport = () => {
     Modal.confirm({
-      title: "Delete Product Export",
+      title: "Xoá Đơn xuất",
       icon: <ExclamationCircleOutlined />,
-      content:
-        "Are you really want to Delete Product Export? Action can't revert, scarefully",
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: "Bạn có chắc chắn muốn xoá Đơn xuất không?",
+      okText: "Xoá bỏ",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
         dispatch(deleteProductExport(productExportDetails.id))
@@ -52,13 +51,19 @@ const ExportWrapper = ({ updateMode }) => {
           .then((res) => {
             dispatch(clearProductExport());
             history.push(ProductExportManagerPaths.LIST_PRODUCT_EXPORT);
-            message.success("Delete Product Export successfully");
+            notification.success({
+              message: "Xoá Đơn xuất",
+              description: "Xoá Đơn xuất thành công!",
+            });
             setIsLoading(false);
           })
           .catch((err) => {
             console.log(err);
             setIsLoading(false);
-            message.error("Error deleting Product Export");
+           notification.error({
+             message: "Xoá Đơn xuất",
+             description: "Xoá Đơn xuất thất bại",
+           });
           });
       },
       onCancel: () => {},
@@ -105,7 +110,10 @@ const ExportWrapper = ({ updateMode }) => {
     }
 
     if (listProduct.length === 0) {
-      message.warning("You must insert least once product to table");
+      notification.warning({
+        message: "Đơn xuất",
+        description: "Vui lòng chọn ít nhất một sản phẩm!",
+      });
       return;
     }
 
@@ -118,9 +126,10 @@ const ExportWrapper = ({ updateMode }) => {
     });
 
     if (pLostWarehouse) {
-      message.warning(
-        `Product Id ${pLostWarehouse.id}, with index of ${pLostWarehouse.index} need select warehouse`
-      );
+      notification.warning({
+        message: "Đơn xuất",
+        description: `Sản phẩm có Mã ${pLostWarehouse.id}, với vị trí tại ${pLostWarehouse.index} cần chọn ít nhất một Kho`,
+      });
       return;
     }
 
@@ -172,15 +181,23 @@ const ExportWrapper = ({ updateMode }) => {
         console.log(res);
 
         setIsLoading(false);
-        message.success(
-          `${updateMode ? "Update" : "Create"} Product Export Successfully!`
-        );
+        notification.success({
+          message: "Đơn xuất",
+          description: `${
+            updateMode ? "Cập nhật" : "Tạo mới"
+          } Đơn xuất thành công!`,
+        });
         history.push(ProductExportManagerPaths.LIST_PRODUCT_EXPORT);
       })
       .catch((err) => {
         setIsLoading(false);
         console.log(err);
-        message.error(err);
+        notification.error({
+          message: "Đơn xuất",
+          description: `${
+            updateMode ? "Cập nhật" : "Tạo mới"
+          } Đơn xuất thất bại!`,
+        });
       });
   };
 
@@ -213,7 +230,7 @@ const ExportWrapper = ({ updateMode }) => {
 
         <div className="actions-group">
           <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-            Export Product Details
+            Chi tiết Đơn xuất
           </Title>
 
           {updateMode &&
@@ -241,7 +258,7 @@ const ExportWrapper = ({ updateMode }) => {
                     alt=""
                     style={{ height: "2.5rem", width: "2.5rem" }}
                   />
-                  Delete
+                  Xoá bỏ
                 </Button>
                 <Button
                   type="primary"
@@ -266,7 +283,7 @@ const ExportWrapper = ({ updateMode }) => {
                     alt=""
                     style={{ height: "2.5rem", width: "2.5rem" }}
                   />
-                  "Update"
+                  Cập nhật
                 </Button>
               </>
             )}
@@ -295,7 +312,7 @@ const ExportWrapper = ({ updateMode }) => {
                 alt=""
                 style={{ height: "2.5rem", width: "2.5rem" }}
               />
-              "Create"
+              Tạo mới
             </Button>
           )}
         </div>
@@ -306,7 +323,7 @@ const ExportWrapper = ({ updateMode }) => {
           onTabClick={(key) => setActiveTab(key)}
           items={[
             {
-              label: `Tab 1`,
+              label: `Danh sách sản phẩm`,
               key: `table`,
               children: updateMode ? (
                 <TableUpdate form={form} updateMode={updateMode} />
@@ -314,8 +331,8 @@ const ExportWrapper = ({ updateMode }) => {
                 <TableCreate form={form} updateMode={updateMode} />
               ),
             },
-            {
-              label: `Tab 2`,
+            { 
+              label: `Thông tin khác`,
               key: `details`,
               children: <HeaderTable form={form} updateMode={updateMode} />,
             },

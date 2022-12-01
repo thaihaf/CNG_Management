@@ -20,6 +20,7 @@ import {
   Menu,
   message,
   Modal,
+  notification,
   Row,
   Select,
   Space,
@@ -175,12 +176,11 @@ export default function TableUpdate({ form, updateMode }) {
     const index = record.index;
 
     Modal.confirm({
-      title: "Delete Product",
+      title: `Xác nhận xoá Sản phẩm`,
       icon: <ExclamationCircleOutlined />,
-      content:
-        "Are you really want to Delete Product? Action can't revert, scarefully",
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: `Bạn có chắc chắn muốn xoá Sản phẩm không?`,
+      okText: "Xoá bỏ",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         if (typeof record.id === "number") {
           setIsLoading(true);
@@ -204,13 +204,20 @@ export default function TableUpdate({ form, updateMode }) {
               });
               dispatch(updateProductExport(newListProduct1));
               dispatch(updateListProductLv2(newListProductv2_1));
-              message.success("Delete Product Export Deatails Successfully");
+              notification.success({
+                message: "Xoá Sản phẩm",
+                description: "Xoá Sản phẩm nhập thành công",
+              });
               setIsLoading(false);
               onHandleCaculatorTotal(newListProduct);
             })
             .catch((err) => {
               setIsLoading(false);
               console.log(err);
+              notification.error({
+                message: "Xoá Sản phẩm",
+                description: "Xoá Sản phẩm nhập thất bại",
+              });
             });
         } else {
           const newListProduct = productsExport.filter(
@@ -303,17 +310,19 @@ export default function TableUpdate({ form, updateMode }) {
 
     if (warehouseDelete.id && warehouseInDB.length > 1) {
       Modal.confirm({
-        title: "Delete Product Warehouse",
+        title: "Xoá Kho hàng",
         icon: <ExclamationCircleOutlined />,
-        content:
-          "Are you really want to Delete Product Warehouse? Action can't revert, scarefully",
-        okText: "Delete",
-        cancelText: "Cancel",
+        content: "Bạn có chắc chắn muốn xoá Kho hàng không?",
+        okText: "Xoá bỏ",
+        cancelText: "Huỷ bỏ",
         onOk: () => {
           setIsLoading(true);
           dispatch(deleteProductExportDetailWarehouse(warehouseDelete.id))
             .then((res) => {
-              message.success("Delete Warehouse successfully");
+              notification.success({
+                message: "Xoá Kho hàng",
+                description: "Xoá Kho hàng thành công!",
+              });
               callback(name);
               onHandleChangeQuantity(record);
               setIsLoading(false);
@@ -321,6 +330,10 @@ export default function TableUpdate({ form, updateMode }) {
             .catch((err) => {
               console.log(err);
               setIsLoading(false);
+              notification.error({
+                message: "Xoá Kho hàng",
+                description: "Xoá Kho hàng thành công!",
+              });
             });
         },
         onCancel: () => {},
@@ -474,7 +487,7 @@ export default function TableUpdate({ form, updateMode }) {
 
   const productColumns = [
     {
-      title: "Index",
+      title: "Vị trí",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -484,7 +497,7 @@ export default function TableUpdate({ form, updateMode }) {
       render: (_, record) => <Title level={4}>{record.index}</Title>,
     },
     {
-      title: "Product",
+      title: "Sản phẩm",
       dataIndex: "id",
       key: "id",
       align: "center",
@@ -543,7 +556,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Product Details",
+      title: "Chi tiết sản phẩm",
       dataIndex: "productDetails",
       key: "productDetails",
       align: "center",
@@ -574,7 +587,7 @@ export default function TableUpdate({ form, updateMode }) {
               rules={[
                 {
                   required: true,
-                  message: "Missing shipment",
+                  message: "Số lô bị thiếu",
                 },
               ]}
               style={{
@@ -583,7 +596,7 @@ export default function TableUpdate({ form, updateMode }) {
             >
               {record.productDetailDTO?.length && isEditing(record) ? (
                 <Select
-                  placeholder="Shipment"
+                  placeholder="Số lô"
                   onChange={(value) => {
                     let productDetailsFilter = record.productDetailDTO?.filter(
                       (item) => item.shipment === value
@@ -639,7 +652,7 @@ export default function TableUpdate({ form, updateMode }) {
                 <Input
                   type="text"
                   disabled
-                  placeholder="Shipment"
+                  placeholder="Số lô"
                   style={{
                     color: "black",
                   }}
@@ -656,7 +669,7 @@ export default function TableUpdate({ form, updateMode }) {
               rules={[
                 {
                   required: true,
-                  message: "Missing Type",
+                  message: "Loại sản phẩm bị thiếu",
                 },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
@@ -681,14 +694,14 @@ export default function TableUpdate({ form, updateMode }) {
                       return Promise.resolve();
                     }
                     return Promise.reject(
-                      new Error("Product Details duplicated!")
+                      new Error("Loại sản phẩm bị lặp lại!")
                     );
                   },
                 }),
               ]}
             >
               <Select
-                placeholder="Type"
+                placeholder="Loại sản phẩm"
                 notFoundContent={null}
                 onChange={(value, option) => {
                   form.setFieldValue([
@@ -754,7 +767,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Price Per Square Meter (vnđ)",
+      title: "Giá trên mỗi mét vuông (vnđ)",
       dataIndex: "pricePerSquareMeter",
       key: "pricePerSquareMeter",
       align: "center",
@@ -790,7 +803,7 @@ export default function TableUpdate({ form, updateMode }) {
             rules={[
               {
                 required: true,
-                message: "Missing Price Per Square Meter",
+                message: "Giá trên mỗi mét vuông bị thiếu",
               },
             ]}
             onChange={(value) => onHandleChangeCost(record, value)}
@@ -824,7 +837,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Quantity Box",
+      title: "Hộp số lượng",
       dataIndex: "quantityBox",
       key: "quantityBox",
       align: "center",
@@ -862,7 +875,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Square Meter (m2)",
+      title: "Mét vuông (m2)",
       dataIndex: "totalSquareMeter",
       key: "totalSquareMeter",
       align: "center",
@@ -903,7 +916,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Price (vnđ)",
+      title: "Giá (vnđ)",
       dataIndex: "totalPrice",
       key: "totalPrice",
       align: "center",
@@ -941,7 +954,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Product Note",
+      title: "Ghi chú",
       dataIndex: "noteExport",
       key: "noteExport",
       align: "center",
@@ -959,7 +972,7 @@ export default function TableUpdate({ form, updateMode }) {
             <Input.TextArea
               showCount
               maxLength={300}
-              placeholder="Product note"
+              placeholder="Ghi chú"
               disabled={!isEditing(record)}
               style={{
                 height: "100%",
@@ -987,20 +1000,20 @@ export default function TableUpdate({ form, updateMode }) {
                   onClick={() => onRowEdit(record)}
                   disabled={isEditing(record)}
                 >
-                  Edit Product
+                  Chỉnh sửa sản phẩm
                 </Menu.Item>
               )}
               <Menu.Item
                 onClick={() => onRowDelete("deleteProduct", record)}
                 disabled={productsExport.length <= 1}
               >
-                Remove Product
+                Xoá sản phẩm
               </Menu.Item>
             </Menu>
           }
         >
           <a>
-            More <DownOutlined />
+            Xem thêm <DownOutlined />
           </a>
         </Dropdown>
       ),

@@ -11,6 +11,7 @@ import {
   Spin,
   Typography,
   message,
+  notification,
 } from "antd";
 import { updateDetails } from "features/brand-manager/brandManager";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,13 +54,18 @@ function BrandDetailsForm() {
     )
       .then(unwrapResult)
       .then((res) => {
-        console.log(res);
-        message.success("Update success!");
+        notification.success({
+          message: "Nhãn hàng",
+          description: "Cập nhật thông tin Nhãn hàng thành công",
+        });
       })
       .catch((error) => {
         console.log(error);
         console.log(dataDetails.id);
-        message.error("Update failed!!!");
+        notification.error({
+          message: "Nhãn hàng",
+          description: "Cập nhật thông tin Nhãn hàng thất bại",
+        });
       });
   };
 
@@ -98,7 +104,7 @@ function BrandDetailsForm() {
           <div className="details__group">
             <Form.Item
               name="brandName"
-              label={<Text>Brand Name</Text>}
+              label={<Text>Tên Nhãn Hàng</Text>}
               className="details__item"
               rules={[
                 {
@@ -106,7 +112,7 @@ function BrandDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_REQUIRED,
                     MESSAGE_ERROR,
-                    "Brand Name"
+                    "Tên Nhãn Hàng"
                   ),
                 },
                 {
@@ -115,7 +121,7 @@ function BrandDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_NUMBER_LETTER,
                     MESSAGE_ERROR,
-                    "Brand Name"
+                    "Tên Nhãn Hàng"
                   ),
                 },
                 {
@@ -123,7 +129,7 @@ function BrandDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_NUMBER_MAX,
                     MESSAGE_ERROR,
-                    "Brand Name",
+                    "Tên Nhãn Hàng",
                     25
                   ),
                 },
@@ -132,7 +138,7 @@ function BrandDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_NUMBER_MIN,
                     MESSAGE_ERROR,
-                    "Brand Name",
+                    "Tên Nhãn Hàng",
                     2
                   ),
                 },
@@ -142,7 +148,7 @@ function BrandDetailsForm() {
             </Form.Item>
             <Form.Item
               name="supplierId"
-              label={<Text>Supplier Name</Text>}
+              label={<Text>Tên Nhà cung cấp</Text>}
               className="details__item"
               rules={[
                 {
@@ -150,7 +156,7 @@ function BrandDetailsForm() {
                   message: getMessage(
                     CODE_ERROR.ERROR_REQUIRED,
                     MESSAGE_ERROR,
-                    "Supplier Id"
+                    "Nhà cung cấp"
                   ),
                 },
               ]}
@@ -196,7 +202,7 @@ function BrandDetailsForm() {
                 size={"large"}
                 htmlType="submit"
               >
-                Update
+                Cập nhật
               </Button>
             </Form.Item>
             <Form.Item className="details__item">
@@ -207,7 +213,7 @@ function BrandDetailsForm() {
                 size={"large"}
                 htmlType="reset"
               >
-                Reset
+                Đặt lại
               </Button>
             </Form.Item>
           </div>

@@ -20,6 +20,7 @@ import {
   message,
   Spin,
   Steps,
+  notification,
 } from "antd";
 import { updateDetails } from "features/supplier-manager/supplierManager";
 import { useDispatch, useSelector } from "react-redux";
@@ -112,12 +113,18 @@ function SupplierDetailsForm() {
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
-        message.success("Update success!");
+        notification.success({
+          message: "Chi tiết Nhà cung cấp",
+          description: "Cập nhật thông tin thành công",
+        });
       })
       .catch((error) => {
         console.log(error);
         console.log(dataDetails.id);
-        message.error("Update failed!!!");
+        notification.error({
+          message: "Chi tiết Nhà cung cấp",
+          description: "Cập nhật thông tin thất bại",
+        });
       });
   };
 
@@ -146,7 +153,7 @@ function SupplierDetailsForm() {
         <div className="product-details">
           <div className="actions-group">
             <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-              {createMode ? "Create Supplier" : "Supplier Details"}
+              {createMode ? "Tạo nhà Cung cấp" : "Chi tiết nhà Cung cấp"}
             </Title>
 
             <Button
@@ -170,7 +177,7 @@ function SupplierDetailsForm() {
                 alt=""
                 style={{ height: "2.5rem", width: "2.5rem" }}
               />
-              Reset
+              Đặt lại
             </Button>
 
             {!createMode && (
@@ -196,7 +203,7 @@ function SupplierDetailsForm() {
                     alt=""
                     style={{ height: "2.5rem", width: "2.5rem" }}
                   />
-                  Delete
+                  Xoá bỏ
                 </Button>
                 <Button
                   type="primary"
@@ -219,7 +226,7 @@ function SupplierDetailsForm() {
                     alt=""
                     style={{ height: "2.5rem", width: "2.5rem" }}
                   />
-                  Update
+                  Cập nhật
                 </Button>
               </>
             )}
@@ -246,7 +253,7 @@ function SupplierDetailsForm() {
                   alt=""
                   style={{ height: "2.5rem", width: "2.5rem" }}
                 />
-                Create
+                Tạo mới
               </Button>
             )}
           </div>
@@ -269,7 +276,7 @@ function SupplierDetailsForm() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Avatar"
+                      "Ảnh đại diện"
                     ),
                   },
                 ]}
@@ -304,13 +311,13 @@ function SupplierDetailsForm() {
 
             <Steps direction="vertical" className="list-data">
               <Step
-                title="Supplier Information"
+                title="Thông tin liên hệ"
                 status="finish"
                 description={
                   <div className="group-data">
                     <Form.Item
                       name="supplierName"
-                      label={<Text>Supplier Name</Text>}
+                      label={<Text>Tên Nhà cung cấp</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -318,7 +325,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Supplier Name"
+                            "Tên Nhà cung cấp"
                           ),
                         },
                         {
@@ -327,7 +334,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_LETTER,
                             MESSAGE_ERROR,
-                            "Supplier Name"
+                            "Tên Nhà cung cấp"
                           ),
                         },
                         {
@@ -335,7 +342,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MAX,
                             MESSAGE_ERROR,
-                            "Supplier Name",
+                            "Tên Nhà cung cấp",
                             25
                           ),
                         },
@@ -344,7 +351,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MIN,
                             MESSAGE_ERROR,
-                            "Supplier Name",
+                            "Tên Nhà cung cấp",
                             2
                           ),
                         },
@@ -354,7 +361,7 @@ function SupplierDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name="firstContactName"
-                      label={<Text>First Name</Text>}
+                      label={<Text>Họ của người liên hệ</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -362,7 +369,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "First Name"
+                            "Họ của người liên hệ"
                           ),
                         },
                         {
@@ -371,7 +378,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_FORMAT,
                             MESSAGE_ERROR,
-                            "First Name"
+                            "Họ của người liên hệ"
                           ),
                         },
                         {
@@ -379,7 +386,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MAX,
                             MESSAGE_ERROR,
-                            "First Name",
+                            "Họ của người liên hệ",
                             10
                           ),
                         },
@@ -388,7 +395,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MIN,
                             MESSAGE_ERROR,
-                            "First Name",
+                            "Họ của người liên hệ",
                             2
                           ),
                         },
@@ -398,7 +405,7 @@ function SupplierDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name="lastContactName"
-                      label={<Text>Last Name</Text>}
+                      label={<Text>Tên của người liên hệ</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -406,7 +413,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Last Name"
+                            "Tên của người liên hệ"
                           ),
                         },
                         {
@@ -415,7 +422,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_FORMAT,
                             MESSAGE_ERROR,
-                            "Last name"
+                            "Tên của người liên hệ"
                           ),
                         },
                         {
@@ -423,7 +430,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MAX,
                             MESSAGE_ERROR,
-                            "Last Name",
+                            "Tên của người liên hệ",
                             20
                           ),
                         },
@@ -432,7 +439,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MIN,
                             MESSAGE_ERROR,
-                            "Last Name",
+                            "Tên của người liên hệ",
                             2
                           ),
                         },
@@ -442,7 +449,7 @@ function SupplierDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name="phoneNumberContact"
-                      label={<Text>Phone Number</Text>}
+                      label={<Text>Số điện thoại</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -450,7 +457,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Phone Number"
+                            "Số điện thoại"
                           ),
                         },
                         {
@@ -458,7 +465,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_FORMAT_NUMBER,
                             MESSAGE_ERROR,
-                            "Phone Number"
+                            "Số điện thoại"
                           ),
                         },
                         {
@@ -466,7 +473,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MAX,
                             MESSAGE_ERROR,
-                            "Phone Number",
+                            "Số điện thoại",
                             10
                           ),
                         },
@@ -475,7 +482,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_MIN,
                             MESSAGE_ERROR,
-                            "Phone Number",
+                            "Số điện thoại",
                             9
                           ),
                         },
@@ -484,22 +491,128 @@ function SupplierDetailsForm() {
                       <Input />
                     </Form.Item>
                     <Form.Item
-                      name="description"
-                      label={<Text>Description</Text>}
+                      name="bankName"
+                      label={<Text>Tên ngân hàng</Text>}
                       className="details__item"
+                      rules={[
+                        {
+                          required: true,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_REQUIRED,
+                            MESSAGE_ERROR,
+                            "Tên ngân hàng"
+                          ),
+                        },
+                        {
+                          max: 10,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_NUMBER_MAX,
+                            MESSAGE_ERROR,
+                            "Tên ngân hàng",
+                            10
+                          ),
+                        },
+                        {
+                          min: 2,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_NUMBER_MIN,
+                            MESSAGE_ERROR,
+                            "Tên ngân hàng",
+                            2
+                          ),
+                        },
+                      ]}
                     >
-                      <TextArea
-                        showCount
-                        maxLength={300}
-                        style={{
-                          height: "100%",
-                          resize: "none",
-                          minWidth: "200px",
-                        }}
-                      />
+                      <Input />
                     </Form.Item>
                     <Form.Item
-                      label={<Text>Active Status</Text>}
+                      name="bankAccountNumber"
+                      label={<Text>Số tài khoản</Text>}
+                      className="details__item"
+                      rules={[
+                        {
+                          required: true,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_REQUIRED,
+                            MESSAGE_ERROR,
+                            "Số tài khoản"
+                          ),
+                        },
+                        {
+                          pattern: /^[1-9]{1}[0-9]{5,14}$/,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_FORMAT_NUMBER,
+                            MESSAGE_ERROR,
+                            "Số tài khoản"
+                          ),
+                        },
+                        {
+                          max: 14,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_NUMBER_MAX,
+                            MESSAGE_ERROR,
+                            "Số tài khoản",
+                            14
+                          ),
+                        },
+                        {
+                          min: 5,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_NUMBER_MIN,
+                            MESSAGE_ERROR,
+                            "Số tài khoản",
+                            5
+                          ),
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name="taxCode"
+                      label={<Text>Mã số thuế</Text>}
+                      className="details__item"
+                      rules={[
+                        {
+                          required: true,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_REQUIRED,
+                            MESSAGE_ERROR,
+                            "Mã số thuế"
+                          ),
+                        },
+                        {
+                          pattern: /^[0-9]{10,13}$/,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_NUMBER,
+                            MESSAGE_ERROR,
+                            "Mã số thuế"
+                          ),
+                        },
+                        {
+                          max: 13,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_NUMBER_MAX,
+                            MESSAGE_ERROR,
+                            "Mã số thuế",
+                            13
+                          ),
+                        },
+                        {
+                          min: 10,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_NUMBER_MIN,
+                            MESSAGE_ERROR,
+                            "Mã số thuế",
+                            10
+                          ),
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label={<Text>Trạng thái hoạt động</Text>}
                       className="details__item"
                     >
                       <Switch
@@ -515,135 +628,13 @@ function SupplierDetailsForm() {
               />
 
               <Step
-                title="Supplier Characteristics"
+                title="Địa chỉ Nhà cung cấp"
                 status="finish"
                 description={
                   <div className="group-data">
                     <Form.Item
-                      name="bankName"
-                      label={<Text>Bank Name</Text>}
-                      className="details__item"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Bank Name"
-                          ),
-                        },
-                        {
-                          max: 10,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_NUMBER_MAX,
-                            MESSAGE_ERROR,
-                            "Bank Name",
-                            10
-                          ),
-                        },
-                        {
-                          min: 2,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_NUMBER_MIN,
-                            MESSAGE_ERROR,
-                            "Bank Name",
-                            2
-                          ),
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      name="bankAccountNumber"
-                      label={<Text>Bank Account Number</Text>}
-                      className="details__item"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Bank Account Number"
-                          ),
-                        },
-                        {
-                          pattern: /^[1-9]{1}[0-9]{5,14}$/,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_FORMAT_NUMBER,
-                            MESSAGE_ERROR,
-                            "Bank Account Number"
-                          ),
-                        },
-                        {
-                          max: 14,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_NUMBER_MAX,
-                            MESSAGE_ERROR,
-                            "Bank Account Number",
-                            14
-                          ),
-                        },
-                        {
-                          min: 5,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_NUMBER_MIN,
-                            MESSAGE_ERROR,
-                            "Bank Account Number",
-                            5
-                          ),
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      name="taxCode"
-                      label={<Text>Tax Code</Text>}
-                      className="details__item"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Tax Code"
-                          ),
-                        },
-                        {
-                          pattern: /^[0-9]{10,13}$/,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_NUMBER,
-                            MESSAGE_ERROR,
-                            "Tax Code"
-                          ),
-                        },
-                        {
-                          max: 13,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_NUMBER_MAX,
-                            MESSAGE_ERROR,
-                            "Tax Code",
-                            13
-                          ),
-                        },
-                        {
-                          min: 10,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_NUMBER_MIN,
-                            MESSAGE_ERROR,
-                            "Tax Code",
-                            10
-                          ),
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-
-                    <Form.Item
                       name={["address", "apartmentNumber"]}
-                      label={<Text>Street Name, House No</Text>}
+                      label={<Text>Tên đường, số nhà</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -651,7 +642,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Street Name, House No"
+                            "Tên đường, số nhà"
                           ),
                         },
                       ]}
@@ -660,7 +651,7 @@ function SupplierDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name={["address", "city"]}
-                      label={<Text>City</Text>}
+                      label={<Text>Tỉnh, Thành phố</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -668,7 +659,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "City"
+                            "Tỉnh, Thành phố"
                           ),
                         },
                       ]}
@@ -704,7 +695,7 @@ function SupplierDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name={["address", "district"]}
-                      label={<Text>District</Text>}
+                      label={<Text>Quận, Huyện</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -712,7 +703,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "District"
+                            "Quận, Huyện"
                           ),
                         },
                       ]}
@@ -748,7 +739,7 @@ function SupplierDetailsForm() {
                     </Form.Item>
                     <Form.Item
                       name={["address", "ward"]}
-                      label={<Text>Ward</Text>}
+                      label={<Text>Xã, Phường</Text>}
                       className="details__item"
                       rules={[
                         {
@@ -756,7 +747,7 @@ function SupplierDetailsForm() {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Ward"
+                            "Xã, Phường"
                           ),
                         },
                       ]}
@@ -787,6 +778,21 @@ function SupplierDetailsForm() {
                         })}
                       </Select>
                     </Form.Item>
+                    <Form.Item
+                      name="description"
+                      label={<Text>Mô tả</Text>}
+                      className="details__item"
+                    >
+                      <TextArea
+                        showCount
+                        maxLength={300}
+                        style={{
+                          height: "100%",
+                          resize: "none",
+                          minWidth: "200px",
+                        }}
+                      />
+                    </Form.Item>
                   </div>
                 }
               />
@@ -801,7 +807,7 @@ function SupplierDetailsForm() {
                       width: "100%",
                     }}
                   >
-                    <div>Dept Supplier</div>
+                    <div>Công nợ</div>
                     <DetailsModal updateMode={false} record={initialValues} />
                   </div>
                 }

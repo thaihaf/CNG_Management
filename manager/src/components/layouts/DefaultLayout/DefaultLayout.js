@@ -19,6 +19,7 @@ import {
   Menu,
   message,
   Modal,
+  notification,
   Spin,
   Tabs,
   Tooltip,
@@ -81,11 +82,11 @@ const DefaultLayout = ({ children }) => {
 
   const handleLogout = () => {
     Modal.confirm({
-      title: "Confirm",
+      title: "Xác nhận",
       icon: <ExclamationCircleOutlined />,
-      content: "Are you sure want to Logout",
-      okText: "Logout",
-      cancelText: "Cancel",
+      content: "Bạn có chắc chắn muốn Đăng xuất không?",
+      okText: "Đăng xuất",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         dispatch({ type: "LOGOUT" });
         history.push(AuthPaths.LOGIN);
@@ -100,26 +101,32 @@ const DefaultLayout = ({ children }) => {
     dispatch(changePassword({ data: values }))
       .then(unwrapResult)
       .then((res) => {
-        message.success("Change password success!");
+        notification.success({
+          message: "Thay đổi mật khẩu",
+          description: "Thay đổi mật khẩu thành công!",
+        });
         setIsLoadingModal(false);
         changePassForm.resetFields();
       })
       .catch((error) => {
         if (error.errorKey === "currentPassword") {
           setIsLoadingModal(false);
-          message.error("Current Password not correct, check again!");
+          notification.warning({
+            message: "Thay đổi mật khẩu",
+            description: "Mật khẩu hiện tại không đúng, vui lòng kiểm tra lại!",
+          });
         } else {
-          message.error("Check err in F12");
+          notification.error({
+            message: "Thay đổi mật khẩu",
+            description: "Thay đổi mật khẩu thất bại!",
+          });
         }
       });
   };
 
   return (
     <Layout className="defaultLayout">
-      <div
-        className="left-bar"
-        onMouseMove={() => setOpen(true)}
-      ></div>
+      <div className="left-bar" onMouseMove={() => setOpen(true)}></div>
       <BackTop />
 
       <Drawer
@@ -174,7 +181,7 @@ const DefaultLayout = ({ children }) => {
                          </span> */}
 
           <div className="info">
-            <Tooltip placement="topRight" title={"Click to show Menubar"}>
+            <Tooltip placement="topRight" title={"Chọn để hiện thị Cài đặt"}>
               <div className="info_avt" onClick={() => setModal1Open(true)}>
                 <img
                   src={avatar ? avatar : avt_default}
@@ -190,7 +197,7 @@ const DefaultLayout = ({ children }) => {
             </div>
 
             <Modal
-              title="Menu"
+              title="Cài đặt"
               style={{ top: 20 }}
               open={modal1Open}
               onOk={() => setModal1Open(false)}
@@ -208,7 +215,7 @@ const DefaultLayout = ({ children }) => {
                       label: (
                         <span>
                           <BarcodeOutlined />
-                          Change Password
+                          Thay đổi mật khẩu
                         </span>
                       ),
                       key: "changePassword",
@@ -230,7 +237,7 @@ const DefaultLayout = ({ children }) => {
                           <div className="details__group">
                             <Form.Item
                               name="currentPassword"
-                              label={<Text>Current Password</Text>}
+                              label={<Text>Mật khẩu hiện tại</Text>}
                               className="details__item"
                               rules={[
                                 {
@@ -238,15 +245,16 @@ const DefaultLayout = ({ children }) => {
                                   message: getMessage(
                                     CODE_ERROR.ERROR_REQUIRED,
                                     MESSAGE_ERROR,
-                                    "Current Password"
+                                    "Mật khẩu hiện tại"
                                   ),
                                 },
                                 {
-                                    pattern:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
-                                    message: getMessage(
-                                      CODE_ERROR.ERROR_FORMAT_PASSWORD,
-                                      MESSAGE_ERROR,
-                                      "Current Password"
+                                  pattern:
+                                    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+                                  message: getMessage(
+                                    CODE_ERROR.ERROR_FORMAT_PASSWORD,
+                                    MESSAGE_ERROR,
+                                    "Mật khẩu hiện tại"
                                   ),
                                 },
                                 {
@@ -254,7 +262,7 @@ const DefaultLayout = ({ children }) => {
                                   message: getMessage(
                                     CODE_ERROR.ERROR_MAX_LENGTH,
                                     MESSAGE_ERROR,
-                                    "Current Password",
+                                    "Mật khẩu hiện tại",
                                     25
                                   ),
                                 },
@@ -263,7 +271,7 @@ const DefaultLayout = ({ children }) => {
                                   message: getMessage(
                                     CODE_ERROR.ERROR_MIN_LENGTH,
                                     MESSAGE_ERROR,
-                                    "Current Password",
+                                    "Mật khẩu hiện tại",
                                     8
                                   ),
                                 },
@@ -279,7 +287,7 @@ const DefaultLayout = ({ children }) => {
                           <div className="details__group">
                             <Form.Item
                               name="newPassword"
-                              label={<Text>New Password</Text>}
+                              label={<Text>Mật khẩu mới</Text>}
                               className="details__item"
                               dependencies={["currentPassword"]}
                               rules={[
@@ -288,15 +296,16 @@ const DefaultLayout = ({ children }) => {
                                   message: getMessage(
                                     CODE_ERROR.ERROR_REQUIRED,
                                     MESSAGE_ERROR,
-                                    "New Password"
+                                    "Mật khẩu mới"
                                   ),
                                 },
                                 {
-                                    pattern:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
-                                    message: getMessage(
-                                      CODE_ERROR.ERROR_FORMAT_PASSWORD,
-                                      MESSAGE_ERROR,
-                                      "New Password"
+                                  pattern:
+                                    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+                                  message: getMessage(
+                                    CODE_ERROR.ERROR_FORMAT_PASSWORD,
+                                    MESSAGE_ERROR,
+                                    "Mật khẩu mới"
                                   ),
                                 },
                                 {
@@ -304,7 +313,7 @@ const DefaultLayout = ({ children }) => {
                                   message: getMessage(
                                     CODE_ERROR.ERROR_MAX_LENGTH,
                                     MESSAGE_ERROR,
-                                    "New Password",
+                                    "Mật khẩu mới",
                                     25
                                   ),
                                 },
@@ -313,7 +322,7 @@ const DefaultLayout = ({ children }) => {
                                   message: getMessage(
                                     CODE_ERROR.ERROR_MIN_LENGTH,
                                     MESSAGE_ERROR,
-                                    "New Password",
+                                    "Mật khẩu mới",
                                     8
                                   ),
                                 },
@@ -327,7 +336,7 @@ const DefaultLayout = ({ children }) => {
                                     }
                                     return Promise.reject(
                                       new Error(
-                                        "The Current passwords and New passwords that you entered match!"
+                                        "Mật khẩu mới và Mật khẩu hiện tại phải khác nhau"
                                       )
                                     );
                                   },
@@ -344,7 +353,7 @@ const DefaultLayout = ({ children }) => {
                           <div className="details__group">
                             <Form.Item
                               name="confirmNewPassword"
-                              label={<Text>Confirm New Password</Text>}
+                              label={<Text>Xác nhận mật khẩu</Text>}
                               className="details__item"
                               dependencies={["newPassword"]}
                               rules={[
@@ -353,15 +362,16 @@ const DefaultLayout = ({ children }) => {
                                   message: getMessage(
                                     CODE_ERROR.ERROR_REQUIRED,
                                     MESSAGE_ERROR,
-                                    "Confirm New Password"
+                                    "Xác nhận mật khẩu"
                                   ),
                                 },
                                 {
-                                    pattern:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
-                                    message: getMessage(
-                                      CODE_ERROR.ERROR_FORMAT_PASSWORD,
-                                      MESSAGE_ERROR,
-                                      "Confirm New Password"
+                                  pattern:
+                                    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
+                                  message: getMessage(
+                                    CODE_ERROR.ERROR_FORMAT_PASSWORD,
+                                    MESSAGE_ERROR,
+                                    "Xác nhận mật khẩu"
                                   ),
                                 },
                                 {
@@ -369,7 +379,7 @@ const DefaultLayout = ({ children }) => {
                                   message: getMessage(
                                     CODE_ERROR.ERROR_MAX_LENGTH,
                                     MESSAGE_ERROR,
-                                    "Confirm New Password",
+                                    "Xác nhận mật khẩu",
                                     25
                                   ),
                                 },
@@ -378,7 +388,7 @@ const DefaultLayout = ({ children }) => {
                                   message: getMessage(
                                     CODE_ERROR.ERROR_MIN_LENGTH,
                                     MESSAGE_ERROR,
-                                    "Confirm New Password",
+                                    "Xác nhận mật khẩu",
                                     8
                                   ),
                                 },
@@ -392,7 +402,7 @@ const DefaultLayout = ({ children }) => {
                                     }
                                     return Promise.reject(
                                       new Error(
-                                        "The New passwords and Confirm passwords that you entered do not match!"
+                                        "Xác nhận mật khẩu và Mật khẩu mới phải giống nhau"
                                       )
                                     );
                                   },
@@ -417,7 +427,7 @@ const DefaultLayout = ({ children }) => {
                                 changePassForm.resetFields();
                               }}
                             >
-                              Cancel
+                              Huỷ bỏ
                             </Button>
                             <Button
                               key="submit"
@@ -425,7 +435,7 @@ const DefaultLayout = ({ children }) => {
                               type="primary"
                               htmlType="submit"
                             >
-                              Submit
+                              Xác nhận
                             </Button>
                           </div>
                         </Form>
@@ -435,7 +445,7 @@ const DefaultLayout = ({ children }) => {
                       label: (
                         <span>
                           <SettingOutlined />
-                          Setting
+                          Hệ thống
                         </span>
                       ),
                       key: "setting",
@@ -488,10 +498,10 @@ const DefaultLayout = ({ children }) => {
               })}
             </Breadcrumb>
 
-            <Tooltip placement="bottomRight" title={"Logout"}>
+            <Tooltip placement="bottomRight" title={"Đăng xuất"}>
               <div className="logout" onClick={handleLogout}>
                 <img src={logoutIcon} alt="" />
-                <span>Logout</span>
+                <span>Đăng xuất</span>
               </div>
             </Tooltip>
           </div>

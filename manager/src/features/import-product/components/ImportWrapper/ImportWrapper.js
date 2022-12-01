@@ -3,6 +3,7 @@ import {
   Form,
   message,
   Modal,
+  notification,
   Select,
   Spin,
   Tabs,
@@ -64,12 +65,11 @@ const ImportWrapper = ({ updateMode }) => {
 
   const onDeleteProductImport = () => {
     Modal.confirm({
-      title: "Delete Product Import",
+      title: "Xoá Đơn nhập",
       icon: <ExclamationCircleOutlined />,
-      content:
-        "Are you really want to Delete Product Import? Action can't revert, scarefully",
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: "Bạn có chắc chắn muốn xoá Đơn nhập không?",
+      okText: "Xoá bỏ",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
         dispatch(deleteProductImport(productImportDetails.id))
@@ -77,12 +77,18 @@ const ImportWrapper = ({ updateMode }) => {
           .then((res) => {
             dispatch(clearProductImport());
             history.push(ImportProductManagerPaths.LIST_PRODUCT_IMPORT);
-            message.success("Delete Product Import successfully");
+            notification.success({
+              message: "Xoá Đơn nhập",
+              description: "Xoá Xoá Đơn nhập thành công!",
+            });
             setIsLoading(false);
           })
           .catch((err) => {
             console.log(err);
-            message.error("Error deleting Product Import");
+            notification.error({
+              message: "Xoá Đơn nhập",
+              description: "Xoá Xoá Đơn nhập thất bại",
+            });
           });
       },
       onCancel: () => {},
@@ -127,7 +133,10 @@ const ImportWrapper = ({ updateMode }) => {
     }
 
     if (listProduct.length === 0) {
-      message.warning("You must insert least once product to table");
+      notification.warning({
+        message: "Đơn nhập",
+        description: "Vui lòng nhập ít nhất một sản phẩm!",
+      });
       return;
     }
 
@@ -140,9 +149,10 @@ const ImportWrapper = ({ updateMode }) => {
     });
 
     if (pLostWarehouse) {
-      message.warning(
-        `Product Id ${pLostWarehouse.id}, with index of ${pLostWarehouse.index} need select warehouse`
-      );
+      notification.warning({
+        message: "Đơn nhập",
+        description: `Sản phẩm có Mã ${pLostWarehouse.id}, với vị trí tại ${pLostWarehouse.index} cần chọn ít nhất một Kho`,
+      });
       return;
     }
 
@@ -183,15 +193,19 @@ const ImportWrapper = ({ updateMode }) => {
       .then(unwrapResult)
       .then((res) => {
         setIsLoading(false);
-        message.success(
-          `${updateMode ? "Update" : "Create"} Product Import Successfully!`
-        );
+        notification.success({
+          message: "Đơn nhập",
+          description:  `${updateMode ? "Cập nhật" : "Tạo mới"} Đơn nhập thành công!`
+        });
         history.push(ImportProductManagerPaths.LIST_PRODUCT_IMPORT);
       })
       .catch((err) => {
         setIsLoading(false);
         console.log(err);
-        message.error(err);
+        notification.error({
+          message: "Đơn nhập",
+          description:  `${updateMode ? "Cập nhật" : "Tạo mới"} Đơn nhập thất bại!`
+        });
       });
   };
 
@@ -224,7 +238,7 @@ const ImportWrapper = ({ updateMode }) => {
 
         <div className="actions-group">
           <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-            Import Product Details
+            Chi tiết Đơn nhập
           </Title>
 
           {updateMode &&
@@ -252,7 +266,7 @@ const ImportWrapper = ({ updateMode }) => {
                     alt=""
                     style={{ height: "2.5rem", width: "2.5rem" }}
                   />
-                  Delete
+                  Xoá bỏ
                 </Button>
                 <Button
                   type="primary"
@@ -277,7 +291,7 @@ const ImportWrapper = ({ updateMode }) => {
                     alt=""
                     style={{ height: "2.5rem", width: "2.5rem" }}
                   />
-                  "Update"
+                  Cập nhật
                 </Button>
               </>
             )}
@@ -306,7 +320,7 @@ const ImportWrapper = ({ updateMode }) => {
                 alt=""
                 style={{ height: "2.5rem", width: "2.5rem" }}
               />
-              "Create"
+              Tạo mới
             </Button>
           )}
         </div>
@@ -317,7 +331,7 @@ const ImportWrapper = ({ updateMode }) => {
           onTabClick={(key) => setActiveTab(key)}
           items={[
             {
-              label: `Tab 1`,
+              label: `Danh sách sản phẩm`,
               key: `table`,
               children: updateMode ? (
                 <TableUpdate form={form} updateMode={updateMode} />
@@ -326,7 +340,7 @@ const ImportWrapper = ({ updateMode }) => {
               ),
             },
             {
-              label: `Tab 2`,
+              label: `Thông tin khác`,
               key: `details`,
               children: <HeaderTable form={form} updateMode={updateMode} />,
             },

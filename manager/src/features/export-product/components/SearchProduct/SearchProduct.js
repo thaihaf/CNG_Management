@@ -1,4 +1,4 @@
-import { message, Select } from "antd";
+import { message, notification, Select } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -47,7 +47,10 @@ const SearchProduct = () => {
     }
   };
   const handleSelectChange = (newValue, option) => {
-    message.success("Insert Product Export Success");
+    notification.success({
+      message: "Đơn xuất",
+      description: `Thêm sản phẩm thành công!`,
+    });
 
     setSearchProductVal(newValue);
     dispatch(
@@ -60,7 +63,7 @@ const SearchProduct = () => {
 
   return (
     <Select
-      placeholder="Search product"
+      placeholder="Tìm kiếm sản phẩm"
       style={{
         minWidth: 200,
         width: 350,
@@ -71,7 +74,7 @@ const SearchProduct = () => {
       allowClear
       optionLabelProp="label"
       filterOption={false}
-      notFoundContent={null}
+      showArrow={false}
       defaultActiveFirstOption={false}
       value={searchProductVal}
       onSearch={handleSearch}
@@ -93,12 +96,12 @@ const SearchProduct = () => {
             </div>
             <div className="search-details">
               <div className="search-name">
-                Name : {d.productName.toUpperCase()}
+                Tên : {d.productName.toUpperCase()}
               </div>
               <div className="search-code">
                 {d.id} - {d.titleSize}
               </div>
-              <div className="search-origin">Origin : {d.origin}</div>
+              <div className="search-origin">Suất xứ : {d.origin}</div>
             </div>
           </Option>
         );

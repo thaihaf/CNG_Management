@@ -26,7 +26,7 @@ export default function HeaderTable({ form, updateMode }) {
     <div className="headerHidden">
       <Form.Item
         name="employeeId"
-        label={<Text>Employee</Text>}
+        label={<Text>Nhân viên</Text>}
         className="details__item"
         rules={[
           {
@@ -34,7 +34,7 @@ export default function HeaderTable({ form, updateMode }) {
             message: getMessage(
               CODE_ERROR.ERROR_REQUIRED,
               MESSAGE_ERROR,
-              "Employee"
+              "Nhân viên"
             ),
           },
         ]}
@@ -61,7 +61,7 @@ export default function HeaderTable({ form, updateMode }) {
       </Form.Item>
       <Form.Item
         name="licensePlates"
-        label={<Text>License Plates</Text>}
+        label={<Text>Biển số xe</Text>}
         className="details__item"
         rules={[
           {
@@ -69,7 +69,7 @@ export default function HeaderTable({ form, updateMode }) {
             message: getMessage(
               CODE_ERROR.ERROR_REQUIRED,
               MESSAGE_ERROR,
-              "License Plates"
+              "Biển số xe"
             ),
           },
         ]}
@@ -78,7 +78,7 @@ export default function HeaderTable({ form, updateMode }) {
       </Form.Item>
       <Form.Item
         name="importDate"
-        label={<Text>Import Date</Text>}
+        label={<Text>Ngày nhập</Text>}
         className="details__item"
         rules={[
           {
@@ -86,7 +86,7 @@ export default function HeaderTable({ form, updateMode }) {
             message: getMessage(
               CODE_ERROR.ERROR_REQUIRED,
               MESSAGE_ERROR,
-              "Import Date"
+              "Ngày nhập"
             ),
           },
         ]}
@@ -104,30 +104,32 @@ export default function HeaderTable({ form, updateMode }) {
           // }}
         />
       </Form.Item>
-      {updateMode && <Form.Item
-        name="status"
-        label={<Text>Status</Text>}
-        className="details__item"
-        rules={[
-          {
-            required: true,
-            message: getMessage(
-              CODE_ERROR.ERROR_REQUIRED,
-              MESSAGE_ERROR,
-              "Status"
-            ),
-          },
-        ]}
-      >
-        <Select
-          showSearch
-          allowClear
-          options={statusProductImport}
-          onChange={(value) =>
-            form.setFieldValue("statusImport", getStatusString(value))
-          }
-        ></Select>
-      </Form.Item>}
+      {updateMode && (
+        <Form.Item
+          name="status"
+          label={<Text>Trạng thái</Text>}
+          className="details__item"
+          rules={[
+            {
+              required: true,
+              message: getMessage(
+                CODE_ERROR.ERROR_REQUIRED,
+                MESSAGE_ERROR,
+                "Trạng thái"
+              ),
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            allowClear
+            options={statusProductImport}
+            onChange={(value) =>
+              form.setFieldValue("statusImport", getStatusString(value))
+            }
+          ></Select>
+        </Form.Item>
+      )}
     </div>
   );
 }

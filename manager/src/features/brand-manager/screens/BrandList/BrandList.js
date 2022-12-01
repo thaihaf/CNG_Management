@@ -22,6 +22,7 @@ import {
   Dropdown,
   Menu,
   Select,
+  notification,
 } from "antd";
 import {
   BrandManagerPaths,
@@ -119,9 +120,9 @@ export default function BrandList() {
     Modal.confirm({
       title: "Confirm",
       icon: <ExclamationCircleOutlined />,
-      content: "Delete can't revert, scarefully",
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: "Bạn có chắc chắn muốn xoá Nhãn hàng không?",
+      okText: "Xoá",
+      cancelText: "Trở lại",
       onOk: () => {
         setIsLoading(true);
         dispatch(
@@ -134,10 +135,17 @@ export default function BrandList() {
               .then(unwrapResult)
               .then(() => setIsLoading(false));
             message.success("Delete success!");
+            notification.success({
+              message: "Xoá Nhãn hàng",
+              description: "Xoá nhãn hàng thành công!",
+            });
           })
           .catch((error) => {
             console.log(error);
-            message.success("Delete failed!!!");
+            notification.error({
+              message: "Xoá Nhãn hàng",
+              description: "Xoá nhãn hàng không thành công!",
+            });
           });
       },
       onCancel: () => {},
@@ -275,7 +283,7 @@ export default function BrandList() {
 
   const columns = [
     {
-      title: "Brand Id",
+      title: "ID",
       dataIndex: "id",
       key: "id",
       width: "20%",
@@ -284,7 +292,7 @@ export default function BrandList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Brand Name",
+      title: "Tên Nhãn hàng",
       dataIndex: "brandName",
       key: "brandName",
       width: "20%",
@@ -293,7 +301,7 @@ export default function BrandList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Supplier Name",
+      title: "Tên Nhà cung cấp",
       dataIndex: "supplierName",
       key: "supplierName",
 
@@ -303,7 +311,7 @@ export default function BrandList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       filters: [
@@ -335,7 +343,7 @@ export default function BrandList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Actions",
+      title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       render: (_, record) => (
@@ -345,12 +353,12 @@ export default function BrandList() {
               items={[
                 {
                   key: 1,
-                  label: "View Details and Update",
+                  label: "Xem chi tiết và Chỉnh sửa",
                   onClick: () => onRowDetails(record),
                 },
                 {
                   key: 2,
-                  label: "Delete Brand",
+                  label: "Xoá nhãn hàng",
                   onClick: () => onRowDelete(record),
                 },
               ]}
@@ -358,7 +366,7 @@ export default function BrandList() {
           }
         >
           <a>
-            More <DownOutlined />
+            Nhiều hơn <DownOutlined />
           </a>
         </Dropdown>
       ),
@@ -379,13 +387,18 @@ export default function BrandList() {
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
-        message.success("Create brand success!");
+       notification.success({
+         message: "Nhãn hàng",
+         description: "Tạo mới Nhãn hàng thành công",
+       });
       })
       .catch((error) => {
         console.log(error);
         console.log(args);
-        message.error("Create brand failed!");
-        //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
+         notification.error({
+           message: "Nhãn hàng",
+           description: "Tạo mới Nhãn hàng thất bại",
+         });
       });
   };
 
@@ -396,14 +409,14 @@ export default function BrandList() {
   return (
     <div className="employee-list">
       <div className="top">
-        <Title level={2}>Brand List</Title>
+        <Title level={2}>Danh sách Nhãn Hàng</Title>
         <div>
           <span
             style={{
               marginRight: 9,
             }}
           >
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
           </span>
           <Button
             className="btnDelete"
@@ -413,7 +426,7 @@ export default function BrandList() {
             shape="round"
             icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
           >
-            Delete
+            Xoá Nhãn Hàng
           </Button>
           <Button
             type="primary"
@@ -421,10 +434,10 @@ export default function BrandList() {
             size={"large"}
             onClick={() => setModal1Open(true)}
           >
-            Create Brand
+            Tạo Nhãn Hàng
           </Button>
           <Modal
-            title="Create New Brand"
+            title="Tạo Mới Nhãn Hàng"
             style={{ top: 20 }}
             open={modal1Open}
             onOk={() => setModal1Open(false)}
@@ -447,7 +460,7 @@ export default function BrandList() {
               <div className="details__group">
                 <Form.Item
                   name="supplierId"
-                  label={<Text>Supplier Name</Text>}
+                  label={<Text>Tên Nhà cung cấp</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -455,14 +468,14 @@ export default function BrandList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED_SELECT,
                         MESSAGE_ERROR,
-                        "Supplier Name"
+                        "Tên Nhà cung cấp"
                       ),
                     },
                   ]}
                 >
                   <Select
                     showSearch
-                    placeholder="Select a supplier"
+                    placeholder="Chọn Nhà cung cấp"
                     optionFilterProp="children"
                     onChange={onChange}
                     onSearch={onSearch}
@@ -481,7 +494,7 @@ export default function BrandList() {
                 </Form.Item>
                 <Form.Item
                   name="brandName"
-                  label={<Text>Brand Name</Text>}
+                  label={<Text>Tên Nhãn Hàng</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -489,7 +502,7 @@ export default function BrandList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Brand Name"
+                        "Tên Nhãn Hàng"
                       ),
                     },
                     {
@@ -498,7 +511,7 @@ export default function BrandList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_LETTER,
                         MESSAGE_ERROR,
-                        "Brand Name"
+                        "Tên Nhãn Hàng"
                       ),
                     },
                     {
@@ -506,7 +519,7 @@ export default function BrandList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Brand Name",
+                        "Tên Nhãn Hàng",
                         25
                       ),
                     },
@@ -515,13 +528,13 @@ export default function BrandList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Brand Name",
+                        "Tên Nhãn Hàng",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="Brand Name" />
+                  <Input placeholder="Tên Nhãn Hàng" />
                 </Form.Item>
               </div>
               <div className="btns">
@@ -534,7 +547,7 @@ export default function BrandList() {
                     form.resetFields();
                   }}
                 >
-                  Cancel
+                  Trở lại
                 </Button>
                 <Button
                   key="submit"
@@ -542,7 +555,7 @@ export default function BrandList() {
                   type="primary"
                   htmlType="submit"
                 >
-                  Submit
+                  Tạo
                 </Button>
               </div>
             </Form>

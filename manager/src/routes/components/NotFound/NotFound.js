@@ -20,11 +20,11 @@ const NotFound = () => {
           <Result
                status="404"
                title="404"
-               subTitle="Sorry, the page you visited does not exist."
+               subTitle="Xin lỗi, trang này hiện không tồn tại trong hệ thống"
                style={{ color: "black" }}
                extra={
                     <Link to="/">
-                         <Button type="primary">Back Home</Button>
+                         <Button type="primary">Trở về Trang chủ</Button>
                     </Link>
                }
           />

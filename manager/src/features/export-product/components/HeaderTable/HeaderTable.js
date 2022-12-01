@@ -27,7 +27,7 @@ export default function HeaderTable({ form, updateMode }) {
     <div className="headerHidden">
       <Form.Item
         name="customerId"
-        label={<Text>Customer</Text>}
+        label={<Text>Khách hàng</Text>}
         className="details__item"
         rules={[
           {
@@ -35,7 +35,7 @@ export default function HeaderTable({ form, updateMode }) {
             message: getMessage(
               CODE_ERROR.ERROR_REQUIRED,
               MESSAGE_ERROR,
-              "Customer"
+              "Khách hàng"
             ),
           },
         ]}
@@ -63,7 +63,7 @@ export default function HeaderTable({ form, updateMode }) {
       </Form.Item>
       <Form.Item
         name="employeeId"
-        label={<Text>Seller</Text>}
+        label={<Text>Người bán</Text>}
         className="details__item"
         rules={[
           {
@@ -71,7 +71,7 @@ export default function HeaderTable({ form, updateMode }) {
             message: getMessage(
               CODE_ERROR.ERROR_REQUIRED,
               MESSAGE_ERROR,
-              "Employee"
+              "Người bán"
             ),
           },
         ]}
@@ -99,7 +99,7 @@ export default function HeaderTable({ form, updateMode }) {
       </Form.Item>
       <Form.Item
         name="type"
-        label={<Text>Type</Text>}
+        label={<Text>Hình thức xuất</Text>}
         className="details__item"
         rules={[
           {
@@ -107,7 +107,7 @@ export default function HeaderTable({ form, updateMode }) {
             message: getMessage(
               CODE_ERROR.ERROR_REQUIRED,
               MESSAGE_ERROR,
-              "Type"
+              "Hình thức xuất"
             ),
           },
         ]}
@@ -130,7 +130,7 @@ export default function HeaderTable({ form, updateMode }) {
       </Form.Item>
       <Form.Item
         name="licensePlates"
-        label={<Text>License Plates</Text>}
+        label={<Text>Biển số xe</Text>}
         className="details__item"
         rules={[
           {
@@ -138,7 +138,7 @@ export default function HeaderTable({ form, updateMode }) {
             message: getMessage(
               CODE_ERROR.ERROR_REQUIRED,
               MESSAGE_ERROR,
-              "License Plates"
+              "Biển số xe"
             ),
           },
         ]}
@@ -147,7 +147,7 @@ export default function HeaderTable({ form, updateMode }) {
       </Form.Item>
       <Form.Item
         name="exportDate"
-        label={<Text>Export Date</Text>}
+        label={<Text>Ngày xuất</Text>}
         className="details__item"
         rules={[
           {
@@ -155,7 +155,7 @@ export default function HeaderTable({ form, updateMode }) {
             message: getMessage(
               CODE_ERROR.ERROR_REQUIRED,
               MESSAGE_ERROR,
-              "Export Date"
+              "Ngày xuất"
             ),
           },
         ]}
@@ -170,7 +170,7 @@ export default function HeaderTable({ form, updateMode }) {
       {updateMode && (
         <Form.Item
           name="status"
-          label={<Text>Status</Text>}
+          label={<Text>Trạng thái</Text>}
           className="details__item"
           rules={[
             {
@@ -178,7 +178,7 @@ export default function HeaderTable({ form, updateMode }) {
               message: getMessage(
                 CODE_ERROR.ERROR_REQUIRED,
                 MESSAGE_ERROR,
-                "Status"
+                "Trạng thái"
               ),
             },
           ]}

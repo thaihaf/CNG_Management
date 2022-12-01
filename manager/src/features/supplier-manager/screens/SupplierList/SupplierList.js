@@ -27,6 +27,7 @@ import {
   Menu,
   Upload,
   Select,
+  notification,
 } from "antd";
 import {
   SupplierManagerPaths,
@@ -146,11 +147,11 @@ export default function SupplierList() {
 
   const onRowDelete = (record) => {
     Modal.confirm({
-      title: "Confirm",
+      title: "Xác nhận",
       icon: <ExclamationCircleOutlined />,
-      content: "Delete can't revert, scarefully",
-      okText: "Delete",
-      cancelText: "Cancel",
+      content: "Bạn chắc chắn muốn xoá không?",
+      okText: "Xoá",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
         dispatch(
@@ -161,12 +162,20 @@ export default function SupplierList() {
             console.log(res);
             dispatch(getProvinces())
               .then(unwrapResult)
-              .then(() => setIsLoading(false));
-            message.success("Delete success!");
+              .then(() => {
+                notification.success({
+                  message: "Xoá Nhà cung cấp",
+                  description: "Xoá Nhà cung cấp thành công",
+                });
+                setIsLoading(false);
+              });
           })
           .catch((error) => {
             console.log(error);
-            message.success("Delete failed!!!");
+            notification.error({
+              message: "Xoá Nhà cung cấp",
+              description: "Xoá Nhà cung cấp thất bại",
+            });
           });
       },
       onCancel: () => {},
@@ -294,7 +303,7 @@ export default function SupplierList() {
 
   const columns = [
     {
-      title: "Avatar",
+      title: "Ảnh đại diện",
       dataIndex: "avatarSupplier",
       key: "avatarSupplier",
       width: "10%",
@@ -307,7 +316,7 @@ export default function SupplierList() {
       },
     },
     {
-      title: "Supplier Name",
+      title: "Tên nhà cung cấp",
       dataIndex: "supplierName",
       key: "supplierName",
       width: "10%",
@@ -316,7 +325,7 @@ export default function SupplierList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "First Name",
+      title: "Họ của Người liên hệ",
       dataIndex: "firstContactName",
       key: "firstContactName",
       width: "10%",
@@ -325,7 +334,7 @@ export default function SupplierList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Last Name",
+      title: "Tên của Người liên hệ",
       dataIndex: "lastContactName",
       key: "lastContactName",
       width: "10%",
@@ -334,7 +343,7 @@ export default function SupplierList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Bank Name",
+      title: "Tên Ngân hàng",
       dataIndex: "bankName",
       key: "bankName",
       width: "10%",
@@ -342,7 +351,7 @@ export default function SupplierList() {
       sorter: (a, b) => a.bankName.length - b.bankName.length,
     },
     {
-      title: "Bank Account Number",
+      title: "Tài khoản ngân hàng",
       dataIndex: "bankAccountNumber",
       key: "bankAccountNumber",
       width: "10%",
@@ -350,23 +359,23 @@ export default function SupplierList() {
       sorter: (a, b) => a.bankAccountNumber.length - b.bankAccountNumber.length,
     },
     {
-      title: "Phone Number",
+      title: "Số điện thoại",
       dataIndex: "phoneNumberContact",
       key: "phoneNumberContact",
       width: "10%",
       ...getColumnSearchProps("phoneNumberContact"),
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       filters: [
         {
-          text: "Active",
+          text: "Hoạt động",
           value: 1,
         },
         {
-          text: "In Active",
+          text: "Không hoạt động",
           value: 0,
         },
       ],
@@ -376,11 +385,11 @@ export default function SupplierList() {
         let color = s === 1 ? "green" : "volcano";
         return s === 1 ? (
           <Tag color={color} key={s}>
-            Active
+            Hoạt động
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            In Active
+            Không hoạt động
           </Tag>
         );
       },
@@ -389,7 +398,7 @@ export default function SupplierList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Actions",
+      title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       render: (_, record) => (
@@ -399,12 +408,12 @@ export default function SupplierList() {
               items={[
                 {
                   key: 1,
-                  label: "View Details and Update",
+                  label: "Xem chi tiết và Cập nhật",
                   onClick: () => onRowDetails(record),
                 },
                 {
                   key: 2,
-                  label: "Delete Supplier",
+                  label: "Xoá Chức năng",
                   onClick: () => onRowDelete(record),
                 },
               ]}
@@ -412,7 +421,7 @@ export default function SupplierList() {
           }
         >
           <a>
-            More <DownOutlined />
+            Xem thêm <DownOutlined />
           </a>
         </Dropdown>
       ),
@@ -445,14 +454,18 @@ export default function SupplierList() {
     )
       .then(unwrapResult)
       .then((res) => {
-        console.log(res);
-        message.success("Create supplier success!");
+        notification.success({
+          message: "Tạo Nhà cung cấp",
+          description: "Tạo Nhà cung cấp thành công",
+        });
       })
       .catch((error) => {
         console.log(error);
         console.log(args);
-        message.error("Create supplier failed!");
-        //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
+        notification.error({
+          message: "Tạo Nhà cung cấp",
+          description: "Tạo Nhà cung cấp thất bại",
+        });
       });
   };
 
@@ -471,14 +484,14 @@ export default function SupplierList() {
   return (
     <div className="employee-list">
       <div className="top">
-        <Title level={2}>Supplier List</Title>
+        <Title level={2}>Danh sách Nhà cung cấp</Title>
         <div>
           <span
             style={{
               marginRight: 9,
             }}
           >
-            {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
+            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
           </span>
           <Button
             className="btnDelete"
@@ -488,7 +501,7 @@ export default function SupplierList() {
             shape="round"
             icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
           >
-            Delete
+            Xoá bỏ
           </Button>
           <Button
             type="primary"
@@ -496,10 +509,10 @@ export default function SupplierList() {
             size={"large"}
             onClick={() => setModal1Open(true)}
           >
-            Create Supplier
+            Tạo mới Nhà cung cấp
           </Button>
           <Modal
-            title="Create New Supplier"
+            title="Tạo mới Nhà cung cấp"
             style={{ top: 20 }}
             open={modal1Open}
             onOk={() => setModal1Open(false)}
@@ -519,7 +532,6 @@ export default function SupplierList() {
               colon={false}
               onFinish={onSubmitCreate}
             >
-              {<Text>Avatar</Text>}
               <div className="details__group">
                 <div className="details__avatar">
                   <div className="details__avatar-img">
@@ -564,7 +576,7 @@ export default function SupplierList() {
               <div className="details__group">
                 <Form.Item
                   name="firstContactName"
-                  label={<Text>First name</Text>}
+                  label={<Text>Họ của Người cung cấp</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -572,7 +584,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "First Name"
+                        "Họ của Người cung cấp"
                       ),
                     },
                     {
@@ -581,7 +593,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
-                        "First Name"
+                        "Họ của Người cung cấp"
                       ),
                     },
                     {
@@ -589,7 +601,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "First Name",
+                        "Họ của Người cung cấp",
                         10
                       ),
                     },
@@ -598,18 +610,18 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "First Name",
+                        "Họ của Người cung cấp",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="First name" />
+                  <Input placeholder="Họ của Người cung cấp" />
                 </Form.Item>
 
                 <Form.Item
                   name="lastContactName"
-                  label={<Text>Last name</Text>}
+                  label={<Text>Tên của nhà cung cấp</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -617,7 +629,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Last name"
+                        "Tên của nhà cung cấp"
                       ),
                     },
                     {
@@ -626,7 +638,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
-                        "Last name"
+                        "Tên của nhà cung cấp"
                       ),
                     },
                     {
@@ -634,7 +646,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Last name",
+                        "Tên của nhà cung cấp",
                         20
                       ),
                     },
@@ -643,19 +655,19 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Last name",
+                        "Tên của nhà cung cấp",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="Last name" />
+                  <Input placeholder="Tên của nhà cung cấp" />
                 </Form.Item>
               </div>
               <div className="details__group">
                 <Form.Item
                   name="bankName"
-                  label={<Text>Bank Name</Text>}
+                  label={<Text>Tên Ngân hàng</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -663,7 +675,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Bank Name"
+                        "Tên Ngân hàng"
                       ),
                     },
                     {
@@ -671,7 +683,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Bank Name",
+                        "Tên Ngân hàng",
                         10
                       ),
                     },
@@ -680,40 +692,18 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Bank Name",
+                        "Tên Ngân hàng",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="BankName" />
-                  {/* <Select
-                    showSearch
-                    style={{
-                      width: 200,
-                    }}
-                    placeholder="Search to Select"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      option.children.includes(input)
-                    }
-                    filterSort={(optionA, optionB) =>
-                      optionA.children
-                        .toLowerCase()
-                        .localeCompare(optionB.children.toLowerCase())
-                    }
-                  >
-                    {bankNameList.map((item) => (
-                      <Select.Option value={item.value} key={item.text}>
-                        {item.value}
-                      </Select.Option>
-                    ))}
-                  </Select>*/}
+                  <Input placeholder="Tên Ngân hàng" />
                 </Form.Item>
 
                 <Form.Item
                   name="bankAccountNumber"
-                  label={<Text>Bank Account Number</Text>}
+                  label={<Text>Số tài khoản</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -721,7 +711,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Bank Account Number"
+                        "Số tài khoản"
                       ),
                     },
                     {
@@ -729,7 +719,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
-                        "Bank Account Number"
+                        "Số tài khoản"
                       ),
                     },
                     {
@@ -737,7 +727,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Bank Account Number",
+                        "Số tài khoản",
                         14
                       ),
                     },
@@ -746,19 +736,19 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Bank Account Number",
+                        "Số tài khoản",
                         5
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="BankAccountNumber" />
+                  <Input placeholder="Số tài khoản" />
                 </Form.Item>
               </div>
               <div className="details__group">
                 <Form.Item
                   name="phoneNumberContact"
-                  label={<Text>Phone Number</Text>}
+                  label={<Text>Số điện thoại người liên hệ</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -766,7 +756,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Phone Number Contact"
+                        "Số điện thoại người liên hệ"
                       ),
                     },
                     {
@@ -774,7 +764,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT_NUMBER,
                         MESSAGE_ERROR,
-                        "Phone Number Contact"
+                        "Số điện thoại người liên hệ"
                       ),
                     },
                     {
@@ -782,7 +772,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Phone Number Contact",
+                        "Số điện thoại người liên hệ",
                         10
                       ),
                     },
@@ -791,18 +781,18 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Phone Number Contact",
+                        "Số điện thoại người liên hệ",
                         9
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="PhoneNumberContact" />
+                  <Input placeholder="Số điện thoại người liên hệ" />
                 </Form.Item>
 
                 <Form.Item
                   name="supplierName"
-                  label={<Text>Supplier Name</Text>}
+                  label={<Text>Tên nhà cung cấp</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -810,7 +800,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Supplier Name"
+                        "Tên nhà cung cấp"
                       ),
                     },
                     {
@@ -819,7 +809,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_LETTER,
                         MESSAGE_ERROR,
-                        "Supplier Name"
+                        "Tên nhà cung cấp"
                       ),
                     },
                     {
@@ -827,7 +817,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Supplier Name",
+                        "Tên nhà cung cấp",
                         25
                       ),
                     },
@@ -836,19 +826,19 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Supplier Name",
+                        "Tên nhà cung cấp",
                         2
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="SupplierName" />
+                  <Input placeholder="Tên nhà cung cấp" />
                 </Form.Item>
               </div>
               <div className="details__group">
                 <Form.Item
                   name="taxCode"
-                  label={<Text>Tax Code</Text>}
+                  label={<Text>Mã số thuế</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -856,7 +846,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Tax Code"
+                        "Mã số thuế"
                       ),
                     },
                     {
@@ -864,7 +854,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER,
                         MESSAGE_ERROR,
-                        "Tax Code"
+                        "Mã số thuế"
                       ),
                     },
                     {
@@ -872,7 +862,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Tax Code",
+                        "Mã số thuế",
                         13
                       ),
                     },
@@ -881,19 +871,19 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MIN,
                         MESSAGE_ERROR,
-                        "Tax Code",
+                        "Mã số thuế",
                         10
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="TaxCode" />
+                  <Input placeholder="Mã số thuế" />
                 </Form.Item>
               </div>
               <div className="details__group">
                 <Form.Item
                   name="apartmentNumber"
-                  label={<Text>Street Name, House No</Text>}
+                  label={<Text>Tên đường, số nhà</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -901,16 +891,16 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Street Name, House No"
+                        "Tên đường, số nhà"
                       ),
                     },
                   ]}
                 >
-                  <Input placeholder="Street Name, House No" />
+                  <Input placeholder="Tên đường, số nhà" />
                 </Form.Item>
                 <Form.Item
                   name="city"
-                  label={<Text>City</Text>}
+                  label={<Text>Tỉnh, Thành phố</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -918,7 +908,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "City"
+                        "Tỉnh, Thành phố"
                       ),
                     },
                   ]}
@@ -956,7 +946,7 @@ export default function SupplierList() {
               <div className="details__group">
                 <Form.Item
                   name="district"
-                  label={<Text>District</Text>}
+                  label={<Text>Quận, Huyện</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -964,7 +954,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "District"
+                        "Quận, Huyện"
                       ),
                     },
                   ]}
@@ -1001,7 +991,7 @@ export default function SupplierList() {
 
                 <Form.Item
                   name="ward"
-                  label={<Text>Ward</Text>}
+                  label={<Text>Xã, Phường</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -1009,7 +999,7 @@ export default function SupplierList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Ward"
+                        "Xã, Phường"
                       ),
                     },
                   ]}
@@ -1054,7 +1044,7 @@ export default function SupplierList() {
                     form.resetFields();
                   }}
                 >
-                  Cancel
+                  Huỷ bỏ
                 </Button>
                 <Button
                   key="submit"
@@ -1062,7 +1052,7 @@ export default function SupplierList() {
                   type="primary"
                   htmlType="submit"
                 >
-                  Submit
+                  Gửi đi
                 </Button>
               </div>
             </Form>

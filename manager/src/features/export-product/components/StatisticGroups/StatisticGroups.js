@@ -22,7 +22,7 @@ export default function StatisticGroups({ updateMode }) {
           <img src={boxesImg} alt="" />
         </div>
         <Form.Item name={"totalQuantityExport"} initialValue={0}>
-          <Statistic title="Total Quantity Box" />
+          <Statistic title="Tổng số lượng hộp" />
         </Form.Item>
       </div>
 
@@ -34,7 +34,7 @@ export default function StatisticGroups({ updateMode }) {
           <img src={squareMeterImg} alt="" />
         </div>
         <Form.Item name={"totalSquareMeterExport"} initialValue={0}>
-          <Statistic title="Total Square Meter (m2)" precision={2} />
+          <Statistic title="Tổng số mét vuông (m2)" precision={2} />
         </Form.Item>
       </div>
 
@@ -46,7 +46,7 @@ export default function StatisticGroups({ updateMode }) {
           <img src={packageImg} alt="" />
         </div>
         <Form.Item name={"totalExportOrderPrice"} initialValue={0}>
-          <Statistic title="Total Price (vnđ)" precision={2} />
+          <Statistic title="Tổng giá (vnđ)" precision={2} />
         </Form.Item>
       </div>
 
@@ -62,7 +62,7 @@ export default function StatisticGroups({ updateMode }) {
             <img src={statusImg} alt="" />
           </div>
           <Form.Item name={"statusExport"} initialValue={0}>
-            <Statistic title="Status" />
+            <Statistic title="Trạng thái đơn" />
           </Form.Item>
         </div>
       )}
