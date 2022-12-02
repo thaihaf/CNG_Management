@@ -330,22 +330,22 @@ function SupplierDetailsForm() {
                         },
                         {
                           pattern:
-                            /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,}$/,
+                            /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,50}$/,
                           message: getMessage(
                             CODE_ERROR.ERROR_NUMBER_LETTER,
                             MESSAGE_ERROR,
                             "Tên Nhà cung cấp"
                           ),
                         },
-                        // {
-                        //   max: 25,
-                        //   message: getMessage(
-                        //     CODE_ERROR.ERROR_NUMBER_MAX,
-                        //     MESSAGE_ERROR,
-                        //     "Supplier Name",
-                        //     25
-                        //   ),
-                        // },
+                        {
+                          max: 50,
+                          message: getMessage(
+                            CODE_ERROR.ERROR_NUMBER_MAX,
+                            MESSAGE_ERROR,
+                            "Supplier Name",
+                            50
+                          ),
+                        },
                         {
                           min: 2,
                           message: getMessage(
@@ -461,7 +461,7 @@ function SupplierDetailsForm() {
                           ),
                         },
                         {
-                          pattern: /^[0]{1}[0-9]{9,11}$/,
+                          pattern: /^[0]{1}[0-9]{9,10}$/,
                           message: getMessage(
                             CODE_ERROR.ERROR_FORMAT_NUMBER,
                             MESSAGE_ERROR,

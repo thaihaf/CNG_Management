@@ -580,12 +580,12 @@ export default function WarehouseList() {
                       ),
                     },
                     {
-                      max: 10,
+                      max: 11,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
                         "Số điện thoại",
-                        10
+                        11
                       ),
                     },
                     {
