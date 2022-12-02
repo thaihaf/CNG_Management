@@ -17,7 +17,7 @@ export default function ActionsModal() {
           <>
                <Tooltip placement="topLeft" title={"Click to show Actions Modal"}>
                     <Title level={2} style={{cursor : "pointer"}} onClick={() => setModal1Open(true)}>
-                         Product List
+                         Danh sách Sản phẩm
                     </Title>
                </Tooltip>
 
