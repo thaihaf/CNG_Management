@@ -1,1 +1,1 @@
-export const CUSTOMER_DEBT_KEY = "customer-debt";
+export const CUSTOMER_DEBT_KEY = "customerDebt";

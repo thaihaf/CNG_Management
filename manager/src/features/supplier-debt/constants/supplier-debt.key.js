@@ -1,1 +1,1 @@
-export const SUPPLIER_DEBT_KEY = "SupplierDebt";
+export const SUPPLIER_DEBT_KEY = "supplierDebt";

@@ -12,32 +12,32 @@ const ProductDetailsScreen = React.lazy(() =>
   import("../screens/ProductDetails/ProductDetails")
 );
 
-const PRODUCT_LIST_SCREEN = {
-  id: "supplier-debt-list",
+const SUPPLIER_LIST_SCREEN = {
+  id: "list-supplier-debt",
   path: SupplierDebtPaths.PRODUCT_MANAGER,
   component: ProductListScreen,
   isPrivateRoute: true,
-  pageTitle: "Product Manager",
+  pageTitle: "Supplier Debt List",
 };
-const CREATE_PRODUCT_SCREEN = {
-  id: "create-supplier-debt",
+const CREATE_SUPPLIER_SCREEN = {
+  id: "supplier-debt-create",
   path: SupplierDebtPaths.CREATE_PRODUCT,
   component: CreateProductScreen,
   isPrivateRoute: true,
-  pageTitle: "Create Product",
+  pageTitle: "Create Supplier Debt Product",
 };
-const PRODUCT_DETAILS_SCREEN = {
+const SUPPLIER_DETAILS_SCREEN = {
   id: "supplier-debt-details",
   path: SupplierDebtPaths.PRODUCT_DETAILS,
   component: ProductDetailsScreen,
   isPrivateRoute: true,
-  pageTitle: "Product Details",
+  pageTitle: "Supplier Debt Details",
 };
 
 const SUPPLIER_DEBT_ROUTES = [
-  CREATE_PRODUCT_SCREEN,
-  PRODUCT_DETAILS_SCREEN,
-  PRODUCT_LIST_SCREEN,
+  CREATE_SUPPLIER_SCREEN,
+  SUPPLIER_DETAILS_SCREEN,
+  SUPPLIER_LIST_SCREEN,
 ];
 
 export default SUPPLIER_DEBT_ROUTES;

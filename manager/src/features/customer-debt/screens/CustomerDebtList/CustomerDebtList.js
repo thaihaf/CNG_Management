@@ -8,32 +8,31 @@ import { SearchOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
+  DatePicker,
   Input,
   Space,
+  Statistic,
   Table,
-  Tag,
-  Tooltip,
   Typography,
 } from "antd";
-import { EmployeeManagerPaths } from "features/employee-manager/employeeManager";
 
 import avt_default from "assets/images/avt-default.png";
-import "./ProductList.css";
+import "./CustomerDebtList.css";
 
-import {
-  getProducts,
-  ProductManagerPaths,
-  titleSizeList,
-} from "features/product-manager/productManager";
-import { getActiveCategories } from "features/category-manager/categoryManager";
 import { get } from "lodash";
-import { ActionsModal } from "features/product-manager/components";
+import moment from "moment";
+import {
+  CustomerDebtPaths,
+  getCustomerDebts,
+} from "features/customer-debt/customerDebt";
+import dayjs from "dayjs";
 
 const { Title, Text } = Typography;
+const { RangePicker } = DatePicker;
 
-export default function ProductList() {
-  const { listProducts, totalElements, totalPages, size } = useSelector(
-    (state) => state.product
+export default function CustomerDebtList() {
+  const { listCustomerDebt, totalElements, totalPages, size } = useSelector(
+    (state) => state.customerDebt
   );
   const { listActiveCategories } = useSelector((state) => state.category);
   const history = useHistory();
@@ -41,11 +40,30 @@ export default function ProductList() {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [datesPicker, setDatesPicker] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(2);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const rangePresets = [
+    {
+      label: "7 ngày trước",
+      value: [dayjs().add(-7, "d"), dayjs()],
+    },
+    {
+      label: "14 ngày trước",
+      value: [dayjs().add(-14, "d"), dayjs()],
+    },
+    {
+      label: "30 ngày trước",
+      value: [dayjs().add(-30, "d"), dayjs()],
+    },
+    {
+      label: "90 ngày trước",
+      value: [dayjs().add(-90, "d"), dayjs()],
+    },
+  ];
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -170,148 +188,87 @@ export default function ProductList() {
     },
     {
       title: "Ảnh sản phẩm",
-      dataIndex: "image",
       key: "image",
       align: "center",
-      render: (_, record) => (
+      render: (record) => (
         <Avatar
           size={50}
           src={
-            record?.listImage[0]?.filePath === ""
+            record?.customerDTO.fileAttachDTO.filePath === ""
               ? avt_default
-              : record?.listImage[0]?.filePath
+              : record?.customerDTO.fileAttachDTO.filePath
           }
         />
       ),
     },
     {
-      title: "Mã sản phẩm",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id > b.id,
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("id"),
-    },
-    {
-      title: "Màu sản phẩm",
-      dataIndex: "color",
-      key: "color",
-      sorter: (a, b) => a.color > b.color,
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("color"),
-    },
-    {
-      title: "Nơi sản xuất",
-      dataIndex: "origin",
-      key: "origin",
-      ...getColumnSearchProps("origin"),
-    },
-    {
-      title: "Kích thước",
-      dataIndex: "titleSize",
-      key: "titleSize",
+      title: "Tên khách hàng",
+      dataIndex: "customerDTO",
+      key: "customerName",
       align: "center",
-      filters: titleSizeList,
-      onFilter: (value, record) => record.titleSize === value,
-      filterSearch: true,
-      sorter: (a, b) => {
-        let aArr = a.titleSize.split("x");
-        let bArr = b.titleSize.split("x");
-
-        let aVal = Number(aArr[0]) * Number(aArr[1]);
-        let bVal = Number(bArr[0]) * Number(bArr[1]);
-
-        return aVal - bVal;
-      },
-      sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: "Tổng số lượng hộp",
-      dataIndex: "totalQuantityBox",
-      key: "totalQuantityBox",
-      align: "center",
-      sorter: (a, b) => a.totalQuantityBox - b.totalQuantityBox,
-      sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: "Tên chức năng",
-      dataIndex: "categoriesName",
-      key: "categoriesName",
-      render: (_, { categoryDTO }) => (
-        <>
-          {categoryDTO.map((c) => {
-            // let color = tag.length > 5 ? 'geekblue' : 'green';
-            // if (tag === 'loser') {
-            // 	color = 'volcano';
-            // }
-            return (
-              <Tag color="blue" key={c.id}>
-                {c.categoryName.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-      filters: listActiveCategories?.map((c) => {
-        return { text: c.categoryName, value: c.id };
-      }),
-      onFilter: (value, record) =>
-        record.categoryDTO.find((c) => c.id === value),
-      filterSearch: true,
-    },
-    {
-      title: "Tên nhãn hàng",
-      dataIndex: "brandDTO",
-      key: "brandName",
-      ...getColumnSearchProps("brandDTO", "brandName"),
-      render: (_, { brandDTO }) => (
-        <Tag color="blue" key={brandDTO.id}>
-          {brandDTO.brandName.toUpperCase()}
-        </Tag>
-      ),
-    },
-    {
-      title: "Tên nhà cung cấp",
-      dataIndex: "supplierDTO",
-      key: "supplierName",
-      ...getColumnSearchProps("supplierDTO", "supplierName"),
-      render: (_, { supplierDTO }) => (
-        <Tag color="blue" key={supplierDTO?.id}>
-          {supplierDTO?.supplierName.toUpperCase()}
-        </Tag>
-      ),
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
-      filters: [
-        {
-          text: "Hoạt động",
-          value: 1,
-        },
-        {
-          text: "Không hoạt động",
-          value: 0,
-        },
-      ],
-      onFilter: (value, record) => record.status === value,
-      filterSearch: true,
-      render: (s) => {
-        let color = s == 1 ? "green" : "volcano";
-        return s == 1 ? (
-          <Tag color={color} key={s}>
-            Hoạt động
-          </Tag>
-        ) : (
-          <Tag color={color} key={s}>
-            Không hoạt động
-          </Tag>
+      render: (value) => {
+        return (
+          <Text>
+            {value.firstName} {value.lastName}
+          </Text>
         );
       },
-      sorter: (a, b) => a.status - b.status,
-      sortDirections: ["descend", "ascend"],
+      // ...getColumnSearchProps("id"),
+    },
+    {
+      title: "Tên cửa hàng",
+      dataIndex: "customerDTO",
+      key: "shopName",
+      align: "center",
+      render: (value) => {
+        return <Text>{value.shopName}</Text>;
+      },
+      // ...getColumnSearchProps("id"),
+    },
+    {
+      title: "Mã số thuế",
+      dataIndex: "customerDTO",
+      key: "taxCode",
+      align: "center",
+      render: (value) => {
+        return <Text>{value.taxCode}</Text>;
+      },
+    },
+    {
+      title: "Số nợ đầu kỳ",
+      dataIndex: "debtAtBeginningPeriod",
+      key: "debtAtBeginningPeriod",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value} />;
+      },
+    },
+    {
+      title: "Số phát sinh nợ",
+      dataIndex: "debtMoneyDTO",
+      key: "debtIncurredIncrease",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value.incurredIncrease} />;
+      },
+    },
+    {
+      title: "Số phát sinh có",
+      dataIndex: "debtMoneyDTO",
+      key: "debtIncurredDecrease",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value.incurredDecrease} />;
+      },
+    },
+    {
+      title: "Số nợ cuối kỳ",
+      dataIndex: "debtAtEndPeriod",
+      key: "debtAtEndPeriod",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value} />;
+      },
     },
   ];
 
@@ -319,36 +276,75 @@ export default function ProductList() {
     setCurrentPage(page);
     setPageSize(size);
   };
-  useEffect(() => {
+
+  const handleGetList = async (defaultSelect) => {
     setIsLoading(true);
-    dispatch(getProducts())
+    let startDate = moment(new Date()).subtract(15, "d").format("MM/DD/YYYY");
+    let endDate = moment(new Date()).format("MM/DD/YYYY");
+
+    dispatch(
+      defaultSelect
+        ? getCustomerDebts(datesPicker)
+        : getCustomerDebts({ startDate: startDate, endDate: endDate })
+    )
       .then(unwrapResult)
-      .then(() => setIsLoading(false));
-    dispatch(getActiveCategories());
+      .then(() => {
+        setDatesPicker(null);
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    handleGetList(false);
   }, [dispatch, location]);
 
   return (
     <div className="product-list">
       <div className="top">
-        <ActionsModal />
+        <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
+          Công nợ Khách hàng
+        </Title>
 
-        <Button
-          type="primary"
-          shape={"round"}
-          size={"large"}
-          onClick={() => history.push(ProductManagerPaths.CREATE_PRODUCT)}
-        >
-          Tạo mới
-        </Button>
+        <RangePicker
+          defaultValue={[
+            moment(new Date()).subtract(15, "d"),
+            moment(new Date()),
+          ]}
+          format={"DD/MM/YYYY"}
+          onChange={(dates, dateString) => {
+            if (dates) {
+              let value = {
+                startDate: dates[0].format("MM/DD/YYYY"),
+                endDate: dates[1].format("MM/DD/YYYY"),
+              };
+              setDatesPicker(value);
+            } else {
+              setDatesPicker(null);
+            }
+          }}
+          renderExtraFooter={(value, a, b) => {
+            return (
+              <Button
+                type="primary"
+                shape={"round"}
+                size={"large"}
+                onClick={async () => await handleGetList(true)}
+                disabled={datesPicker ? false : true}
+              >
+                Tìm kiếm
+              </Button>
+            );
+          }}
+        />
       </div>
 
       <Table
-        rowKey="id"
+        rowKey={(record) => record.customerDTO.id}
         columns={columns}
         loading={isLoading}
-        dataSource={listProducts}
+        dataSource={[...listCustomerDebt]}
         pagination={
-          listProducts.length !== 0
+          listCustomerDebt.length !== 0
             ? {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
@@ -365,9 +361,9 @@ export default function ProductList() {
           return {
             onClick: () =>
               history.push(
-                ProductManagerPaths.PRODUCT_DETAILS.replace(
-                  ":productId",
-                  record.id
+                CustomerDebtPaths.CUSTOMER_DEBT_DETAILS.replace(
+                  ":id",
+                  record.customerDTO.id
                 )
               ),
           };

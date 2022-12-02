@@ -6,150 +6,88 @@ import api from "../api/supplier-debt.api";
 
 export const SUPPLIER_DEBT_FEATURE_KEY = SUPPLIER_DEBT_KEY;
 
-export const getProducts = createAsyncThunk("product/getProducts", async () => {
-  const response = await api.getProducts();
-  return response.data;
-});
-export const getDetailsProduct = createAsyncThunk(
-  "product/getDetailsProduct",
-  async (id, { rejectWithValue }) => {
+export const getSupplierDebts = createAsyncThunk(
+  "product/getSupplierDebts",
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await api.getDetailsProduct(id);
+      const response = await api.getSupplierDebts();
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
     }
   }
 );
-export const createProduct = createAsyncThunk(
-  "product/createProduct",
+export const getSupplierDebtDetails = createAsyncThunk(
+  "product/getSupplierDebtDetails",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.getSupplierDebtDetails(id);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const createSupplierDebts = createAsyncThunk(
+  "product/createSupplierDebts",
   async ({ data }, { rejectWithValue }) => {
     try {
-      const response = await api.createProduct(data);
+      const response = await api.createSupplierDebts(data);
       return response;
     } catch (error) {
       throw rejectWithValue(error);
     }
   }
 );
-export const updateProduct = createAsyncThunk(
-  "product/updateProduct",
+export const updateSupplierDebts = createAsyncThunk(
+  "product/updateSupplierDebts",
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      const response = await api.updateProduct(id, data);
+      const response = await api.updateSupplierDebts(id, data);
       return response;
     } catch (error) {
       throw rejectWithValue(error);
-    }
-  }
-);
-export const searchProduct = createAsyncThunk(
-  "product/searchProduct",
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await api.searchProduct(id);
-      return response.data;
-    } catch (error) {
-      throw rejectWithValue(error);
-    }
-  }
-);
-export const searchProductBySupplier = createAsyncThunk(
-  "product/searchProductBySupplier",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await api.searchProductBySupplier(data);
-      return response.data;
-    } catch (error) {
-      throw rejectWithValue(error);
-    }
-  }
-);
-export const createDetailsProduct = createAsyncThunk(
-  "product/createDetailsProduct",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await api.createDetailsProduct(data);
-      return response.data;
-    } catch (error) {
-      throw rejectWithValue(error.response.data.Error);
-    }
-  }
-);
-export const updateDetailsProduct = createAsyncThunk(
-  "product/updateDetailsProduct",
-  async ({ id, data }, { rejectWithValue }) => {
-    try {
-      const response = await api.updateDetailsProduct(id, data);
-      return response.data;
-    } catch (error) {
-      throw rejectWithValue(error.response.data.Error);
-    }
-  }
-);
-export const deleteDetailsProduct = createAsyncThunk(
-  "product/deleteDetailsProduct",
-  async (id, { rejectWithValue }) => {
-    try {
-      console.log(id);
-      const response = await api.deleteDetailsProduct(id);
-      return response.data;
-    } catch (error) {
-      throw rejectWithValue(error.response.data.Error);
     }
   }
 );
 
 const initialState = {
-  listProducts: [],
+  listSupplierDebt: [],
   totalElements: 0,
   totalPages: 0,
   size: 0,
   errorProcess: "",
   productDetails: null,
-  detailDTOList: [],
+  supplierDebtDetails: [],
 };
 
-const supplierDebt = createSlice({
+const supplierDebtSlice = createSlice({
   name: SUPPLIER_DEBT_FEATURE_KEY,
   initialState,
   reducers: {
-    updateErrorProcess: (state, action) => {
-      state.errorProcess = action.payload;
-    },
-    updateProductDetails: (state, action) => {
-      state.detailDTOList = action.payload;
-    },
+    // updateErrorProcess: (state, action) => {
+    //   state.errorProcess = action.payload;
+    // },
+    // updateProductDetails: (state, action) => {
+    //   state.detailDTOList = action.payload;
+    // },
   },
   extraReducers: {
-    [getProducts.fulfilled]: (state, action) => {
-      state.listProducts = action.payload.content;
+    [getSupplierDebts.fulfilled]: (state, action) => {
+      state.listSupplierDebt = action.payload.content;
       state.totalElements = action.payload.totalElements;
       state.totalPages = action.payload.totalPages;
       state.size = action.payload.size;
     },
-    [getDetailsProduct.fulfilled]: (state, action) => {
-      state.productDetails = action.payload;
-      state.detailDTOList = action.payload.productDetailDTO;
+    [getSupplierDebtDetails.fulfilled]: (state, action) => {
+      state.supplierDebtDetails = action.payload;
     },
-    [createDetailsProduct.fulfilled]: (state, action) => {
-      state.detailDTOList = [...state.detailDTOList, action.payload];
-    },
-    [updateDetailsProduct.fulfilled]: (state, action) => {
-      state.detailDTOList = state.detailDTOList.map((item) => {
-        if (item.id === action.payload.id) {
-          return action.payload;
-        } else {
-          return item;
-        }
-      });
     },
     ["LOGOUT"]: (state) => {
       Object.assign(state, initialState);
     },
-  },
 });
 
-export const { updateProductDetails } = supplierDebt.actions;
+export const { updateProductDetails } = supplierDebtSlice.actions;
 
-export const supplierDebtReducer = supplierDebt.reducer;
+export const supplierDebtReducer = supplierDebtSlice.reducer;
