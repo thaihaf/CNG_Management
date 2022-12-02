@@ -216,21 +216,21 @@ const ExportWrapper = ({ updateMode }) => {
 
   const initialValues = updateMode ? productExportDetails : null;
 
-  useEffect(() => {
-    form.setFieldValue(initialValues);
+  // useEffect(() => {
+  //   form.setFieldValue(initialValues);
 
-    if (initialValues) {
-      let arr =
-        initialValues.type === "EXPORT"
-          ? statusProductExport
-          : statusProductReExport;
+  //   if (initialValues) {
+  //     let arr =
+  //       initialValues.type === "EXPORT"
+  //         ? statusProductExport
+  //         : statusProductReExport;
 
-      form.setFieldValue(
-        "statusExport",
-        getStatusString(initialValues.status, arr)
-      );
-    }
-  }, [dispatch, updateMode, initialValues]);
+  //     form.setFieldValue(
+  //       "statusExport",
+  //       getStatusString(initialValues.status, arr)
+  //     );
+  //   }
+  // }, [dispatch, updateMode, initialValues]);
 
   if (!initialValues && updateMode == true) {
     return <Spin spinning={isLoading} />;
@@ -247,11 +247,11 @@ const ExportWrapper = ({ updateMode }) => {
         onFinish={onFinish}
         initialValues={initialValues}
       >
-        <StatisticGroups updateMode={updateMode} />
+        {/* <StatisticGroups updateMode={updateMode} /> */}
 
         <div className="actions-group">
           <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-            Chi tiết Đơn xuất
+            Chi tiết Công nợ
           </Title>
 
           {updateMode &&

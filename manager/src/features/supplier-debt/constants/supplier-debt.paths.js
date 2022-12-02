@@ -1,8 +1,5 @@
 export const SupplierDebtPaths = {
-  PRODUCT_MANAGER: "/product",
-  PRODUCT_DETAILS: "/product/details/:productId",
-  CREATE_PRODUCT: "/product/create",
-  LIST_PRODUCT_IMPORT: "/import-product",
-  DETAILS_PRODUCT_IMPORT: "/import-product/details/:importId",
-  CREATE_PRODUCT_IMPORT: "/import-product/create",
+  SUPPLIER_DEBT_MANAGER: "/supplier-debt",
+  SUPPLIER_DEBT_DETAILS: "/supplier-debt/details/:id",
+  CREATE_SUPPLIER_DEBT: "/supplier-debt/create",
 };
