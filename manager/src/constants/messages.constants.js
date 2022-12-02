@@ -25,6 +25,6 @@ export const MESSAGE_ERROR = {
   "0500": "%field% must be a boolean",
   "0005": "%field% bao gồm các ký tự không hợp lệ",
   "1406": "Vui lòng nhập đúng định dạng cho %field%.",
-  "1408": "%field% which contain at least one lowercase letter, one uppercase letter, one numeric digit, one special character",
+  "1408": "%field% chứa ít nhất một chữ thường, một chữ in hoa, một chữ số, một ký tự đặc biệt.",
   "1402": "Vui lòng chỉ nhập số và ký tự cho %field%.",
 };

@@ -563,7 +563,7 @@ export default function CustomerList() {
               <div className="details__group">
                 <Form.Item
                   name="firstName"
-                  label={<Text>Tên</Text>}
+                  label={<Text>Họ</Text>}
                   className="details__item"
                   rules={[
                     {
@@ -571,7 +571,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_REQUIRED,
                         MESSAGE_ERROR,
-                        "Tên"
+                        "Họ"
                       ),
                     },
                     {
@@ -580,7 +580,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
-                        "Tên"
+                        "Họ"
                       ),
                     },
                     {
@@ -588,7 +588,7 @@ export default function CustomerList() {
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
-                        "Tên",
+                        "Họ",
                         10
                       ),
                     },
@@ -674,12 +674,12 @@ export default function CustomerList() {
                       ),
                     },
                     {
-                      max: 10,
+                      max: 11,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
                         "Số điện thoại",
-                        10
+                        11
                       ),
                     },
                     {

@@ -481,7 +481,7 @@ function EmployeeDetailsForm() {
                     ),
                   },
                   {
-                    pattern: /^[0]{1}[0-9]{9,11}$/,
+                    pattern: /^[0]{1}[0-9]{9,10}$/,
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT_NUMBER,
                       MESSAGE_ERROR,

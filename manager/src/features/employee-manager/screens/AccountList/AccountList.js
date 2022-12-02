@@ -387,15 +387,15 @@ export default function AccountList() {
                         "Mật khẩu"
                       ),
                     },
-                    {
-                      pattern:
-                        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_FORMAT_PASSWORD,
-                        MESSAGE_ERROR,
-                        "Mật khẩu"
-                      ),
-                    },
+                    // {
+                    //   pattern:
+                    //     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,25}$/,
+                    //   message: getMessage(
+                    //     CODE_ERROR.ERROR_FORMAT_PASSWORD,
+                    //     MESSAGE_ERROR,
+                    //     "Mật khẩu"
+                    //   ),
+                    // },
                     {
                       max: 25,
                       message: getMessage(
