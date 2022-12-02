@@ -1,4 +1,13 @@
-import { Button, Form, message, Modal, notification, Spin, Tabs, Typography } from "antd";
+import {
+  Button,
+  Form,
+  message,
+  Modal,
+  notification,
+  Spin,
+  Tabs,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +31,10 @@ import {
   updateProductExports,
 } from "features/export-product/exportProduct";
 import HeaderTable from "../HeaderTable/HeaderTable";
+import {
+  statusProductExport,
+  statusProductReExport,
+} from "features/export-product/constants/export-product.constants";
 
 const { Title } = Typography;
 
@@ -60,10 +73,10 @@ const ExportWrapper = ({ updateMode }) => {
           .catch((err) => {
             console.log(err);
             setIsLoading(false);
-           notification.error({
-             message: "Xoá Đơn xuất",
-             description: "Xoá Đơn xuất thất bại",
-           });
+            notification.error({
+              message: "Xoá Đơn xuất",
+              description: "Xoá Đơn xuất thất bại",
+            });
           });
       },
       onCancel: () => {},
@@ -203,13 +216,21 @@ const ExportWrapper = ({ updateMode }) => {
 
   const initialValues = updateMode ? productExportDetails : null;
 
-  useEffect(() => {
-    form.setFieldValue(initialValues);
+  // useEffect(() => {
+  //   form.setFieldValue(initialValues);
 
-    if (initialValues) {
-      form.setFieldValue("statusExport", getStatusString(initialValues.status));
-    }
-  }, [dispatch, updateMode, initialValues]);
+  //   if (initialValues) {
+  //     let arr =
+  //       initialValues.type === "EXPORT"
+  //         ? statusProductExport
+  //         : statusProductReExport;
+
+  //     form.setFieldValue(
+  //       "statusExport",
+  //       getStatusString(initialValues.status, arr)
+  //     );
+  //   }
+  // }, [dispatch, updateMode, initialValues]);
 
   if (!initialValues && updateMode == true) {
     return <Spin spinning={isLoading} />;
@@ -226,11 +247,11 @@ const ExportWrapper = ({ updateMode }) => {
         onFinish={onFinish}
         initialValues={initialValues}
       >
-        <StatisticGroups updateMode={updateMode} />
+        {/* <StatisticGroups updateMode={updateMode} /> */}
 
         <div className="actions-group">
           <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-            Chi tiết Đơn xuất
+            Chi tiết Công nợ
           </Title>
 
           {updateMode &&
@@ -331,7 +352,7 @@ const ExportWrapper = ({ updateMode }) => {
                 <TableCreate form={form} updateMode={updateMode} />
               ),
             },
-            { 
+            {
               label: `Thông tin khác`,
               key: `details`,
               children: <HeaderTable form={form} updateMode={updateMode} />,

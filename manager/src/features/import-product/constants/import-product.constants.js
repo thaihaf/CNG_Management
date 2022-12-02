@@ -4,7 +4,6 @@ export const typeDetails = [
   { label: "A3", value: "A3" },
 ];
 export const statusProductImport = [
-  { label: "Đã Nhận Đơn", value: 0, key: 0 },
-  { label: "Đang Duyệt Đơn", value: 1, key: 1 },
-  { label: "Đã Bàn Giao", value: 2, key: 2 },
+  { label: "Chưa duyệt", value: 0, key: 0 },
+  { label: "Đã duyệt", value: 2, key: 2 },
 ];

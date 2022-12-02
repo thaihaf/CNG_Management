@@ -4,9 +4,13 @@ export const typeDetails = [
   { label: "A3", value: "A3" },
 ];
 export const statusProductExport = [
-  { label: "Đã Nhận Đơn", value: 0, key: 0, color: "green" },
-  { label: "Đang Duyệt Đơn", value: 1, key: 1, color: "green" },
-  { label: "Đã Bàn Giao", value: 2, key: 2, color: "green" },
+  { label: "Đã Tạo đơn", value: 0, key: "Đã Tạo đơn", color: "green" },
+  { label: "Đang Giao đơn", value: 1, key: "Đang Giao đơn", color: "green" },
+  { label: "Đã Hoàn thành", value: 2, key: "Đã Hoàn thành", color: "green" },
+];
+export const statusProductReExport = [
+  { label: "Chưa Duyệt đơn", value: 3, key: "Chưa Duyệt đơn", color: "green" },
+  { label: "Đã Duyệt đơn", value: 4, key: "Đã Duyệt đơn", color: "green" },
 ];
 export const typeExport = [
   { label: "EXPORT", value: "EXPORT", key: "EXPORT", color: "darkseagreen" },

@@ -282,13 +282,11 @@ export default function WarehouseList() {
 
   const columns = [
     {
-      title: "Mã Kho",
-      dataIndex: "id",
-      key: "id",
-      width: "20%",
-      ...getColumnSearchProps("id"),
-      sorter: (a, b) => a.id - b.id,
-      sortDirections: ["descend", "ascend"],
+      title: "Vị trí",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
       title: "Tên Kho",

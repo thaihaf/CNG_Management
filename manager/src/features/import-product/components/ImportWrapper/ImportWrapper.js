@@ -58,7 +58,7 @@ const ImportWrapper = ({ updateMode }) => {
 
   const dispatch = useDispatch();
   const history = useHistory();
-  const [form] = Form.useForm();
+  const [debtForm] = Form.useForm();
 
   const [activeTab, setActiveTab] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -95,7 +95,7 @@ const ImportWrapper = ({ updateMode }) => {
     });
   };
   const onBeforeSubmit = () => {
-    const listHeaderItemValue = form.getFieldsValue([
+    const listHeaderItemValue = debtForm.getFieldsValue([
       "employeeId",
       "licensePlates",
       "importDate",
@@ -110,9 +110,9 @@ const ImportWrapper = ({ updateMode }) => {
     }
 
     if (firstCheck) {
-      setActiveTab("table");
+      setActiveTab("supplier");
     } else {
-      setActiveTab("details");
+      setActiveTab("customer");
     }
   };
   const onFinish = (value) => {
@@ -141,7 +141,10 @@ const ImportWrapper = ({ updateMode }) => {
     }
 
     const pLostWarehouse = listProduct.find((p) => {
-      let warehouse = form.getFieldValue([`${p.id}_${p.index}`, "warehouse"]);
+      let warehouse = debtForm.getFieldValue([
+        `${p.id}_${p.index}`,
+        "warehouse",
+      ]);
       return (
         (!p.value.warehouse || p.value.warehouse.length === 0) &&
         (!warehouse || warehouse.length === 0)
@@ -160,7 +163,7 @@ const ImportWrapper = ({ updateMode }) => {
       const pWithIndex = productsImport.find((item) => item.index === p.index);
       const importProductDetailDTO = {
         ...p.value,
-        importProductDetailWarehouseDTOList: form.getFieldValue([
+        importProductDetailWarehouseDTOList: debtForm.getFieldValue([
           `${p.id}_${p.index}`,
           "warehouse",
         ]),
@@ -195,7 +198,9 @@ const ImportWrapper = ({ updateMode }) => {
         setIsLoading(false);
         notification.success({
           message: "Đơn nhập",
-          description:  `${updateMode ? "Cập nhật" : "Tạo mới"} Đơn nhập thành công!`
+          description: `${
+            updateMode ? "Cập nhật" : "Tạo mới"
+          } Đơn nhập thành công!`,
         });
         history.push(ImportProductManagerPaths.LIST_PRODUCT_IMPORT);
       })
@@ -204,44 +209,47 @@ const ImportWrapper = ({ updateMode }) => {
         console.log(err);
         notification.error({
           message: "Đơn nhập",
-          description:  `${updateMode ? "Cập nhật" : "Tạo mới"} Đơn nhập thất bại!`
+          description: `${
+            updateMode ? "Cập nhật" : "Tạo mới"
+          } Đơn nhập thất bại!`,
         });
       });
   };
 
-  const initialValues = updateMode ? productImportDetails : null;
+  // const initialValues = updateMode ? productImportDetails : null;
 
-  useEffect(() => {
-    form.setFieldValue(initialValues);
+  // useEffect(() => {
+  //   form.setFieldValue(initialValues);
 
-    if (initialValues) {
-      form.setFieldValue("statusImport", getStatusString(initialValues.status));
-    }
-  }, [dispatch, updateMode, initialValues]);
+  //   if (initialValues) {
+  //     form.setFieldValue(
+  //       "statusImport",
+  //       getStatusString(initialValues.status, statusProductImport)
+  //     );
+  //   }
+  // }, [dispatch, updateMode, initialValues]);
 
-  if (!initialValues && updateMode == true) {
-    return <Spin spinning={isLoading} />;
-  }
+  // if (!initialValues && updateMode == true) {
+  //   return <Spin spinning={isLoading} />;
+  // }
 
   return (
     <Spin spinning={isLoading}>
       <Form
-        className="product"
-        form={form}
+        className="debt"
+        form={debtForm}
         name="dynamic_form_nest_item"
         autoComplete="off"
         layout="vertical"
         onFinish={onFinish}
-        initialValues={initialValues}
+        // initialValues={initialValues}
       >
-        <StatisticGroups updateMode={updateMode} />
-
         <div className="actions-group">
-          <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-            Chi tiết Đơn nhập
+          <Title level={3} style={{ marginRight: "auto" }}>
+            Công nợ
           </Title>
 
-          {updateMode &&
+          {/* {updateMode &&
             typeof productImportDetails?.status === "number" &&
             productImportDetails?.status !== 2 && (
               <>
@@ -294,9 +302,9 @@ const ImportWrapper = ({ updateMode }) => {
                   Cập nhật
                 </Button>
               </>
-            )}
+            )} */}
 
-          {!updateMode && (
+          {/* {!updateMode && (
             <Button
               type="primary"
               shape="round"
@@ -322,27 +330,27 @@ const ImportWrapper = ({ updateMode }) => {
               />
               Tạo mới
             </Button>
-          )}
+          )} */}
         </div>
 
         <Tabs
-          defaultActiveKey={`table`}
+          defaultActiveKey={"supplier"}
           activeKey={activeTab}
           onTabClick={(key) => setActiveTab(key)}
           items={[
             {
-              label: `Danh sách sản phẩm`,
-              key: `table`,
-              children: updateMode ? (
-                <TableUpdate form={form} updateMode={updateMode} />
-              ) : (
-                <TableCreate form={form} updateMode={updateMode} />
-              ),
+              label: `Nhà cung cấp`,
+              key: "supplier",
+              // children: updateMode ? (
+              //   <TableUpdate form={form} updateMode={updateMode} />
+              // ) : (
+              //   <TableCreate form={form} updateMode={updateMode} />
+              // ),
             },
             {
-              label: `Thông tin khác`,
+              label: `Khách hàng`,
               key: `details`,
-              children: <HeaderTable form={form} updateMode={updateMode} />,
+              // children: <HeaderTable form={form} updateMode={updateMode} />,
             },
           ]}
         />

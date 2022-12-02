@@ -164,12 +164,11 @@ export default function AccountList() {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id - b.id,
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("id"),
+      title: "Vị trí",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
       title: "Tên đăng nhập",

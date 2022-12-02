@@ -85,23 +85,8 @@ export const replaceString = (stringReplace, from, to) => {
   )}${stringReplace.slice(-to)}`;
 };
 
-export const getStatusString = (value) => {
-  let statusString = "";
+export const getStatusString = (value, arr) => {
+  let status = arr.find((s) => s.value === value);
 
-  switch (value) {
-    case 0:
-      statusString = statusProductImport[0].label;
-      break;
-    case 1:
-      statusString = statusProductImport[1].label;
-      break;
-    case 2:
-      statusString = statusProductImport[2].label;
-      break;
-    default:
-      statusString = statusProductImport[0].label;
-      break;
-  }
-
-  return statusString;
+  return status.label;
 };
