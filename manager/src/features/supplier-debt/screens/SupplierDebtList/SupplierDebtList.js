@@ -210,10 +210,10 @@ export default function SupplierDebtList() {
     {
       title: "Số điện thoại",
       dataIndex: "supplierDTO",
-      key: "phoneNumber",
+      key: "phoneNumberContact",
       align: "center",
       render: (value) => {
-        return <Text>{value.phoneNumber}</Text>;
+        return <Text>{value.phoneNumberContact}</Text>;
       },
     },
     {
