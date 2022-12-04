@@ -191,7 +191,7 @@ export default function DetailsModal({ record, updateMode }) {
                 ]}
                 initialValue={1}
               >
-                <InputNumber min={1} max={10000} className="details__item" />
+                <InputNumber min={1} className="details__item" />
               </Form.Item>
             </div>
             <div className="details__group">

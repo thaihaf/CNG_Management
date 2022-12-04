@@ -2,42 +2,31 @@ import React from "react";
 
 import { SupplierDebtPaths } from "../constants/supplier-debt.paths";
 
-const ProductListScreen = React.lazy(() =>
-  import("../screens/ProductList/ProductList")
+const SupplierDebtListScreen = React.lazy(() =>
+  import("../screens/SupplierDebtList/SupplierDebtList")
 );
-const CreateProductScreen = React.lazy(() =>
-  import("../screens/CreateProduct/CreateProduct")
-);
-const ProductDetailsScreen = React.lazy(() =>
-  import("../screens/ProductDetails/ProductDetails")
+const DetailsSupplierDebtScreen = React.lazy(() =>
+  import("../screens/DetailsSupplierDebt/DetailsSupplierDebt")
 );
 
-const SUPPLIER_LIST_SCREEN = {
-  id: "list-supplier-debt",
-  path: SupplierDebtPaths.PRODUCT_MANAGER,
-  component: ProductListScreen,
+const SUPPLIER_DEBT_SCREEN = {
+  id: "supplier-debt-list",
+  path: SupplierDebtPaths.SUPPLIER_DEBT_MANAGER,
+  component: SupplierDebtListScreen,
   isPrivateRoute: true,
-  pageTitle: "Supplier Debt List",
+  pageTitle: "Supplier Debt Manager",
 };
-const CREATE_SUPPLIER_SCREEN = {
-  id: "supplier-debt-create",
-  path: SupplierDebtPaths.CREATE_PRODUCT,
-  component: CreateProductScreen,
-  isPrivateRoute: true,
-  pageTitle: "Create Supplier Debt Product",
-};
-const SUPPLIER_DETAILS_SCREEN = {
+const SUPPLIER_DEBT_DETAILS_SCREEN = {
   id: "supplier-debt-details",
-  path: SupplierDebtPaths.PRODUCT_DETAILS,
-  component: ProductDetailsScreen,
+  path: SupplierDebtPaths.SUPPLIER_DEBT_DETAILS,
+  component: DetailsSupplierDebtScreen,
   isPrivateRoute: true,
   pageTitle: "Supplier Debt Details",
 };
 
 const SUPPLIER_DEBT_ROUTES = [
-  CREATE_SUPPLIER_SCREEN,
-  SUPPLIER_DETAILS_SCREEN,
-  SUPPLIER_LIST_SCREEN,
+  SUPPLIER_DEBT_DETAILS_SCREEN,
+  SUPPLIER_DEBT_SCREEN,
 ];
 
 export default SUPPLIER_DEBT_ROUTES;

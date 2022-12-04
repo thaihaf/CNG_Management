@@ -948,7 +948,7 @@ export default function TableUpdate({ form, updateMode }) {
             initialValue={0}
             style={{ padding: "0 1.5rem" }}
           >
-            <Statistic style={{ minWidth: "150px" }} precision={2} />
+            <Statistic style={{ minWidth: "150px" }} precision={0} />
           </Form.Item>
         );
       },
@@ -998,14 +998,19 @@ export default function TableUpdate({ form, updateMode }) {
               {typeof record.id === "number" && (
                 <Menu.Item
                   onClick={() => onRowEdit(record)}
-                  disabled={isEditing(record)}
+                  disabled={
+                    isEditing(record) || productExportDetails?.status === 4
+                  }
                 >
                   Chỉnh sửa sản phẩm
                 </Menu.Item>
               )}
               <Menu.Item
                 onClick={() => onRowDelete("deleteProduct", record)}
-                disabled={productsExport.length <= 1}
+                disabled={
+                  productsExport.length <= 1 ||
+                  productExportDetails?.status === 4
+                }
               >
                 Xoá sản phẩm
               </Menu.Item>
@@ -1296,7 +1301,7 @@ export default function TableUpdate({ form, updateMode }) {
             }
           : false
       }
-      title={() => <SearchProduct />}
+      title={() => productExportDetails?.status !== 4 && <SearchProduct />}
     />
   );
 }

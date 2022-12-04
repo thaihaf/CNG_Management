@@ -617,7 +617,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           onChange={(value) => console.log(value)}
           initialValue={0}
         >
-          <Statistic style={{ minWidth: "150px" }} precision={2} />
+          <Statistic style={{ minWidth: "150px" }} precision={0} />
         </Form.Item>
       ),
     },

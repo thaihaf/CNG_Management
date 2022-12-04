@@ -1,33 +1,23 @@
 import { api } from "api/api";
 import { SupplierDebtEndPoints } from "../supplierDebt";
 
-const getSupplierDebts = () => {
-  const url = SupplierDebtEndPoints.SUPPLIER_DEBT;
+const getSupplierDebts = (startDate, endDate) => {
+  const rp1 = SupplierDebtEndPoints.SUPPLIER_DEBT.replace(
+    ":startDate",
+    startDate
+  );
+  const url = rp1.replace(":endDate", endDate);
   return api.get(url);
 };
-const getSupplierDebtDetails = (id) => {
-  const url = SupplierDebtEndPoints.SUPPLIER_DEBT_DETAILS.replace(
-    ":id",
-    id || ""
-  );
+const getSupplierDebtDetails = (id, startDate, endDate) => {
+  const rp1 = SupplierDebtEndPoints.SUPPLIER_DEBT_DETAILS.replace(":id", id);
+  const rp2 = rp1.replace(":startDate", startDate);
+  const url = rp2.replace(":endDate", endDate);
   return api.get(url);
-};
-const createSupplierDebts = (data) => {
-  const url = SupplierDebtEndPoints.SUPPLIER_DEBT;
-  return api.post(url, data);
-};
-const updateSupplierDebts = (id, data) => {
-  const url = SupplierDebtEndPoints.SUPPLIER_DEBT_DETAILS.replace(
-    ":id",
-    id || ""
-  );
-  return api.put(url, data);
 };
 
-const SupplierDebtApi = {
+const supplierDebtApi = {
   getSupplierDebts,
-  createSupplierDebts,
-  updateSupplierDebts,
   getSupplierDebtDetails,
 };
-export default SupplierDebtApi;
+export default supplierDebtApi;

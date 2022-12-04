@@ -59,6 +59,7 @@ export default function HeaderTable({ form, updateMode }) {
               .toLowerCase()
               .localeCompare((optionB?.children ?? "").toLowerCase())
           }
+          disabled={productExportDetails?.status === 4 ? true : false}
         >
           {listCustomers.map((item) => (
             <Select.Option value={item.id} key={item.id}>
@@ -95,6 +96,7 @@ export default function HeaderTable({ form, updateMode }) {
               .localeCompare((optionB?.children ?? "").toLowerCase())
           }
           placeholder="Select employee"
+          disabled={productExportDetails?.status === 4 ? true : false}
         >
           {listEmployees.map((item) => (
             <Select.Option value={item.id} key={item.id}>
@@ -132,12 +134,14 @@ export default function HeaderTable({ form, updateMode }) {
           }
           placeholder="Select type"
           options={typeExport}
-          disabled={updateMode ? true : false}
           onChange={(value) => {
             if (value === "EXPORT") {
               setStatusByType(value);
             }
           }}
+          disabled={
+            updateMode || productExportDetails?.status === 4 ? true : false
+          }
         />
       </Form.Item>
       <Form.Item
@@ -155,7 +159,10 @@ export default function HeaderTable({ form, updateMode }) {
           },
         ]}
       >
-        <Input placeholder="29v3-41065" />
+        <Input
+          placeholder="29v3-41065"
+          disabled={productExportDetails?.status === 4 ? true : false}
+        />
       </Form.Item>
       <Form.Item
         name="exportDate"
@@ -173,11 +180,14 @@ export default function HeaderTable({ form, updateMode }) {
         ]}
         initialValue={
           updateMode
-            ? moment(productExportDetails?.createDate, "YYYY-MM-DD").add(1, "d")
+            ? moment(productExportDetails?.createDate, "YYYY-MM-DD")
             : moment()
         }
       >
-        <DatePicker format="YYYY-MM-DD" />
+        <DatePicker
+          format="YYYY-MM-DD"
+          disabled={productExportDetails?.status === 4 ? true : false}
+        />
       </Form.Item>
       {updateMode && (
         <Form.Item
@@ -214,7 +224,8 @@ export default function HeaderTable({ form, updateMode }) {
                 )
               )
             }
-          ></Select>
+            disabled={productExportDetails?.status === 4 ? true : false}
+          />
         </Form.Item>
       )}
     </div>

@@ -1,12 +1,12 @@
-import {
-  SearchOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import {
   Button,
   Input,
   Select,
   Space,
+  Statistic,
   Table,
+  Tag,
   Typography,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
@@ -176,9 +176,9 @@ export default function TableDetails({ form }) {
       key: "date",
       align: "center",
       render: (value) => (
-        <Text>
-          {moment(value.split("T")[0], "DD/MM/YYYY").format("DD/MM/YYYY")}
-        </Text>
+        <Tag color="darkseagreen">
+          {moment(value.split("T")[0], "YYYY/MM/DD").format("DD/MM/YYYY")}
+        </Tag>
       ),
     },
     {
@@ -196,6 +196,9 @@ export default function TableDetails({ form }) {
       sorter: (a, b) =>
         parseFloat(a.incurredIncrease) < parseFloat(b.incurredIncrease),
       sortDirections: ["descend", "ascend"],
+      render: (value) => (
+        <Statistic precision={0} value={value.incurredIncrease} />
+      ),
     },
     {
       title: "Phát sinh có (vnđ)",
@@ -204,6 +207,9 @@ export default function TableDetails({ form }) {
       align: "center",
       sorter: (a, b) => a.incurredDecrease - b.incurredDecrease,
       sortDirections: ["descend", "ascend"],
+      render: (value) => (
+        <Statistic precision={0} value={value.incurredDecrease} />
+      ),
     },
     {
       title: "Ghi chú",
@@ -212,7 +218,6 @@ export default function TableDetails({ form }) {
       align: "center",
       render: (value) => (
         <Input.TextArea
-          showCount
           style={{ height: "100%", resize: "none", minWidth: "150px" }}
           value={value}
           disabled
