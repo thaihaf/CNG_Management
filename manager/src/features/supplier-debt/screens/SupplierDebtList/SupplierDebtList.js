@@ -208,12 +208,12 @@ export default function SupplierDebtList() {
       // ...getColumnSearchProps("id"),
     },
     {
-      title: "Mã số thuế",
+      title: "Số điện thoại",
       dataIndex: "supplierDTO",
-      key: "taxCode",
+      key: "phoneNumber",
       align: "center",
       render: (value) => {
-        return <Text>{value.taxCode}</Text>;
+        return <Text>{value.phoneNumber}</Text>;
       },
     },
     {
