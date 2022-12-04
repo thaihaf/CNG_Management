@@ -247,7 +247,7 @@ export default function ListProductImport() {
       sorter: (a, b) => a.totalCostImport > b.totalCostImport,
       sortDirections: ["descend", "ascend"],
       render: (a, { totalCostImport }) => {
-        return <Statistic precision={2} value={totalCostImport} />;
+        return <Statistic precision={0} value={totalCostImport} />;
       },
     },
     {

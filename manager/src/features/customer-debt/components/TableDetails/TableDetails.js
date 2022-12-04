@@ -1,12 +1,13 @@
-import {
-  SearchOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import {
   Button,
   Input,
   Select,
   Space,
+  Statistic,
   Table,
+  Tag,
+  Tooltip,
   Typography,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
+import { ProductExportManagerPaths } from "features/export-product/exportProduct";
 
 import "./TableDetails.css";
 import moment from "moment";
@@ -176,17 +178,40 @@ export default function TableDetails({ form }) {
       key: "date",
       align: "center",
       render: (value) => (
-        <Text>
-          {moment(value.split("T")[0], "DD/MM/YYYY").format("DD/MM/YYYY")}
-        </Text>
+        <Tag color="darkseagreen">
+          {moment(value.split("T")[0], "YYYY/MM/DD").format("DD/MM/YYYY")}
+        </Tag>
       ),
     },
     {
-      title: "Mã đơn hàng export",
+      title: "Mã đơn hàng",
       dataIndex: "orderId",
       key: "orderId",
       align: "center",
-      render: (value) => <Text>{value ? value : "-"}</Text>,
+      render: (value) =>
+        value ? (
+          <Tooltip title="Chuyển đến đơn xuất">
+            <Text
+              onClick={() =>
+                history.push(
+                  ProductExportManagerPaths.DETAILS_PRODUCT_EXPORT.replace(
+                    ":exportId",
+                    value
+                  )
+                )
+              }
+              style={{
+                color: "#1890ff",
+                fontSize: "2rem",
+                textDecoration: "underline",
+              }}
+            >
+              {value}
+            </Text>
+          </Tooltip>
+        ) : (
+          "--"
+        ),
     },
     {
       title: "Phát sinh nợ (vnđ)",
@@ -196,6 +221,9 @@ export default function TableDetails({ form }) {
       sorter: (a, b) =>
         parseFloat(a.incurredIncrease) < parseFloat(b.incurredIncrease),
       sortDirections: ["descend", "ascend"],
+      render: (value) => (
+        <Statistic precision={0} value={value.incurredIncrease} />
+      ),
     },
     {
       title: "Phát sinh có (vnđ)",
@@ -204,6 +232,9 @@ export default function TableDetails({ form }) {
       align: "center",
       sorter: (a, b) => a.incurredDecrease - b.incurredDecrease,
       sortDirections: ["descend", "ascend"],
+      render: (value) => (
+        <Statistic precision={0} value={value.incurredDecrease} />
+      ),
     },
     {
       title: "Ghi chú",
@@ -212,7 +243,6 @@ export default function TableDetails({ form }) {
       align: "center",
       render: (value) => (
         <Input.TextArea
-          showCount
           style={{ height: "100%", resize: "none", minWidth: "150px" }}
           value={value}
           disabled

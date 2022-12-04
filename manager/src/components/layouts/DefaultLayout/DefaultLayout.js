@@ -477,7 +477,7 @@ const DefaultLayout = ({ children }) => {
             />
 
             <Breadcrumb className="breadcrumb">
-              {location.pathname.split("/").map((item, index) => {
+              {location.pathname.split("/").map((item, index, arr) => {
                 if (index === 0) {
                   return (
                     <Breadcrumb.Item href={`/${item}`} key={item}>
@@ -485,16 +485,18 @@ const DefaultLayout = ({ children }) => {
                     </Breadcrumb.Item>
                   );
                 }
-                return (
-                  <Breadcrumb.Item href={`/${item}`} key={`/${item}`}>
-                    {item
-                      .split(" ")
-                      .map((word) => {
-                        return word[0].toUpperCase() + word.substring(1);
-                      })
-                      .join(" ")}
-                  </Breadcrumb.Item>
-                );
+                if (arr[index - 1] !== "details") {
+                  return (
+                    <Breadcrumb.Item href={`/${item}`} key={`/${item}`}>
+                      {item
+                        .split("-")
+                        .map((word) => {
+                          return word[0].toUpperCase() + word.substring(1);
+                        })
+                        .join(" ")}
+                    </Breadcrumb.Item>
+                  );
+                }
               })}
             </Breadcrumb>
 

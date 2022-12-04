@@ -968,7 +968,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
           initialValue={0}
           style={{ padding: "0 1.5rem" }}
         >
-          <Statistic style={{ minWidth: "150px" }} precision={2} />
+          <Statistic style={{ minWidth: "150px" }} precision={0} />
         </Form.Item>
       ),
     },
@@ -1016,17 +1016,23 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               <Menu.Item>
                 <NewProductDetailsModal record={record} />
               </Menu.Item>
-              {typeof record.id === "number" && (
-                <Menu.Item
-                  onClick={() => onRowEdit(record)}
-                  disabled={isEditing(record)}
-                >
-                  Chỉnh sửa sản phẩm
-                </Menu.Item>
+              {productImportDetails?.status !== 2 && (
+                <>
+                  {typeof record.id === "number" && (
+                    <Menu.Item
+                      onClick={() => onRowEdit(record)}
+                      disabled={isEditing(record)}
+                    >
+                      Chỉnh sửa sản phẩm
+                    </Menu.Item>
+                  )}
+                  <Menu.Item
+                    onClick={() => onRowDelete("deleteProduct", record)}
+                  >
+                    Xoá sản phẩm
+                  </Menu.Item>
+                </>
               )}
-              <Menu.Item onClick={() => onRowDelete("deleteProduct", record)}>
-                Xoá sản phẩm
-              </Menu.Item>
             </Menu>
           }
         >
@@ -1261,7 +1267,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
             }
           : false
       }
-      title={() => <SearchProduct />}
+      title={() => productImportDetails?.status !== 2 && <SearchProduct updateMode={updateMode}/>}
     />
   );
 }

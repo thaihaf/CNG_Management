@@ -256,7 +256,7 @@ export default function ListProductExport() {
         parseFloat(b.totalExportOrderPrice),
       sortDirections: ["descend", "ascend"],
       render: (a, { totalExportOrderPrice }) => {
-        return <Statistic precision={2} value={totalExportOrderPrice} />;
+        return <Statistic precision={0} value={totalExportOrderPrice} />;
       },
     },
     {

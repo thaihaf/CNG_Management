@@ -33,16 +33,15 @@ import minusButtonImg from "assets/icons/minusButton.png";
 
 import TableDetails from "../TableDetails/TableDetails";
 import moment from "moment";
-import { getCustomerDebtDetails } from "features/customer-debt/customerDebt";
 import StatisticGroups from "../StatisticGroups/StatisticGroups";
+import { getSupplierDebtDetails } from "features/supplier-debt/supplierDebt";
 
 const { Title } = Typography;
 const { Step } = Steps;
 const { RangePicker } = DatePicker;
 
-const DetailsForm = ({ updateMode }) => {
-  const { provinces } = useSelector((state) => state.provinces);
-  const { customerDebtDetails } = useSelector((state) => state.customerDebt);
+const DetailsForm = () => {
+  const { supplierDebtDetails } = useSelector((state) => state.supplierDebt);
 
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -55,34 +54,35 @@ const DetailsForm = ({ updateMode }) => {
 
   const handleGetList = async () => {
     setIsLoading(true);
-    dispatch(getCustomerDebtDetails({ id: id, ...datesPicker }))
+    dispatch(getSupplierDebtDetails({ id: id, ...datesPicker }))
       .then(unwrapResult)
       .then(() => {
         setDatesPicker(null);
         setIsLoading(false);
-      }).catch((err) => console.log(err))
+      })
+      .catch((err) => console.log(err));
   };
   useEffect(() => {
-    setImgUrl(customerDebtDetails?.customerDTO?.fileAttachDTO?.filePath);
+    setImgUrl(supplierDebtDetails?.supplierDTO?.avatarSupplier);
 
-    for (const key in customerDebtDetails) {
-      if (key === "customerDTO") {
-        let customerDTO = customerDebtDetails[key];
-        for (const key in customerDTO) {
-          if (key === "firstName") {
+    for (const key in supplierDebtDetails) {
+      if (key === "supplierDTO") {
+        let supplierDTO = supplierDebtDetails[key];
+        for (const key in supplierDTO) {
+          if (key === "firstContactName") {
             form.setFieldValue(
               "fullname",
-              `${customerDTO[key]} ${customerDTO["lastName"]}`
+              `${supplierDTO["firstContactName"]} ${supplierDTO["lastContactName"]}`
             );
           } else {
-            form.setFieldValue(key, customerDTO[key]);
+            form.setFieldValue(key, supplierDTO[key]);
           }
         }
       } else {
-        form.setFieldValue(key, customerDebtDetails[key]);
+        form.setFieldValue(key, supplierDebtDetails[key]);
       }
     }
-  }, [dispatch, customerDebtDetails]);
+  }, [dispatch, supplierDebtDetails]);
 
   return (
     <Spin spinning={isLoading}>
@@ -90,21 +90,18 @@ const DetailsForm = ({ updateMode }) => {
         form={form}
         autoComplete="off"
         layout="vertical"
-        initialValues={customerDebtDetails}
+        initialValues={supplierDebtDetails}
       >
         <StatisticGroups />
 
         <div className="product-details">
           <div className="actions-group">
             <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-              Công nợ Khách hàng
+              Chi tiết Nhà cung cấp
             </Title>
 
             <RangePicker
-              defaultValue={[
-                moment().startOf("month"),
-                moment().endOf("month"),
-              ]}
+               defaultValue={[moment().startOf("month"), moment().endOf("month")]}
               format={"DD/MM/YYYY"}
               onChange={(dates, dateString) => {
                 if (dates) {
@@ -145,72 +142,26 @@ const DetailsForm = ({ updateMode }) => {
 
             <Steps direction="vertical" className="list-data">
               <Step
-                title="Thông tin Khách hàng"
+                title="Thông tin Nhà cung cấp"
                 status="finish"
                 description={
                   <div className="group-data">
-                    <Form.Item
-                      label="Họ và tên"
-                      name="fullname"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Họ và tên"
-                          ),
-                        },
-                      ]}
-                    >
+                    <Form.Item label="Nhà cung cấp" name="supplierName">
+                      <Input disabled />
+                    </Form.Item>
+                    <Form.Item label="Tên người liên hệ" name="fullname">
                       <Input disabled />
                     </Form.Item>
                     <Form.Item
-                      label="Tên cửa hàng"
-                      name="shopName"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Tên cửa hàng"
-                          ),
-                        },
-                      ]}
+                      label="Số điện thoại liên hệ"
+                      name="phoneNumberContact"
                     >
                       <Input disabled />
                     </Form.Item>
-                    <Form.Item
-                      label="Số điện thoại"
-                      name="phoneNumber"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Số điện thoại"
-                          ),
-                        },
-                      ]}
-                    >
+                    <Form.Item label="Tên ngân hàng" name="bankName">
                       <Input disabled />
                     </Form.Item>
-                    <Form.Item
-                      label="Mã số thuế"
-                      name="taxCode"
-                      rules={[
-                        {
-                          required: true,
-                          message: getMessage(
-                            CODE_ERROR.ERROR_REQUIRED,
-                            MESSAGE_ERROR,
-                            "Mã số thuế"
-                          ),
-                        },
-                      ]}
-                    >
+                    <Form.Item label="Mã số thuế" name="taxCode">
                       <Input disabled />
                     </Form.Item>
                   </div>

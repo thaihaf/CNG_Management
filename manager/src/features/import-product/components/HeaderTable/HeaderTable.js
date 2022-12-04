@@ -51,6 +51,7 @@ export default function HeaderTable({ form, updateMode }) {
               .toLowerCase()
               .localeCompare((optionB?.children ?? "").toLowerCase())
           }
+          disabled={productImportDetails?.status === 2 ? true : false}
         >
           {listEmployees.map((item) => (
             <Select.Option value={item.id} key={item.id}>
@@ -74,7 +75,7 @@ export default function HeaderTable({ form, updateMode }) {
           },
         ]}
       >
-        <Input />
+        <Input disabled={productImportDetails?.status === 2 ? true : false} />
       </Form.Item>
       <Form.Item
         name="importDate"
@@ -92,16 +93,13 @@ export default function HeaderTable({ form, updateMode }) {
         ]}
         initialValue={
           updateMode
-            ? moment(productImportDetails?.createDate, "YYYY-MM-DD").add(1, "d")
+            ? moment(productImportDetails?.createDate, "YYYY-MM-DD")
             : moment()
         }
       >
         <DatePicker
           format="YYYY-MM-DD"
-          // format="YYYY-MM-DD HH:mm:ss"
-          // showTime={{
-          //   defaultValue: moment("00:00:00", "HH:mm:ss"),
-          // }}
+          disabled={productImportDetails?.status === 2 ? true : false}
         />
       </Form.Item>
       {updateMode && (
@@ -130,6 +128,7 @@ export default function HeaderTable({ form, updateMode }) {
                 getStatusString(value, statusProductImport)
               )
             }
+            disabled={productImportDetails?.status === 2 ? true : false}
           ></Select>
         </Form.Item>
       )}

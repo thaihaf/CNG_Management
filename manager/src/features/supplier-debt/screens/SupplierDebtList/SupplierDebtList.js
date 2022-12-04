@@ -8,32 +8,31 @@ import { SearchOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
+  DatePicker,
   Input,
   Space,
+  Statistic,
   Table,
-  Tag,
-  Tooltip,
   Typography,
 } from "antd";
-import { EmployeeManagerPaths } from "features/employee-manager/employeeManager";
 
 import avt_default from "assets/images/avt-default.png";
-import "./ProductList.css";
+import "./SupplierDebtList.css";
 
-import {
-  getProducts,
-  ProductManagerPaths,
-  titleSizeList,
-} from "features/product-manager/productManager";
-import { getActiveCategories } from "features/category-manager/categoryManager";
 import { get } from "lodash";
-import { ActionsModal } from "features/product-manager/components";
+import moment from "moment";
+import dayjs from "dayjs";
+import {
+  getSupplierDebts,
+  SupplierDebtPaths,
+} from "features/supplier-debt/supplierDebt";
 
 const { Title, Text } = Typography;
+const { RangePicker } = DatePicker;
 
-export default function ProductList() {
-  const { listProducts, totalElements, totalPages, size } = useSelector(
-    (state) => state.product
+export default function SupplierDebtList() {
+  const { listSupplierDebt, totalElements, totalPages, size } = useSelector(
+    (state) => state.supplierDebt
   );
   const { listActiveCategories } = useSelector((state) => state.category);
   const history = useHistory();
@@ -41,6 +40,7 @@ export default function ProductList() {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [datesPicker, setDatesPicker] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(2);
   const [searchText, setSearchText] = useState("");
@@ -169,149 +169,88 @@ export default function ProductList() {
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Ảnh sản phẩm",
-      dataIndex: "image",
+      title: "Ảnh đại diện",
       key: "image",
       align: "center",
-      render: (_, record) => (
+      render: (record) => (
         <Avatar
           size={50}
           src={
-            record?.listImage[0]?.filePath === ""
+            record?.supplierDTO.avatarSupplier === ""
               ? avt_default
-              : record?.listImage[0]?.filePath
+              : record?.supplierDTO.avatarSupplier
           }
         />
       ),
     },
     {
-      title: "Mã sản phẩm",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id > b.id,
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("id"),
-    },
-    {
-      title: "Màu sản phẩm",
-      dataIndex: "color",
-      key: "color",
-      sorter: (a, b) => a.color > b.color,
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("color"),
-    },
-    {
-      title: "Nơi sản xuất",
-      dataIndex: "origin",
-      key: "origin",
-      ...getColumnSearchProps("origin"),
-    },
-    {
-      title: "Kích thước",
-      dataIndex: "titleSize",
-      key: "titleSize",
+      title: "Nhà cung cấp",
+      dataIndex: "supplierDTO",
+      key: "shopName",
       align: "center",
-      filters: titleSizeList,
-      onFilter: (value, record) => record.titleSize === value,
-      filterSearch: true,
-      sorter: (a, b) => {
-        let aArr = a.titleSize.split("x");
-        let bArr = b.titleSize.split("x");
-
-        let aVal = Number(aArr[0]) * Number(aArr[1]);
-        let bVal = Number(bArr[0]) * Number(bArr[1]);
-
-        return aVal - bVal;
+      render: (value) => {
+        return <Text>{value.supplierName}</Text>;
       },
-      sortDirections: ["descend", "ascend"],
+      // ...getColumnSearchProps("id"),
     },
     {
-      title: "Tổng số lượng hộp",
-      dataIndex: "totalQuantityBox",
-      key: "totalQuantityBox",
-      align: "center",
-      sorter: (a, b) => a.totalQuantityBox - b.totalQuantityBox,
-      sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: "Tên chức năng",
-      dataIndex: "categoriesName",
-      key: "categoriesName",
-      render: (_, { categoryDTO }) => (
-        <>
-          {categoryDTO.map((c) => {
-            // let color = tag.length > 5 ? 'geekblue' : 'green';
-            // if (tag === 'loser') {
-            // 	color = 'volcano';
-            // }
-            return (
-              <Tag color="blue" key={c.id}>
-                {c.categoryName.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-      filters: listActiveCategories?.map((c) => {
-        return { text: c.categoryName, value: c.id };
-      }),
-      onFilter: (value, record) =>
-        record.categoryDTO.find((c) => c.id === value),
-      filterSearch: true,
-    },
-    {
-      title: "Tên nhãn hàng",
-      dataIndex: "brandDTO",
-      key: "brandName",
-      ...getColumnSearchProps("brandDTO", "brandName"),
-      render: (_, { brandDTO }) => (
-        <Tag color="blue" key={brandDTO.id}>
-          {brandDTO.brandName.toUpperCase()}
-        </Tag>
-      ),
-    },
-    {
-      title: "Tên nhà cung cấp",
+      title: "Người liên hệ",
       dataIndex: "supplierDTO",
       key: "supplierName",
-      ...getColumnSearchProps("supplierDTO", "supplierName"),
-      render: (_, { supplierDTO }) => (
-        <Tag color="blue" key={supplierDTO?.id}>
-          {supplierDTO?.supplierName.toUpperCase()}
-        </Tag>
-      ),
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
       align: "center",
-      filters: [
-        {
-          text: "Hoạt động",
-          value: 1,
-        },
-        {
-          text: "Không hoạt động",
-          value: 0,
-        },
-      ],
-      onFilter: (value, record) => record.status === value,
-      filterSearch: true,
-      render: (s) => {
-        let color = s == 1 ? "green" : "volcano";
-        return s == 1 ? (
-          <Tag color={color} key={s}>
-            Hoạt động
-          </Tag>
-        ) : (
-          <Tag color={color} key={s}>
-            Không hoạt động
-          </Tag>
+      render: (value) => {
+        return (
+          <Text>
+            {value.firstContactName} {value.lastContactName}
+          </Text>
         );
       },
-      sorter: (a, b) => a.status - b.status,
-      sortDirections: ["descend", "ascend"],
+      // ...getColumnSearchProps("id"),
+    },
+    {
+      title: "Mã số thuế",
+      dataIndex: "supplierDTO",
+      key: "taxCode",
+      align: "center",
+      render: (value) => {
+        return <Text>{value.taxCode}</Text>;
+      },
+    },
+    {
+      title: "Dư nợ đầu kỳ",
+      dataIndex: "debtAtBeginningPeriod",
+      key: "debtAtBeginningPeriod",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
+    },
+    {
+      title: "Phát sinh nợ",
+      dataIndex: "debtMoneyDTO",
+      key: "debtIncurredIncrease",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value.incurredIncrease} precision={0} />;
+      },
+    },
+    {
+      title: "Phát sinh có",
+      dataIndex: "debtMoneyDTO",
+      key: "debtIncurredDecrease",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value.incurredDecrease} precision={0} />;
+      },
+    },
+    {
+      title: "Dư nợ cuối kỳ",
+      dataIndex: "debtAtEndPeriod",
+      key: "debtAtEndPeriod",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
   ];
 
@@ -319,36 +258,72 @@ export default function ProductList() {
     setCurrentPage(page);
     setPageSize(size);
   };
-  useEffect(() => {
+
+  const handleGetList = async (defaultSelect) => {
     setIsLoading(true);
-    dispatch(getProducts())
+    let startDate = moment().startOf("month").format("MM/DD/YYYY");
+    let endDate = moment().endOf("month").format("MM/DD/YYYY");
+
+    dispatch(
+      defaultSelect
+        ? getSupplierDebts(datesPicker)
+        : getSupplierDebts({ startDate: startDate, endDate: endDate })
+    )
       .then(unwrapResult)
-      .then(() => setIsLoading(false));
-    dispatch(getActiveCategories());
+      .then(() => {
+        setDatesPicker(null);
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    handleGetList(false);
   }, [dispatch, location]);
 
   return (
     <div className="product-list">
       <div className="top">
-        <ActionsModal />
+        <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
+          Công nợ Nhà cung cấp
+        </Title>
 
-        <Button
-          type="primary"
-          shape={"round"}
-          size={"large"}
-          onClick={() => history.push(ProductManagerPaths.CREATE_PRODUCT)}
-        >
-          Tạo mới
-        </Button>
+        <RangePicker
+          defaultValue={[moment().startOf("month"), moment().endOf("month")]}
+          format={"DD/MM/YYYY"}
+          onChange={(dates, dateString) => {
+            if (dates) {
+              let value = {
+                startDate: dates[0].format("MM/DD/YYYY"),
+                endDate: dates[1].format("MM/DD/YYYY"),
+              };
+              setDatesPicker(value);
+            } else {
+              setDatesPicker(null);
+            }
+          }}
+          renderExtraFooter={(value, a, b) => {
+            return (
+              <Button
+                type="primary"
+                shape={"round"}
+                size={"large"}
+                onClick={async () => await handleGetList(true)}
+                disabled={datesPicker ? false : true}
+              >
+                Tìm kiếm
+              </Button>
+            );
+          }}
+        />
       </div>
 
       <Table
-        rowKey="id"
+        rowKey={(record) => record.supplierDTO.id}
         columns={columns}
         loading={isLoading}
-        dataSource={listProducts}
+        dataSource={[...listSupplierDebt]}
         pagination={
-          listProducts.length !== 0
+          listSupplierDebt.length !== 0
             ? {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
@@ -365,9 +340,9 @@ export default function ProductList() {
           return {
             onClick: () =>
               history.push(
-                ProductManagerPaths.PRODUCT_DETAILS.replace(
-                  ":productId",
-                  record.id
+                SupplierDebtPaths.SUPPLIER_DEBT_DETAILS.replace(
+                  ":id",
+                  record.supplierDTO.id
                 )
               ),
           };

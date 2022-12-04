@@ -46,24 +46,6 @@ export default function CustomerDebtList() {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-  const rangePresets = [
-    {
-      label: "7 ngày trước",
-      value: [dayjs().add(-7, "d"), dayjs()],
-    },
-    {
-      label: "14 ngày trước",
-      value: [dayjs().add(-14, "d"), dayjs()],
-    },
-    {
-      label: "30 ngày trước",
-      value: [dayjs().add(-30, "d"), dayjs()],
-    },
-    {
-      label: "90 ngày trước",
-      value: [dayjs().add(-90, "d"), dayjs()],
-    },
-  ];
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -187,7 +169,7 @@ export default function CustomerDebtList() {
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Ảnh sản phẩm",
+      title: "Ảnh đại diện",
       key: "image",
       align: "center",
       render: (record) => (
@@ -235,39 +217,39 @@ export default function CustomerDebtList() {
       },
     },
     {
-      title: "Số nợ đầu kỳ",
+      title: "Dư nợ đầu kỳ",
       dataIndex: "debtAtBeginningPeriod",
       key: "debtAtBeginningPeriod",
       align: "center",
       render: (value) => {
-        return <Statistic value={value} />;
+        return <Statistic value={value} precision={0} />;
       },
     },
     {
-      title: "Số phát sinh nợ",
+      title: "Phát sinh nợ",
       dataIndex: "debtMoneyDTO",
       key: "debtIncurredIncrease",
       align: "center",
       render: (value) => {
-        return <Statistic value={value.incurredIncrease} />;
+        return <Statistic value={value.incurredIncrease} precision={0} />;
       },
     },
     {
-      title: "Số phát sinh có",
+      title: "Phát sinh có",
       dataIndex: "debtMoneyDTO",
       key: "debtIncurredDecrease",
       align: "center",
       render: (value) => {
-        return <Statistic value={value.incurredDecrease} />;
+        return <Statistic value={value.incurredDecrease} precision={0} />;
       },
     },
     {
-      title: "Số nợ cuối kỳ",
+      title: "Dư nợ cuối kỳ",
       dataIndex: "debtAtEndPeriod",
       key: "debtAtEndPeriod",
       align: "center",
       render: (value) => {
-        return <Statistic value={value} />;
+        return <Statistic value={value} precision={0} />;
       },
     },
   ];
@@ -279,8 +261,8 @@ export default function CustomerDebtList() {
 
   const handleGetList = async (defaultSelect) => {
     setIsLoading(true);
-    let startDate = moment(new Date()).subtract(15, "d").format("MM/DD/YYYY");
-    let endDate = moment(new Date()).format("MM/DD/YYYY");
+    let startDate = moment().startOf("month").format("MM/DD/YYYY");
+    let endDate = moment().endOf("month").format("MM/DD/YYYY");
 
     dispatch(
       defaultSelect
@@ -306,10 +288,7 @@ export default function CustomerDebtList() {
         </Title>
 
         <RangePicker
-          defaultValue={[
-            moment(new Date()).subtract(15, "d"),
-            moment(new Date()),
-          ]}
+          defaultValue={[moment().startOf("month"), moment().endOf("month")]}
           format={"DD/MM/YYYY"}
           onChange={(dates, dateString) => {
             if (dates) {

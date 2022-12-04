@@ -46,7 +46,7 @@ export default function StatisticGroups({ updateMode }) {
           <img src={packageImg} alt="" />
         </div>
         <Form.Item name={"totalExportOrderPrice"} initialValue={0}>
-          <Statistic title="Tổng giá (vnđ)" precision={2} />
+          <Statistic title="Tổng giá (vnđ)" precision={0} />
         </Form.Item>
       </div>
 

@@ -12,7 +12,7 @@ import { MESSAGE_ERROR } from "constants/messages.constants";
 
 const { Option } = Select;
 
-const SearchProduct = () => {
+const SearchProduct = ({ updateMode }) => {
   const { productsImport } = useSelector((state) => state.productImport);
   const { listSuppliers } = useSelector((state) => state.supplier);
 
@@ -101,6 +101,7 @@ const SearchProduct = () => {
           style={{
             width: "100%",
           }}
+          disabled={updateMode ? true : false}
         >
           {listSuppliers.map((item) => (
             <Select.Option value={item.id} key={item.id}>

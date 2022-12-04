@@ -1,20 +1,7 @@
-import {
-  CaretDownFilled,
-  CaretUpFilled,
-  DownOutlined,
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import {
   Button,
-  Dropdown,
-  Form,
   Input,
-  Menu,
-  message,
-  Modal,
-  notification,
   Select,
   Space,
   Statistic,
@@ -28,26 +15,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
-
-import deleteImg from "assets/icons/delete.png";
-import editImg from "assets/icons/edit.png";
+import { ImportProductManagerPaths } from "features/import-product/importProduct";
 
 import "./TableDetails.css";
-import DetailsModal from "../DetailsModal/DetailsModal";
-import {
-  deleteDetailsProduct,
-  updateProductDetails,         
-} from "features/product-manager/productManager";
-import { unwrapResult } from "@reduxjs/toolkit";
+import moment from "moment";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
 
 export default function TableDetails({ form }) {
-  const { listWarehouses } = useSelector((state) => state.warehouse);
-  const { productDetails, detailDTOList } = useSelector(
-    (state) => state.product
-  );
+  const { listDebtMoney } = useSelector((state) => state.supplierDebt);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -64,45 +41,6 @@ export default function TableDetails({ form }) {
     setCurrentPage(page);
     setPageSize(size);
   };
-  const handleDelete = (record) => {
-    Modal.confirm({
-      title: "Xoá Lô hàng và loại sản phẩm",
-      icon: <ExclamationCircleOutlined />,
-      content: `Bạn có chắc chắn muốn xoá Lô hàng và loại sản phẩm không?`,
-      okText: "Xoá bỏ",
-      cancelText: "Huỷ bỏ",
-      onOk: () => {
-        setIsLoading(true);
-        dispatch(deleteDetailsProduct(record?.id))
-          .then(unwrapResult)
-          .then((res) => {
-            let ab = detailDTOList.map((item) => {
-              if (item.id === record.id) {
-                return { ...item, status: 0 };
-              } else {
-                return item;
-              }
-            });
-
-            dispatch(updateProductDetails(ab));
-            setIsLoading(false);
-            notification.success({
-              message: "Lô hàng và loại sản phẩm",
-              description: "Xoá Lô hàng và loại sản phẩm thành công!",
-            });
-          })
-          .catch((error) => {
-            setIsLoading(false);
-            notification.error({
-              message: "Lô hàng và loại sản phẩm",
-              description: "Xoá Lô hàng và loại sản phẩm thất bại",
-            });
-          });
-      },
-      onCancel: () => {},
-    });
-  };
-
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -226,15 +164,6 @@ export default function TableDetails({ form }) {
       ),
   });
 
-  useEffect(() => {
-    detailDTOList.map((item) => {
-      form.setFieldValue(
-        [item.id, "productWarehouseDTOList"],
-        item.productWarehouseDTOList
-      );
-    });
-  }, [dispatch, detailDTOList, productDetails]);
-
   const productColumns = [
     {
       title: "Vị trí",
@@ -244,79 +173,80 @@ export default function TableDetails({ form }) {
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Số lô hàng",
-      dataIndex: "shipment",
-      key: "shipment",
+      title: "Ngày",
+      dataIndex: "date",
+      key: "date",
       align: "center",
+      render: (value) => (
+        <Tag color="darkseagreen">
+          {moment(value.split("T")[0], "YYYY/MM/DD").format("DD/MM/YYYY")}
+        </Tag>
+      ),
     },
     {
-      title: "Loại sản phẩm",
-      dataIndex: "type",
-      key: "type",
+      title: "Mã đơn hàng",
+      dataIndex: "orderId",
+      key: "orderId",
       align: "center",
+      render: (value) =>
+        value ? (
+          <Tooltip title="Chuyển đến đơn nhập">
+            <Text
+              onClick={() =>
+                history.push(
+                  ImportProductManagerPaths.DETAILS_PRODUCT_IMPORT.replace(
+                    ":importId",
+                    value
+                  )
+                )
+              }
+              style={{
+                color: "#1890ff",
+                fontSize: "2rem",
+                textDecoration: "underline",
+              }}
+            >
+              {value}
+            </Text>
+          </Tooltip>
+        ) : (
+          "--"
+        ),
     },
     {
-      title: "Chi phí trên mỗi mét vuông (vnđ)",
-      dataIndex: "costPerSquareMeter",
-      key: "costPerSquareMeter",
+      title: "Phát sinh nợ (vnđ)",
+      dataIndex: "debtMoneyDTO",
+      key: "incurredIncrease",
       align: "center",
       sorter: (a, b) =>
-        parseFloat(a.costPerSquareMeter) < parseFloat(b.costPerSquareMeter),
+        parseFloat(a.incurredIncrease) < parseFloat(b.incurredIncrease),
       sortDirections: ["descend", "ascend"],
+      render: (value) => (
+        <Statistic precision={0} value={value.incurredIncrease} />
+      ),
     },
     {
-      title: "Tổng số lượng hộp",
-      dataIndex: "totalQuantityBox",
-      key: "totalQuantityBox",
+      title: "Phát sinh có (vnđ)",
+      dataIndex: "debtMoneyDTO",
+      key: "incurredDecrease",
       align: "center",
-      sorter: (a, b) => a.totalQuantityBox - b.totalQuantityBox,
+      sorter: (a, b) => a.incurredDecrease - b.incurredDecrease,
       sortDirections: ["descend", "ascend"],
+      render: (value) => (
+        <Statistic precision={0} value={value.incurredDecrease} />
+      ),
     },
     {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
+      title: "Ghi chú",
+      dataIndex: "note",
+      key: "note",
       align: "center",
-      //   filters: statusProductExport.map((item) => {
-      //     return { key: item.key, value: item.value, text: item.label };
-      //   }),
-      onFilter: (value, record) => record.status === value,
-      filterSearch: true,
-      render: (s) => {
-        let color = s == 1 ? "green" : "volcano";
-        let text = s == 1 ? "Hoạt động" : "Không hoạt động";
-
-        return (
-          <Tag color={color} key={s}>
-            {text}
-          </Tag>
-        );
-      },
-      sorter: (a, b) => a.status - b.status,
-      sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: "Hành động",
-      dataIndex: "operation",
-      key: "operation",
-      align: "center",
-      render: (_, record) => (
-        <div
-          style={{
-            display: "flex",
-            alignItem: "center",
-            justifyContent: "center",
-            gap: "2rem",
-          }}
-        >
-          <DetailsModal record={record} type="edit" />
-          <img
-            src={deleteImg}
-            alt=""
-            style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
-            onClick={() => handleDelete(record)}
-          />
-        </div>
+      render: (value) => (
+        <Input.TextArea
+          style={{ height: "100%", resize: "none", minWidth: "150px" }}
+          value={value}
+          disabled
+        />
       ),
     },
   ];
@@ -326,87 +256,19 @@ export default function TableDetails({ form }) {
       size="middle"
       className="listProductDetails"
       columns={productColumns}
-      dataSource={[...detailDTOList]}
+      dataSource={listDebtMoney}
       rowKey={(record) => record.id}
       loading={isLoading}
       scroll={{ x: "maxContent" }}
-      expandable={{
-        expandedRowRender: (record) => (
-          <>
-            <Form.List name={[record.id, "productWarehouseDTOList"]}>
-              {(fields, { add, remove }) => {
-                if (fields.length > 0) {
-                  return (
-                    <div className="space-container">
-                      {fields.map(({ key, name, ...restField }) => (
-                        <Space
-                          key={`${key}${name}`}
-                          style={{
-                            display: "flex",
-                          }}
-                          align="center"
-                        >
-                          <Form.Item
-                            {...restField}
-                            label="Kho hàng"
-                            name={[name, "wareHouseName"]}
-                          >
-                            <Input disabled />
-                          </Form.Item>
-
-                          <Form.Item
-                            {...restField}
-                            label="Số lượng"
-                            name={[name, "quantityBox"]}
-                          >
-                            <Input disabled />
-                          </Form.Item>
-                        </Space>
-                      ))}
-                    </div>
-                  );
-                } else {
-                  return (
-                    <Text>
-                      Số lô và loại sản phẩm này chưa có trong Kho hàng nào
-                    </Text>
-                  );
-                }
-              }}
-            </Form.List>
-          </>
-        ),
-        expandIcon: ({ expanded, onExpand, record }) => (
-          <Tooltip placement="topRight" title={"Show warehouse select"}>
-            {expanded ? (
-              <CaretUpFilled
-                style={{
-                  fontSize: "23px",
-                  transition: "all 0.3s ease",
-                }}
-                onClick={(e) => onExpand(record, e)}
-              />
-            ) : (
-              <CaretDownFilled
-                style={{
-                  fontSize: "23px",
-                  transition: "all 0.3s ease",
-                }}
-                onClick={(e) => onExpand(record, e)}
-              />
-            )}
-          </Tooltip>
-        ),
-      }}
       pagination={
-        detailDTOList.length !== 0
+        listDebtMoney.length !== 0
           ? {
               showSizeChanger: true,
               position: ["bottomCenter"],
               size: "default",
               pageSize: pageSize,
               current: currentPage,
-              total: detailDTOList.length,
+              total: listDebtMoney.length,
               onChange: (page, size) => onHandlePagination(page, size),
               pageSizeOptions: ["2", "4", "10"],
             }

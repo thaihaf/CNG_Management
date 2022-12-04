@@ -49,10 +49,10 @@ import {
   customerDebtReducer,
   CUSTOMER_DEBT_FEATURE_KEY,
 } from "features/customer-debt/customerDebt";
-// import {
-//   supplierDebtReducer,
-//   SUPPLIER_DEBT_FEATURE_KEY,
-// } from "features/supplier-debt/supplierDebt";
+import {
+  supplierDebtReducer,
+  SUPPLIER_DEBT_FEATURE_KEY,
+} from "features/supplier-debt/supplierDebt";
 
 const rootReducer = combineReducers({
   [AUTHEN_FEATURE_KEY]: authReducer,
@@ -68,7 +68,7 @@ const rootReducer = combineReducers({
   [IMPORT_PRODUCT_FEATURE_KEY]: importProductReducer,
   [EXPORT_PRODUCT_FEATURE_KEY]: exportProductReducer,
   [CUSTOMER_DEBT_FEATURE_KEY]: customerDebtReducer,
-  // [SUPPLIER_DEBT_FEATURE_KEY]: supplierDebtReducer,
+  [SUPPLIER_DEBT_FEATURE_KEY]: supplierDebtReducer,
 });
 
 export default rootReducer;
