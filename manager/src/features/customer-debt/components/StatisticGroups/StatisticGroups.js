@@ -20,7 +20,7 @@ export default function StatisticGroups() {
           <img src={debt2Img} alt="" />
         </div>
         <Form.Item name={"debtAtBeginningPeriod"} initialValue={0}>
-          <Statistic title="Số nợ đầu kỳ (vnđ)" precision={0} />
+          <Statistic title="Dư nợ đầu kỳ (vnđ)" precision={0} />
         </Form.Item>
       </div>
 
@@ -32,7 +32,7 @@ export default function StatisticGroups() {
           <img src={debtImg} alt="" />
         </div>
         <Form.Item name={"debtAtEndPeriod"} initialValue={0}>
-          <Statistic title="Số nợ cuối kỳ (vnđ)" precision={0} />
+          <Statistic title="Dư nợ cuối kỳ (vnđ)" precision={0} />
         </Form.Item>
       </div>
     </div>

@@ -7,6 +7,7 @@ import {
   Statistic,
   Table,
   Tag,
+  Tooltip,
   Typography,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
+import { ProductExportManagerPaths } from "features/export-product/exportProduct";
 
 import "./TableDetails.css";
 import moment from "moment";
@@ -182,11 +184,34 @@ export default function TableDetails({ form }) {
       ),
     },
     {
-      title: "Mã đơn hàng export",
+      title: "Mã đơn hàng",
       dataIndex: "orderId",
       key: "orderId",
       align: "center",
-      render: (value) => <Text>{value ? value : "-"}</Text>,
+      render: (value) =>
+        value ? (
+          <Tooltip title="Chuyển đến đơn xuất">
+            <Text
+              onClick={() =>
+                history.push(
+                  ProductExportManagerPaths.DETAILS_PRODUCT_EXPORT.replace(
+                    ":exportId",
+                    value
+                  )
+                )
+              }
+              style={{
+                color: "#1890ff",
+                fontSize: "2rem",
+                textDecoration: "underline",
+              }}
+            >
+              {value}
+            </Text>
+          </Tooltip>
+        ) : (
+          "--"
+        ),
     },
     {
       title: "Phát sinh nợ (vnđ)",
