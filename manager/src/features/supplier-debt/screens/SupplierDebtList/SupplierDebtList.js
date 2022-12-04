@@ -217,7 +217,7 @@ export default function SupplierDebtList() {
       },
     },
     {
-      title: "Số nợ đầu kỳ",
+      title: "Dư nợ đầu kỳ",
       dataIndex: "debtAtBeginningPeriod",
       key: "debtAtBeginningPeriod",
       align: "center",
@@ -226,7 +226,7 @@ export default function SupplierDebtList() {
       },
     },
     {
-      title: "Số phát sinh nợ",
+      title: "Phát sinh nợ",
       dataIndex: "debtMoneyDTO",
       key: "debtIncurredIncrease",
       align: "center",
@@ -235,7 +235,7 @@ export default function SupplierDebtList() {
       },
     },
     {
-      title: "Số phát sinh có",
+      title: "Phát sinh có",
       dataIndex: "debtMoneyDTO",
       key: "debtIncurredDecrease",
       align: "center",
@@ -244,7 +244,7 @@ export default function SupplierDebtList() {
       },
     },
     {
-      title: "Số nợ cuối kỳ",
+      title: "Dư nợ cuối kỳ",
       dataIndex: "debtAtEndPeriod",
       key: "debtAtEndPeriod",
       align: "center",
@@ -284,7 +284,7 @@ export default function SupplierDebtList() {
     <div className="product-list">
       <div className="top">
         <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-          Danh sách Nhà cung cấp
+          Công nợ Nhà cung cấp
         </Title>
 
         <RangePicker
