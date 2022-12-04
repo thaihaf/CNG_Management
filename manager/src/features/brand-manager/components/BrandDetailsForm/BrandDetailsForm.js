@@ -180,7 +180,7 @@ function BrandDetailsForm() {
           </div>
           <div className="details__group">
             <Form.Item
-              label={<Text>Active Status</Text>}
+              label={<Text>Trạng thái hoạt động</Text>}
               className="details__item"
             >
               <Switch
