@@ -58,7 +58,7 @@ const ImportWrapper = ({ updateMode }) => {
 
   const dispatch = useDispatch();
   const history = useHistory();
-  const [debtForm] = Form.useForm();
+  const [form] = Form.useForm();
 
   const [activeTab, setActiveTab] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -95,7 +95,7 @@ const ImportWrapper = ({ updateMode }) => {
     });
   };
   const onBeforeSubmit = () => {
-    const listHeaderItemValue = debtForm.getFieldsValue([
+    const listHeaderItemValue = form.getFieldsValue([
       "employeeId",
       "licensePlates",
       "importDate",
@@ -110,9 +110,9 @@ const ImportWrapper = ({ updateMode }) => {
     }
 
     if (firstCheck) {
-      setActiveTab("supplier");
+      setActiveTab("table");
     } else {
-      setActiveTab("customer");
+      setActiveTab("details");
     }
   };
   const onFinish = (value) => {
@@ -141,10 +141,7 @@ const ImportWrapper = ({ updateMode }) => {
     }
 
     const pLostWarehouse = listProduct.find((p) => {
-      let warehouse = debtForm.getFieldValue([
-        `${p.id}_${p.index}`,
-        "warehouse",
-      ]);
+      let warehouse = form.getFieldValue([`${p.id}_${p.index}`, "warehouse"]);
       return (
         (!p.value.warehouse || p.value.warehouse.length === 0) &&
         (!warehouse || warehouse.length === 0)
@@ -163,7 +160,7 @@ const ImportWrapper = ({ updateMode }) => {
       const pWithIndex = productsImport.find((item) => item.index === p.index);
       const importProductDetailDTO = {
         ...p.value,
-        importProductDetailWarehouseDTOList: debtForm.getFieldValue([
+        importProductDetailWarehouseDTOList: form.getFieldValue([
           `${p.id}_${p.index}`,
           "warehouse",
         ]),
@@ -216,40 +213,42 @@ const ImportWrapper = ({ updateMode }) => {
       });
   };
 
-  // const initialValues = updateMode ? productImportDetails : null;
+  const initialValues = updateMode ? productImportDetails : null;
 
-  // useEffect(() => {
-  //   form.setFieldValue(initialValues);
+  useEffect(() => {
+    form.setFieldValue(initialValues);
 
-  //   if (initialValues) {
-  //     form.setFieldValue(
-  //       "statusImport",
-  //       getStatusString(initialValues.status, statusProductImport)
-  //     );
-  //   }
-  // }, [dispatch, updateMode, initialValues]);
+    if (initialValues) {
+      form.setFieldValue(
+        "statusImport",
+        getStatusString(initialValues.status, statusProductImport)
+      );
+    }
+  }, [dispatch, updateMode, initialValues]);
 
-  // if (!initialValues && updateMode == true) {
-  //   return <Spin spinning={isLoading} />;
-  // }
+  if (!initialValues && updateMode == true) {
+    return <Spin spinning={isLoading} />;
+  }
 
   return (
     <Spin spinning={isLoading}>
       <Form
-        className="debt"
-        form={debtForm}
+        className="product"
+        form={form}
         name="dynamic_form_nest_item"
         autoComplete="off"
         layout="vertical"
         onFinish={onFinish}
-        // initialValues={initialValues}
+        initialValues={initialValues}
       >
+        <StatisticGroups updateMode={updateMode} />
+
         <div className="actions-group">
-          <Title level={3} style={{ marginRight: "auto" }}>
-            Công nợ
+          <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
+            Chi tiết Đơn nhập
           </Title>
 
-          {/* {updateMode &&
+          {updateMode &&
             typeof productImportDetails?.status === "number" &&
             productImportDetails?.status !== 2 && (
               <>
@@ -302,9 +301,8 @@ const ImportWrapper = ({ updateMode }) => {
                   Cập nhật
                 </Button>
               </>
-            )} */}
-
-          {/* {!updateMode && (
+            )}
+          {!updateMode && (
             <Button
               type="primary"
               shape="round"
@@ -330,27 +328,27 @@ const ImportWrapper = ({ updateMode }) => {
               />
               Tạo mới
             </Button>
-          )} */}
+          )}
         </div>
 
         <Tabs
-          defaultActiveKey={"supplier"}
+          defaultActiveKey={`table`}
           activeKey={activeTab}
           onTabClick={(key) => setActiveTab(key)}
           items={[
             {
-              label: `Nhà cung cấp`,
-              key: "supplier",
-              // children: updateMode ? (
-              //   <TableUpdate form={form} updateMode={updateMode} />
-              // ) : (
-              //   <TableCreate form={form} updateMode={updateMode} />
-              // ),
+              label: `Danh sách sản phẩm`,
+              key: `table`,
+              children: updateMode ? (
+                <TableUpdate form={form} updateMode={updateMode} />
+              ) : (
+                <TableCreate form={form} updateMode={updateMode} />
+              ),
             },
             {
-              label: `Khách hàng`,
+              label: `Thông tin khác`,
               key: `details`,
-              // children: <HeaderTable form={form} updateMode={updateMode} />,
+              children: <HeaderTable form={form} updateMode={updateMode} />,
             },
           ]}
         />

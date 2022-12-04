@@ -1,3 +1,2 @@
-export { default as ProductDetailsForm } from "./ProductDetailsForm/ProductDetailsForm";
-export { default as ActionsModal } from "./ActionsModal/ActionsModal";
+export { default as DetailsForm } from "./DetailsForm/DetailsForm";
 export { default as TableDetails } from "./TableDetails/TableDetails";

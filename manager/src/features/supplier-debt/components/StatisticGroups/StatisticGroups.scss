@@ -1,0 +1,43 @@
+.statistic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+
+  &-item {
+    border-radius: 2.5rem;
+    padding: 2rem 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    min-width: 25rem;
+    width: max-content;
+    max-height: 10rem;
+
+    .ant-form-item,
+    .ant-statistic-title {
+      margin-bottom: 0;
+    }
+
+    .ant-statistic-content-value-int {
+      font-weight: 500;
+    }
+  }
+
+  &-icon {
+    width: 6rem;
+    height: 6rem;
+    padding: 1.5rem;
+    border-radius: 2rem;
+  }
+}
+// &-bar {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+
+//   width: 70%;
+//   margin-left: auto;
+//   margin-right: auto;
+//   background-color: #f4efff;
+//   padding: 5rem;
+// }
