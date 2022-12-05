@@ -255,6 +255,7 @@ export default function ProductsExpande({ listProductsExpande }) {
       loading={isLoading}
       dataSource={[...listProductsExpande]}
       pagination={false}
+      className="productsExpande"
     />
   );
 }
