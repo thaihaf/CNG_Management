@@ -420,7 +420,7 @@ export default function SupplierList() {
                 },
                 {
                   key: 2,
-                  label: "Xoá Chức năng",
+                  label: "Xoá Nhà cung cấp",
                   onClick: () => onRowDelete(record),
                 },
               ]}
