@@ -459,7 +459,7 @@ export default function CategoryList() {
                     },
                     {
                       pattern:
-                        /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                        /^[a-zA-Z0-9aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,50}$/,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_LETTER,
                         MESSAGE_ERROR,
@@ -467,12 +467,12 @@ export default function CategoryList() {
                       ),
                     },
                     {
-                      max: 25,
+                      max: 50,
                       message: getMessage(
                         CODE_ERROR.ERROR_NUMBER_MAX,
                         MESSAGE_ERROR,
                         "Tên Chức năng",
-                        25
+                        50
                       ),
                     },
                     {

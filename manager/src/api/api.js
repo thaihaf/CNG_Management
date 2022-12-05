@@ -22,7 +22,7 @@ const openNotificationWithIcon = (type, mess, des) => {
 
 /** Setup an API instance */
 export const api = axios.create({
-  baseURL: "http://ec2-54-157-251-223.compute-1.amazonaws.com/api",
+  baseURL: "http://localhost:8080/api",
   headers: {
     "Content-Type": "application/json",
   },
