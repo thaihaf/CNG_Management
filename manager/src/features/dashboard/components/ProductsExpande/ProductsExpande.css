@@ -1,0 +1,54 @@
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.btns {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.details__group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.details__group .details__item {
+  width: 50%;
+}
+.details__group .details__item .ant-col {
+  max-width: 100% !important;
+  flex: none !important;
+}
+.details__group .details__item .ant-row {
+  display: block;
+}
+.details__group .details__item .ant-input {
+  border-radius: 2rem !important;
+  padding: 1rem 2rem;
+  margin-top: 0.7rem;
+}
+.details__group .details__item .login_input {
+  border-radius: 5rem;
+  padding: 0 1.5rem 0 0;
+}
+.details__group .details__item .login_input .ant-input {
+  margin: 0;
+}
+
+.ant-picker {
+  height: 4rem !important;
+  border-radius: 2rem !important;
+  padding: 1rem 2rem !important;
+}
+
+.ant-table-row {
+  background-color: #fafafa;
+}
