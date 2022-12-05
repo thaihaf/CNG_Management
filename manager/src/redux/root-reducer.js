@@ -2,6 +2,10 @@ import { combineReducers } from "@reduxjs/toolkit";
 
 import { authReducer, AUTHEN_FEATURE_KEY } from "features/auth/auth";
 import {
+  dashboardReducer,
+  DASHBOARD_FEATURE_KEY,
+} from "features/dashboard/dashboard";
+import {
   employeesReducer,
   EMPLOYEES_FEATURE_KEY,
 } from "features/employee-manager/employeeManager";
@@ -56,6 +60,7 @@ import {
 
 const rootReducer = combineReducers({
   [AUTHEN_FEATURE_KEY]: authReducer,
+  [DASHBOARD_FEATURE_KEY]: dashboardReducer,
   [EMPLOYEES_FEATURE_KEY]: employeesReducer,
   [SUPPLIERS_FEATURE_KEY]: suppliersReducer,
   [BRANDS_FEATURE_KEY]: brandsReducer,

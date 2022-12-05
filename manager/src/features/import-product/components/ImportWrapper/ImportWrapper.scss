@@ -117,12 +117,20 @@
     .ant-tabs-nav-list {
       width: 100%;
       border-top: 0.5px solid #efefef;
+      //     width: 100% !important;
+      // border-top: 0.5px solid #efefef !important;
+      // display: grid !important;
+      // grid-template-columns: repeat(auto-fit, minmax(50%, 1fr)) !important;
 
       .ant-tabs-tab {
         width: 50%;
         display: flex;
         justify-content: center;
       }
+    }
+    .ant-tabs-nav-operations {
+      display: none !important;
+      visibility: hidden !important;
     }
   }
 }

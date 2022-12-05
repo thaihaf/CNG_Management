@@ -1,15 +1,15 @@
 .product {
-  .actions-group {
-    display: flex;
-    gap: 2rem;
-    padding: 1.7rem 2.5rem;
-    border-radius: 2rem 2rem 0 0;
-    background-color: #fafafa;
-    margin-top: 2rem;
-    // box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  display: flex;
+  gap: 5rem;
 
-    .details__item {
-      margin-bottom: 0;
+  .product-left {
+    max-width: 80%;
+
+    .actions-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
     }
   }
 }
@@ -107,30 +107,4 @@
 .ant-input {
   border-radius: 2rem !important;
   padding: 1rem 2rem;
-}
-
-.ant-tabs {
-  .ant-tabs-nav {
-    background-color: #fafafa;
-    margin: 0;
-
-    .ant-tabs-nav-list {
-      width: 100%;
-      border-top: 0.5px solid #efefef;
-      //     width: 100% !important;
-      // border-top: 0.5px solid #efefef !important;
-      // display: grid !important;
-      // grid-template-columns: repeat(auto-fit, minmax(50%, 1fr)) !important;
-
-      .ant-tabs-tab {
-        width: 50%;
-        display: flex;
-        justify-content: center;
-      }
-    }
-    .ant-tabs-nav-operations {
-      display: none !important;
-      visibility: hidden !important;
-    }
-  }
 }
