@@ -132,8 +132,10 @@ export default function TableCreate({ form, updateMode, openHeader }) {
     const totalQuantityBox = form
       .getFieldValue([`${record.id}_${record.index}`, "warehouse"])
       .reduce(function (result, warehouse) {
-        return result + warehouse?.quantityBox;
+        let q = warehouse === undefined ? 1 : warehouse?.quantityBox;
+        return result + q;
       }, 0);
+
     const pricePerSquareMeter = form.getFieldValue([
       `${record.id}_${record.index}`,
       "pricePerSquareMeter",
@@ -773,9 +775,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
 
                                   if (!wId) {
                                     return Promise.reject(
-                                      new Error(
-                                        "Vui lòng chọn Kho hàng trước"
-                                      )
+                                      new Error("Vui lòng chọn Kho hàng trước")
                                     );
                                   }
 

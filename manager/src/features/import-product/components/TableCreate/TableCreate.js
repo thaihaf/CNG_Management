@@ -93,13 +93,13 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       cancelText: "Huỷ bỏ",
       onOk: () => {
         switch (type) {
-          case "deleteProduct":
+          case "sản phẩm":
             const newListProduct = productsImport.filter(
               (p) => p.index !== record.index && p.index !== record.index
             );
             dispatch(updateProductImport(newListProduct));
             break;
-          case "deleteWarehouse":
+          case "tất cả các kho":
             form.setFieldValue(
               [`${record.id}_${record.index}`, "warehouse"],
               []
@@ -113,7 +113,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
               0
             );
             form.setFieldValue(
-              [`${record.id}_${record.index}`, "costPerSquareMeter"],
+              [`${record.id}_${record.index}`, "totalCost"],
               0
             );
             onHandleCaculatorTotal();
@@ -152,7 +152,8 @@ export default function TableCreate({ form, updateMode, openHeader }) {
     const totalQuantityBox = form
       .getFieldValue([`${record.id}_${record.index}`, "warehouse"])
       .reduce(function (result, warehouse) {
-        return result + warehouse?.quantityBox;
+        let q = warehouse === undefined ? 1 : warehouse?.quantityBox;
+        return result + q;
       }, 0);
     const costPerSquareMeter = form.getFieldValue([
       `${record.id}_${record.index}`,
@@ -660,7 +661,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                 {
                   key: 2,
                   label: "Xoá sản phẩm",
-                  onClick: () => onRowDelete("deleteProduct", record),
+                  onClick: () => onRowDelete("sản phẩm", record),
                 },
               ]}
             />
@@ -750,6 +751,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                             },
                           ]}
                           onChange={() => onHandleChangeQuantity(record)}
+                          initialValue={1}
                         >
                           <InputNumber
                             min={1}
@@ -776,7 +778,10 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                     {fields.length < listWarehouses.length ? (
                       <Button
                         type="dashed"
-                        onClick={() => add()}
+                        onClick={() => {
+                          add();
+                          onHandleChangeQuantity(record);
+                        }}
                         block
                         icon={<PlusOutlined />}
                       >
@@ -785,7 +790,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                     ) : (
                       <Button
                         type="dashed"
-                        onClick={() => onRowDelete("deleteWarehouse", record)}
+                        onClick={() => onRowDelete("tất cả các kho", record)}
                         block
                         style={{ color: "red" }}
                         icon={<RestTwoTone twoToneColor="red" />}
@@ -835,7 +840,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             }
           : false
       }
-      title={() => <SearchProduct updateMode={updateMode}/>}
+      title={() => <SearchProduct updateMode={updateMode} />}
     />
   );
 }
