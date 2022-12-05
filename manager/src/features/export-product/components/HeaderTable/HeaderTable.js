@@ -26,6 +26,7 @@ export default function HeaderTable({ form, updateMode }) {
 
   const [statusByType, setStatusByType] = useState("EXPORT");
   useEffect(() => {
+    setStatusByType(productExportDetails.type);
     dispatch(getEmployees());
   }, [dispatch, productExportDetails, form]);
 
