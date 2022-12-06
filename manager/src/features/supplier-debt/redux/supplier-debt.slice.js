@@ -52,8 +52,10 @@ const supplierDebtSlice = createSlice({
   },
   extraReducers: {
     [getSupplierDebts.fulfilled]: (state, action) => {
-      state.listSupplierDebt = action.payload.managementDebtMoneyDTOList;
-      state.totalElements = action.payload.managementDebtMoneyDTOList.length;
+      state.listSupplierDebt = action.payload.content;
+      state.totalElements = action.payload.totalElements;
+      state.totalPages = action.payload.totalPages;
+      state.size = action.payload.size;
     },
     [getSupplierDebtDetails.fulfilled]: (state, action) => {
       console.log(action.payload);

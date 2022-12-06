@@ -14,6 +14,7 @@ import {
   message,
   notification,
   Spin,
+  Typography,
 } from "antd";
 
 import { getMessage } from "helpers/util.helper";
@@ -27,10 +28,15 @@ import {
 } from "../../auth";
 import { EmployeeManagerPaths } from "features/employee-manager/employeeManager";
 
+import loginImage from "assets/images/loginImage.png";
+
 import "./LoginScreen.css";
 import { getIsLogin } from "helpers/auth.helpers";
 import { LoadingSpinner } from "components";
 import { SupplierManagerPaths } from "features/supplier-manager/supplierManager";
+
+import userProfileImg from "assets/icons/userProfile.png";
+const { Title } = Typography;
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
@@ -72,9 +78,11 @@ export default function LoginScreen() {
         }
       })
       .catch((error) => {
+        console.log(error);
         notification.error({
           message: "Đăng nhập",
-          description: "Đăng nhập thất bại, vui lòng kiểm tra lại Tài khoản hoặc Mật khẩu",
+          description:
+            "Đăng nhập thất bại, vui lòng kiểm tra lại Tài khoản hoặc Mật khẩu",
         });
         setLoading(false);
         dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
@@ -91,9 +99,15 @@ export default function LoginScreen() {
             remember: true,
           }}
           onFinish={onFinish}
+          layout="vertical"
         >
+          <div className="top">
+            <img src={userProfileImg} alt="" />
+            <Title level={1}>Đăng nhập</Title>
+          </div>
           <Form.Item
             name="username"
+            label={"Tên đăng nhập"}
             rules={[
               {
                 required: true,
@@ -132,6 +146,7 @@ export default function LoginScreen() {
           </Form.Item>
           <Form.Item
             name="password"
+            label="Mật khẩu"
             rules={[
               {
                 required: true,
@@ -170,15 +185,14 @@ export default function LoginScreen() {
             />
           </Form.Item>
           <Form.Item className="form_item d-flex">
-            <Form.Item name="remember" valuePropName="checked" noStyle>
+            {/* <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox>Ghi nhớ</Checkbox>
-            </Form.Item>
+            </Form.Item> */}
 
             <a className="/login-form-forgot forgot" href="/forgot-password">
               Quên mật khẩu
             </a>
           </Form.Item>
-
           <Form.Item className="form_item">
             <Button
               type="primary"
