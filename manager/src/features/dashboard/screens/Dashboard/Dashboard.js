@@ -16,7 +16,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <div>
+    <div className="dashboard">
       <div className="actions-group">
         <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
           Thống kê
