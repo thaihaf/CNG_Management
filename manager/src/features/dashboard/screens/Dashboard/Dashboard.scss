@@ -1,85 +1,125 @@
-@import "../../../../styles/colors.scss";
-@import "../../../../styles/variables.scss";
+.ant-select-dropdown {
+  width: max-content !important;
 
-.dashboard {
-     padding: 3rem 8rem 5rem 8rem;
-     height: 100vh;
-     display: flex;
-     flex-direction: column;
-     justify-content: center;
-     align-items: flex-start;
+  .searchProduct {
+    width: 100%;
 
-     background-repeat: no-repeat;
-     background-position: 90% 70%;
-     background-size: 40%;
+    .ant-select-item-option-content {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      padding: 1rem;
+      width: 100%;
 
-     .dashboard_header,
-     .header_links {
-          display: flex;
-          align-items: center;
-     }
-     .header {
-          width: 100%;
-          display: flex;
+      .search-img {
+        width: 5rem;
+        min-width: 5rem;
+        height: 5rem;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+    }
+  }
+}
 
-          &_logo {
-               margin-right: 4rem;
-							 width: 6rem;
-							 height: 6rem;
-							 object-fit: contain;
-          }
-          &_link {
-               margin-right: 4rem;
-          }
-          &_btns {
-               margin-left: auto;
+.ant-table-wrapper {
+  button.ant-pagination-item-link {
+    height: 4.5rem;
+    width: 4.5rem;
+    border-radius: 2rem !important;
+  }
 
-               .btn_signUp {
-                    text-transform: capitalize;
-                    font-size: 1.2rem;
-                    color: $white-color;
-                    border-color: $white-color;
-										border-radius: 2rem;
-										padding : 0.5rem 3rem;
-               }
-          }
-     }
+  .ant-pagination-item {
+    height: 4.5rem;
+    width: 5.5rem;
+    border-radius: 2rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ant-pagination-item a {
+    height: 4.5rem;
+    width: 5.5rem;
+    border-radius: 2rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 
-     .slogan {
-          margin: auto 0;
-          color: $white-color;
+.ant-table-row {
+  .ant-table-cell {
+    .ant-form-item {
+      margin-bottom: 0 !important;
+    }
 
-          &_title {
-               text-transform: uppercase;
-               font-size: 7rem;
-               width: min-content;
-               white-space: break-space;
-               font-weight: bold;
-               line-height: 100%;
-               margin-bottom: 1rem;
-          }
-          &_captions {
-               margin-bottom: 3.5rem;
+    .caculator {
+      .ant-input-group-addon {
+        background-color: none !important;
+        border: 1px solid none !important;
+      }
+      .ant-input-disabled {
+        color: black !important;
+      }
+    }
+  }
+}
 
-               .caption {
-                    font-size: 2rem;
-               }
-          }
+.ant-select-selector {
+  height: 4.5rem !important;
+  border-radius: 2rem !important;
 
-          &_btn {
-               text-transform: uppercase;
-               font-size: 1.5rem;
-               color: $white-color;
-							 border-radius: 3rem;
-							 padding : 1rem 4rem;
-							 font-weight: bold;
-							 border: 2px $white-color solid;
-          }
-     }
+  .ant-select-selection-search,
+  .ant-select-selection-item,
+  .ant-select-selection-placeholder {
+    display: flex;
+    // justify-content: center;
+    padding: 0 1.5rem !important;
+    align-items: center;
+  }
+}
 
-     .contact_links {
-          display: flex;
-          align-items: center;
-          gap: 3rem;
-     }
+.ant-input-number {
+  border-radius: 2rem !important;
+  padding: 0.5rem 0.7rem;
+
+  .ant-input-number-handler-wrap {
+    right: 9px;
+    border-radius: 2rem;
+  }
+}
+.ant-input {
+  border-radius: 2rem !important;
+  padding: 1rem 2rem;
+}
+
+.ant-tabs {
+  .ant-tabs-nav {
+    background-color: #fafafa;
+    margin: 0;
+    border-radius: 2rem 2rem 0 0;
+
+    .ant-tabs-nav-list {
+      width: 100%;
+      border-top: 0.5px solid #efefef;
+      width: 100% !important;
+      //   border-top: 0.5px solid #efefef !important;
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, calc(100% / 3)) !important;
+      border-radius: 2rem;
+
+      .ant-tabs-tab {
+        // width: 50%;
+        display: flex;
+        justify-content: center;
+      }
+    }
+    .ant-tabs-nav-operations {
+      display: none !important;
+      visibility: hidden !important;
+    }
+  }
+  .ant-table-title {
+    padding: 0 !important;
+  }
 }

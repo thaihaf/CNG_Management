@@ -5,14 +5,17 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import queryString from "query-string";
 
 import { LockOutlined } from "@ant-design/icons";
-import { Button, Form, Input, message, notification, Spin } from "antd";
+import { Button, Form, Input, message, notification, Spin, Typography } from "antd";
 
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { verifyCode, AuthPaths } from "../../auth";
 
-import "../ForgotPassword/ForgotPassword.css";
+import "../LoginScreen/LoginScreen.css";
+
+import userProfileImg from "assets/icons/userProfile.png";
+const { Title } = Typography;
 
 export default function VerifyCode() {
   const dispatch = useDispatch();
@@ -54,9 +57,16 @@ export default function VerifyCode() {
             remember: true,
           }}
           onFinish={onFinish}
+          layout="vertical"
         >
+          <div className="top">
+            <img src={userProfileImg} alt="" />
+            <Title level={1}>Quên mật khẩu</Title>
+          </div>
+
           <Form.Item
             name="verifCodes"
+            label="Mã code"
             rules={[
               {
                 required: true,

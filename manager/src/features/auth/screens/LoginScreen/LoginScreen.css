@@ -7,7 +7,21 @@
   align-items: center;
 }
 .login .form {
-  width: 30rem;
+  width: 45rem;
+  background-color: #ffffff;
+  padding: 5rem;
+  border-radius: 2.5rem;
+}
+.login .form .top {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  text-align: center;
+  width: 100%;
+}
+.login .form .top img {
+  width: 15rem;
+  margin-bottom: 6rem;
 }
 .login .form_item .login_input {
   border-radius: 5rem;

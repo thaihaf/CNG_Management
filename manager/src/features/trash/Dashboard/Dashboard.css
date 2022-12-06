@@ -1,0 +1,76 @@
+.dashboard {
+  padding: 3rem 8rem 5rem 8rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background-repeat: no-repeat;
+  background-position: 90% 70%;
+  background-size: 40%;
+}
+.dashboard .dashboard_header,
+.dashboard .header_links {
+  display: flex;
+  align-items: center;
+}
+.dashboard .header {
+  width: 100%;
+  display: flex;
+}
+.dashboard .header_logo {
+  margin-right: 4rem;
+  width: 6rem;
+  height: 6rem;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.dashboard .header_link {
+  margin-right: 4rem;
+}
+.dashboard .header_btns {
+  margin-left: auto;
+}
+.dashboard .header_btns .btn_signUp {
+  text-transform: capitalize;
+  font-size: 1.2rem;
+  color: #fff;
+  border-color: #fff;
+  border-radius: 2rem;
+  padding: 0.5rem 3rem;
+}
+.dashboard .slogan {
+  margin: auto 0;
+  color: #fff;
+}
+.dashboard .slogan_title {
+  text-transform: uppercase;
+  font-size: 7rem;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  white-space: break-space;
+  font-weight: bold;
+  line-height: 100%;
+  margin-bottom: 1rem;
+}
+.dashboard .slogan_captions {
+  margin-bottom: 3.5rem;
+}
+.dashboard .slogan_captions .caption {
+  font-size: 2rem;
+}
+.dashboard .slogan_btn {
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  color: #fff;
+  border-radius: 3rem;
+  padding: 1rem 4rem;
+  font-weight: bold;
+  border: 2px #fff solid;
+}
+.dashboard .contact_links {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}

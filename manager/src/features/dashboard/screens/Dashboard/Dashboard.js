@@ -1,93 +1,55 @@
-import React from "react";
-
-import "antd/dist/antd.css";
-
-import bg from "assets/images/bg-dashboard.png";
-import logo from "assets/images/logo3.png";
-import { Button } from "@mui/material";
+import { Tabs, Typography } from "antd";
 import {
-     FacebookFilled,
-     InstagramFilled,
-     TwitterCircleFilled,
-} from "@ant-design/icons";
+  DashboardByDay,
+  DashboardByMonth,
+  DashboardByYear,
+} from "features/dashboard/components";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import "./Dashboard.css";
+const { Title } = Typography;
+
 export default function Dashboard() {
+  const history = useHistory();
 
-     return (
-          <div
-               className="dashboard"
-               style={{ backgroundImage: "url(" + bg + ")" }}
-          >
-               <div className="header">
-                    <a href="/" className="header_logo">
-                         <img src={logo} alt="logo" />
-                    </a>
+  const [activeTab, setActiveTab] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
-                    <div className="header_links">
-                         <a href="/" className="header_link">
-                              Home
-                         </a>
-                         <a href="/product" className="header_link">
-                              Product
-                         </a>
-                         <a href="/support" className="header_link">
-                              Support
-                         </a>
-                    </div>
+  return (
+    <div>
+      <div className="actions-group">
+        <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
+          Thống kê
+        </Title>
+      </div>
 
-                    <a className="header_btns" href="/login">
-                         <Button
-                              className="btn_signUp"
-                              variant="outlined"
-                              size="large"
-                         >
-                              Sign in
-                         </Button>
-                    </a>
-               </div>
-
-               <div className="slogan">
-                    <div className="slogan_title">otter express</div>
-                    <div className="slogan_captions">
-                         <div className="caption">
-                              One hour courier service in the same city.
-                         </div>
-                         <div className="caption">
-                              Your satisfaction is our task.
-                         </div>
-                    </div>
-                    <Button
-                         className="slogan_btn"
-                         variant="outlined"
-                         size="large"
-                    >
-                         Get started
-                    </Button>
-               </div>
-
-               <div className="contact_links">
-                    <a href="/fb">
-                         <FacebookFilled
-                              color={"#fff"}
-                              height="30px"
-                              width="30px"
-                         />
-                    </a>
-                    <a href="/ins">
-                         <InstagramFilled
-                              color={"#fff"}
-                              height="30px"
-                              width="30px"
-                         />
-                    </a>
-                    <a href="/tw">
-                         <TwitterCircleFilled
-                              color={"#fff"}
-                              height="30px"
-                              width="30px"
-                         />
-                    </a>
-               </div>
-          </div>
-     );
+      <Tabs
+        defaultActiveKey={`table`}
+        activeKey={activeTab}
+        onTabClick={(key) => setActiveTab(key)}
+        style={{
+          boxShadow: "rgba(0, 0, 0, 0.15) 0px 2px 8px",
+          borderRadius: "2rem",
+          marginTop: "2rem",
+        }}
+        items={[
+          {
+            label: `Thống kê theo ngày`,
+            key: `dashboardByDay`,
+            children: <DashboardByDay />,
+          },
+          {
+            label: `Thống kê theo tháng`,
+            key: `dashboardByMonth`,
+            children: <DashboardByMonth />,
+          },
+          {
+            label: `Thống kê theo năm`,
+            key: `dashboardByYear`,
+            children: <DashboardByYear />,
+          },
+        ]}
+      />
+    </div>
+  );
 }
