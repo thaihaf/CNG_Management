@@ -1,33 +1,71 @@
-import { SearchOutlined } from "@ant-design/icons";
 import {
+  CaretDownFilled,
+  CaretDownOutlined,
+  CaretUpFilled,
+  CaretUpOutlined,
+  CloseOutlined,
+  DeleteFilled,
+  DeleteTwoTone,
+  DownCircleTwoTone,
+  DownOutlined,
+  ExclamationCircleOutlined,
+  MinusCircleOutlined,
+  MinusOutlined,
+  PlusOutlined,
+  RestTwoTone,
+  SearchOutlined,
+  UpCircleTwoTone,
+} from "@ant-design/icons";
+import {
+  Avatar,
   Button,
+  Col,
+  DatePicker,
+  Divider,
+  Dropdown,
+  Form,
   Input,
+  InputNumber,
+  Menu,
+  Modal,
+  Row,
   Select,
   Space,
+  Spin,
   Statistic,
   Table,
   Tag,
   Tooltip,
   Typography,
 } from "antd";
+import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
-import { ProductExportManagerPaths } from "features/export-product/exportProduct";
-
-import "./TableDetails.css";
-import moment from "moment";
+import avt_default from "assets/images/avt-default.png";
+import {
+  updateListProductLv2,
+  updateProductImport,
+} from "features/import-product/importProduct";
+import {
+  getDashBoardByDay,
+  getDashBoardByMonth,
+} from "features/dashboard/dashboard";
+import HeaderTable from "../HeaderTable/HeaderTable";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
 
-export default function TableDetails({ form }) {
-  const { listDebtMoney } = useSelector((state) => state.customerDebt);
+export default function DashboardByMonth() {
+  const { listDashboardByMonth, totalElements, totalPages, size } = useSelector(
+    (state) => state.dashboard.dashboardByMonth
+  );
 
   const history = useHistory();
   const dispatch = useDispatch();
+  const [DayForm] = Form.useForm();
 
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,6 +79,7 @@ export default function TableDetails({ form }) {
     setCurrentPage(page);
     setPageSize(size);
   };
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -164,7 +203,7 @@ export default function TableDetails({ form }) {
       ),
   });
 
-  const productColumns = [
+  const colunns = [
     {
       title: "Vị trí",
       dataIndex: "index",
@@ -173,107 +212,150 @@ export default function TableDetails({ form }) {
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Ngày tạo",
-      dataIndex: "date",
+      title: "Tháng",
       key: "date",
       align: "center",
-      render: (value) => (
-        <Tag color="darkseagreen">
-          {moment(value.split("T")[0], "YYYY/MM/DD").format("DD/MM/YYYY")}
-        </Tag>
-      ),
+      render: (record) => {
+        return (
+          <Text>
+            {record.month}/{record.year}
+          </Text>
+        );
+      },
+      // ...getColumnSearchProps("id"),
     },
     {
-      title: "Mã đơn hàng",
-      dataIndex: "orderId",
-      key: "orderId",
+      title: "Số M2 nhập hàng (m2)",
+      dataIndex: "totalSquareMeterImport",
+      key: "totalSquareMeterImport",
       align: "center",
-      render: (value) =>
-        value ? (
-          <Tooltip title="Chuyển đến đơn xuất">
-            <Text
-              onClick={() =>
-                history.push(
-                  ProductExportManagerPaths.DETAILS_PRODUCT_EXPORT.replace(
-                    ":exportId",
-                    value
-                  )
-                )
-              }
-              style={{
-                color: "#1890ff",
-                fontSize: "2rem",
-                textDecoration: "underline",
-              }}
-            >
-              {value}
-            </Text>
-          </Tooltip>
-        ) : (
-          "--"
-        ),
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Phát sinh nợ (vnđ)",
-      dataIndex: "debtMoneyDTO",
-      key: "incurredIncrease",
+      title: "Tiền nhập hàng (vnđ)",
+      dataIndex: "totalCostImport",
+      key: "totalCostImport",
       align: "center",
-      sorter: (a, b) =>
-        parseFloat(a.incurredIncrease) < parseFloat(b.incurredIncrease),
-      sortDirections: ["descend", "ascend"],
-      render: (value) => (
-        <Statistic precision={0} value={value.incurredIncrease} />
-      ),
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Phát sinh có (vnđ)",
-      dataIndex: "debtMoneyDTO",
-      key: "incurredDecrease",
+      title: "Số M2 trả hàng (vnđ)",
+      dataIndex: "totalSquareMeterReExport",
+      key: "totalSquareMeterReExport",
       align: "center",
-      sorter: (a, b) => a.incurredDecrease - b.incurredDecrease,
-      sortDirections: ["descend", "ascend"],
-      render: (value) => (
-        <Statistic precision={0} value={value.incurredDecrease} />
-      ),
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Ghi chú",
-      dataIndex: "note",
-      key: "note",
+      title: "Tiền trả hàng (vnđ)",
+      dataIndex: "totalPriceReExport",
+      key: "totalPriceReExport",
       align: "center",
-      render: (value) => (
-        <Input.TextArea
-          style={{ height: "100%", resize: "none", minWidth: "150px" }}
-          value={value}
-          disabled
-        />
-      ),
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
+    },
+    {
+      title: "Số M2 xuất hàng (vnđ)",
+      dataIndex: "totalSquareMeterExport",
+      key: "totalSquareMeterExport",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
+    },
+    {
+      title: "Tiền xuất hàng (vnđ)",
+      dataIndex: "totalPriceExport",
+      key: "totalPriceExport",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
+    },
+    {
+      title: "Lợi nhuận (vnđ)",
+      dataIndex: "revenue",
+      key: "revenue",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
   ];
 
+  useEffect(() => {
+    setIsLoading(true);
+    dispatch(getDashBoardByMonth(moment().year()))
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [dispatch]);
+
+  const getData = async (defaultValues) => {
+    setIsLoading(true);
+    dispatch(
+      getDashBoardByMonth(defaultValues ? defaultValues : moment().year())
+    )
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const onFinish = ({ data }) => {
+    getData(data.year());
+  };
+
+  useEffect(() => {
+    getData();
+  }, [dispatch]);
+
   return (
-    <Table
-      size="middle"
-      className="listProductDetails"
-      columns={productColumns}
-      dataSource={listDebtMoney}
-      rowKey={(record) => record.id}
-      loading={isLoading}
-      scroll={{ x: "maxContent" }}
-      pagination={
-        listDebtMoney.length !== 0
-          ? {
-              showSizeChanger: true,
-              position: ["bottomCenter"],
-              size: "default",
-              pageSize: pageSize,
-              current: currentPage,
-              total: listDebtMoney.length,
-              onChange: (page, size) => onHandlePagination(page, size),
-              pageSizeOptions: ["2", "4", "10"],
-            }
-          : false
-      }
-    />
+    <Form
+      className="product"
+      form={DayForm}
+      name="dynamic_form_nest_item"
+      autoComplete="off"
+      layout="vertical"
+      onFinish={onFinish}
+      initialValues={{
+        data: moment(moment().year(), "YYYY"),
+      }}
+    >
+      <Table
+        size="middle"
+        columns={colunns}
+        dataSource={[...listDashboardByMonth]}
+        rowKey={(record) => record.month}
+        loading={isLoading}
+        scroll={{ x: "maxContent" }}
+        pagination={
+          listDashboardByMonth.length !== 0
+            ? {
+                showSizeChanger: true,
+                position: ["bottomCenter"],
+                size: "default",
+                pageSize: size,
+                current: currentPage,
+                total: totalElements,
+                onChange: (page, size) => onHandlePagination(page, size),
+                pageSizeOptions: ["2", "5", "10"],
+              }
+            : false
+        }
+        title={() => <HeaderTable type={"month"} />}
+      />
+    </Form>
   );
 }

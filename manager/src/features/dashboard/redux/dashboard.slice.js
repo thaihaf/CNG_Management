@@ -16,11 +16,33 @@ export const getDashboardCustomerDaily = createAsyncThunk(
     }
   }
 );
-export const getCustomerDebtDetails = createAsyncThunk(
-  "product/getCustomerDebtDetails",
-  async ({ id, startDate, endDate }, { rejectWithValue }) => {
+export const getDashBoardByDay = createAsyncThunk(
+  "product/getDashBoardByDay",
+  async ({ month, year }, { rejectWithValue }) => {
     try {
-      const response = await api.getCustomerDebtDetails(id, startDate, endDate);
+      const response = await api.getDashBoardByDay(month, year);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const getDashBoardByMonth = createAsyncThunk(
+  "product/getDashBoardByMonth",
+  async (year, { rejectWithValue }) => {
+    try {
+      const response = await api.getDashBoardByMonth(year);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const getDashBoardByYear = createAsyncThunk(
+  "product/getDashBoardByYear",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.getDashBoardByYear();
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -29,10 +51,30 @@ export const getCustomerDebtDetails = createAsyncThunk(
 );
 
 const initialState = {
-  listDashboardCustomerDaily: [],
-  totalElements: 0,
-  totalPages: 0,
-  size: 0,
+  dailyReport: {
+    listDailyReport: [],
+    totalElements: 0,
+    totalPages: 0,
+    size: 0,
+  },
+  dashboardByDay: {
+    listDashboardByDay: [],
+    totalElements: 0,
+    totalPages: 0,
+    size: 0,
+  },
+  dashboardByMonth: {
+    listDashboardByMonth: [],
+    totalElements: 0,
+    totalPages: 0,
+    size: 0,
+  },
+  dashboardByYear: {
+    listDashboardByYear: [],
+    totalElements: 0,
+    totalPages: 0,
+    size: 0,
+  },
 };
 
 const dashboardSlice = createSlice({
@@ -48,15 +90,30 @@ const dashboardSlice = createSlice({
   },
   extraReducers: {
     [getDashboardCustomerDaily.fulfilled]: (state, action) => {
-      state.listDashboardCustomerDaily = action.payload.content;
-      state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
-      state.size = action.payload.size;
+      state.dailyReport.listDailyReport = action.payload.content;
+      state.dailyReport.totalElements = action.payload.totalElements;
+      state.dailyReport.totalPages = action.payload.totalPages;
+      state.dailyReport.size = action.payload.size;
     },
-    [getCustomerDebtDetails.fulfilled]: (state, action) => {
-      state.customerDebtDetails = action.payload;
-      state.listDebtMoney = action.payload.managementDebtMoneyDetailDTOList;
+    [getDashBoardByDay.fulfilled]: (state, action) => {
+      state.dashboardByDay.listDashboardByDay = action.payload.content;
+      state.dashboardByDay.totalElements = action.payload.totalElements;
+      state.dashboardByDay.totalPages = action.payload.totalPages;
+      state.dashboardByDay.size = action.payload.size;
     },
+    [getDashBoardByMonth.fulfilled]: (state, action) => {
+      state.dashboardByMonth.listDashboardByMonth = action.payload.content;
+      state.dashboardByMonth.totalElements = action.payload.totalElements;
+      state.dashboardByMonth.totalPages = action.payload.totalPages;
+      state.dashboardByMonth.size = action.payload.size;
+    },
+    [getDashBoardByYear.fulfilled]: (state, action) => {
+      state.dashboardByYear.listDashboardByYear = action.payload.content;
+      state.dashboardByYear.totalElements = action.payload.totalElements;
+      state.dashboardByYear.totalPages = action.payload.totalPages;
+      state.dashboardByYear.size = action.payload.size;
+    },
+
     ["LOGOUT"]: (state) => {
       Object.assign(state, initialState);
     },

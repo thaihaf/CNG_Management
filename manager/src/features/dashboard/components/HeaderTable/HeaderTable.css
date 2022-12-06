@@ -1,0 +1,14 @@
+.headerTable {
+  text-align: center;
+  padding: 2rem 0;
+  background-color: #fafafa;
+}
+.headerTable .ant-picker {
+  width: 40rem;
+  height: 4rem !important;
+  border-radius: 2rem !important;
+  padding: 1rem 2rem !important;
+}
+.headerTable .ant-picker input {
+  text-align: center;
+}
