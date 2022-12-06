@@ -13,6 +13,7 @@ import {
   Space,
   Statistic,
   Table,
+  Tag,
   Typography,
 } from "antd";
 
@@ -215,7 +216,7 @@ export default function CustomerDailyList() {
       key: "type",
       align: "center",
       render: (value) => {
-        return <Text>{value}</Text>;
+        return <Tag color="green">{value}</Tag>;
       },
       // ...getColumnSearchProps("id"),
     },

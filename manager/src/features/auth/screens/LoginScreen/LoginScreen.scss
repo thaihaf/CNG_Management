@@ -2,46 +2,60 @@
 @import "../../../../styles/variables.scss";
 
 .login {
-     padding: 5rem 8rem;
-     height: 100vh;
-     display: flex;
-     flex-direction: column;
-     justify-content: center;
-     align-items: center;
+  padding: 5rem 8rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-     .form {
-          width: 30rem;
+  .form {
+    width: 45rem;
+    background-color: #ffffff;
+    padding: 5rem;
+    border-radius: 2.5rem;
 
-          &_item {
-               .login_input {
-                    border-radius: 5rem;
-                    padding: 1rem;
-                    padding-right: 2rem;
-                    display: flex;
-                    gap: 1rem;
-               }
+    .top {
+      width: fit-content;
+      text-align: center;
+      width: 100%;
 
-               .forgot {
-                    margin-left: auto;
-               }
+      img {
+        width: 15rem;
+        margin-bottom: 6rem;
+      }
+    }
 
-               .btn_signUp {
-                    text-transform: uppercase;
-                    font-size: 1.5rem;
-                    color: $white-color;
-                    border-radius: 3rem;
-                    height: 4.5rem;
-                    width: 100%;
-               }
+    &_item {
+      .login_input {
+        border-radius: 5rem;
+        padding: 1rem;
+        padding-right: 2rem;
+        display: flex;
+        gap: 1rem;
+      }
 
-               .ant-form-item-explain-error {
-                    padding: 0.3rem 1rem 1.5rem 2rem;
-               }
+      .forgot {
+        margin-left: auto;
+      }
 
-               .ant-form-item-control-input-content {
-                    display: flex;
-                    justify-content: space-between;
-               }
-          }
-     }
+      .btn_signUp {
+        text-transform: uppercase;
+        font-size: 1.5rem;
+        color: $white-color;
+        border-radius: 3rem;
+        height: 4.5rem;
+        width: 100%;
+      }
+
+      .ant-form-item-explain-error {
+        padding: 0.3rem 1rem 1.5rem 2rem;
+      }
+
+      .ant-form-item-control-input-content {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
 }

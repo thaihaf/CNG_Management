@@ -5,15 +5,18 @@ import { useHistory } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, message, notification, Spin } from "antd";
+import { Button, Form, Input, message, notification, Spin, Typography } from "antd";
 
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { forgotPassword, updateError, AuthPaths } from "../../auth";
 
-import "./ForgotPassword.css";
+import "../LoginScreen/LoginScreen.css";
 import { LoadingSpinner } from "components";
+
+import userProfileImg from "assets/icons/userProfile.png";
+const { Title } = Typography;
 
 export default function ForgotPassword() {
   const dispatch = useDispatch();
@@ -53,9 +56,16 @@ export default function ForgotPassword() {
             remember: true,
           }}
           onFinish={onFinish}
+          layout="vertical"
         >
+          <div className="top">
+            <img src={userProfileImg} alt="" />
+            <Title level={1}>Quên mật khẩu</Title>
+          </div>
+
           <Form.Item
             name="email"
+            label="Địa chỉ email"
             rules={[
               {
                 required: true,
