@@ -129,7 +129,7 @@ function WarehouseDetailsForm() {
                   },
                   {
                     pattern:
-                      /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
+                      /^[a-zA-Z0-9aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,50}$/,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_LETTER,
                       MESSAGE_ERROR,
@@ -137,12 +137,12 @@ function WarehouseDetailsForm() {
                     ),
                   },
                   {
-                    max: 25,
+                    max: 50,
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
                       "Tên kho",
-                      25
+                      50
                     ),
                   },
                   {
