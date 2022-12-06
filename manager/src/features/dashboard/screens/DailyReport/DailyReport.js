@@ -31,8 +31,8 @@ const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
 export default function CustomerDailyList() {
-  const { listDashboardCustomerDaily, totalElements, totalPages, size } =
-    useSelector((state) => state.dashboard);
+  const { listDailyReport, totalElements, totalPages, size } =
+    useSelector((state) => state.dashboard.dailyReport);
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -316,14 +316,14 @@ export default function CustomerDailyList() {
         rowKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
-        dataSource={[...listDashboardCustomerDaily]}
+        dataSource={[...listDailyReport]}
         pagination={
-          listDashboardCustomerDaily.length !== 0
+          listDailyReport.length !== 0
             ? {
                 showSizeChanger: true,
                 position: ["bottomCenter"],
                 size: "default",
-                pageSize: pageSize,
+                pageSize: size,
                 current: currentPage,
                 totalElements,
                 onChange: (page, size) => onHandlePagination(page, size),

@@ -23,6 +23,12 @@ export const siderBarItems = [
     role: ["admin", "employee"],
   },
   {
+    key: "dashboard/daily-report",
+    icon: <DashboardOutlined style={{ fontSize: "1.6rem" }} />,
+    label: `Daily Report`,
+    role: ["admin", "employee"],
+  },
+  {
     key: "product",
     icon: <InboxOutlined style={{ fontSize: "1.6rem" }} />,
     label: `Sản phẩm`,
