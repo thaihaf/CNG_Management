@@ -209,7 +209,7 @@ export default function ProductsExpande({ listProductsExpande }) {
       // ...getColumnSearchProps("id"),
     },
     {
-      title: "Đơn giá bán (m2)",
+      title: "Đơn giá bán (vnđ)",
       dataIndex: "pricePerSquareMeter",
       key: "pricePerSquareMeter",
       align: "center",
@@ -219,17 +219,7 @@ export default function ProductsExpande({ listProductsExpande }) {
       // ...getColumnSearchProps("id"),
     },
     {
-      title: "Giá nhập (vnđ)",
-      dataIndex: "totalCost",
-      key: "totalCost",
-      align: "center",
-      render: (value) => {
-        return <Text>{value}</Text>;
-      },
-      // ...getColumnSearchProps("id"),
-    },
-    {
-      title: "Giá bán (vnđ)",
+      title: "Thành tiền (vnđ)",
       dataIndex: "totalPrice",
       key: "totalPrice",
       align: "center",

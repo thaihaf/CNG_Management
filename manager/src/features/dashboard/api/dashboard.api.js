@@ -9,15 +9,25 @@ const getDashboardCustomerDaily = (startDate, endDate) => {
   const url = rp1.replace(":endDate", endDate);
   return api.get(url);
 };
-const getCustomerDebtDetails = (id, startDate, endDate) => {
-  const rp1 = DashboardEndPoints.CUSTOMER_DEBT_DETAILS.replace(":id", id);
-  const rp2 = rp1.replace(":startDate", startDate);
-  const url = rp2.replace(":endDate", endDate);
+const getDashBoardByDay = (month, year) => {
+  const subString = `?month=${month}&year=${year}`;
+  const url = DashboardEndPoints.DASHBOARD_MANAGER.concat(subString);
+  return api.get(url);
+};
+const getDashBoardByMonth = (year) => {
+  const subString = `?year=${year}`;
+  const url = DashboardEndPoints.DASHBOARD_MANAGER.concat(subString);
+  return api.get(url);
+};
+const getDashBoardByYear = () => {
+  const url = DashboardEndPoints.DASHBOARD_MANAGER;
   return api.get(url);
 };
 
-const dashboardCustomerDailyApi = {
+const dashboardApi = {
   getDashboardCustomerDaily,
-  getCustomerDebtDetails,
+  getDashBoardByDay,
+  getDashBoardByMonth,
+  getDashBoardByYear,
 };
-export default dashboardCustomerDailyApi;
+export default dashboardApi;

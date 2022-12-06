@@ -18,7 +18,7 @@ import {
 } from "antd";
 
 import avt_default from "assets/images/avt-default.png";
-import "./CustomerDailyList.css";
+import "./DailyReport.css";
 
 import { get } from "lodash";
 import moment from "moment";
@@ -216,7 +216,7 @@ export default function CustomerDailyList() {
       key: "type",
       align: "center",
       render: (value) => {
-        return <Tag color="green">{value}</Tag>;
+        return <Tag color="green">{value === "EXPORT" ? "XUẤT HÀNG" : "TRẢ HÀNG"}</Tag>;
       },
       // ...getColumnSearchProps("id"),
     },
@@ -230,16 +230,7 @@ export default function CustomerDailyList() {
       },
     },
     {
-      title: "Tổng giá nhập (m2)",
-      dataIndex: "totalExportOrderCost",
-      key: "totalExportOrderCost",
-      align: "center",
-      render: (value) => {
-        return <Statistic value={value} precision={0} />;
-      },
-    },
-    {
-      title: "Tổng giá bán (m2)",
+      title: "Thành tiền (vnđ)",
       dataIndex: "totalExportOrderPrice",
       key: "totalExportOrderPrice",
       align: "center",
@@ -248,7 +239,7 @@ export default function CustomerDailyList() {
       },
     },
     {
-      title: "Lợi nhuận (vnđ)",
+      title: "Tổng lợi nhuận (vnđ)",
       dataIndex: "exportProductRevenue",
       key: "exportProductRevenue",
       align: "center",

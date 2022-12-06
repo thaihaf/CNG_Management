@@ -2,18 +2,24 @@ import React from "react";
 
 import { DashboardPaths } from "../constants/dashboard.paths";
 
-const CustomerDailyListScreen = React.lazy(() =>
-  import("../screens/CustomerDailyList/CustomerDailyList")
+const DailyReport = React.lazy(() =>
+  import("../screens/DailyReport/DailyReport")
 );
-// const DetailsCustomerDebtScreen = React.lazy(() =>
-//   import("../screens/DetailsCustomerDebt/DetailsCustomerDebt")
-// );
+const Dashboard = React.lazy(() => import("../screens/Dashboard/Dashboard"));
 
 const DASHBOARD = {
   id: "dashboard",
-  isRoot: true,
-  path2: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
+  path: DashboardPaths.DASHBOARD_MANAGER,
+  component: Dashboard,
   isPrivateRoute: true,
+  pageTitle: "Thống kê",
+};
+const CUSTOMER_DAILY_LIST_SCREEN = {
+  id: "dashboard-customer-daily-list",
+  path: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
+  component: DailyReport,
+  isPrivateRoute: true,
+  pageTitle: "Báo cáo hàng ngày",
 };
 const DASHBOARD_CUSTOMER = {
   id: "dashboard-customer",
@@ -21,26 +27,7 @@ const DASHBOARD_CUSTOMER = {
   path2: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
   isPrivateRoute: true,
 };
-const CUSTOMER_DAILY_LIST_SCREEN = {
-  id: "dashboard-customer-daily-list",
-  path: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
-  component: CustomerDailyListScreen,
-  isPrivateRoute: true,
-  pageTitle: "Dashboard Daily",
-};
-// const CUSTOMER_DEBT_DETAILS_SCREEN = {
-//   id: "customer-debt-details",
-//   path: DashboardPaths.CUSTOMER_DEBT_DETAILS,
-//   component: DetailsCustomerDebtScreen,
-//   isPrivateRoute: true,
-//   pageTitle: "Customer Debt Details",
-// };
 
-const DASHBOARD_ROUTES = [
-  CUSTOMER_DAILY_LIST_SCREEN,
-  // DASHBOARD,
-  // DASHBOARD_CUSTOMER,
-  // CUSTOMER_DEBT_DETAILS_SCREEN,
-];
+const DASHBOARD_ROUTES = [CUSTOMER_DAILY_LIST_SCREEN, DASHBOARD];
 
 export default DASHBOARD_ROUTES;
