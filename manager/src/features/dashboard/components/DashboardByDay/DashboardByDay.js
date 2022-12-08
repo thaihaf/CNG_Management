@@ -65,6 +65,7 @@ export default function DashboardByDay() {
   const dispatch = useDispatch();
   const [DayForm] = Form.useForm();
 
+  const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(4);
@@ -316,7 +317,6 @@ export default function DashboardByDay() {
     <Form
       className="product"
       form={DayForm}
-      name="dynamic_form_nest_item"
       autoComplete="off"
       layout="vertical"
       onFinish={onFinish}
@@ -345,7 +345,13 @@ export default function DashboardByDay() {
               }
             : false
         }
-        title={() => <HeaderTable type={"day"} />}
+        title={() => (
+          <HeaderTable
+            type={"day"}
+            checkDisable={checkDisable}
+            setCheckDisable={setCheckDisable}
+          />
+        )}
       />
     </Form>
   );

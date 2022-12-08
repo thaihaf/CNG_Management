@@ -1,14 +1,34 @@
 .headerTable {
   text-align: center;
-  padding: 2rem 0;
-  background-color: #fafafa;
+  padding: 2rem 3rem;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+  border-radius: 2rem;
 }
 .headerTable .ant-picker {
-  width: 40rem;
   height: 4rem !important;
   border-radius: 2rem !important;
   padding: 1rem 2rem !important;
 }
 .headerTable .ant-picker input {
   text-align: center;
+}
+.headerTable .ant-select-selector {
+  height: 4rem !important;
+  border-radius: 2rem !important;
+  padding: 0.3rem 2rem 0 2rem !important;
+}
+.headerTable .ant-select-selector input {
+  padding: 0.5rem 1rem 0 1rem !important;
+}
+.headerTable .wrapper {
+  width: 100%;
+  display: grid;
+  -moz-column-gap: 3rem;
+       column-gap: 3rem;
+  align-items: center;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+}
+.headerTable .wrapper.dashboard {
+  padding: 1rem 5rem;
 }
