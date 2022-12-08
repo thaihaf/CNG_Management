@@ -7,9 +7,14 @@ export const DASHBOARD_FEATURE_KEY = DASHBOARD_KEY;
 
 export const getDashboardCustomerDaily = createAsyncThunk(
   "product/getDashboardCustomerDaily",
-  async ({ startDate, endDate }, { rejectWithValue }) => {
+  async ({ startDate, endDate, customer, employee }, { rejectWithValue }) => {
     try {
-      const response = await api.getDashboardCustomerDaily(startDate, endDate);
+      const response = await api.getDashboardCustomerDaily(
+        startDate,
+        endDate,
+        customer,
+        employee
+      );
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);

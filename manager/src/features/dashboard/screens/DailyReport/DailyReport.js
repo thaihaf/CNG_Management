@@ -9,6 +9,7 @@ import {
   Avatar,
   Button,
   DatePicker,
+  Form,
   Input,
   Space,
   Statistic,
@@ -24,21 +25,26 @@ import { get } from "lodash";
 import moment from "moment";
 import dayjs from "dayjs";
 
+import { getEmployees } from "features/employee-manager/employeeManager";
+import { getCustomers } from "features/customer-manager/customerManager";
 import { getDashboardCustomerDaily } from "features/dashboard/dashboard";
 import { ProductsExpande } from "features/dashboard/components";
+import HeaderTable from "features/dashboard/components/HeaderTable/HeaderTable";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
 export default function CustomerDailyList() {
-  const { listDailyReport, totalElements, totalPages, size } =
-    useSelector((state) => state.dashboard.dailyReport);
+  const { listDailyReport, totalElements, totalPages, size } = useSelector(
+    (state) => state.dashboard.dailyReport
+  );
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
 
+  const [form] = Form.useForm();
+  const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [datesPicker, setDatesPicker] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
   const [searchText, setSearchText] = useState("");
@@ -216,7 +222,11 @@ export default function CustomerDailyList() {
       key: "type",
       align: "center",
       render: (value) => {
-        return <Tag color="green">{value === "EXPORT" ? "XUẤT HÀNG" : "TRẢ HÀNG"}</Tag>;
+        return (
+          <Tag color="green">
+            {value === "EXPORT" ? "XUẤT HÀNG" : "TRẢ HÀNG"}
+          </Tag>
+        );
       },
       // ...getColumnSearchProps("id"),
     },
@@ -254,91 +264,102 @@ export default function CustomerDailyList() {
     setPageSize(size);
   };
 
-  const handleGetList = async (defaultSelect) => {
+  const onFinish = (values) => {
     setIsLoading(true);
-    let startDate = moment().startOf("month").format("MM/DD/YYYY");
-    let endDate = moment().endOf("month").format("MM/DD/YYYY");
 
     dispatch(
-      defaultSelect
-        ? getDashboardCustomerDaily(datesPicker)
-        : getDashboardCustomerDaily({ startDate: startDate, endDate: endDate })
+      getDashboardCustomerDaily({
+        startDate: values.dates[0]?.format("MM/DD/YYYY"),
+        endDate: values.dates[1]?.format("MM/DD/YYYY"),
+        customer: values.customer?.split("_")[0],
+        employee: values.employee?.split("_")[0],
+      })
     )
       .then(unwrapResult)
-      .then((res) => {
-        setDatesPicker(null);
+      .then(() => {
+        setCheckDisable(true);
         setIsLoading(false);
       });
   };
 
   useEffect(() => {
-    handleGetList(false);
+    setIsLoading(true);
+    let startDate = moment().startOf("month").format("MM/DD/YYYY");
+    let endDate = moment().endOf("month").format("MM/DD/YYYY");
+
+    dispatch(
+      getDashboardCustomerDaily({ startDate: startDate, endDate: endDate })
+    )
+      .then(unwrapResult)
+      .then(() => {
+        dispatch(getEmployees());
+        dispatch(getCustomers())
+          .then(unwrapResult)
+          .then(() => {
+            setCheckDisable(true);
+            setIsLoading(false);
+          });
+      });
   }, [dispatch, location]);
 
   return (
-    <div className="product-list">
+    <div className="daily-report">
       <div className="top">
         <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
           Báo cáo hàng ngày
         </Title>
-
-        <RangePicker
-          defaultValue={[moment().startOf("month"), moment().endOf("month")]}
-          format={"DD/MM/YYYY"}
-          onChange={(dates, dateString) => {
-            if (dates) {
-              let value = {
-                startDate: dates[0].format("MM/DD/YYYY"),
-                endDate: dates[1].format("MM/DD/YYYY"),
-              };
-              setDatesPicker(value);
-            } else {
-              setDatesPicker(null);
-            }
-          }}
-          renderExtraFooter={(value, a, b) => {
-            return (
-              <Button
-                type="primary"
-                shape={"round"}
-                size={"large"}
-                onClick={async () => await handleGetList(true)}
-                disabled={datesPicker ? false : true}
-              >
-                Tìm kiếm
-              </Button>
-            );
-          }}
-        />
       </div>
 
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listDailyReport]}
-        pagination={
-          listDailyReport.length !== 0
-            ? {
-                showSizeChanger: true,
-                position: ["bottomCenter"],
-                size: "default",
-                pageSize: size,
-                current: currentPage,
-                totalElements,
-                onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "4", "6"],
-              }
-            : false
-        }
-        expandable={{
-          expandedRowRender: (record) => (
-            <ProductsExpande
-              listProductsExpande={record.exportProductDetailDTOS}
-            />
-          ),
+      <Form
+        form={form}
+        onFinish={onFinish}
+        autoComplete="off"
+        layout="vertical"
+        initialValues={{
+          dates: [moment().startOf("month"), moment().endOf("month")],
         }}
-      />
+      >
+        <HeaderTable
+          type="report"
+          checkDisable={checkDisable}
+          setCheckDisable={setCheckDisable}
+        />
+
+        <Table
+          bordered={false}
+          rowKey={(record) => record.id}
+          columns={columns}
+          loading={isLoading}
+          style={{
+            boxShadow:
+              "rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px",
+            borderRadius: "2rem",
+            marginTop: "2rem",
+          }}
+          dataSource={[...listDailyReport]}
+          pagination={
+            listDailyReport.length !== 0
+              ? {
+                  showSizeChanger: true,
+                  position: ["bottomCenter"],
+                  size: "default",
+                  pageSize: size,
+                  current: currentPage,
+                  totalElements,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  pageSizeOptions: ["2", "4", "6"],
+                }
+              : false
+          }
+          expandable={{
+            expandedRowRender: (record) => (
+              <ProductsExpande
+                listProductsExpande={record.exportProductDetailDTOS}
+              />
+            ),
+          }}
+        />
+      </Form>
     </div>
   );
 }

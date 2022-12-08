@@ -36,6 +36,7 @@ import { LoadingSpinner } from "components";
 import { SupplierManagerPaths } from "features/supplier-manager/supplierManager";
 
 import userProfileImg from "assets/icons/userProfile.png";
+import { ProductManagerPaths } from "features/product-manager/productManager";
 const { Title } = Typography;
 
 export default function LoginScreen() {
@@ -70,7 +71,7 @@ export default function LoginScreen() {
 
         switch (res.role.substring(1, res.role.length - 1)) {
           case "ROLE_ADMIN":
-            history.push(EmployeeManagerPaths.EMPLOYEE_MANAGER);
+            history.push(ProductManagerPaths.PRODUCT_MANAGER);
             break;
           case "ROLE_EMPLOYEE":
             history.push(SupplierManagerPaths.SUPPLIER_LIST);
