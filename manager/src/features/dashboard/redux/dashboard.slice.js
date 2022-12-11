@@ -45,9 +45,9 @@ export const getDashBoardByMonth = createAsyncThunk(
 );
 export const getDashBoardByYear = createAsyncThunk(
   "product/getDashBoardByYear",
-  async (_, { rejectWithValue }) => {
+  async ({ startYear, endYear }, { rejectWithValue }) => {
     try {
-      const response = await api.getDashBoardByYear();
+      const response = await api.getDashBoardByYear(startYear, endYear);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -67,32 +67,30 @@ const initialState = {
     totalElements: 0,
     totalPages: 0,
     size: 0,
+    month: null,
+    year: null,
   },
   dashboardByMonth: {
     listDashboardByMonth: [],
     totalElements: 0,
     totalPages: 0,
     size: 0,
+    year2: null,
   },
   dashboardByYear: {
     listDashboardByYear: [],
     totalElements: 0,
     totalPages: 0,
     size: 0,
+    startYear: null,
+    endYear: null,
   },
 };
 
 const dashboardSlice = createSlice({
   name: DASHBOARD_FEATURE_KEY,
   initialState,
-  reducers: {
-    // updateErrorProcess: (state, action) => {
-    //   state.errorProcess = action.payload;
-    // },
-    // updateProductDetails: (state, action) => {
-    //   state.detailDTOList = action.payload;
-    // },
-  },
+  reducers: {},
   extraReducers: {
     [getDashboardCustomerDaily.fulfilled]: (state, action) => {
       state.dailyReport.listDailyReport = action.payload.content;
@@ -105,18 +103,25 @@ const dashboardSlice = createSlice({
       state.dashboardByDay.totalElements = action.payload.totalElements;
       state.dashboardByDay.totalPages = action.payload.totalPages;
       state.dashboardByDay.size = action.payload.size;
+      state.dashboardByDay.month = action.payload.content[0].month;
+      state.dashboardByDay.year = action.payload.content[0].year;
     },
     [getDashBoardByMonth.fulfilled]: (state, action) => {
       state.dashboardByMonth.listDashboardByMonth = action.payload.content;
       state.dashboardByMonth.totalElements = action.payload.totalElements;
       state.dashboardByMonth.totalPages = action.payload.totalPages;
       state.dashboardByMonth.size = action.payload.size;
+      state.dashboardByMonth.year2 = action.payload.content[0].year;
     },
     [getDashBoardByYear.fulfilled]: (state, action) => {
-      state.dashboardByYear.listDashboardByYear = action.payload.content;
+      const arr = action.payload.content;
+
+      state.dashboardByYear.listDashboardByYear = arr;
       state.dashboardByYear.totalElements = action.payload.totalElements;
       state.dashboardByYear.totalPages = action.payload.totalPages;
       state.dashboardByYear.size = action.payload.size;
+      state.dashboardByYear.startYear = arr[0].year;
+      state.dashboardByYear.endYear = arr[arr.length - 1].year;
     },
 
     ["LOGOUT"]: (state) => {

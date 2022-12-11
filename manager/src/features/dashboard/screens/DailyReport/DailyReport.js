@@ -9,6 +9,7 @@ import {
   Avatar,
   Button,
   DatePicker,
+  Divider,
   Form,
   Input,
   Space,
@@ -30,6 +31,11 @@ import { getCustomers } from "features/customer-manager/customerManager";
 import { getDashboardCustomerDaily } from "features/dashboard/dashboard";
 import { ProductsExpande } from "features/dashboard/components";
 import HeaderTable from "features/dashboard/components/HeaderTable/HeaderTable";
+import { Excel } from "antd-table-saveas-excel";
+import {
+  columnsExport,
+  dailyReportColumnsExport,
+} from "features/dashboard/constants/dashboard.column";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -282,6 +288,84 @@ export default function CustomerDailyList() {
       });
   };
 
+  const handleExportExcel = () => {
+    const excel = new Excel();
+
+    let dataExport = [];
+    let totalSquareMeter = 0;
+    let totalPrice = 0;
+    let stt = 0;
+    const startDate = form.getFieldValue("dates")[0]?.format("DD/MM/YYYY");
+    const endDate = form.getFieldValue("dates")[1]?.format("DD/MM/YYYY");
+
+    listDailyReport.map((item, index, arr) => {
+      let products = item.exportProductDetailDTOS;
+      const createDate = item.createDate.split("T")[0];
+      const exportId = item.id;
+      const exportType = item.type === "EXPORT" ? "XUẤT HÀNG" : "TRẢ HÀNG";
+
+      products.map((product, index2, arr2) => {
+        totalSquareMeter = totalSquareMeter + product.totalSquareMeter;
+        totalPrice = totalPrice + product.totalPrice;
+
+        dataExport.push({
+          ...item,
+          ...product,
+          ...product.productDetailDTO,
+          createDate: createDate,
+          exportId: exportId,
+          exportType: exportType,
+          stt: stt,
+        });
+
+        stt++;
+
+        if (
+          arr2.length === index2 + 1 &&
+          arr[index + 1]?.createDate !== item.createDate
+        ) {
+          dataExport.push({
+            totalSquareMeter: totalSquareMeter,
+            totalPrice: totalPrice,
+          });
+          totalSquareMeter = 0;
+          totalPrice = 0;
+        }
+      });
+    });
+
+    excel.addSheet("Báo cáo hằng ngày");
+
+    excel.setTHeadStyle({
+      h: "center",
+      v: "center",
+      fontName: "SF Mono",
+    });
+    excel.setTBodyStyle({
+      h: "center",
+      v: "center",
+      fontName: "SF Mono",
+    });
+
+    excel.drawCell(0, 0, {
+      hMerge: 14,
+      vMerge: 3,
+      value: `Báo cáo hằng ngày : ${startDate} - ${endDate}`,
+      style: {
+        bold: true,
+        v: "center",
+        h: "center",
+        background: "FFC000",
+        fontSize: 25,
+      },
+    });
+
+    excel.addColumns(dailyReportColumnsExport);
+    excel.addDataSource(dataExport);
+
+    excel.saveAs("Báo cáo hằng ngày.xlsx");
+  };
+
   useEffect(() => {
     setIsLoading(true);
     let startDate = moment().startOf("month").format("MM/DD/YYYY");
@@ -308,6 +392,16 @@ export default function CustomerDailyList() {
         <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
           Báo cáo hàng ngày
         </Title>
+
+        <Button
+          type="primary"
+          shape={"round"}
+          size={"large"}
+          onClick={() => handleExportExcel()}
+          disabled={listDailyReport.length === 0 ? true : false}
+        >
+          XUẤT EXCEL
+        </Button>
       </div>
 
       <Form
@@ -319,29 +413,32 @@ export default function CustomerDailyList() {
           dates: [moment().startOf("month"), moment().endOf("month")],
         }}
       >
+        <Divider style={{ margin: 0 }} />
+
         <HeaderTable
-          type="report"
           checkDisable={checkDisable}
           setCheckDisable={setCheckDisable}
         />
 
+        <Divider style={{ margin: 0 }} />
+
         <Table
-          bordered={false}
+          rowClassName={() => "rowClassName1"}
+          bordered
           rowKey={(record) => record.id}
           columns={columns}
           loading={isLoading}
           style={{
-            boxShadow:
-              "rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px",
             borderRadius: "2rem",
-            marginTop: "2rem",
           }}
+          scroll={{ x: "maxContent" }}
+          size="middle"
           dataSource={[...listDailyReport]}
           pagination={
             listDailyReport.length !== 0
               ? {
                   showSizeChanger: true,
-                  position: ["bottomCenter"],
+                  position: ["bottomRight"],
                   size: "default",
                   pageSize: size,
                   current: currentPage,

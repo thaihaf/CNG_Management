@@ -24,7 +24,9 @@ const { Option } = Select;
 const { Text, Title } = Typography;
 
 export default function TableDetails({ form }) {
-  const { listDebtMoney } = useSelector((state) => state.supplierDebt);
+  const { listDebtMoney, totalElements, totalPages, size } = useSelector(
+    (state) => state.supplierDebt.debtMoney
+  );
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -256,19 +258,19 @@ export default function TableDetails({ form }) {
       size="middle"
       className="listProductDetails"
       columns={productColumns}
-      dataSource={listDebtMoney}
+      dataSource={[...listDebtMoney]}
       rowKey={(record) => record.id}
       loading={isLoading}
       scroll={{ x: "maxContent" }}
       pagination={
-        listDebtMoney.length !== 0
+        totalElements !== 0
           ? {
               showSizeChanger: true,
               position: ["bottomCenter"],
               size: "default",
-              pageSize: pageSize,
+              pageSize: size,
               current: currentPage,
-              total: listDebtMoney.length,
+              total: totalElements,
               onChange: (page, size) => onHandlePagination(page, size),
               pageSizeOptions: ["2", "4", "10"],
             }

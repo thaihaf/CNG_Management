@@ -1,8 +1,25 @@
 .headerTable {
   text-align: center;
   padding: 2rem 3rem;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
   border-radius: 2rem;
+  width: 100%;
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.headerTable .wrapper {
+  width: 100%;
+  display: grid;
+  -moz-column-gap: 3rem;
+       column-gap: 3rem;
+  row-gap: 2rem;
+  align-items: center;
+  justify-content: flex-end;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+}
+.headerTable .ant-form-item {
+  margin: 0 !important;
 }
 .headerTable .ant-picker {
   height: 4rem !important;
@@ -19,16 +36,4 @@
 }
 .headerTable .ant-select-selector input {
   padding: 0.5rem 1rem 0 1rem !important;
-}
-.headerTable .wrapper {
-  width: 100%;
-  display: grid;
-  -moz-column-gap: 3rem;
-       column-gap: 3rem;
-  align-items: center;
-  justify-content: center;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
-}
-.headerTable .wrapper.dashboard {
-  padding: 1rem 5rem;
 }

@@ -331,20 +331,7 @@ export default function DashboardByDay() {
         rowKey={(record) => record.day}
         loading={isLoading}
         scroll={{ x: "maxContent" }}
-        pagination={
-          listDashboardByDay.length !== 0
-            ? {
-                showSizeChanger: true,
-                position: ["bottomCenter"],
-                size: "default",
-                pageSize: size,
-                current: currentPage,
-                total: totalElements,
-                onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "5", "10"],
-              }
-            : false
-        }
+        pagination={false}
         title={() => (
           <HeaderTable
             type={"day"}

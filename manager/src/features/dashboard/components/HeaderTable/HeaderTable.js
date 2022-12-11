@@ -21,7 +21,7 @@ const HeaderTable = ({ type, checkDisable, setCheckDisable }) => {
   return (
     <>
       {type ? (
-        <div className="headerTable">
+        <div className="headerTable wrapper">
           {type === "day" || type === "month" ? (
             <div className="wrapper dashboard">
               <Form.Item
@@ -48,62 +48,28 @@ const HeaderTable = ({ type, checkDisable, setCheckDisable }) => {
               </Form.Item>
             </div>
           ) : (
-            <div className="wrapper">
-              <Form.Item label="Khách hàng" name="customer">
-                <Select
-                  showSearch
-                  allowClear
-                  onChange={() => setCheckDisable(false)}
-                >
-                  {listCustomers.map((c) => (
-                    <Select.Option
-                      value={`${c.id}_${c.firstName} ${c.lastName} ${c.addressDTO.ward}`}
-                      key={c.id}
-                      id={c.id}
-                    >
-                      {`${c.firstName} ${c.lastName} -  ${c.addressDTO.ward}`}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
+            <div className="wrapper dashboard">
               <Form.Item
-                name={"dates"}
+                name={"years"}
                 className="details__item"
-                label="Ngày"
                 rules={[
                   {
                     required: true,
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      type === "day" ? "Tháng" : "Năm"
+                      "Năm"
                     ),
                   },
                 ]}
               >
                 <RangePicker
-                  format={"DD/MM/YYYY"}
-                  onChange={(dates) => {
-                    dates ? setCheckDisable(false) : setCheckDisable(true);
+                  picker="year"
+                  onChange={(years) => {
+                    years ? setCheckDisable(false) : setCheckDisable(true);
                   }}
+                  placement="bottomRight"
                 />
-              </Form.Item>
-              <Form.Item label="Người bán hàng" name="employee">
-                <Select
-                  showSearch
-                  allowClear
-                  onChange={() => setCheckDisable(false)}
-                >
-                  {listEmployees.map((e) => (
-                    <Select.Option
-                      value={`${e.id}_${e.firstName} ${e.lastName} ${e.ward}`}
-                      key={e.id}
-                      id={e.id}
-                    >
-                      {`${e.firstName} ${e.lastName} -  ${e.ward}`}
-                    </Select.Option>
-                  ))}
-                </Select>
               </Form.Item>
             </div>
           )}
@@ -122,7 +88,80 @@ const HeaderTable = ({ type, checkDisable, setCheckDisable }) => {
           </Button>
         </div>
       ) : (
-        <div></div>
+        <div className="headerTable wrapper">
+          <div className="wrapper">
+            <Form.Item name="customer">
+              <Select
+                showSearch
+                allowClear
+                onChange={() => setCheckDisable(false)}
+                placeholder="Khách hàng"
+              >
+                {listCustomers.map((c) => (
+                  <Select.Option
+                    value={`${c.id}_${c.firstName} ${c.lastName} ${c.addressDTO.ward}`}
+                    key={c.id}
+                    id={c.id}
+                  >
+                    {`${c.firstName} ${c.lastName} -  ${c.addressDTO.ward}`}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name={"dates"}
+              className="details__item"
+              rules={[
+                {
+                  required: true,
+                  message: getMessage(
+                    CODE_ERROR.ERROR_REQUIRED,
+                    MESSAGE_ERROR,
+                    type === "day" ? "Tháng" : "Năm"
+                  ),
+                },
+              ]}
+            >
+              <RangePicker
+                format={"DD/MM/YYYY"}
+                onChange={(dates) => {
+                  dates ? setCheckDisable(false) : setCheckDisable(true);
+                }}
+              />
+            </Form.Item>
+            <Form.Item name="employee">
+              <Select
+                showSearch
+                allowClear
+                onChange={() => setCheckDisable(false)}
+                placeholder="Người bán hàng"
+              >
+                {listEmployees.map((e) => (
+                  <Select.Option
+                    value={`${e.id}_${e.firstName} ${e.lastName} ${e.ward}`}
+                    key={e.id}
+                    id={e.id}
+                  >
+                    {`${e.firstName} ${e.lastName} -  ${e.ward}`}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </div>
+
+          <Button
+            type="primary"
+            shape={"round"}
+            size={"large"}
+            htmlType={"submit"}
+            disabled={checkDisable === false ? false : true}
+            style={{
+              width: 180,
+            }}
+          >
+            Tìm kiếm
+          </Button>
+        </div>
       )}
     </>
   );

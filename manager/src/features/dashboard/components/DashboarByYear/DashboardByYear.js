@@ -67,6 +67,7 @@ export default function DashboardByDay() {
   const dispatch = useDispatch();
   const [DayForm] = Form.useForm();
 
+  const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(4);
@@ -285,15 +286,29 @@ export default function DashboardByDay() {
     },
   ];
 
-  useEffect(() => {
+  const getData = async (defaultValues) => {
     setIsLoading(true);
-    dispatch(getDashBoardByYear())
+    dispatch(
+      getDashBoardByYear(
+        defaultValues
+          ? defaultValues
+          : { startYear: moment().year() - 9, endYear: moment().year() }
+      )
+    )
       .then(() => {
         setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const onFinish = ({ years }) => {
+    getData(years);
+  };
+
+  useEffect(() => {
+    getData();
   }, [dispatch]);
 
   return (
@@ -303,7 +318,13 @@ export default function DashboardByDay() {
       name="dynamic_form_nest_item"
       autoComplete="off"
       layout="vertical"
-      // onFinish={onFinish}
+      onFinish={onFinish}
+      initialValues={{
+        years: [
+          moment(`${moment().year() - 9}`, "YYYY"),
+          moment(`${moment().year()}`, "YYYY"),
+        ],
+      }}
     >
       <Table
         size="middle"
@@ -312,21 +333,14 @@ export default function DashboardByDay() {
         rowKey={(record) => record.year}
         loading={isLoading}
         scroll={{ x: "maxContent" }}
-        pagination={
-          listDashboardByYear.length !== 0
-            ? {
-                showSizeChanger: true,
-                position: ["bottomCenter"],
-                size: "default",
-                pageSize: size,
-                current: currentPage,
-                total: totalElements,
-                onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "5", "10"],
-              }
-            : false
-        }
-        title={() => <HeaderTable />}
+        pagination={false}
+        title={() => (
+          <HeaderTable
+            type={"year"}
+            checkDisable={checkDisable}
+            setCheckDisable={setCheckDisable}
+          />
+        )}
       />
     </Form>
   );

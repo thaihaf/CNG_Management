@@ -17,7 +17,7 @@ const getDashboardCustomerDaily = (startDate, endDate, customer, employee) => {
   return api.get(url);
 };
 const getDashBoardByDay = (month, year) => {
-  const subString = `?month=${month}&year=${year}`;
+  const subString = `?month=${month}&year=${year}&size=31`;
   const url = DashboardEndPoints.DASHBOARD_MANAGER.concat(subString);
   return api.get(url);
 };
@@ -26,8 +26,9 @@ const getDashBoardByMonth = (year) => {
   const url = DashboardEndPoints.DASHBOARD_MANAGER.concat(subString);
   return api.get(url);
 };
-const getDashBoardByYear = () => {
-  const url = DashboardEndPoints.DASHBOARD_MANAGER;
+const getDashBoardByYear = (startYear, endYear) => {
+  const subString = `?start=${startYear}&end=${endYear}`;
+  const url = DashboardEndPoints.DASHBOARD_MANAGER.concat(subString);
   return api.get(url);
 };
 
