@@ -17,7 +17,7 @@ import {
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { typeDetails } from "features/import-product/constants/import-product.constants";
-import moment from "moment";
+import dayjs from "dayjs";
 import {
   updateListProductLv2,
   updateProductImport,
@@ -252,7 +252,7 @@ export default function DetailsModal({ record, updateMode }) {
                   },
                 ]}
                 initialValue={
-                  updateMode ? moment(record?.debtDay, "DD/MM/YYYY") : moment()
+                  updateMode ? dayjs(record?.debtDay, "DD/MM/YYYY") : dayjs()
                 }
               >
                 <DatePicker format="DD/MM/YYYY" />

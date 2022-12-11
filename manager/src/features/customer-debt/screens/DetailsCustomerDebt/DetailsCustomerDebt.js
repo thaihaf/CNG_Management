@@ -10,7 +10,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import ExportWrapper from "features/export-product/components/ExportWrapper/ExportWrapper";
 import { getCustomers } from "features/customer-manager/customerManager";
 import { getCustomerDebtDetails } from "features/customer-debt/customerDebt";
-import moment from "moment";
+import dayjs from "dayjs";
 import { DetailsForm } from "features/customer-debt/components";
 
 export default function DetailsCustomerDebt() {
@@ -21,8 +21,8 @@ export default function DetailsCustomerDebt() {
 
   useEffect(() => {
     setIsLoading(true);
-    let startDate = moment().startOf("month").format("MM/DD/YYYY");
-    let endDate = moment().endOf("month").format("MM/DD/YYYY");
+    let startDate = dayjs().startOf("month").format("MM/DD/YYYY");
+    let endDate = dayjs().endOf("month").format("MM/DD/YYYY");
 
     dispatch(
       getCustomerDebtDetails({ id: id, startDate: startDate, endDate: endDate })

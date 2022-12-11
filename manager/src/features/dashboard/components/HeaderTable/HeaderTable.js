@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { searchProduct } from "features/product-manager/productManager";
-import moment from "moment";
+import dayjs from "dayjs";
 import "./HeaderTable.css";
 import { updateProductImport } from "features/import-product/importProduct";
 import { getMessage } from "helpers/util.helper";

@@ -38,7 +38,7 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";

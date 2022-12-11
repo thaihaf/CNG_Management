@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Spin } from "antd";
 import { unwrapResult } from "@reduxjs/toolkit";
-import moment from "moment";
+import dayjs from "dayjs";
 import { getSupplierDebtDetails } from "features/supplier-debt/supplierDebt";
 import { DetailsForm } from "features/supplier-debt/components";
 
@@ -16,8 +16,8 @@ export default function DetailsSupplierDebt() {
 
   useEffect(() => {
     setIsLoading(true);
-    let startDate = moment().startOf("month").format("MM/DD/YYYY");
-    let endDate = moment().endOf("month").format("MM/DD/YYYY");
+    let startDate = dayjs().startOf("month").format("MM/DD/YYYY");
+    let endDate = dayjs().endOf("month").format("MM/DD/YYYY");
 
     dispatch(
       getSupplierDebtDetails({ id: id, startDate: startDate, endDate: endDate })

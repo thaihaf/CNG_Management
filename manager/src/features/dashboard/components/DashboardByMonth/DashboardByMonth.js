@@ -38,7 +38,7 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
@@ -292,7 +292,7 @@ export default function DashboardByMonth() {
 
   useEffect(() => {
     setIsLoading(true);
-    dispatch(getDashBoardByMonth(moment().year()))
+    dispatch(getDashBoardByMonth(dayjs().year()))
       .then(() => {
         setIsLoading(false);
       })
@@ -304,7 +304,7 @@ export default function DashboardByMonth() {
   const getData = async (defaultValues) => {
     setIsLoading(true);
     dispatch(
-      getDashBoardByMonth(defaultValues ? defaultValues : moment().year())
+      getDashBoardByMonth(defaultValues ? defaultValues : dayjs().year())
     )
       .then(() => {
         setIsLoading(false);
@@ -330,7 +330,7 @@ export default function DashboardByMonth() {
       layout="vertical"
       onFinish={onFinish}
       initialValues={{
-        data: moment(moment().year(), "YYYY"),
+        data: dayjs(dayjs().year(), "YYYY"),
       }}
     >
       <Table

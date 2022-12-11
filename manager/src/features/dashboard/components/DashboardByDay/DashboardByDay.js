@@ -38,7 +38,7 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
@@ -294,7 +294,7 @@ export default function DashboardByDay() {
       getDashBoardByDay(
         defaultValues
           ? defaultValues
-          : { month: moment().month() + 1, year: moment().year() }
+          : { month: dayjs().month() + 1, year: dayjs().year() }
       )
     )
       .then(() => {
@@ -321,7 +321,7 @@ export default function DashboardByDay() {
       layout="vertical"
       onFinish={onFinish}
       initialValues={{
-        data: moment(`${moment().year()}/${moment().month() + 1}`, "YYYY/MM"),
+        data: dayjs(`${dayjs().year()}/${dayjs().month() + 1}`, "YYYY/MM"),
       }}
     >
       <Table

@@ -18,7 +18,7 @@ import Highlighter from "react-highlight-words";
 import { ProductExportManagerPaths } from "features/export-product/exportProduct";
 
 import "./TableDetails.css";
-import moment from "moment";
+import dayjs from "dayjs";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -181,7 +181,7 @@ export default function TableDetails({ form }) {
       align: "center",
       render: (value) => (
         <Tag color="darkseagreen">
-          {moment(value.split("T")[0], "YYYY/MM/DD").format("DD/MM/YYYY")}
+          {dayjs(value.split("T")[0], "YYYY/MM/DD").format("DD/MM/YYYY")}
         </Tag>
       ),
     },

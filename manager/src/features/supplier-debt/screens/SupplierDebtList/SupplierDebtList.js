@@ -20,7 +20,6 @@ import avt_default from "assets/images/avt-default.png";
 import "./SupplierDebtList.css";
 
 import { get } from "lodash";
-import moment from "moment";
 import dayjs from "dayjs";
 import {
   getSupplierDebts,
@@ -261,8 +260,8 @@ export default function SupplierDebtList() {
 
   const handleGetList = async (defaultSelect) => {
     setIsLoading(true);
-    let startDate = moment().startOf("month").format("MM/DD/YYYY");
-    let endDate = moment().endOf("month").format("MM/DD/YYYY");
+    let startDate = dayjs().startOf("month").format("MM/DD/YYYY");
+    let endDate = dayjs().endOf("month").format("MM/DD/YYYY");
 
     dispatch(
       defaultSelect
@@ -288,7 +287,7 @@ export default function SupplierDebtList() {
         </Title>
 
         <RangePicker
-          defaultValue={[moment().startOf("month"), moment().endOf("month")]}
+          defaultValue={[dayjs().startOf("month"), dayjs().endOf("month")]}
           format={"DD/MM/YYYY"}
           onChange={(dates, dateString) => {
             if (dates) {

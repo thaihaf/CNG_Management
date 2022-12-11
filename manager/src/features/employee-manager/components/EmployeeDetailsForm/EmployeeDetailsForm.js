@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
+import dayjs from "dayjs";
 import "./EmployeeDetailsForm.css";
 import avt_default from "assets/images/avt-default.png";
 import {
@@ -81,7 +81,7 @@ function EmployeeDetailsForm() {
 
     if (createMode) {
       const bd =
-        birthDay === null ? moment().utc().format("YYYY-MM-DD") : birthDay;
+        birthDay === null ? dayjs().utc().format("YYYY-MM-DD") : birthDay;
 
       dispatch(
         createDetails({
@@ -606,8 +606,8 @@ function EmployeeDetailsForm() {
                 <DatePicker
                   defaultValue={
                     createMode
-                      ? moment()
-                      : moment(dataDetails?.birthDay, "YYYY-MM-DD")
+                      ? dayjs()
+                      : dayjs(dataDetails?.birthDay, "YYYY-MM-DD")
                   }
                   format={"YYYY-MM-DD"}
                   onChange={onChangeBirthDay}

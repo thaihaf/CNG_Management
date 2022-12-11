@@ -40,7 +40,7 @@ import {
   CaretUpFilled,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
-import moment from "moment";
+import dayjs from "dayjs";
 import StatisticGroups from "../StatisticGroups/StatisticGroups";
 import InsertProductTable from "../TableCreate/TableCreate";
 import TableUpdate from "../TableUpdate/TableUpdate";

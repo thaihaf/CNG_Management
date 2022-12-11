@@ -9,10 +9,10 @@ import {
 } from "@ant-design/icons";
 
 import {
-  BackTop,
   Breadcrumb,
   Button,
   Drawer,
+  FloatButton,
   Form,
   Input,
   Layout,
@@ -24,7 +24,7 @@ import {
   Tabs,
   Tooltip,
   Typography,
-} from "antd";
+} from 'antd';
 import { Footer } from "components";
 
 import "./DefaultLayout.css";
@@ -125,31 +125,30 @@ const DefaultLayout = ({ children }) => {
   };
 
   return (
-    <Layout className="defaultLayout">
+    (<Layout className="defaultLayout">
       <div className="left-bar" onMouseMove={() => setOpen(true)}></div>
-      <BackTop />
-
+      <FloatButton.BackTop />
       <Drawer
         placement={"left"}
         closable={false}
         onClose={onClose}
         open={open}
-        className="drawer"
+        rootClassName="drawer"
       >
-        <div className="sidebar_children">
-          <div className="logo">
+        <div rootClassName="sidebar_children">
+          <div rootClassName="logo">
             {collapsed ? (
-              <img src={logo3} alt="logo" className="logo3_img" />
+              <img src={logo3} alt="logo" rootClassName="logo3_img" />
             ) : (
-              <img src={logo5} alt="logo" className="logo5_img" />
+              <img src={logo5} alt="logo" rootClassName="logo5_img" />
             )}
           </div>
 
           <Menu
-            className="sidebarMenu"
+            rootClassName="sidebarMenu"
             mode="inline"
             selectedKeys={[pathname]}
-            style={{ height: "100%" }}
+            rootStyle={{ height: "100%" }}
             items={siderBarItems.map((item) => {
               if (item.role.includes(role)) {
                 return {
@@ -180,31 +179,31 @@ const DefaultLayout = ({ children }) => {
                               )}
                          </span> */}
 
-          <div className="info">
+          <div rootClassName="info">
             <Tooltip placement="topRight" title={"Chọn để hiện thị Cài đặt"}>
-              <div className="info_avt" onClick={() => setModal1Open(true)}>
+              <div rootClassName="info_avt" onClick={() => setModal1Open(true)}>
                 <img
                   src={avatar ? avatar : avt_default}
                   alt=""
-                  className="info_avt_img"
+                  rootClassName="info_avt_img"
                 />
               </div>
             </Tooltip>
 
-            <div className="info_detail">
-              <div className="info_fullname">{userName}</div>
-              <div className="info_role">{role}</div>
+            <div rootClassName="info_detail">
+              <div rootClassName="info_fullname">{userName}</div>
+              <div rootClassName="info_role">{role}</div>
             </div>
 
             <Modal
               title="Cài đặt"
-              style={{ top: 20 }}
+              rootStyle={{ top: 20 }}
               open={modal1Open}
               onOk={() => setModal1Open(false)}
               onCancel={() => setModal1Open(false)}
               footer={[]}
               width={800}
-              className="modalSetting"
+              rootClassName="modalSetting"
             >
               <Spin spinning={isLoadingModal}>
                 <Tabs
@@ -234,11 +233,11 @@ const DefaultLayout = ({ children }) => {
                           colon={false}
                           onFinish={handleChangePassword}
                         >
-                          <div className="details__group">
+                          <div rootClassName="details__group">
                             <Form.Item
                               name="currentPassword"
                               label={<Text>Mật khẩu hiện tại</Text>}
-                              className="details__item"
+                              rootClassName="details__item"
                               rules={[
                                 {
                                   required: true,
@@ -280,15 +279,15 @@ const DefaultLayout = ({ children }) => {
                               <Input.Password
                                 type="password"
                                 placeholder="●●●●●●●●●"
-                                className="login_input pass"
+                                rootClassName="login_input pass"
                               />
                             </Form.Item>
                           </div>
-                          <div className="details__group">
+                          <div rootClassName="details__group">
                             <Form.Item
                               name="newPassword"
                               label={<Text>Mật khẩu mới</Text>}
-                              className="details__item"
+                              rootClassName="details__item"
                               dependencies={["currentPassword"]}
                               rules={[
                                 {
@@ -346,15 +345,15 @@ const DefaultLayout = ({ children }) => {
                               <Input.Password
                                 type="password"
                                 placeholder="●●●●●●●●●"
-                                className="login_input pass"
+                                rootClassName="login_input pass"
                               />
                             </Form.Item>
                           </div>
-                          <div className="details__group">
+                          <div rootClassName="details__group">
                             <Form.Item
                               name="confirmNewPassword"
                               label={<Text>Xác nhận mật khẩu</Text>}
-                              className="details__item"
+                              rootClassName="details__item"
                               dependencies={["newPassword"]}
                               rules={[
                                 {
@@ -412,12 +411,12 @@ const DefaultLayout = ({ children }) => {
                               <Input.Password
                                 type="password"
                                 placeholder="●●●●●●●●●"
-                                className="login_input pass"
+                                rootClassName="login_input pass"
                               />
                             </Form.Item>
                           </div>
 
-                          <div className="btns">
+                          <div rootClassName="btns">
                             <Button
                               key="back"
                               shape={"round"}
@@ -458,7 +457,6 @@ const DefaultLayout = ({ children }) => {
           </div>
         </div>
       </Drawer>
-
       <Layout className="wrapper_layout">
         <Layout
           style={{
@@ -513,7 +511,7 @@ const DefaultLayout = ({ children }) => {
           <Footer className="footer" />
         </Layout>
       </Layout>
-    </Layout>
+    </Layout>)
   );
 };
 

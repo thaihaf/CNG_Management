@@ -32,7 +32,7 @@ import resetFileImg from "assets/icons/resetFile.png";
 import minusButtonImg from "assets/icons/minusButton.png";
 
 import TableDetails from "../TableDetails/TableDetails";
-import moment from "moment";
+import dayjs from "dayjs";
 import StatisticGroups from "../StatisticGroups/StatisticGroups";
 import { getSupplierDebtDetails } from "features/supplier-debt/supplierDebt";
 
@@ -101,7 +101,7 @@ const DetailsForm = () => {
             </Title>
 
             <RangePicker
-               defaultValue={[moment().startOf("month"), moment().endOf("month")]}
+               defaultValue={[dayjs().startOf("month"), dayjs().endOf("month")]}
               format={"DD/MM/YYYY"}
               onChange={(dates, dateString) => {
                 if (dates) {

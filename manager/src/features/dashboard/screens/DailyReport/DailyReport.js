@@ -23,7 +23,6 @@ import avt_default from "assets/images/avt-default.png";
 import "./DailyReport.css";
 
 import { get } from "lodash";
-import moment from "moment";
 import dayjs from "dayjs";
 
 import { getEmployees } from "features/employee-manager/employeeManager";
@@ -186,7 +185,7 @@ export default function CustomerDailyList() {
       render: (value) => {
         return (
           <Text>
-            {moment(value.split("T")[0], "YYYY-MM-DD").format("DD/MM/YYYY")}
+            {dayjs(value.split("T")[0], "YYYY-MM-DD").format("DD/MM/YYYY")}
           </Text>
         );
       },
@@ -368,8 +367,8 @@ export default function CustomerDailyList() {
 
   useEffect(() => {
     setIsLoading(true);
-    let startDate = moment().startOf("month").format("MM/DD/YYYY");
-    let endDate = moment().endOf("month").format("MM/DD/YYYY");
+    let startDate = dayjs().startOf("month").format("MM/DD/YYYY");
+    let endDate = dayjs().endOf("month").format("MM/DD/YYYY");
 
     dispatch(
       getDashboardCustomerDaily({ startDate: startDate, endDate: endDate })
@@ -410,7 +409,7 @@ export default function CustomerDailyList() {
         autoComplete="off"
         layout="vertical"
         initialValues={{
-          dates: [moment().startOf("month"), moment().endOf("month")],
+          dates: [dayjs().startOf("month"), dayjs().endOf("month")],
         }}
       >
         <Divider style={{ margin: 0 }} />

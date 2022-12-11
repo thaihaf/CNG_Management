@@ -1,6 +1,7 @@
 import React from "react";
 
-import "antd/dist/antd.css";
+// import "antd/dist/antd.css";
+
 
 import bg from "assets/images/bg-dashboard.png";
 import logo from "assets/images/logo3.png";

@@ -3,7 +3,7 @@ import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import moment from "moment";
+import dayjs from "dayjs";
 
 import { SearchOutlined } from "@ant-design/icons";
 import {
@@ -201,10 +201,10 @@ export default function ListProductImport() {
       dataIndex: "createAt",
       key: "createAt",
       align: "center",
-      sorter: (a, b) => moment(a.createAt).isAfter(b.createAt),
+      sorter: (a, b) => dayjs(a.createAt).isAfter(b.createAt),
       sortDirections: ["descend", "ascend"],
       render: (_, { createDate }) => {
-        let newDate = moment(new Date(createDate)).format("DD-MM-YYYY");
+        let newDate = dayjs(new Date(createDate)).format("DD-MM-YYYY");
         return <Text>{newDate}</Text>;
       },
     },
