@@ -36,7 +36,12 @@ const initialState = {
   size: 0,
   errorProcess: "",
   supplierDebtDetails: null,
-  listDebtMoney: [],
+  debtMoney: {
+    listDebtMoney: [],
+    totalElements: 0,
+    totalPages: 0,
+    size: 0,
+  },
 };
 
 const supplierDebtSlice = createSlice({
@@ -58,9 +63,13 @@ const supplierDebtSlice = createSlice({
       state.size = action.payload.size;
     },
     [getSupplierDebtDetails.fulfilled]: (state, action) => {
-      console.log(action.payload);
+      const debtMoneyOb = action.payload.managementDebtMoneyDetailDTOList;
+      
       state.supplierDebtDetails = action.payload;
-      state.listDebtMoney = action.payload.managementDebtMoneyDetailDTOList;
+      state.debtMoney.listDebtMoney = debtMoneyOb.content;
+      state.debtMoney.totalElements = debtMoneyOb.totalElements;
+      state.debtMoney.totalPages = debtMoneyOb.totalPages;
+      state.debtMoney.size = debtMoneyOb.size;
     },
     ["LOGOUT"]: (state) => {
       Object.assign(state, initialState);

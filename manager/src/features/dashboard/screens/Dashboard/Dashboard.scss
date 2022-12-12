@@ -1,4 +1,11 @@
 .dashboard {
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  
   .ant-select-dropdown {
     width: max-content !important;
 

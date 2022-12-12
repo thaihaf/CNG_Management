@@ -1,3 +1,9 @@
+.dashboard .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
 .dashboard .ant-select-dropdown {
   width: -webkit-max-content !important;
   width: -moz-max-content !important;

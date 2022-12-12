@@ -3,7 +3,9 @@ import React, { Suspense, useEffect } from "react";
 import { LoadingSpinner } from "components";
 import RoutesApp from "routes/Routes";
 
-import "antd/dist/antd.css";
+// import "antd/dist/antd.css";
+
+
 import "./App.css";
 import { Spin } from "antd";
 import { useDispatch } from "react-redux";

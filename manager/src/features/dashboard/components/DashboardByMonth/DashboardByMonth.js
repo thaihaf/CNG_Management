@@ -38,7 +38,7 @@ import {
   Tooltip,
   Typography,
 } from "antd";
-import moment from "moment";
+import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
@@ -290,21 +290,10 @@ export default function DashboardByMonth() {
     },
   ];
 
-  useEffect(() => {
-    setIsLoading(true);
-    dispatch(getDashBoardByMonth(moment().year()))
-      .then(() => {
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [dispatch]);
-
   const getData = async (defaultValues) => {
     setIsLoading(true);
     dispatch(
-      getDashBoardByMonth(defaultValues ? defaultValues : moment().year())
+      getDashBoardByMonth(defaultValues ? defaultValues : dayjs().year())
     )
       .then(() => {
         setIsLoading(false);
@@ -330,7 +319,7 @@ export default function DashboardByMonth() {
       layout="vertical"
       onFinish={onFinish}
       initialValues={{
-        data: moment(moment().year(), "YYYY"),
+        data: dayjs(`${dayjs().year()}`, "YYYY"),
       }}
     >
       <Table
@@ -340,20 +329,7 @@ export default function DashboardByMonth() {
         rowKey={(record) => record.month}
         loading={isLoading}
         scroll={{ x: "maxContent" }}
-        pagination={
-          listDashboardByMonth.length !== 0
-            ? {
-                showSizeChanger: true,
-                position: ["bottomCenter"],
-                size: "default",
-                pageSize: size,
-                current: currentPage,
-                total: totalElements,
-                onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "5", "10"],
-              }
-            : false
-        }
+        pagination={false}
         title={() => (
           <HeaderTable
             type={"month"}

@@ -251,7 +251,8 @@ const ProductDetailsForm = ({ updateMode }) => {
             {updateMode && (
               <>
                 <Button
-                  type="danger"
+                  danger
+                  type="primary"
                   shape="round"
                   size={"large"}
                   style={{

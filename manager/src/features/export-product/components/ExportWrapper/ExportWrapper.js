@@ -24,6 +24,7 @@ import StatisticGroups from "../StatisticGroups/StatisticGroups";
 import TableUpdate from "../TableUpdate/TableUpdate";
 import TableCreate from "../TableCreate/TableCreate";
 import {
+  buildExportColumns,
   clearProductExport,
   createProductExport,
   deleteProductExport,
@@ -35,6 +36,8 @@ import {
   statusProductExport,
   statusProductReExport,
 } from "features/export-product/constants/export-product.constants";
+import { Excel } from "antd-table-saveas-excel";
+import dayjs from "dayjs";
 
 const { Title } = Typography;
 
@@ -42,6 +45,7 @@ const ExportWrapper = ({ updateMode }) => {
   const { productsExport, productExportDetails } = useSelector(
     (state) => state.productExport
   );
+  const { listCustomers } = useSelector((state) => state.customer);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -214,6 +218,327 @@ const ExportWrapper = ({ updateMode }) => {
       });
   };
 
+  const handleExportExcel = () => {
+    const excel = new Excel();
+
+    let dateExport = productExportDetails.createDate.split("T")[0];
+    const dayExport = dateExport.split("-")[2];
+    const monthExport = dateExport.split("-")[1];
+    const yearExport = dateExport.split("-")[0];
+    const customer = listCustomers.find(
+      (c) => c.id === productExportDetails.customerId
+    );
+    const newProductsExport = [
+      ...productsExport,
+      {
+        id: "TỔNG CỘNG",
+        totalSquareMeter: productExportDetails.totalSquareMeterExport,
+        totalPrice: productExportDetails.totalExportOrderPrice,
+      },
+    ];
+    excel.addSheet("Hoá đơn bán hàng");
+
+    excel.setTHeadStyle({
+      h: "center",
+      v: "center",
+      fontName: "SF Mono",
+    });
+    excel.setTBodyStyle({
+      h: "center",
+      v: "center",
+      fontName: "SF Mono",
+    });
+
+    excel.addCol();
+    excel.addCol();
+
+    excel.drawCell(2, 0, {
+      hMerge: 6,
+      vMerge: 2,
+      value: `HOÁ ĐƠN BÁN HÀNG`,
+      style: {
+        bold: true,
+        v: "center",
+        h: "center",
+        fontSize: 20,
+        fontName: "SF Mono",
+      },
+    });
+
+    excel.drawCell(2, 3, {
+      value: `Liên 2: Gửi khách hàng`,
+      hMerge: 6,
+      style: {
+        fontSize: 11,
+        v: "center",
+        h: "center",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 4, {
+      value: `Ngày ${dayExport} tháng ${monthExport} năm ${yearExport}`,
+      hMerge: 6,
+      style: {
+        fontSize: 11,
+        v: "center",
+        h: "center",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+
+    excel.drawCell(9, 1, {
+      value: `Mẫu số: 02GTGT3/01`,
+      hMerge: 1,
+      style: {
+        fontSize: 11,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(9, 2, {
+      value: `Ký hiệu: CNG-HDBL`,
+      hMerge: 1,
+      style: {
+        fontSize: 11,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(9, 3, {
+      value: `Số: ${productExportDetails.id}`,
+      hMerge: 1,
+      style: {
+        fontSize: 11,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+
+    excel.drawCell(2, 5, {
+      value: `Đơn vị bán hàng: Nhà phân phối gạch CNG (Cường Năng Group)`,
+      hMerge: 8,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 6, {
+      value: `Mã số thuế: 0900406845-001`,
+      hMerge: 8,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 7, {
+      value: `Địa chỉ: Số nhà 333, Tân Phú, Sơn Đông, Sơn Tây, Hà Nội`,
+      hMerge: 8,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 8, {
+      value: `Điện thoại: 0912.228.698`,
+      hMerge: 8,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 9, {
+      value: `Số tài khoản: CTK: Đỗ Mạnh Cường- STK: 4511.0000.102.888, Ngân hàng: BIDV`,
+      hMerge: 8,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        bold: true,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 10, {
+      value: `CTK: Nguyễn Thị Hải Năng, STK: 105.0055.08855, Ngân hàng Vietinbank, chi nhánh: Bắc Hưng Yên`,
+      hMerge: 8,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        bold: true,
+        fontName: "SF Mono",
+      },
+    });
+
+    excel.drawCell(2, 11, {
+      value: `Họ tên người mua hàng: ${customer.firstName} ${customer.lastName}`,
+      hMerge: 8,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 12, {
+      value: `Tên đơn vị: ${customer.shopName}`,
+      hMerge: 8,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 13, {
+      value: `Địa chỉ: ${customer.addressDTO.apartmentNumber}, ${customer.addressDTO.ward}, ${customer.addressDTO.district}, ${customer.addressDTO.city}`,
+      hMerge: 8,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 14, {
+      value: `Điện thoại: `,
+      hMerge: 8,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 15, {
+      value: `Số tài khoản: `,
+      hMerge: 5,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(8, 15, {
+      value: `Tên NH: `,
+      hMerge: 2,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, 16, {
+      value: `Hình thức thanh toán: Tiền mặt/Chuyển khoản`,
+      hMerge: 5,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(8, 16, {
+      value: `MST:`,
+      hMerge: 2,
+      style: {
+        fontSize: 10,
+        v: "center",
+        h: "left",
+        border: false,
+        fontName: "SF Mono",
+      },
+    });
+
+    excel.addRow();
+    excel.addCol();
+    excel.addColumns(buildExportColumns);
+    excel.addDataSource(newProductsExport);
+
+    excel.addRow();
+    excel.drawCell(2, excel.currentRow, {
+      hMerge: 8,
+      value: `Thành tiền (viết bằng chữ): `,
+      style: {
+        v: "center",
+        h: "left",
+        fontSize: 11,
+        i: true,
+        fontName: "SF Mono",
+      },
+    });
+
+    excel.addRow();
+    excel.addRow();
+    const currentRow = excel.currentRow;
+
+    excel.drawCell(3, currentRow, {
+      hMerge: 2,
+      value: `KHÁCH HÀNG`,
+      style: {
+        h: "center",
+        fontName: "SF Mono",
+        v: "top",
+      },
+    });
+    excel.drawCell(3, currentRow + 1, {
+      hMerge: 2,
+      vMerge: 5,
+    });
+    excel.drawCell(7, currentRow - 1, {
+      hMerge: 2,
+      value: `Ngày ${dayjs().day()},tháng ${dayjs().month()} năm ${dayjs().year()}`,
+      style: {
+        h: "center",
+        fontName: "SF Mono",
+        i: true,
+        v: "top",
+      },
+    });
+    excel.drawCell(7, currentRow, {
+      hMerge: 2,
+      value: `NGƯỜI XUẤT HOÁ ĐƠN`,
+      style: {
+        h: "center",
+        fontName: "SF Mono",
+        v: "top",
+      },
+    });
+    excel.drawCell(7, currentRow + 1, {
+      hMerge: 2,
+      vMerge: 5,
+    });
+
+    excel.saveAs("Hoá đơn bán hàng.xlsx");
+  };
   const initialValues = updateMode ? productExportDetails : null;
 
   useEffect(() => {
@@ -259,9 +584,9 @@ const ExportWrapper = ({ updateMode }) => {
             productExportDetails?.status !== 4 && (
               <>
                 <Button
-                  type="danger"
+                  danger
+                  type="primary"
                   shape="round"
-                  size={"large"}
                   style={{
                     width: "fitContent",
                     display: "flex",
@@ -284,8 +609,6 @@ const ExportWrapper = ({ updateMode }) => {
                 <Button
                   type="primary"
                   shape="round"
-                  // icon={<CaretUpOutlined />}
-                  size={"large"}
                   htmlType="submit"
                   style={{
                     width: "fitContent",
@@ -313,8 +636,6 @@ const ExportWrapper = ({ updateMode }) => {
             <Button
               type="primary"
               shape="round"
-              // icon={<CaretUpOutlined />}
-              size={"large"}
               htmlType="submit"
               style={{
                 width: "fitContent",
@@ -336,6 +657,29 @@ const ExportWrapper = ({ updateMode }) => {
               Tạo mới
             </Button>
           )}
+
+          <Button
+            type="primary"
+            shape="round"
+            style={{
+              width: "fitContent",
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+              paddingTop: "2.1rem",
+              paddingBottom: "2.1rem",
+              paddingLeft: "2.8rem",
+              paddingRight: "2.8rem",
+            }}
+            onClick={() => handleExportExcel()}
+          >
+            <img
+              src={uploadFileImg}
+              alt=""
+              style={{ height: "2.5rem", width: "2.5rem" }}
+            />
+            Xuất hoá đơn
+          </Button>
         </div>
 
         <Tabs

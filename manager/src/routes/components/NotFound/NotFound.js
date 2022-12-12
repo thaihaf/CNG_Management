@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { Button, Result } from "antd";
-import "antd/dist/antd.css";
+
+// import "antd/dist/antd.css";
+
+
 import { Link, useHistory } from "react-router-dom";
 import { getIsLogin } from "helpers/auth.helpers";
 import { AuthPaths } from "features/auth/auth";

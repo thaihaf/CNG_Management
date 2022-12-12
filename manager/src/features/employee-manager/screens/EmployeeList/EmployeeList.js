@@ -35,7 +35,7 @@ import "./EmployeeList.css";
 const { Title, Text } = Typography;
 
 export default function EmployeeList() {
-  const { listEmployees, totalElements, totalPages, size } = useSelector(
+  const { listEmployees, totalElements, number, size } = useSelector(
     (state) => state.employee
   );
   const history = useHistory();
@@ -46,55 +46,13 @@ export default function EmployeeList() {
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
   const searchInput = useRef(null);
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
-  };
-
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: "odd",
-        text: "Select Odd Row",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: "even",
-        text: "Select Even Row",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
+  const onHandlePagination = (number, size) => {
+    setIsLoading(true);
+    dispatch(getEmployees({ number: number - 1, size: size }))
+      .then(unwrapResult)
+      .then(() => setIsLoading(false));
   };
 
   const onRowDelete = (record) => {
@@ -106,13 +64,10 @@ export default function EmployeeList() {
       cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
-        dispatch(
-          record ? deleteEmployee(record.id) : deleteEmployees(selectedRowKeys)
-        )
+        dispatch(deleteEmployee(record.id))
           .then(unwrapResult)
           .then((res) => {
-            console.log(res);
-            dispatch(getEmployees())
+            dispatch(getEmployees({ number: number - 1, size: size }))
               .then(unwrapResult)
               .then(() => {
                 notification.success({
@@ -245,7 +200,7 @@ export default function EmployeeList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -271,6 +226,7 @@ export default function EmployeeList() {
       title: "Họ",
       dataIndex: "firstName",
       key: "firstName",
+      align: "center",
       sorter: (a, b) => a.firstName.length - b.firstName.length,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("firstName"),
@@ -308,12 +264,14 @@ export default function EmployeeList() {
       title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
+      align: "center",
       ...getColumnSearchProps("phoneNumber"),
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      align: "center",
       sorter: (a, b) => a.email.length - b.email.length,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("email"),
@@ -354,24 +312,25 @@ export default function EmployeeList() {
       title: "Hành động",
       dataIndex: "operation",
       key: "operation",
+      align: "center",
       render: (_, record) => (
         <Dropdown
-          overlay={
-            <Menu
-              items={[
-                {
-                  key: 1,
-                  label: "Xem Chi tiết và Cập nhật",
-                  onClick: () => onRowDetails(record),
-                },
-                {
-                  key: 2,
-                  label: "Xoá Nhân viên",
-                  onClick: () => onRowDelete(record),
-                },
-              ]}
-            />
-          }
+          placement="bottomRight"
+          arrow
+          menu={{
+            items: [
+              {
+                key: 1,
+                label: "Xem Chi tiết và Cập nhật",
+                onClick: () => onRowDetails(record),
+              },
+              {
+                key: 2,
+                label: "Xoá Nhân viên",
+                onClick: () => onRowDelete(record),
+              },
+            ],
+          }}
         >
           <a>
             Xem thêm <DownOutlined />
@@ -380,11 +339,10 @@ export default function EmployeeList() {
       ),
     },
   ];
-  const hasSelected = selectedRowKeys.length > 0;
 
   useEffect(() => {
     setIsLoading(true);
-    dispatch(getEmployees())
+    dispatch(getEmployees({ number: 0, size: 20 }))
       .then(unwrapResult)
       .then(() => setIsLoading(false));
   }, [dispatch, location]);
@@ -393,46 +351,34 @@ export default function EmployeeList() {
     <div className="employee-list">
       <div className="top">
         <Title level={2}>Danh sách Nhân viên</Title>
-        <div>
-          <span
-            style={{
-              marginRight: 9,
-            }}
-          >
-            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
-          </span>
-          <Button
-            onClick={() => onRowDelete()}
-            disabled={!hasSelected}
-            loading={isLoading}
-            shape="round"
-            icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
-          >
-            Xoá bỏ
-          </Button>
-        </div>
       </div>
 
       <Table
-        rowKey="id"
+        rowKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
-        dataSource={listEmployees}
+        dataSource={[...listEmployees]}
         pagination={
-          listEmployees.length !== 0
+          totalElements !== 0
             ? {
-                showSizeChanger: true,
-                position: ["bottomCenter"],
-                size: "mặc định",
-                pageSize: pageSize,
-                current: currentPage,
+                current: number,
+                pageSize: size,
                 total: totalElements,
+                showSizeChanger: true,
+                showQuickJumper: true,
+                position: ["bottomCenter"],
+                pageSizeOptions: ["10", "20", "50", "100"],
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
                 onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "4", "6"],
+                locale: {
+                  jump_to: "",
+                  page: "trang",
+                  items_per_page: "/ trang",
+                },
               }
             : false
         }
-        rowSelection={rowSelection}
       />
     </div>
   );

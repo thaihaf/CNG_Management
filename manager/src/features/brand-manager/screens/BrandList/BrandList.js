@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { DownOutlined } from "@ant-design/icons";
 import {
   DeleteTwoTone,
@@ -31,89 +31,56 @@ import {
   deleteBrands,
 } from "features/brand-manager/brandManager";
 
+import queryString from "query-string";
+
 import "./BrandList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
 import { createDetails } from "features/brand-manager/brandManager";
-import {
-  getDistrict,
-  getProvince,
-  getProvinces,
-} from "features/provinces/provinces";
+
 import { getActiveSuppliers } from "features/supplier-manager/supplierManager";
 import { getSuppliers } from "features/supplier-manager/supplierManager";
+
 const { Title, Text } = Typography;
 const { Option } = Select;
+
 export default function BrandList() {
-  const { listBrands, totalElements, totalPages, size } = useSelector(
+  const { listBrands, totalElements, number, size } = useSelector(
     (state) => state.brand
   );
-  const { listSuppliers } = useSelector((state) => state.supplier);
   const { listActiveSuppliers } = useSelector((state) => state.supplier);
-  const { provinces, districts, wards } = useSelector(
-    (state) => state.provinces
-  );
+
   const history = useHistory();
+  const params = useParams();
   const location = useLocation();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const [componentDisabled, setComponentDisabled] = useState(true);
   const [modal1Open, setModal1Open] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [status, setStatus] = useState(null);
+
   const [searchedColumn, setSearchedColumn] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+
   const searchInput = useRef(null);
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
-  };
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: "odd",
-        text: "Select Odd Row",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: "even",
-        text: "Select Even Row",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: BrandManagerPaths.BRAND_LIST,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        number: page,
+      }),
+    });
   };
 
   const onRowDelete = (record) => {
@@ -157,38 +124,15 @@ export default function BrandList() {
     );
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    dispatch(getActiveSuppliers());
-    dispatch(getBrands())
-      .then(unwrapResult)
-      .then(() => setIsLoading(false));
-
-    if (listSuppliers.length === 0 || !listSuppliers) {
-      dispatch(getSuppliers())
-        .then(unwrapResult)
-        .then(() => setIsLoading(false));
-    }
-  }, [dispatch]);
-
-  const onChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-  const onSearch = (value) => {
-    console.log("search:", value);
-  };
-
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
-
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -283,7 +227,7 @@ export default function BrandList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -293,7 +237,7 @@ export default function BrandList() {
       title: "Tên Nhãn hàng",
       dataIndex: "brandName",
       key: "brandName",
-      width: "20%",
+      align: "center",
       ...getColumnSearchProps("brandName"),
       sorter: (a, b) => a.brandName - b.brandName,
       sortDirections: ["descend", "ascend"],
@@ -302,8 +246,7 @@ export default function BrandList() {
       title: "Tên Nhà cung cấp",
       dataIndex: "supplierName",
       key: "supplierName",
-
-      width: "20%",
+      align: "center",
       ...getColumnSearchProps("supplierName"),
       sorter: (a, b) => a.supplierName - b.supplierName,
       sortDirections: ["descend", "ascend"],
@@ -312,13 +255,14 @@ export default function BrandList() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
+      align: "center",
       filters: [
         {
-          text: "Active",
+          text: "Hoạt động",
           value: 1,
         },
         {
-          text: "In Active",
+          text: "Không hoạt động",
           value: 0,
         },
       ],
@@ -328,15 +272,14 @@ export default function BrandList() {
         let color = s === 1 ? "green" : "volcano";
         return s === 1 ? (
           <Tag color={color} key={s}>
-            Active
+            Hoạt động
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            In Active
+            Không hoạt động
           </Tag>
         );
       },
-      width: "20%",
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend", "ascend"],
     },
@@ -344,34 +287,33 @@ export default function BrandList() {
       title: "Hành động",
       dataIndex: "operation",
       key: "operation",
+      align: "center",
       render: (_, record) => (
         <Dropdown
-          overlay={
-            <Menu
-              items={[
-                {
-                  key: 1,
-                  label: "Xem chi tiết và Chỉnh sửa",
-                  onClick: () => onRowDetails(record),
-                },
-                {
-                  key: 2,
-                  label: "Xoá nhãn hàng",
-                  onClick: () => onRowDelete(record),
-                },
-              ]}
-            />
-          }
+          placement="bottomRight"
+          arrow
+          menu={{
+            items: [
+              {
+                key: 1,
+                label: "Xem chi tiết và Chỉnh sửa",
+                onClick: () => onRowDetails(record),
+              },
+              {
+                key: 2,
+                label: "Xoá nhãn hàng",
+                onClick: () => onRowDelete(record),
+              },
+            ],
+          }}
         >
           <a>
-            Nhiều hơn <DownOutlined />
+            Xem thêm <DownOutlined />
           </a>
         </Dropdown>
       ),
     },
   ];
-
-  const hasSelected = selectedRowKeys.length > 0;
 
   const onSubmitCreate = async ({ ...args }) => {
     dispatch(
@@ -385,47 +327,40 @@ export default function BrandList() {
       .then(unwrapResult)
       .then((res) => {
         console.log(res);
-       notification.success({
-         message: "Nhãn hàng",
-         description: "Tạo mới Nhãn hàng thành công",
-       });
+        notification.success({
+          message: "Nhãn hàng",
+          description: "Tạo mới Nhãn hàng thành công",
+        });
       })
       .catch((error) => {
         console.log(error);
         console.log(args);
-         notification.error({
-           message: "Nhãn hàng",
-           description: "Tạo mới Nhãn hàng thất bại",
-         });
+        notification.error({
+          message: "Nhãn hàng",
+          description: "Tạo mới Nhãn hàng thất bại",
+        });
       });
   };
 
   useEffect(() => {
-    dispatch(getProvinces());
-  }, [dispatch]);
+    const query = queryString.parse(location.search);
+
+    setIsLoading(true);
+
+    dispatch(getBrands(query))
+      .then(unwrapResult)
+      .then(() => {
+        dispatch(getActiveSuppliers())
+          .then(unwrapResult)
+          .then(() => setIsLoading(false));
+      });
+  }, [dispatch, location]);
 
   return (
     <div className="employee-list">
       <div className="top">
         <Title level={2}>Danh sách Nhãn Hàng</Title>
         <div>
-          <span
-            style={{
-              marginRight: 9,
-            }}
-          >
-            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
-          </span>
-          <Button
-            className="btnDelete"
-            onClick={() => onRowDelete()}
-            disabled={!hasSelected}
-            loading={isLoading}
-            shape="round"
-            icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
-          >
-            Xoá Nhãn Hàng
-          </Button>
           <Button
             type="primary"
             shape={"round"}
@@ -475,8 +410,6 @@ export default function BrandList() {
                     showSearch
                     placeholder="Chọn Nhà cung cấp"
                     optionFilterProp="children"
-                    onChange={onChange}
-                    onSearch={onSearch}
                     filterOption={(input, option) =>
                       option.children
                         .toLowerCase()
@@ -545,7 +478,7 @@ export default function BrandList() {
                     form.resetFields();
                   }}
                 >
-                  Trở lại
+                  Huỷ bỏ
                 </Button>
                 <Button
                   key="submit"
@@ -553,7 +486,7 @@ export default function BrandList() {
                   type="primary"
                   htmlType="submit"
                 >
-                  Tạo
+                  Tạo mới
                 </Button>
               </div>
             </Form>
@@ -561,25 +494,31 @@ export default function BrandList() {
         </div>
       </div>
       <Table
-        rowKey="id"
+        rowKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
-        dataSource={listBrands}
+        dataSource={[...listBrands]}
         pagination={
-          listBrands.length !== 0
+          totalElements !== 0
             ? {
+                current: number,
+                pageSize: size,
+                total: totalElements,
                 showSizeChanger: true,
+                showQuickJumper: true,
                 position: ["bottomCenter"],
-                size: "default",
-                pageSize: pageSize,
-                current: currentPage,
-                totalElements,
+                pageSizeOptions: ["10", "20", "50", "100"],
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
                 onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "6", "10"],
+                locale: {
+                  jump_to: "",
+                  page: "trang",
+                  items_per_page: "/ trang",
+                },
               }
             : false
         }
-        rowSelection={rowSelection}
       />
     </div>
   );

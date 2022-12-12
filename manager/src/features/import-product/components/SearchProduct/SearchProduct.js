@@ -56,7 +56,7 @@ const SearchProduct = ({ updateMode }) => {
       description: `Thêm sản phẩm thành công!`,
     });
 
-    setSearchProductVal(newValue);
+    setSearchProductVal();
     dispatch(
       updateProductImport([
         ...productsImport,
@@ -129,7 +129,6 @@ const SearchProduct = ({ updateMode }) => {
         onChange={handleSelectChange}
       >
         {dataSearch?.map((d) => {
-          // let isDisabled = productsImport.find((p) => p.id === d.id);
           return (
             <Option
               className="searchProduct"
@@ -137,7 +136,6 @@ const SearchProduct = ({ updateMode }) => {
               lable={`${d.id} - ${d.productName} - ${d.titleSize}`}
               key={d.id}
               item={d}
-              // disabled={isDisabled}
             >
               <div className="search-img">
                 <img src={d.listImage[0].filePath} alt="" />

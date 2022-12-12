@@ -9,10 +9,10 @@ import {
 } from "@ant-design/icons";
 
 import {
-  BackTop,
   Breadcrumb,
   Button,
   Drawer,
+  FloatButton,
   Form,
   Input,
   Layout,
@@ -24,7 +24,7 @@ import {
   Tabs,
   Tooltip,
   Typography,
-} from "antd";
+} from 'antd';
 import { Footer } from "components";
 
 import "./DefaultLayout.css";
@@ -125,10 +125,9 @@ const DefaultLayout = ({ children }) => {
   };
 
   return (
-    <Layout className="defaultLayout">
+    (<Layout className="defaultLayout">
       <div className="left-bar" onMouseMove={() => setOpen(true)}></div>
-      <BackTop />
-
+      <FloatButton.BackTop />
       <Drawer
         placement={"left"}
         closable={false}
@@ -458,7 +457,6 @@ const DefaultLayout = ({ children }) => {
           </div>
         </div>
       </Drawer>
-
       <Layout className="wrapper_layout">
         <Layout
           style={{
@@ -513,7 +511,7 @@ const DefaultLayout = ({ children }) => {
           <Footer className="footer" />
         </Layout>
       </Layout>
-    </Layout>
+    </Layout>)
   );
 };
 

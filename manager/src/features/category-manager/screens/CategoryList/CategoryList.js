@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import moment from "moment";
 import queryString from "query-string";
 import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";

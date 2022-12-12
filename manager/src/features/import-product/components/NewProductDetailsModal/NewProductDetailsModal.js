@@ -197,7 +197,6 @@ export default function NewProductDetailsModal({ record }) {
               <Button
                 key="back"
                 shape={"round"}
-                htmlType="reset"
                 onClick={() => {
                   setModal1Open(false);
                   newProductDetailsForm.resetFields();

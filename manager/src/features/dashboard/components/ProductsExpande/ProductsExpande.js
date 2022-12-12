@@ -20,7 +20,6 @@ import avt_default from "assets/images/avt-default.png";
 import "./ProductsExpande.css";
 
 import { get } from "lodash";
-import moment from "moment";
 import dayjs from "dayjs";
 
 import { getDashboardCustomerDaily } from "features/dashboard/dashboard";

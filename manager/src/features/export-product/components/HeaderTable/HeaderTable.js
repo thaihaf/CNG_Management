@@ -5,7 +5,7 @@ import { getEmployees } from "features/employee-manager/employeeManager";
 import { getMessage, getStatusString } from "helpers/util.helper";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
+import dayjs from "dayjs";
 
 import "./HeaderTable.css";
 import {
@@ -25,8 +25,9 @@ export default function HeaderTable({ form, updateMode }) {
   const dispatch = useDispatch();
 
   const [statusByType, setStatusByType] = useState("EXPORT");
+
   useEffect(() => {
-    setStatusByType(productExportDetails.type);
+    productExportDetails && setStatusByType(productExportDetails.type);
     dispatch(getEmployees());
   }, [dispatch, productExportDetails, form]);
 
@@ -50,7 +51,7 @@ export default function HeaderTable({ form, updateMode }) {
         <Select
           showSearch
           allowClear
-          placeholder="Select customer"
+          placeholder="Chọn khách hàng"
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.children ?? "").includes(input)
@@ -96,7 +97,7 @@ export default function HeaderTable({ form, updateMode }) {
               .toLowerCase()
               .localeCompare((optionB?.children ?? "").toLowerCase())
           }
-          placeholder="Select employee"
+          placeholder="Chọn người bán"
           disabled={productExportDetails?.status === 4 ? true : false}
         >
           {listEmployees.map((item) => (
@@ -133,7 +134,7 @@ export default function HeaderTable({ form, updateMode }) {
               .toLowerCase()
               .localeCompare((optionB?.children ?? "").toLowerCase())
           }
-          placeholder="Select type"
+          placeholder="Chọn hình thức xuất"
           options={typeExport}
           onChange={(value) => {
             if (value === "EXPORT") {
@@ -161,7 +162,7 @@ export default function HeaderTable({ form, updateMode }) {
         ]}
       >
         <Input
-          placeholder="29v3-41065"
+          placeholder="Vd : 29v3-41065"
           disabled={productExportDetails?.status === 4 ? true : false}
         />
       </Form.Item>
@@ -181,8 +182,8 @@ export default function HeaderTable({ form, updateMode }) {
         ]}
         initialValue={
           updateMode
-            ? moment(productExportDetails?.createDate, "YYYY-MM-DD")
-            : moment()
+            ? dayjs(productExportDetails?.createDate, "YYYY-MM-DD")
+            : dayjs()
         }
       >
         <DatePicker

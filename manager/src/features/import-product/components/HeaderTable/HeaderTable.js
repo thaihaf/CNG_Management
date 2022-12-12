@@ -5,7 +5,7 @@ import { getEmployees } from "features/employee-manager/employeeManager";
 import { getMessage, getStatusString } from "helpers/util.helper";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
+import dayjs from "dayjs";
 
 import "./HeaderTable.css";
 import { statusProductImport } from "features/import-product/constants/import-product.constants";
@@ -93,8 +93,8 @@ export default function HeaderTable({ form, updateMode }) {
         ]}
         initialValue={
           updateMode
-            ? moment(productImportDetails?.createDate, "YYYY-MM-DD")
-            : moment()
+            ? dayjs(productImportDetails?.createDate, "YYYY-MM-DD")
+            : dayjs()
         }
       >
         <DatePicker
