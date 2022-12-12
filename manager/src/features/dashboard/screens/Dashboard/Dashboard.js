@@ -19,6 +19,7 @@ import {
   yearDashboardColumnsExport,
   yearExport,
 } from "features/dashboard/constants/dashboard.column";
+import { ContainerOutlined } from "@ant-design/icons";
 const { Title } = Typography;
 
 export default function Dashboard() {
@@ -33,7 +34,6 @@ export default function Dashboard() {
     (state) => state.dashboard.dashboardByYear
   );
   const [activeTab, setActiveTab] = useState();
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleExportExcel = () => {
     const excel = new Excel();

@@ -253,7 +253,8 @@ const ImportWrapper = ({ updateMode }) => {
             productImportDetails?.status !== 2 && (
               <>
                 <Button
-                  type="danger"
+                  danger
+                  type="primary"
                   shape="round"
                   size={"large"}
                   style={{

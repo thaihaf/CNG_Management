@@ -7,139 +7,143 @@ import api from "../api/employee.api";
 export const EMPLOYEES_FEATURE_KEY = EMPLOYEES_KEY;
 
 export const getEmployees = createAsyncThunk(
-     "employee/getEmployees",
-     async () => {
-          const response = await api.getEmployees();
-          return response.data;
-     }
+  "employee/getEmployees",
+  async ({ number, size }, { rejectWithValue }) => {
+    try {
+      const response = await api.getEmployees(number, size);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
 );
 export const createAccEmployee = createAsyncThunk(
-     "employee/createAccEmployee",
-     async ({ data }, { rejectWithValue }) => {
-          try {
-               const response = await api.createAccEmployee(data);
-               return response;
-          } catch (error) {
-               throw rejectWithValue(error);
-          }
-     }
+  "employee/createAccEmployee",
+  async ({ data }, { rejectWithValue }) => {
+    try {
+      const response = await api.createAccEmployee(data);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
 );
 export const getEmployeeDetails = createAsyncThunk(
-     "employee/getEmployeeDetails",
-     async (id) => {
-          const response = await api.getEmployeeDetails(id);
-          return response.data;
-     }
+  "employee/getEmployeeDetails",
+  async (id) => {
+    const response = await api.getEmployeeDetails(id);
+    return response.data;
+  }
 );
 
 export const updateDetails = createAsyncThunk(
-     "employee/updateDetails",
-     async ({ id, data }, { rejectWithValue }) => {
-          try {
-               const response = await api.updateDetails(id, data);
-               return response;
-          } catch (error) {
-               throw rejectWithValue(error);
-          }
-     }
+  "employee/updateDetails",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await api.updateDetails(id, data);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
 );
 export const deleteEmployee = createAsyncThunk(
-     "employee/deleteEmployee",
-     async (id, { rejectWithValue }) => {
-          try {
-               const response = await api.deleteEmployee(id);
-               return response;
-          } catch (error) {
-               throw rejectWithValue(error);
-          }
-     }
+  "employee/deleteEmployee",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.deleteEmployee(id);
+      return response;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
 );
 export const deleteEmployees = createAsyncThunk(
-     "employee/deleteEmployees",
-     async (list, { rejectWithValue }) => {
-          try {
-               list.forEach(async (id) => {
-                    await api.deleteEmployee(id);
-               });
-               return true;
-          } catch (error) {
-               console.log(error);
-               throw rejectWithValue(error);
-          }
-     }
+  "employee/deleteEmployees",
+  async (list, { rejectWithValue }) => {
+    try {
+      list.forEach(async (id) => {
+        await api.deleteEmployee(id);
+      });
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw rejectWithValue(error);
+    }
+  }
 );
 
 export const createDetails = createAsyncThunk(
-     "employee/createDetails",
-     async ({ data }, { rejectWithValue }) => {
-          try {
-               const response = await api.createDetails(data);
-               return response.data;
-          } catch (error) {
-               throw rejectWithValue(error);
-          }
-     }
+  "employee/createDetails",
+  async ({ data }, { rejectWithValue }) => {
+    try {
+      const response = await api.createDetails(data);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
 );
 
 export const getAccounts = createAsyncThunk(
-     "employee/getAccounts",
-     async () => {
-          const response = await api.getAccounts();
-          return response.data;
-     }
+  "employee/getAccounts",
+  async () => {
+    const response = await api.getAccounts();
+    return response.data;
+  }
 );
 
 const initialState = {
-     listEmployees: [],
-     listAccounts: [],
-     totalElements: 0,
-     totalPages: 0,
-     size: 0,
-     dataDetails: null,
-     errorProcess: "",
-     createMode: false,
+  listEmployees: [],
+  listAccounts: [],
+  totalElements: 0,
+  number: 0,
+  size: 0,
+  dataDetails: null,
+  errorProcess: "",
+  createMode: false,
 };
 
 const employeesSlice = createSlice({
-     name: EMPLOYEES_FEATURE_KEY,
-     initialState,
-     reducers: {
-          updateErrorProcess: (state, action) => {
-               state.errorProcess = action.payload;
-          },
-     },
-     extraReducers: {
-          [getEmployees.fulfilled]: (state, action) => {
-               state.listEmployees = action.payload.content;
-               state.totalElements = action.payload.totalElements;
-               state.totalPages = action.payload.totalPages;
-               state.size = action.payload.size;
-          },
-          [createAccEmployee.fulfilled]: (state, action) => {
-               state.errorProcess = "";
-          },
-          [getEmployeeDetails.fulfilled]: (state, action) => {
-               state.dataDetails = action.payload;
-               state.errorProcess = "";
-               state.createMode = false;
-          },
-          [getEmployeeDetails.rejected]: (state, action) => {
-               state.dataDetails = null;
-               state.createMode = true;
-          },
-          [createDetails.fulfilled]: (state, action) => {
-               state.createMode = false;
-          },
-          [getAccounts.fulfilled]: (state, action) => {
-               state.listAccounts = action.payload.content;
-               state.totalElements = action.payload.totalElements;
-               state.totalPages = action.payload.totalPages;
-               state.size = action.payload.size;
-          },
-          ["LOGOUT"]: (state) => {
-               Object.assign(state, initialState);
-          },
-     },
+  name: EMPLOYEES_FEATURE_KEY,
+  initialState,
+  reducers: {
+    updateErrorProcess: (state, action) => {
+      state.errorProcess = action.payload;
+    },
+  },
+  extraReducers: {
+    [getEmployees.fulfilled]: (state, action) => {
+      state.listEmployees = action.payload.content;
+      state.totalElements = action.payload.totalElements;
+      state.number = action.payload.number + 1;
+      state.size = action.payload.size;
+    },
+    [createAccEmployee.fulfilled]: (state, action) => {
+      state.errorProcess = "";
+    },
+    [getEmployeeDetails.fulfilled]: (state, action) => {
+      state.dataDetails = action.payload;
+      state.errorProcess = "";
+      state.createMode = false;
+    },
+    [getEmployeeDetails.rejected]: (state, action) => {
+      state.dataDetails = null;
+      state.createMode = true;
+    },
+    [createDetails.fulfilled]: (state, action) => {
+      state.createMode = false;
+    },
+    [getAccounts.fulfilled]: (state, action) => {
+      state.listAccounts = action.payload.content;
+      state.totalElements = action.payload.totalElements;
+      state.totalPages = action.payload.totalPages;
+      state.size = action.payload.size;
+    },
+    ["LOGOUT"]: (state) => {
+      Object.assign(state, initialState);
+    },
+  },
 });
 
 export const { updateErrorProcess, updateDataDetails } = employeesSlice.actions;

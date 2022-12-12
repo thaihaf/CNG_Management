@@ -71,7 +71,6 @@ const SearchProduct = () => {
         marginRight: "auto",
       }}
       showSearch
-      allowClear
       optionLabelProp="label"
       filterOption={false}
       showArrow={false}

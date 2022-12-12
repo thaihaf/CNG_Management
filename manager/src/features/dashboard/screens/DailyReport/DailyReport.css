@@ -51,11 +51,21 @@
 .daily-report .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
   background: unset;
 }
-.daily-report .ant-table-container .ant-table-content table .ant-table-thead tr th:first-child {
-  border-top-left-radius: 15px !important;
-  border-bottom-left-radius: 15px !important;
+.daily-report .rowClassName1 {
+  background-color: cadetblue;
+  border-radius: 2rem;
+  border-color: chartreuse;
+  border-width: 2rem;
+  border-style: solid;
 }
-.daily-report .ant-table-container .ant-table-content table .ant-table-thead tr th:last-child {
-  border-top-right-radius: 15px;
-  border-bottom-right-radius: 15px;
+.daily-report .rowClassName1 td:first-child {
+  border-top-left-radius: 2rem;
+  border-bottom-left-radius: 2rem;
+}
+.daily-report .rowClassName1 td:last-child {
+  border-top-right-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+.daily-report .ant-table-cell.ant-table-selection-column {
+  border-spacing: 2rem;
 }

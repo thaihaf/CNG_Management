@@ -4,7 +4,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 
-import { SearchOutlined } from "@ant-design/icons";
+import { ContainerOutlined, PoweroffOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
@@ -236,16 +236,17 @@ export default function CustomerDailyList() {
       // ...getColumnSearchProps("id"),
     },
     {
-      title: "Số lượng (m2)",
+      title: () => renderTitle("Số lượng (m2)", "totalSquareMeterExport"),
       dataIndex: "totalSquareMeterExport",
       key: "totalSquareMeterExport",
       align: "center",
       render: (value) => {
-        return <Statistic value={value} precision={0} />;
+        return <Statistic value={value} precision={2} />;
       },
     },
     {
-      title: "Thành tiền (vnđ)",
+      title: () =>
+        renderTitle("Thành tiền (vnđ)", "totalExportOrderPrice", "vnd"),
       dataIndex: "totalExportOrderPrice",
       key: "totalExportOrderPrice",
       align: "center",
@@ -254,7 +255,8 @@ export default function CustomerDailyList() {
       },
     },
     {
-      title: "Tổng lợi nhuận (vnđ)",
+      title: () =>
+        renderTitle("Tổng lợi nhuận (vnđ)", "exportProductRevenue", "vnd"),
       dataIndex: "exportProductRevenue",
       key: "exportProductRevenue",
       align: "center",
@@ -263,6 +265,40 @@ export default function CustomerDailyList() {
       },
     },
   ];
+
+  const renderTitle = (title, value, format) => {
+    let total = listDailyReport.reduce(
+      (accumulator, currentValue) => accumulator + currentValue[value],
+      0
+    );
+
+    if (format === "vnd") {
+      if (typeof Intl === "undefined" || !Intl.NumberFormat) {
+        total = total.toLocaleString("vi-VN", {
+          // style: "currency",
+          currency: "VND",
+        });
+      } else {
+        const nf = Intl.NumberFormat();
+        total = nf.format(total);
+      }
+    } else {
+      total = total !== 0 ? total.toFixed(2) : 0;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          // alignItems: "flex-end",
+        }}
+      >
+        <div>{title}</div>
+        <div style={{ color: "green" }}> Total: {total}</div>
+      </div>
+    );
+  };
 
   const onHandlePagination = (page, size) => {
     setCurrentPage(page);
@@ -356,6 +392,7 @@ export default function CustomerDailyList() {
         h: "center",
         background: "FFC000",
         fontSize: 25,
+        fontName: "SF Mono",
       },
     });
 
@@ -393,9 +430,11 @@ export default function CustomerDailyList() {
         </Title>
 
         <Button
+          loading={isLoading}
           type="primary"
           shape={"round"}
           size={"large"}
+          icon={<ContainerOutlined />}
           onClick={() => handleExportExcel()}
           disabled={listDailyReport.length === 0 ? true : false}
         >
@@ -423,7 +462,7 @@ export default function CustomerDailyList() {
 
         <Table
           rowClassName={() => "rowClassName1"}
-          bordered
+          // bordered
           rowKey={(record) => record.id}
           columns={columns}
           loading={isLoading}

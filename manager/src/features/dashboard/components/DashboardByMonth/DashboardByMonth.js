@@ -290,17 +290,6 @@ export default function DashboardByMonth() {
     },
   ];
 
-  useEffect(() => {
-    setIsLoading(true);
-    dispatch(getDashBoardByMonth(dayjs().year()))
-      .then(() => {
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [dispatch]);
-
   const getData = async (defaultValues) => {
     setIsLoading(true);
     dispatch(
@@ -330,7 +319,7 @@ export default function DashboardByMonth() {
       layout="vertical"
       onFinish={onFinish}
       initialValues={{
-        data: dayjs(dayjs().year(), "YYYY"),
+        data: dayjs(`${dayjs().year()}`, "YYYY"),
       }}
     >
       <Table

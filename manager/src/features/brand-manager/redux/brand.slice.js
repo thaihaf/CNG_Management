@@ -6,11 +6,17 @@ import api from "../api/brand.api";
 
 export const BRANDS_FEATURE_KEY = BRAND_KEY;
 
-export const getBrands = createAsyncThunk("brand/getBrands", async () => {
-  const response = await api.getBrands();
-  console.log(response);
-  return response.data;
-});
+export const getBrands = createAsyncThunk(
+  "brand/getBrands",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await api.getBrands(params);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
 export const getBrandDetails = createAsyncThunk(
   "brand/getBrandDetails",
   async (id) => {
@@ -22,8 +28,6 @@ export const getBrandDetails = createAsyncThunk(
 export const updateDetails = createAsyncThunk(
   "brand/updateDetails",
   async ({ id, data }, { rejectWithValue }) => {
-    console.log(id);
-    console.log(data);
     try {
       const response = await api.updateDetails(id, data);
       return response;
@@ -48,7 +52,6 @@ export const deleteBrands = createAsyncThunk(
   async (list, { rejectWithValue }) => {
     try {
       list.forEach(async (id) => {
-        console.log(id);
         await api.deleteBrand(id);
       });
       return true;
@@ -74,7 +77,7 @@ export const createDetails = createAsyncThunk(
 const initialState = {
   listBrands: [],
   totalElements: 0,
-  totalPages: 0,
+  number: 0,
   size: 0,
   dataDetails: null,
   errorProcess: "",
@@ -93,7 +96,7 @@ const brandSlice = createSlice({
     [getBrands.fulfilled]: (state, action) => {
       state.listBrands = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
+      state.number = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getBrandDetails.fulfilled]: (state, action) => {
