@@ -324,6 +324,7 @@ export default function TableDetails({ form }) {
   return (
     <Table
       size="middle"
+      bordered
       className="listProductDetails"
       columns={productColumns}
       dataSource={[...detailDTOList]}

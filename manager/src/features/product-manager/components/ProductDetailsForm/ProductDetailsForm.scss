@@ -22,10 +22,14 @@
             height: 230px;
             object-fit: contain;
             overflow: hidden;
-            box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px,
-              rgba(0, 0, 0, 0.05) 0px 5px 10px;
             border-radius: 2rem;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+              rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 
+            .ant-image-img {
+              box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+                rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+            }
             .ant-image-mask {
               border-radius: 2rem;
             }
@@ -45,16 +49,14 @@
             text-align: center;
           }
         }
-        .ant-form-item {
-          .ant-upload.ant-upload-select.ant-upload-select-picture-card {
-            width: 230px;
-            height: 230px;
-            border-radius: 2rem;
-            border: none;
-            box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px,
-              rgba(0, 0, 0, 0.05) 0px 5px 10px;
-            margin: 0;
-          }
+        .ant-upload.ant-upload-select {
+          width: 230px;
+          height: 230px;
+          border-radius: 2rem;
+          border: none;
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+            rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+          margin: 0;
         }
       }
 

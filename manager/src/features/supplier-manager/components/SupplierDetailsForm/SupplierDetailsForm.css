@@ -24,7 +24,7 @@
   right: 0;
   margin: 0;
 }
-.details .details__avatar .ant-upload.ant-upload-select-picture-card {
+.details .details__avatar .ant-upload.ant-upload-select {
   width: 5rem;
   height: 5rem;
   padding: 0.5rem 2rem;
@@ -33,7 +33,7 @@
   background-color: #52c41a;
   margin-top: 2rem;
 }
-.details .details__avatar .ant-upload.ant-upload-select-picture-card .ant-upload {
+.details .details__avatar .ant-upload.ant-upload-select .ant-upload {
   color: white;
 }
 .details .list-data {
