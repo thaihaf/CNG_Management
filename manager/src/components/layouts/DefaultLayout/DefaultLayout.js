@@ -24,13 +24,14 @@ import {
   Tabs,
   Tooltip,
   Typography,
-} from 'antd';
+} from "antd";
 import { Footer } from "components";
 
 import "./DefaultLayout.css";
 
 import { siderBarItems } from "constants/items.constants";
 
+import logo from "assets/images/logo.jpg";
 import logo5 from "assets/images/logo5.png";
 import logo3 from "assets/images/logo3.png";
 import logoutIcon from "assets/icons/logout.png";
@@ -125,7 +126,7 @@ const DefaultLayout = ({ children }) => {
   };
 
   return (
-    (<Layout className="defaultLayout">
+    <Layout className="defaultLayout">
       <div className="left-bar" onMouseMove={() => setOpen(true)}></div>
       <FloatButton.BackTop />
       <Drawer
@@ -138,9 +139,9 @@ const DefaultLayout = ({ children }) => {
         <div className="sidebar_children">
           <div className="logo">
             {collapsed ? (
-              <img src={logo3} alt="logo" className="logo3_img" />
+              <img src={logo} alt="logo" className="logo3_img" />
             ) : (
-              <img src={logo5} alt="logo" className="logo5_img" />
+              <img src={logo} alt="logo" className="logo5_img" />
             )}
           </div>
 
@@ -511,7 +512,7 @@ const DefaultLayout = ({ children }) => {
           <Footer className="footer" />
         </Layout>
       </Layout>
-    </Layout>)
+    </Layout>
   );
 };
 
