@@ -8,9 +8,13 @@ export const CUSTOMERS_FEATURE_KEY = CUSTOMER_KEY;
 
 export const getCustomers = createAsyncThunk(
   "customer/getCustomers",
-  async () => {
-    const response = await api.getCustomers();
-    return response.data;
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await api.getCustomers(params);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 export const getCustomerDetails = createAsyncThunk(
@@ -73,9 +77,9 @@ export const createDetails = createAsyncThunk(
 // debt
 export const getDebtCustomers = createAsyncThunk(
   "Customer/getDebtCustomers",
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const response = await api.getDebtCustomers();
+      const response = await api.getDebtCustomers(params);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -132,13 +136,18 @@ export const createDeptCustomer = createAsyncThunk(
 const initialState = {
   listCustomers: [],
   totalElements: 0,
-  totalPages: 0,
+  number: 0,
   size: 0,
   dataDetails: null,
   errorProcess: "",
   createMode: false,
-  listDebtCustomer: [],
-  debtDataDetails: null,
+  debtCustomer: {
+    listDebtCustomer: [],
+    totalElements: 0,
+    number: 0,
+    size: 0,
+    debtDataDetails: null,
+  },
 };
 
 const customerSlice = createSlice({
@@ -149,14 +158,14 @@ const customerSlice = createSlice({
       state.errorProcess = action.payload;
     },
     updateDebtCustomers: (state, action) => {
-      state.listDebtCustomer = action.payload;
+      state.debtCustomer.listDebtCustomer = action.payload;
     },
   },
   extraReducers: {
     [getCustomers.fulfilled]: (state, action) => {
       state.listCustomers = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
+      state.number = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getCustomerDetails.fulfilled]: (state, action) => {
@@ -172,25 +181,29 @@ const customerSlice = createSlice({
     },
     // debt
     [createDeptCustomer.fulfilled]: (state, action) => {
-      state.listDebtCustomer = [...state.listDebtCustomer, action.payload.data];
+      state.debtCustomer.listDebtCustomer = [
+        action.payload.data,
+        ...state.debtCustomer.listDebtCustomer,
+      ];
     },
     [updateDeptCustomer.fulfilled]: (state, action) => {
-      state.listDebtCustomer = state.listDebtCustomer.map((item) => {
-        if (item.id === action.payload.data.id) {
-          return action.payload.data;
-        } else {
-          return item;
-        }
-      });
+      state.debtCustomer.listDebtCustomer =
+        state.debtCustomer.listDebtCustomer.map((item) => {
+          if (item.id === action.payload.data.id) {
+            return action.payload.data;
+          } else {
+            return item;
+          }
+        });
     },
     [getDebtCustomers.fulfilled]: (state, action) => {
-      state.listDebtCustomer = action.payload.content;
-      state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
-      state.size = action.payload.size;
+      state.debtCustomer.listDebtCustomer = action.payload.content;
+      state.debtCustomer.totalElements = action.payload.totalElements;
+      state.debtCustomer.number = action.payload.number + 1;
+      state.debtCustomer.size = action.payload.size;
     },
     [getDeptCustomerDetails.fulfilled]: (state, action) => {
-      state.debtDataDetails = action.payload;
+      state.debtCustomer.debtDataDetails = action.payload;
       state.errorProcess = "";
       state.createMode = false;
     },

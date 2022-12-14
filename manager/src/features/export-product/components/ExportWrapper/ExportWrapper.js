@@ -231,7 +231,8 @@ const ExportWrapper = ({ updateMode }) => {
     const newProductsExport = [
       ...productsExport,
       {
-        id: "TỔNG CỘNG",
+        index: "TỔNG CỘNG",
+        id: "",
         totalSquareMeter: productExportDetails.totalSquareMeterExport,
         totalPrice: productExportDetails.totalExportOrderPrice,
       },
@@ -241,12 +242,15 @@ const ExportWrapper = ({ updateMode }) => {
     excel.setTHeadStyle({
       h: "center",
       v: "center",
+      fontSize: 10,
       fontName: "SF Mono",
     });
     excel.setTBodyStyle({
       h: "center",
       v: "center",
+      fontSize: 10,
       fontName: "SF Mono",
+      border: true,
     });
 
     excel.addCol();
@@ -445,7 +449,7 @@ const ExportWrapper = ({ updateMode }) => {
       },
     });
     excel.drawCell(8, 15, {
-      value: `Tên NH: `,
+      value: `Tên ngân hàng: `,
       hMerge: 2,
       style: {
         fontSize: 10,
@@ -479,7 +483,6 @@ const ExportWrapper = ({ updateMode }) => {
     });
 
     excel.addRow();
-    excel.addCol();
     excel.addColumns(buildExportColumns);
     excel.addDataSource(newProductsExport);
 
@@ -490,8 +493,19 @@ const ExportWrapper = ({ updateMode }) => {
       style: {
         v: "center",
         h: "left",
-        fontSize: 11,
         i: true,
+        fontSize: 10,
+        fontName: "SF Mono",
+      },
+    });
+    excel.drawCell(2, excel.currentRow, {
+      hMerge: 8,
+      value: `Biển số xe: ${productExportDetails.licensePlates}`,
+      style: {
+        v: "center",
+        h: "left",
+        i: true,
+        fontSize: 10,
         fontName: "SF Mono",
       },
     });

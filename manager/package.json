@@ -13,14 +13,12 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.0.0",
-    "antd-table-saveas-excel": "^2.2.1",
-    "surge": "^0.23.1",
-    "qs": "^6.11.0",
     "antd-img-crop": "^4.2.8",
+    "antd-table-saveas-excel": "^2.2.1",
     "axios": "^1.0.0",
     "axios-auth-refresh": "^3.3.3",
     "classnames": "^2.3.2",
-    "dayjs": "^1.11.6",
+    "dayjs": "^1.11.7",
     "eslint-visitor-keys": "^3.3.0",
     "firebase": "^9.12.1",
     "i18next": "^21.9.2",
@@ -36,7 +34,9 @@
     "lodash.isequal": "^4.5.0",
     "lodash.snakecase": "^4.1.1",
     "lodash.startswith": "^4.2.1",
+    "moment": "^2.29.4",
     "node-sass": "^7.0.3",
+    "qs": "^6.11.0",
     "query-string": "^7.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -51,6 +51,7 @@
     "redux-persist-cookie-storage": "^1.0.0",
     "redux-thunk": "^2.4.1",
     "styled-components": "^5.3.6",
+    "surge": "^0.23.1",
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.4"
   },
@@ -86,5 +87,8 @@
   },
   "resolutions": {
     "react-scripts/eslint-webpack-plugin": "2.3.0"
+  },
+  "devDependencies": {
+    "@ant-design/moment-webpack-plugin": "^0.0.3"
   }
 }

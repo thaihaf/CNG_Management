@@ -8,10 +8,13 @@ export const CATEGORIES_FEATURE_KEY = CATEGORY_KEY;
 
 export const getCategories = createAsyncThunk(
   "category/getCategories",
-  async () => {
-    const response = await api.getCategories();
-    console.log(response);
-    return response.data;
+  async (params, { rejectWithValue }) => {
+    try {
+       const response = await api.getCategories(params);
+       return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 export const getActiveCategories = createAsyncThunk(

@@ -27,7 +27,7 @@
 }
 .details .details__left .details__avatar .item_choose-avt {
   position: absolute;
-  bottom: 0;
+  top: 0;
   right: 0;
   margin: 0;
 }
@@ -58,7 +58,7 @@
   margin-top: 1rem;
   gap: 0.5rem;
 }
-.details .details__left .ant-upload.ant-upload-select-picture-card {
+.details .details__left .ant-upload.ant-upload-select {
   width: 5rem;
   height: 5rem;
   padding: 0.5rem 2rem;
@@ -67,7 +67,7 @@
   background-color: #52c41a;
   margin-top: 2rem;
 }
-.details .details__left .ant-upload.ant-upload-select-picture-card .ant-upload {
+.details .details__left .ant-upload.ant-upload-select .ant-upload {
   color: white;
 }
 .details .details__right {

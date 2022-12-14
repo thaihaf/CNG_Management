@@ -53,7 +53,7 @@ import {
 const { Title, Text } = Typography;
 const { Option } = Select;
 export default function CustomerList() {
-  const { listCustomers, totalElements, totalPages, size } = useSelector(
+  const { listCustomers, totalElements, number, size } = useSelector(
     (state) => state.customer
   );
   const { dataDetails, createMode } = useSelector((state) => state.customer);
@@ -65,21 +65,30 @@ export default function CustomerList() {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const [componentDisabled, setComponentDisabled] = useState(true);
   const [modal1Open, setModal1Open] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const [imgURL, setImgUrl] = useState(null);
+
   const [searchText, setSearchText] = useState("");
-  const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const searchInput = useRef(null);
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
+
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: CustomerManagerPaths.CUSTOMER_LIST,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        number: page,
+      }),
+    });
   };
 
   const defaultValues = {
@@ -100,47 +109,6 @@ export default function CustomerList() {
     });
   };
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: "odd",
-        text: "Chọn hàng lẻ",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: "even",
-        text: "Chọn hàng chẵn",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
-  };
-
   const onRowDelete = (record) => {
     Modal.confirm({
       title: "Xác nhận",
@@ -150,9 +118,7 @@ export default function CustomerList() {
       cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
-        dispatch(
-          record ? deleteCustomer(record.id) : deleteCustomers(selectedRowKeys)
-        )
+        dispatch(deleteCustomer(record.id))
           .then(unwrapResult)
           .then((res) => {
             console.log(res);
@@ -186,8 +152,12 @@ export default function CustomerList() {
 
   useEffect(() => {
     const query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
+    }
+    
     setIsLoading(true);
-    dispatch(getCustomers())
+    dispatch(getCustomers(query))
       .then(unwrapResult)
       .then(() => setIsLoading(false));
   }, [dispatch, location]);
@@ -197,12 +167,10 @@ export default function CustomerList() {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
-
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -297,7 +265,7 @@ export default function CustomerList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -308,7 +276,7 @@ export default function CustomerList() {
       dataIndex: "avatar",
       key: "avatar",
       align: "center",
-      width: "10%",
+      align: "center",
       render: (_, record) => (
         <Avatar size={50} src={record.fileAttachDTO.filePath} />
       ),
@@ -317,7 +285,7 @@ export default function CustomerList() {
       title: "Tên cửa hàng",
       dataIndex: "shopName",
       key: "shopName",
-      width: "20%",
+      align: "center",
       ...getColumnSearchProps("shopName"),
       sorter: (a, b) => a.shopName - b.shopName,
       sortDirections: ["descend", "ascend"],
@@ -326,7 +294,7 @@ export default function CustomerList() {
       title: "Họ tên",
       dataIndex: "firstName",
       key: "firstName",
-      width: "20%",
+      align: "center",
       ...getColumnSearchProps("firstName"),
       sorter: (a, b) => a.firstName.length - b.firstName.length,
       sortDirections: ["descend", "ascend"],
@@ -335,7 +303,7 @@ export default function CustomerList() {
       title: "Tên đệm",
       dataIndex: "lastName",
       key: "lastName",
-      width: "20%",
+      align: "center",
       ...getColumnSearchProps("lastName"),
       sorter: (a, b) => a.lastName.length - b.lastName.length,
       sortDirections: ["descend", "ascend"],
@@ -344,13 +312,14 @@ export default function CustomerList() {
       title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
-      width: "20%",
+      align: "center",
       ...getColumnSearchProps("phoneNumber"),
     },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
+      align: "center",
       filters: [
         {
           text: "Hoạt động",
@@ -375,7 +344,6 @@ export default function CustomerList() {
           </Tag>
         );
       },
-      width: "10%",
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend", "ascend"],
     },
@@ -383,24 +351,23 @@ export default function CustomerList() {
       title: "Hành động",
       dataIndex: "operation",
       key: "operation",
+      align: "center",
       render: (_, record) => (
         <Dropdown
-          overlay={
-            <Menu
-              items={[
-                {
-                  key: 1,
-                  label: "Xem chi tiết và Chỉnh sửa",
-                  onClick: () => onRowDetails(record),
-                },
-                {
-                  key: 2,
-                  label: "Xoá Khách hàng",
-                  onClick: () => onRowDelete(record),
-                },
-              ]}
-            />
-          }
+          menu={{
+            items: [
+              {
+                key: 1,
+                label: "Xem chi tiết và Chỉnh sửa",
+                onClick: () => onRowDetails(record),
+              },
+              {
+                key: 2,
+                label: "Xoá Khách hàng",
+                onClick: () => onRowDelete(record),
+              },
+            ],
+          }}
         >
           <a>
             Nhiều hơn <DownOutlined />
@@ -409,7 +376,6 @@ export default function CustomerList() {
       ),
     },
   ];
-  const hasSelected = selectedRowKeys.length > 0;
 
   const onSubmitCreate = async ({
     apartmentNumber,
@@ -456,11 +422,6 @@ export default function CustomerList() {
   };
 
   useEffect(() => {
-    dispatch(getProvinces());
-    // setComponentDisabled(createMode);
-  }, [dispatch]);
-
-  useEffect(() => {
     form.setFieldsValue(initialValues);
     if (!createMode && initialValues !== null) {
       setImgUrl(initialValues.avatarSupplier);
@@ -472,23 +433,6 @@ export default function CustomerList() {
       <div className="top">
         <Title level={2}>Danh sách Khách hàng</Title>
         <div>
-          <span
-            style={{
-              marginRight: 9,
-            }}
-          >
-            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
-          </span>
-          <Button
-            className="btnDelete"
-            onClick={() => onRowDelete()}
-            disabled={!hasSelected}
-            loading={isLoading}
-            shape="round"
-            icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
-          >
-            Xoá bỏ
-          </Button>
           <Button
             type="primary"
             shape={"round"}
@@ -576,7 +520,7 @@ export default function CustomerList() {
                     },
                     {
                       pattern:
-                      /^[a-zA-ZaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,10}$/,
+                        /^[a-zA-ZaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,10}$/,
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
@@ -621,7 +565,7 @@ export default function CustomerList() {
                     },
                     {
                       pattern:
-                      /^[a-zA-ZaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,50}$/,
+                        /^[a-zA-ZaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,50}$/,
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
@@ -969,25 +913,31 @@ export default function CustomerList() {
         </div>
       </div>
       <Table
-        rowKey="id"
+        rowKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
-        dataSource={listCustomers}
+        dataSource={[...listCustomers]}
         pagination={
-          listCustomers.length !== 0
+          totalElements !== 0
             ? {
+                current: number,
+                pageSize: size,
+                total: totalElements,
                 showSizeChanger: true,
+                showQuickJumper: true,
                 position: ["bottomCenter"],
-                size: "mặc định",
-                pageSize: pageSize,
-                current: currentPage,
-                totalElements,
+                pageSizeOptions: ["10", "20", "50", "100"],
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
                 onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "6", "10"],
+                locale: {
+                  jump_to: "",
+                  page: "trang",
+                  items_per_page: "/ trang",
+                },
               }
             : false
         }
-        rowSelection={rowSelection}
       />
     </div>
   );

@@ -3,6 +3,24 @@ export const buildExportColumns = [
     title: "STT",
     dataIndex: "index",
     key: "index",
+    render: (value, record) => {
+      if (record.id !== "") {
+        return {
+          children: value,
+        };
+      }
+      return {
+        children: value,
+        __style__: {
+          bold: true,
+          fontSize: 11,
+          width: 250,
+        },
+        props: {
+          colSpan: 2,
+        },
+      };
+    },
   },
   {
     title: "TÊN HÀNG",
@@ -16,19 +34,9 @@ export const buildExportColumns = [
           : record.productDetailDTO?.productId ??
             record.productDetailDTO[0].productId;
 
-      if (record.index) {
-        return {
-          children: id,
-          __style__: {
-            width: 250,
-          },
-        };
-      }
       return {
         children: id,
         __style__: {
-          bold: true,
-          fontSize: 11,
           width: 250,
         },
       };
@@ -44,7 +52,7 @@ export const buildExportColumns = [
     dataIndex: "totalSquareMeter",
     key: "totalSquareMeter",
     render: (value, record) => {
-      if (record.index) {
+      if (record.id !== "") {
         return {
           children: value,
           __style__: {
@@ -77,13 +85,13 @@ export const buildExportColumns = [
     },
   },
   {
-    title: "THÀNH TIỀN",
+    title: "THÀNH TIỀN (vnđ)",
     dataIndex: "totalPrice",
     key: "totalPrice",
     __numFmt__: "#,##0",
     width: 250,
     render: (value, record) => {
-      if (record.index) {
+      if (record.id !== "") {
         return {
           children: value,
           __style__: {

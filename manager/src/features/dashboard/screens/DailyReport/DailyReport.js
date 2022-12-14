@@ -462,7 +462,6 @@ export default function CustomerDailyList() {
 
         <Table
           rowClassName={() => "rowClassName1"}
-          // bordered
           rowKey={(record) => record.id}
           columns={columns}
           loading={isLoading}
