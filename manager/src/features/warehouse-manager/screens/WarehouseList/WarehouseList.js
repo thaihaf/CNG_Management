@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import dayjs from "dayjs";
 import queryString from "query-string";
 import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { DownOutlined } from "@ant-design/icons";
-import ImgCrop from "antd-img-crop";
 import {
   DeleteTwoTone,
   ExclamationCircleOutlined,
@@ -46,7 +44,7 @@ import {
 const { Title, Text } = Typography;
 const { Option } = Select;
 export default function WarehouseList() {
-  const { listWarehouses, totalElements, totalPages, size } = useSelector(
+  const { listWarehouses, totalElements, number, size } = useSelector(
     (state) => state.warehouse
   );
   const { dataDetails, createMode } = useSelector((state) => state.warehouse);
@@ -58,68 +56,28 @@ export default function WarehouseList() {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const [componentDisabled, setComponentDisabled] = useState(true);
   const [modal1Open, setModal1Open] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [imgURL, setImgUrl] = useState(null);
+
   const [searchText, setSearchText] = useState("");
-  const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const searchInput = useRef(null);
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
-  };
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
 
-  const defaultValues = {
-    status: 0,
-    gender: true,
-  };
-  const initialValues = createMode ? defaultValues : dataDetails;
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: "odd",
-        text: "Select Odd Row",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: "even",
-        text: "Select Even Row",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
+    history.push({
+      pathname: WarehouseManagerPaths.WAREHOUSE_LIST,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        number: page,
+      }),
+    });
   };
 
   const onRowDelete = (record) => {
@@ -131,11 +89,7 @@ export default function WarehouseList() {
       cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
-        dispatch(
-          record
-            ? deleteWarehouse(record.id)
-            : deleteWarehouses(selectedRowKeys)
-        )
+        dispatch(deleteWarehouse(record.id))
           .then(unwrapResult)
           .then((res) => {
             console.log(res);
@@ -169,25 +123,15 @@ export default function WarehouseList() {
     );
   };
 
-  useEffect(() => {
-    const query = queryString.parse(location.search);
-    setIsLoading(true);
-    dispatch(getWarehouses())
-      .then(unwrapResult)
-      .then(() => setIsLoading(false));
-  }, [dispatch, location]);
-
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
-
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -282,7 +226,7 @@ export default function WarehouseList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -292,28 +236,29 @@ export default function WarehouseList() {
       title: "Tên Kho",
       dataIndex: "warehouseName",
       key: "warehouseName",
-      width: "20%",
+      align: "center",
       ...getColumnSearchProps("warehouseName"),
       sorter: (a, b) => a.warehouseName - b.warehouseName,
-      sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: "Ghi chú",
-      dataIndex: "noteWarehouse",
-      key: "noteWarehouse",
-      width: "20%",
-      ...getColumnSearchProps("noteWarehouse"),
-      sorter: (a, b) => a.noteWarehouse - b.noteWarehouse,
       sortDirections: ["descend", "ascend"],
     },
     {
       title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
-      width: "20%",
+      align: "center",
       ...getColumnSearchProps("phoneNumber"),
       sorter: (a, b) => a.phoneNumber.length - b.phoneNumber.length,
       sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Ghi chú",
+      dataIndex: "noteWarehouse",
+      key: "noteWarehouse",
+      align: "center",
+      ...getColumnSearchProps("noteWarehouse"),
+      sorter: (a, b) => a.noteWarehouse - b.noteWarehouse,
+      sortDirections: ["descend", "ascend"],
+      render: (value, record, index) => (value === "" || !value ? "--" : value),
     },
     {
       title: "Trạng thái",
@@ -343,7 +288,7 @@ export default function WarehouseList() {
           </Tag>
         );
       },
-      width: "10%",
+      align: "center",
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend", "ascend"],
     },
@@ -351,24 +296,23 @@ export default function WarehouseList() {
       title: "Hành động",
       dataIndex: "operation",
       key: "operation",
+      align: "center",
       render: (_, record) => (
         <Dropdown
-          overlay={
-            <Menu
-              items={[
-                {
-                  key: 1,
-                  label: "Xem chi tiết và Cập nhật",
-                  onClick: () => onRowDetails(record),
-                },
-                {
-                  key: 2,
-                  label: "Xoá Kho",
-                  onClick: () => onRowDelete(record),
-                },
-              ]}
-            />
-          }
+          menu={{
+            items: [
+              {
+                key: 1,
+                label: "Xem chi tiết và Cập nhật",
+                onClick: () => onRowDetails(record),
+              },
+              {
+                key: 2,
+                label: "Xoá Kho",
+                onClick: () => onRowDelete(record),
+              },
+            ],
+          }}
         >
           <a>
             Xem thêm <DownOutlined />
@@ -377,7 +321,6 @@ export default function WarehouseList() {
       ),
     },
   ];
-  const hasSelected = selectedRowKeys.length > 0;
 
   const onSubmitCreate = async ({
     apartmentNumber,
@@ -419,31 +362,21 @@ export default function WarehouseList() {
   };
 
   useEffect(() => {
-    dispatch(getProvinces());
-  }, [dispatch]);
+    const query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
+    }
+    setIsLoading(true);
+    dispatch(getWarehouses(query))
+      .then(unwrapResult)
+      .then(() => setIsLoading(false));
+  }, [dispatch, location]);
 
   return (
     <div className="employee-list">
       <div className="top">
         <Title level={2}>Danh sách Kho</Title>
         <div>
-          <span
-            style={{
-              marginRight: 9,
-            }}
-          >
-            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
-          </span>
-          <Button
-            className="btnDelete"
-            onClick={() => onRowDelete()}
-            disabled={!hasSelected}
-            loading={isLoading}
-            shape="round"
-            icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
-          >
-            Xoá bỏ
-          </Button>
           <Button
             type="primary"
             shape={"round"}
@@ -783,25 +716,31 @@ export default function WarehouseList() {
         </div>
       </div>
       <Table
-        rowKey="id"
+        rowKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
-        dataSource={listWarehouses}
+        dataSource={[...listWarehouses]}
         pagination={
-          listWarehouses.length !== 0
+          totalElements !== 0
             ? {
+                current: number,
+                pageSize: size,
+                total: totalElements,
                 showSizeChanger: true,
+                showQuickJumper: true,
                 position: ["bottomCenter"],
-                size: "default",
-                pageSize: pageSize,
-                current: currentPage,
-                totalElements,
+                pageSizeOptions: ["10", "20", "50", "100"],
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
                 onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "6", "10"],
+                locale: {
+                  jump_to: "",
+                  page: "trang",
+                  items_per_page: "/ trang",
+                },
               }
             : false
         }
-        rowSelection={rowSelection}
       />
     </div>
   );

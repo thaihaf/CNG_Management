@@ -8,9 +8,9 @@ export const EMPLOYEES_FEATURE_KEY = EMPLOYEES_KEY;
 
 export const getEmployees = createAsyncThunk(
   "employee/getEmployees",
-  async ({ number, size }, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const response = await api.getEmployees(number, size);
+      const response = await api.getEmployees(params);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -87,9 +87,13 @@ export const createDetails = createAsyncThunk(
 
 export const getAccounts = createAsyncThunk(
   "employee/getAccounts",
-  async () => {
-    const response = await api.getAccounts();
-    return response.data;
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await api.getAccounts(params);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 
@@ -137,7 +141,7 @@ const employeesSlice = createSlice({
     [getAccounts.fulfilled]: (state, action) => {
       state.listAccounts = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
+      state.number = action.payload.number + 1;
       state.size = action.payload.size;
     },
     ["LOGOUT"]: (state) => {

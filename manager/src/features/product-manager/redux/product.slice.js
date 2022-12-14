@@ -6,10 +6,17 @@ import api from "../api/product.api";
 
 export const PRODUCT_FEATURE_KEY = PRODUCT_KEY;
 
-export const getProducts = createAsyncThunk("product/getProducts", async () => {
-  const response = await api.getProducts();
-  return response.data;
-});
+export const getProducts = createAsyncThunk(
+  "product/getProducts",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await api.getProducts(params);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
 export const getDetailsProduct = createAsyncThunk(
   "product/getDetailsProduct",
   async (id, { rejectWithValue }) => {
@@ -103,7 +110,7 @@ export const deleteDetailsProduct = createAsyncThunk(
 const initialState = {
   listProducts: [],
   totalElements: 0,
-  totalPages: 0,
+  number: 0,
   size: 0,
   errorProcess: "",
   productDetails: null,
@@ -125,7 +132,7 @@ const productSlice = createSlice({
     [getProducts.fulfilled]: (state, action) => {
       state.listProducts = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
+      state.number = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getDetailsProduct.fulfilled]: (state, action) => {

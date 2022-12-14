@@ -19,13 +19,7 @@ export default function SupplierDetails() {
   useEffect(() => {
     dispatch(getSupplierDetails(supplierId))
       .then(unwrapResult)
-      .then((res) => {
-        dispatch(getDebtSuppliers())
-          .then(() => {
-            setIsLoading(false);
-          });
-      })
-      .catch((err) => {
+      .then(() => {
         setIsLoading(false);
       });
   }, [dispatch, supplierId]);

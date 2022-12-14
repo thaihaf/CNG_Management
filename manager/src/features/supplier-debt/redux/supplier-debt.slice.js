@@ -8,9 +8,9 @@ export const SUPPLIER_DEBT_FEATURE_KEY = SUPPLIER_DEBT_KEY;
 
 export const getSupplierDebts = createAsyncThunk(
   "product/getSupplierDebts",
-  async ({ startDate, endDate }, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const response = await api.getSupplierDebts(startDate, endDate);
+      const response = await api.getSupplierDebts(params);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -32,14 +32,14 @@ export const getSupplierDebtDetails = createAsyncThunk(
 const initialState = {
   listSupplierDebt: [],
   totalElements: 0,
-  totalPages: 0,
+  number: 0,
   size: 0,
   errorProcess: "",
   supplierDebtDetails: null,
   debtMoney: {
     listDebtMoney: [],
     totalElements: 0,
-    totalPages: 0,
+    number: 0,
     size: 0,
   },
 };
@@ -59,16 +59,16 @@ const supplierDebtSlice = createSlice({
     [getSupplierDebts.fulfilled]: (state, action) => {
       state.listSupplierDebt = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
+      state.number = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getSupplierDebtDetails.fulfilled]: (state, action) => {
       const debtMoneyOb = action.payload.managementDebtMoneyDetailDTOList;
-      
+
       state.supplierDebtDetails = action.payload;
       state.debtMoney.listDebtMoney = debtMoneyOb.content;
       state.debtMoney.totalElements = debtMoneyOb.totalElements;
-      state.debtMoney.totalPages = debtMoneyOb.totalPages;
+      state.debtMoney.number = debtMoneyOb.number + 1;
       state.debtMoney.size = debtMoneyOb.size;
     },
     ["LOGOUT"]: (state) => {

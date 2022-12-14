@@ -19,17 +19,20 @@ import {
   Tag,
   Typography,
 } from "antd";
-import { getAccounts } from "features/employee-manager/employeeManager";
 
 import "../EmployeeList/EmployeeList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
-import { createAccEmployee } from "features/employee-manager/employeeManager";
+import {
+  createAccEmployee,
+  EmployeeManagerPaths,
+  getAccounts,
+} from "features/employee-manager/employeeManager";
 const { Title, Text } = Typography;
 
 export default function AccountList() {
-  const { listAccounts, totalElements, totalPages, size } = useSelector(
+  const { listAccounts, totalElements, number, size } = useSelector(
     (state) => state.employee
   );
   const history = useHistory();
@@ -46,15 +49,31 @@ export default function AccountList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(2);
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
+
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: EmployeeManagerPaths.ACCOUNT_LIST,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        number: page,
+      }),
+    });
   };
 
   useEffect(() => {
     const query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
+    }
+
     setIsLoading(true);
-    dispatch(getAccounts())
+    dispatch(getAccounts(query))
       .then(unwrapResult)
       .then(() => setIsLoading(false));
   }, [dispatch, location]);
@@ -64,12 +83,10 @@ export default function AccountList() {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
-
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -164,7 +181,7 @@ export default function AccountList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -174,6 +191,7 @@ export default function AccountList() {
       title: "Tên đăng nhập",
       dataIndex: "username",
       key: "username",
+      align: "center",
       sorter: (a, b) => a.username.length - b.username.length,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("username"),
@@ -182,6 +200,7 @@ export default function AccountList() {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      align: "center",
       sorter: (a, b) => a.email.length - b.email.length,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("email"),
@@ -190,6 +209,7 @@ export default function AccountList() {
       title: "Vai trò",
       dataIndex: "role",
       key: "role",
+      align: "center",
       filters: [
         {
           text: "Quản lý",
@@ -210,6 +230,7 @@ export default function AccountList() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
+      align: "center",
       filters: [
         {
           text: "Hoạt động",
@@ -500,24 +521,31 @@ export default function AccountList() {
         </Modal>
       </div>
       <Table
-        rowKey="id"
+        rowKey={(record) => record.id}
         columns={columns}
-        dataSource={listAccounts}
+        loading={isLoading}
+        dataSource={[...listAccounts]}
         pagination={
-          listAccounts.length !== 0
+          totalElements !== 0
             ? {
-                showSizeChanger: true,
-                position: ["bottomCenter"],
-                size: "mặc địng",
-                pageSize: pageSize,
-                current: currentPage,
+                current: number,
+                pageSize: size,
                 total: totalElements,
+                showSizeChanger: true,
+                showQuickJumper: true,
+                position: ["bottomCenter"],
+                pageSizeOptions: ["10", "20", "50", "100"],
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
                 onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "4", "6"],
+                locale: {
+                  jump_to: "",
+                  page: "trang",
+                  items_per_page: "/ trang",
+                },
               }
             : false
         }
-        loading={isLoading}
       />
     </div>
   );

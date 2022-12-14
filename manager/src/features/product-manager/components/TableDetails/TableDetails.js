@@ -36,7 +36,7 @@ import "./TableDetails.css";
 import DetailsModal from "../DetailsModal/DetailsModal";
 import {
   deleteDetailsProduct,
-  updateProductDetails,         
+  updateProductDetails,
 } from "features/product-manager/productManager";
 import { unwrapResult } from "@reduxjs/toolkit";
 
@@ -44,7 +44,6 @@ const { Option } = Select;
 const { Text, Title } = Typography;
 
 export default function TableDetails({ form }) {
-  const { listWarehouses } = useSelector((state) => state.warehouse);
   const { productDetails, detailDTOList } = useSelector(
     (state) => state.product
   );
@@ -235,9 +234,9 @@ export default function TableDetails({ form }) {
     });
   }, [dispatch, detailDTOList, productDetails]);
 
-  const productColumns = [
+  const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -326,7 +325,7 @@ export default function TableDetails({ form }) {
       size="middle"
       bordered
       className="listProductDetails"
-      columns={productColumns}
+      columns={columns}
       dataSource={[...detailDTOList]}
       rowKey={(record) => record.id}
       loading={isLoading}
@@ -399,20 +398,7 @@ export default function TableDetails({ form }) {
           </Tooltip>
         ),
       }}
-      pagination={
-        detailDTOList.length !== 0
-          ? {
-              showSizeChanger: true,
-              position: ["bottomCenter"],
-              size: "default",
-              pageSize: pageSize,
-              current: currentPage,
-              total: detailDTOList.length,
-              onChange: (page, size) => onHandlePagination(page, size),
-              pageSizeOptions: ["2", "4", "10"],
-            }
-          : false
-      }
+      pagination={false}
     />
   );
 }

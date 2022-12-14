@@ -1,20 +1,20 @@
 import { api } from "api/api";
 import { CustomerEndPoints } from "../customerManager";
 
-const getCustomers = () => {
+const getCustomers = (params) => {
   const url = CustomerEndPoints.CUSTOMER_MANAGER;
-  return api.get(url);
+  return api.get(url, { params });
 };
 const createDetails = (data) => {
   const url = CustomerEndPoints.CUSTOMER_MANAGER;
   return api.post(url, data);
 };
-const getCustomerDetails = (id) => {
+const getCustomerDetails = (id, params) => {
   const url = CustomerEndPoints.CUSTOMER_DETAIL.replace(
     ":customerId",
     id || ""
   );
-  return api.get(url);
+  return api.get(url, { params });
 };
 const updateDetails = (id, data) => {
   const url = CustomerEndPoints.CUSTOMER_DETAIL.replace(
@@ -32,9 +32,9 @@ const deleteCustomer = (id) => {
 };
 
 // debt
-const getDebtCustomers = () => {
+const getDebtCustomers = (params) => {
   const url = CustomerEndPoints.DEBT_MANAGER;
-  return api.get(url);
+  return api.get(url, { params });
 };
 const getDeptCustomerDetails = (id) => {
   const url = CustomerEndPoints.DEBT_MANAGER_DETAILS.replace(":id", id);
@@ -42,7 +42,7 @@ const getDeptCustomerDetails = (id) => {
 };
 const createDeptCustomer = (data) => {
   const url = CustomerEndPoints.DEBT_MANAGER;
-  console.log(data)
+  console.log(data);
   return api.post(url, data);
 };
 const updateDeptCustomer = (id, data) => {

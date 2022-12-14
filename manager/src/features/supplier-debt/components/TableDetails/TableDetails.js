@@ -24,7 +24,7 @@ const { Option } = Select;
 const { Text, Title } = Typography;
 
 export default function TableDetails({ form }) {
-  const { listDebtMoney, totalElements, totalPages, size } = useSelector(
+  const { listDebtMoney, totalElements, number, size } = useSelector(
     (state) => state.supplierDebt.debtMoney
   );
 
@@ -166,9 +166,9 @@ export default function TableDetails({ form }) {
       ),
   });
 
-  const productColumns = [
+  const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -257,7 +257,7 @@ export default function TableDetails({ form }) {
     <Table
       size="middle"
       className="listProductDetails"
-      columns={productColumns}
+      columns={columns}
       dataSource={[...listDebtMoney]}
       rowKey={(record) => record.id}
       loading={isLoading}
@@ -265,14 +265,21 @@ export default function TableDetails({ form }) {
       pagination={
         totalElements !== 0
           ? {
-              showSizeChanger: true,
-              position: ["bottomCenter"],
-              size: "default",
+              current: number,
               pageSize: size,
-              current: currentPage,
               total: totalElements,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              position: ["bottomCenter"],
+              pageSizeOptions: ["10", "20", "50", "100"],
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
               onChange: (page, size) => onHandlePagination(page, size),
-              pageSizeOptions: ["2", "4", "10"],
+              locale: {
+                jump_to: "",
+                page: "trang",
+                items_per_page: "/ trang",
+              },
             }
           : false
       }

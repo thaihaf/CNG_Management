@@ -3,6 +3,7 @@ import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
+import queryString from "query-string";
 
 import { SearchOutlined } from "@ant-design/icons";
 import {
@@ -32,7 +33,7 @@ import { ActionsModal } from "features/product-manager/components";
 const { Title, Text } = Typography;
 
 export default function ProductList() {
-  const { listProducts, totalElements, totalPages, size } = useSelector(
+  const { listProducts, totalElements, number, size } = useSelector(
     (state) => state.product
   );
   const { listActiveCategories } = useSelector((state) => state.category);
@@ -41,8 +42,6 @@ export default function ProductList() {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -162,7 +161,7 @@ export default function ProductList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -188,6 +187,7 @@ export default function ProductList() {
       title: "Mã sản phẩm",
       dataIndex: "id",
       key: "id",
+      align: "center",
       sorter: (a, b) => a.id > b.id,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("id"),
@@ -196,6 +196,7 @@ export default function ProductList() {
       title: "Màu sản phẩm",
       dataIndex: "color",
       key: "color",
+      align: "center",
       sorter: (a, b) => a.color > b.color,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("color"),
@@ -204,6 +205,7 @@ export default function ProductList() {
       title: "Nơi sản xuất",
       dataIndex: "origin",
       key: "origin",
+      align: "center",
       ...getColumnSearchProps("origin"),
     },
     {
@@ -237,6 +239,7 @@ export default function ProductList() {
       title: "Tên chức năng",
       dataIndex: "categoriesName",
       key: "categoriesName",
+      align: "center",
       render: (_, { categoryDTO }) => (
         <>
           {categoryDTO.map((c) => {
@@ -263,6 +266,7 @@ export default function ProductList() {
       title: "Tên nhãn hàng",
       dataIndex: "brandDTO",
       key: "brandName",
+      align: "center",
       ...getColumnSearchProps("brandDTO", "brandName"),
       render: (_, { brandDTO }) => (
         <Tag color="blue" key={brandDTO.id}>
@@ -274,6 +278,7 @@ export default function ProductList() {
       title: "Tên nhà cung cấp",
       dataIndex: "supplierDTO",
       key: "supplierName",
+      align: "center",
       ...getColumnSearchProps("supplierDTO", "supplierName"),
       render: (_, { supplierDTO }) => (
         <Tag color="blue" key={supplierDTO?.id}>
@@ -315,16 +320,37 @@ export default function ProductList() {
     },
   ];
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
-  };
-  useEffect(() => {
+  const onHandlePagination = (pageCurrent, pageSize) => {
     setIsLoading(true);
-    dispatch(getProducts())
+
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: ProductManagerPaths.PRODUCT_MANAGER,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        number: page,
+      }),
+    });
+  };
+
+  useEffect(() => {
+    let query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
+    }
+
+    setIsLoading(true);
+    dispatch(getProducts(query))
       .then(unwrapResult)
-      .then(() => setIsLoading(false));
-    dispatch(getActiveCategories());
+      .then(() => {
+        dispatch(getActiveCategories()).then(() => {
+          setIsLoading(false);
+        });
+      });
   }, [dispatch, location]);
 
   return (
@@ -343,21 +369,28 @@ export default function ProductList() {
       </div>
 
       <Table
-        rowKey="id"
+        owKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
-        dataSource={listProducts}
+        dataSource={[...listProducts]}
         pagination={
-          listProducts.length !== 0
+          totalElements !== 0
             ? {
+                current: number,
+                pageSize: size,
+                total: totalElements,
                 showSizeChanger: true,
+                showQuickJumper: true,
                 position: ["bottomCenter"],
-                size: "default",
-                pageSize: pageSize,
-                current: currentPage,
-                totalElements,
+                pageSizeOptions: ["10", "20", "50", "100"],
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
                 onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "4", "6"],
+                locale: {
+                  jump_to: "",
+                  page: "trang",
+                  items_per_page: "/ trang",
+                },
               }
             : false
         }

@@ -1,9 +1,9 @@
 import { api } from "api/api";
 import { ProductEndPoints } from "../productManager";
 
-const getProducts = () => {
+const getProducts = (params) => {
   const url = ProductEndPoints.PRODUCT_MANAGER;
-  return api.get(url);
+  return api.get(url, { params });
 };
 const createProduct = (data) => {
   const url = ProductEndPoints.PRODUCT_MANAGER;

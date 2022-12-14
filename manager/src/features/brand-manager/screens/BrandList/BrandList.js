@@ -52,17 +52,15 @@ export default function BrandList() {
   const { listActiveSuppliers } = useSelector((state) => state.supplier);
 
   const history = useHistory();
-  const params = useParams();
   const location = useLocation();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   const [modal1Open, setModal1Open] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchText, setSearchText] = useState("");
 
+  const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const searchInput = useRef(null);
 
@@ -92,9 +90,7 @@ export default function BrandList() {
       cancelText: "Trở lại",
       onOk: () => {
         setIsLoading(true);
-        dispatch(
-          record ? deleteBrand(record.id) : deleteBrands(selectedRowKeys)
-        )
+        dispatch(deleteBrand(record.id))
           .then(unwrapResult)
           .then((res) => {
             console.log(res);
@@ -344,9 +340,11 @@ export default function BrandList() {
 
   useEffect(() => {
     const query = queryString.parse(location.search);
-
+    if (query.number) {
+      query.number = query.number - 1;
+    }
+    
     setIsLoading(true);
-
     dispatch(getBrands(query))
       .then(unwrapResult)
       .then(() => {
