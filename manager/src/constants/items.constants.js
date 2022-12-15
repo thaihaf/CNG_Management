@@ -19,13 +19,13 @@ export const siderBarItems = [
   {
     key: "dashboard",
     icon: <DashboardOutlined style={{ fontSize: "1.6rem" }} />,
-    label: `Dashboard`,
+    label: `Thống kê`,
     role: ["admin", "employee"],
   },
   {
     key: "dashboard/daily-report",
     icon: <DashboardOutlined style={{ fontSize: "1.6rem" }} />,
-    label: `Daily Report`,
+    label: `Báo cáo hàng ngày`,
     role: ["admin", "employee"],
   },
   {
@@ -100,7 +100,6 @@ export const siderBarItems = [
     label: `Chức năng`,
     role: ["admin", "employee"],
   },
-  //
   {
     key: "profile",
     icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,

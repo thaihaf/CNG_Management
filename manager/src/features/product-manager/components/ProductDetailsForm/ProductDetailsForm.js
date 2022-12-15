@@ -634,7 +634,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                       <Input />
                     </Form.Item>
                     <Form.Item
-                      label="Kết cấu gạch"
+                      label="Hoạ tiết gạch"
                       name="brickTexture"
                       rules={[
                         {
@@ -642,7 +642,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                           message: getMessage(
                             CODE_ERROR.ERROR_REQUIRED,
                             MESSAGE_ERROR,
-                            "Kết cấu gạch"
+                            "Hoạ tiết gạch"
                           ),
                         },
                       ]}
