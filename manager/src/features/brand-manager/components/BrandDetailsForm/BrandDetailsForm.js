@@ -27,7 +27,7 @@ const { Paragraph, Text } = Typography;
 function BrandDetailsForm() {
   const { dataDetails, createMode } = useSelector((state) => state.brand);
   const { listSuppliers } = useSelector((state) => state.supplier);
-
+  const { listActiveSuppliers } = useSelector((state) => state.supplier);
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -170,7 +170,7 @@ function BrandDetailsForm() {
                   option.children.toLowerCase().includes(input.toLowerCase())
                 }
               >
-                {listSuppliers.map((s) => (
+                {listActiveSuppliers.map((s) => (
                   <Option value={s.id} key={s.id} id={s.id}>
                     {s.supplierName}
                   </Option>
