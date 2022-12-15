@@ -1,37 +1,39 @@
-import React, { useEffect, useRef, useState } from "react";
-import Highlighter from "react-highlight-words";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
-
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
-  DatePicker,
+  Form,
   Input,
   Space,
   Statistic,
   Table,
   Typography,
 } from "antd";
-
-import avt_default from "assets/images/avt-default.png";
-import "./ProductsExpande.css";
-
-import { get } from "lodash";
 import dayjs from "dayjs";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { get } from "lodash";
+import Highlighter from "react-highlight-words";
+import avt_default from "assets/images/avt-default.png";
 
-import { getDashboardCustomerDaily } from "features/dashboard/dashboard";
+import "./DashboardByDay.css";
+import { getDashBoardByDay } from "features/dashboard/dashboard";
+import HeaderTable from "../HeaderTable/HeaderTable";
 
-const { Title, Text } = Typography;
-const { RangePicker } = DatePicker;
+const { Text } = Typography;
 
-export default function ProductsExpande({ listProductsExpande }) {
+export default function DashboardByDay() {
+  const { listDashboardByDay, totalElements, totalPages, size } = useSelector(
+    (state) => state.dashboard.dashboardByDay
+  );
+
   const history = useHistory();
   const dispatch = useDispatch();
+  const [DayForm] = Form.useForm();
 
+  const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -115,16 +117,26 @@ export default function ProductsExpande({ listProductsExpande }) {
       />
     ),
     onFilter: (value, record) => {
-      if (typeof record[dataIndex] === "string") {
+      if (typeof record[dataIndex] !== "object") {
         return record[dataIndex]
           .toString()
           .toLowerCase()
           .includes(value.toLowerCase());
       } else {
-        return get(record, dataIndex)
-          [nestedValue].toString()
-          .toLowerCase()
-          .includes(value.toLowerCase());
+        if (typeof nestedValue === "string") {
+          return get(record, dataIndex)
+            [nestedValue].toString()
+            .toLowerCase()
+            .includes(value.toLowerCase());
+        } else {
+          let parent = get(record, dataIndex);
+          let data = nestedValue.reduce(
+            (previousValue, currentValue) =>
+              previousValue + " " + parent[currentValue],
+            ""
+          );
+          return data.toString().toLowerCase().includes(value.toLowerCase());
+        }
       }
     },
 
@@ -149,78 +161,76 @@ export default function ProductsExpande({ listProductsExpande }) {
       ),
   });
 
-  const columns = [
+  const colunns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Mã sản phẩm",
-      dataIndex: "productDetailDTO",
-      key: "productId",
+      title: "Ngày",
+      key: "date",
       align: "center",
-      render: (value) => {
-        return <Text>{value.productId}</Text>;
+      render: (record) => {
+        return (
+          <Text>
+            {record.day}/{record.month}/{record.year}
+          </Text>
+        );
       },
       // ...getColumnSearchProps("id"),
     },
     {
-      title: "Số lô",
-      dataIndex: "productDetailDTO",
-      key: "shipment",
+      title: "Số M2 nhập hàng (m2)",
+      dataIndex: "totalSquareMeterImport",
+      key: "totalSquareMeterImport",
       align: "center",
       render: (value) => {
-        return <Text>{value.shipment}</Text>;
+        return <Statistic value={value} precision={0} />;
       },
-      // ...getColumnSearchProps("id"),
     },
     {
-      title: "Loại sản phẩm",
-      dataIndex: "productDetailDTO",
-      key: "type",
+      title: "Tiền nhập hàng (vnđ)",
+      dataIndex: "totalCostImport",
+      key: "totalCostImport",
       align: "center",
       render: (value) => {
-        return <Text>{value.type}</Text>;
+        return <Statistic value={value} precision={0} />;
       },
-      // ...getColumnSearchProps("id"),
     },
     {
-      title: "Số lượng (m2)",
-      dataIndex: "totalSquareMeter",
-      key: "totalSquareMeter",
+      title: "Số M2 trả hàng (vnđ)",
+      dataIndex: "totalSquareMeterReExport",
+      key: "totalSquareMeterReExport",
       align: "center",
       render: (value) => {
-        return <Text>{value}</Text>;
+        return <Statistic value={value} precision={0} />;
       },
-      // ...getColumnSearchProps("id"),
     },
     {
-      title: "Đơn giá nhập (vnđ)",
-      dataIndex: "costPerSquareMeter",
-      key: "costPerSquareMeter",
+      title: "Tiền trả hàng (vnđ)",
+      dataIndex: "totalPriceReExport",
+      key: "totalPriceReExport",
       align: "center",
       render: (value) => {
-        return <Text>{value}</Text>;
+        return <Statistic value={value} precision={0} />;
       },
-      // ...getColumnSearchProps("id"),
     },
     {
-      title: "Đơn giá bán (vnđ)",
-      dataIndex: "pricePerSquareMeter",
-      key: "pricePerSquareMeter",
+      title: "Số M2 xuất hàng (vnđ)",
+      dataIndex: "totalSquareMeterExport",
+      key: "totalSquareMeterExport",
       align: "center",
       render: (value) => {
-        return <Text>{value}</Text>;
+        return <Statistic value={value} precision={0} />;
       },
-      // ...getColumnSearchProps("id"),
     },
     {
-      title: "Thành tiền (vnđ)",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
+      title: "Tiền xuất hàng (vnđ)",
+      dataIndex: "totalPriceExport",
+      key: "totalPriceExport",
       align: "center",
       render: (value) => {
         return <Statistic value={value} precision={0} />;
@@ -237,14 +247,58 @@ export default function ProductsExpande({ listProductsExpande }) {
     },
   ];
 
+  const getData = async (defaultValues) => {
+    setIsLoading(true);
+    dispatch(
+      getDashBoardByDay(
+        defaultValues
+          ? defaultValues
+          : { month: dayjs().month() + 1, year: dayjs().year() }
+      )
+    )
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const onFinish = ({ data }) => {
+    getData({ month: data.month() + 1, year: data.year() });
+  };
+
+  useEffect(() => {
+    getData();
+  }, [dispatch]);
+
   return (
-    <Table
-      rowKey={(record) => record.id}
-      columns={columns}
-      loading={isLoading}
-      dataSource={[...listProductsExpande]}
-      pagination={false}
-      className="productsExpande"
-    />
+    <Form
+      className="product"
+      form={DayForm}
+      autoComplete="off"
+      layout="vertical"
+      onFinish={onFinish}
+      initialValues={{
+        data: dayjs(`${dayjs().year()}/${dayjs().month() + 1}`, "YYYY/MM"),
+      }}
+    >
+      <Table
+        size="middle"
+        columns={colunns}
+        dataSource={[...listDashboardByDay]}
+        rowKey={(record) => record.day}
+        loading={isLoading}
+        scroll={{ x: "maxContent" }}
+        pagination={false}
+        title={() => (
+          <HeaderTable
+            type={"day"}
+            checkDisable={checkDisable}
+            setCheckDisable={setCheckDisable}
+          />
+        )}
+      />
+    </Form>
   );
 }

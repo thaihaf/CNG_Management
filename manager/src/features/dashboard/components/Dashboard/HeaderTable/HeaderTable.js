@@ -1,18 +1,12 @@
-import { Button, DatePicker, Form, message, notification, Select } from "antd";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { searchProduct } from "features/product-manager/productManager";
-import dayjs from "dayjs";
+import { Button, DatePicker, Form, notification, Select } from "antd";
+import React from "react";
+import { useSelector } from "react-redux";
 import "./HeaderTable.css";
-import { updateProductImport } from "features/import-product/importProduct";
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
-import { getDashboardCustomerDaily } from "features/dashboard/dashboard";
 
 const { RangePicker } = DatePicker;
-const { Option } = Select;
 
 const HeaderTable = ({ type, checkDisable, setCheckDisable }) => {
   const { listCustomers } = useSelector((state) => state.customer);

@@ -4,7 +4,11 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 
-import { ContainerOutlined, PoweroffOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  ContainerOutlined,
+  PoweroffOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import {
   Avatar,
   Button,
@@ -28,8 +32,7 @@ import dayjs from "dayjs";
 import { getEmployees } from "features/employee-manager/employeeManager";
 import { getCustomers } from "features/customer-manager/customerManager";
 import { getDashboardCustomerDaily } from "features/dashboard/dashboard";
-import { ProductsExpande } from "features/dashboard/components";
-import HeaderTable from "features/dashboard/components/HeaderTable/HeaderTable";
+import HeaderTable from "features/dashboard/components/Dashboard/HeaderTable/HeaderTable";
 import { Excel } from "antd-table-saveas-excel";
 import {
   columnsExport,
@@ -265,6 +268,93 @@ export default function CustomerDailyList() {
       },
     },
   ];
+  const columnsDailyReport = [
+    {
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      align: "center",
+      render: (a, b, index) => <Text>{index + 1}</Text>,
+    },
+    {
+      title: "Mã sản phẩm",
+      dataIndex: "productDetailDTO",
+      key: "productId",
+      align: "center",
+      render: (value) => {
+        return <Text>{value.productId}</Text>;
+      },
+      // ...getColumnSearchProps("id"),
+    },
+    {
+      title: "Số lô",
+      dataIndex: "productDetailDTO",
+      key: "shipment",
+      align: "center",
+      render: (value) => {
+        return <Text>{value.shipment}</Text>;
+      },
+      // ...getColumnSearchProps("id"),
+    },
+    {
+      title: "Loại sản phẩm",
+      dataIndex: "productDetailDTO",
+      key: "type",
+      align: "center",
+      render: (value) => {
+        return <Text>{value.type}</Text>;
+      },
+      // ...getColumnSearchProps("id"),
+    },
+    {
+      title: "Số lượng (m2)",
+      dataIndex: "totalSquareMeter",
+      key: "totalSquareMeter",
+      align: "center",
+      render: (value) => {
+        return <Text>{value}</Text>;
+      },
+      // ...getColumnSearchProps("id"),
+    },
+    {
+      title: "Đơn giá nhập (vnđ)",
+      dataIndex: "costPerSquareMeter",
+      key: "costPerSquareMeter",
+      align: "center",
+      render: (value) => {
+        return <Text>{value}</Text>;
+      },
+      // ...getColumnSearchProps("id"),
+    },
+    {
+      title: "Đơn giá bán (vnđ)",
+      dataIndex: "pricePerSquareMeter",
+      key: "pricePerSquareMeter",
+      align: "center",
+      render: (value) => {
+        return <Text>{value}</Text>;
+      },
+      // ...getColumnSearchProps("id"),
+    },
+    {
+      title: "Thành tiền (vnđ)",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
+    },
+    {
+      title: "Lợi nhuận (vnđ)",
+      dataIndex: "revenue",
+      key: "revenue",
+      align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
+    },
+  ];
 
   const renderTitle = (title, value, format) => {
     let total = listDailyReport.reduce(
@@ -299,19 +389,17 @@ export default function CustomerDailyList() {
       </div>
     );
   };
-
   const onHandlePagination = (page, size) => {
     setCurrentPage(page);
     setPageSize(size);
   };
-
   const onFinish = (values) => {
     setIsLoading(true);
 
     dispatch(
       getDashboardCustomerDaily({
-        startDate: values.dates[0]?.format("MM/DD/YYYY"),
-        endDate: values.dates[1]?.format("MM/DD/YYYY"),
+        startDate: values.dates[0]?.format("DD/MM/YYYY"),
+        endDate: values.dates[1]?.format("DD/MM/YYYY"),
         customer: values.customer?.split("_")[0],
         employee: values.employee?.split("_")[0],
       })
@@ -322,7 +410,6 @@ export default function CustomerDailyList() {
         setIsLoading(false);
       });
   };
-
   const handleExportExcel = () => {
     const excel = new Excel();
 
@@ -404,8 +491,8 @@ export default function CustomerDailyList() {
 
   useEffect(() => {
     setIsLoading(true);
-    let startDate = dayjs().startOf("month").format("MM/DD/YYYY");
-    let endDate = dayjs().endOf("month").format("MM/DD/YYYY");
+    let startDate = dayjs().startOf("month").format("DD/MM/YYYY");
+    let endDate = dayjs().endOf("month").format("DD/MM/YYYY");
 
     dispatch(
       getDashboardCustomerDaily({ startDate: startDate, endDate: endDate })
@@ -487,8 +574,14 @@ export default function CustomerDailyList() {
           }
           expandable={{
             expandedRowRender: (record) => (
-              <ProductsExpande
-                listProductsExpande={record.exportProductDetailDTOS}
+              <Table
+                bordered
+                loading={isLoading}
+                columns={columnsDailyReport}
+                rowKey={(record) => record.id}
+                dataSource={[...record.exportProductDetailDTOS]}
+                pagination={false}
+                className="productsExpande"
               />
             ),
           }}

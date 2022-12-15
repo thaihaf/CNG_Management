@@ -1,66 +1,29 @@
+import { SearchOutlined } from "@ant-design/icons";
 import {
-  CaretDownFilled,
-  CaretDownOutlined,
-  CaretUpFilled,
-  CaretUpOutlined,
-  CloseOutlined,
-  DeleteFilled,
-  DeleteTwoTone,
-  DownCircleTwoTone,
-  DownOutlined,
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  MinusOutlined,
-  PlusOutlined,
-  RestTwoTone,
-  SearchOutlined,
-  UpCircleTwoTone,
-} from "@ant-design/icons";
-import {
-  Avatar,
   Button,
-  Col,
-  DatePicker,
-  Divider,
-  Dropdown,
   Form,
   Input,
-  InputNumber,
-  Menu,
-  Modal,
-  Row,
   Select,
   Space,
-  Spin,
   Statistic,
   Table,
-  Tag,
-  Tooltip,
   Typography,
 } from "antd";
 import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
 import avt_default from "assets/images/avt-default.png";
-import {
-  updateListProductLv2,
-  updateProductImport,
-} from "features/import-product/importProduct";
-import {
-  getDashBoardByDay,
-  getDashBoardByMonth,
-} from "features/dashboard/dashboard";
+import { getDashBoardByYear } from "features/dashboard/dashboard";
 import HeaderTable from "../HeaderTable/HeaderTable";
 
-const { Option } = Select;
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
-export default function DashboardByMonth() {
-  const { listDashboardByMonth, totalElements, totalPages, size } = useSelector(
-    (state) => state.dashboard.dashboardByMonth
+export default function DashboardByDay() {
+  const { listDashboardByYear, totalElements, totalPages, size } = useSelector(
+    (state) => state.dashboard.dashboardByYear
   );
 
   const history = useHistory();
@@ -69,17 +32,10 @@ export default function DashboardByMonth() {
 
   const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
-  };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -206,22 +162,18 @@ export default function DashboardByMonth() {
 
   const colunns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Tháng",
+      title: "Năm",
       key: "date",
       align: "center",
       render: (record) => {
-        return (
-          <Text>
-            {record.month}/{record.year}
-          </Text>
-        );
+        return <Text>{record.year}</Text>;
       },
       // ...getColumnSearchProps("id"),
     },
@@ -293,7 +245,11 @@ export default function DashboardByMonth() {
   const getData = async (defaultValues) => {
     setIsLoading(true);
     dispatch(
-      getDashBoardByMonth(defaultValues ? defaultValues : dayjs().year())
+      getDashBoardByYear(
+        defaultValues
+          ? defaultValues
+          : { startYear: dayjs().year() - 9, endYear: dayjs().year() }
+      )
     )
       .then(() => {
         setIsLoading(false);
@@ -303,8 +259,8 @@ export default function DashboardByMonth() {
       });
   };
 
-  const onFinish = ({ data }) => {
-    getData(data.year());
+  const onFinish = ({ years }) => {
+    getData(years);
   };
 
   useEffect(() => {
@@ -315,24 +271,28 @@ export default function DashboardByMonth() {
     <Form
       className="product"
       form={DayForm}
+      name="dynamic_form_nest_item"
       autoComplete="off"
       layout="vertical"
       onFinish={onFinish}
       initialValues={{
-        data: dayjs(`${dayjs().year()}`, "YYYY"),
+        years: [
+          dayjs(`${dayjs().year() - 9}`, "YYYY"),
+          dayjs(`${dayjs().year()}`, "YYYY"),
+        ],
       }}
     >
       <Table
         size="middle"
         columns={colunns}
-        dataSource={[...listDashboardByMonth]}
-        rowKey={(record) => record.month}
+        dataSource={[...listDashboardByYear]}
+        rowKey={(record) => record.year}
         loading={isLoading}
         scroll={{ x: "maxContent" }}
         pagination={false}
         title={() => (
           <HeaderTable
-            type={"month"}
+            type={"year"}
             checkDisable={checkDisable}
             setCheckDisable={setCheckDisable}
           />

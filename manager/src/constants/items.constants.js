@@ -19,14 +19,14 @@ export const siderBarItems = [
   {
     key: "dashboard",
     icon: <DashboardOutlined style={{ fontSize: "1.6rem" }} />,
-    label: `Dashboard`,
-    role: ["admin", "employee"],
+    label: "Thống kê",
+    role: ["admin"],
   },
   {
-    key: "dashboard/daily-report",
+    key: "daily-report",
     icon: <DashboardOutlined style={{ fontSize: "1.6rem" }} />,
-    label: `Daily Report`,
-    role: ["admin", "employee"],
+    label: "Báo cáo hằng ngày",
+    role: ["admin"],
   },
   {
     key: "product",
@@ -44,6 +44,18 @@ export const siderBarItems = [
     key: "export-product",
     icon: <ExportOutlined style={{ fontSize: "1.6rem" }} />,
     label: `Xuất sản phẩm`,
+    role: ["admin", "employee"],
+  },
+  {
+    key: "dashboard/product/inventory",
+    icon: <ExportOutlined style={{ fontSize: "1.6rem" }} />,
+    label: `Tồn kho`,
+    role: ["admin", "employee"],
+  },
+  {
+    key: "dashboard/product/profit",
+    icon: <ExportOutlined style={{ fontSize: "1.6rem" }} />,
+    label: `Lợi nhận`,
     role: ["admin", "employee"],
   },
   {

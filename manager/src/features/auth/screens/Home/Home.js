@@ -1,8 +1,5 @@
 import React from "react";
 
-// import "antd/dist/antd.css";
-
-
 import bg from "assets/images/bg-dashboard.png";
 import logo from "assets/images/logo3.png";
 import { Button } from "@mui/material";
@@ -11,7 +8,8 @@ import {
      InstagramFilled,
      TwitterCircleFilled,
 } from "@ant-design/icons";
-import "./Dashboard.css";
+import "./Home.css";
+
 export default function Dashboard() {
 
      return (

@@ -1,64 +1,30 @@
+import { SearchOutlined } from "@ant-design/icons";
 import {
-  CaretDownFilled,
-  CaretDownOutlined,
-  CaretUpFilled,
-  CaretUpOutlined,
-  CloseOutlined,
-  DeleteFilled,
-  DeleteTwoTone,
-  DownCircleTwoTone,
-  DownOutlined,
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  MinusOutlined,
-  PlusOutlined,
-  RestTwoTone,
-  SearchOutlined,
-  UpCircleTwoTone,
-} from "@ant-design/icons";
-import {
-  Avatar,
   Button,
-  Col,
-  DatePicker,
-  Divider,
-  Dropdown,
   Form,
   Input,
-  InputNumber,
-  Menu,
-  Modal,
-  Row,
   Select,
   Space,
-  Spin,
   Statistic,
   Table,
-  Tag,
-  Tooltip,
   Typography,
 } from "antd";
 import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
 import avt_default from "assets/images/avt-default.png";
-import {
-  updateListProductLv2,
-  updateProductImport,
-} from "features/import-product/importProduct";
-import "./DashboardByDay.css";
-import { getDashBoardByDay } from "features/dashboard/dashboard";
+
+import { getDashBoardByMonth } from "features/dashboard/dashboard";
 import HeaderTable from "../HeaderTable/HeaderTable";
 
-const { Option } = Select;
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
-export default function DashboardByDay() {
-  const { listDashboardByDay, totalElements, totalPages, size } = useSelector(
-    (state) => state.dashboard.dashboardByDay
+export default function DashboardByMonth() {
+  const { listDashboardByMonth, totalElements, totalPages, size } = useSelector(
+    (state) => state.dashboard.dashboardByMonth
   );
 
   const history = useHistory();
@@ -67,17 +33,10 @@ export default function DashboardByDay() {
 
   const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
-  };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -204,20 +163,20 @@ export default function DashboardByDay() {
 
   const colunns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Ngày",
+      title: "Tháng",
       key: "date",
       align: "center",
       render: (record) => {
         return (
           <Text>
-            {record.day}/{record.month}/{record.year}
+            {record.month}/{record.year}
           </Text>
         );
       },
@@ -291,11 +250,7 @@ export default function DashboardByDay() {
   const getData = async (defaultValues) => {
     setIsLoading(true);
     dispatch(
-      getDashBoardByDay(
-        defaultValues
-          ? defaultValues
-          : { month: dayjs().month() + 1, year: dayjs().year() }
-      )
+      getDashBoardByMonth(defaultValues ? defaultValues : dayjs().year())
     )
       .then(() => {
         setIsLoading(false);
@@ -306,7 +261,7 @@ export default function DashboardByDay() {
   };
 
   const onFinish = ({ data }) => {
-    getData({ month: data.month() + 1, year: data.year() });
+    getData(data.year());
   };
 
   useEffect(() => {
@@ -321,20 +276,20 @@ export default function DashboardByDay() {
       layout="vertical"
       onFinish={onFinish}
       initialValues={{
-        data: dayjs(`${dayjs().year()}/${dayjs().month() + 1}`, "YYYY/MM"),
+        data: dayjs(`${dayjs().year()}`, "YYYY"),
       }}
     >
       <Table
         size="middle"
         columns={colunns}
-        dataSource={[...listDashboardByDay]}
-        rowKey={(record) => record.day}
+        dataSource={[...listDashboardByMonth]}
+        rowKey={(record) => record.month}
         loading={isLoading}
         scroll={{ x: "maxContent" }}
         pagination={false}
         title={() => (
           <HeaderTable
-            type={"day"}
+            type={"month"}
             checkDisable={checkDisable}
             setCheckDisable={setCheckDisable}
           />

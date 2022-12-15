@@ -133,7 +133,6 @@ export default function Dashboard() {
       </div>
 
       <Tabs
-        defaultActiveKey={`table`}
         activeKey={activeTab}
         onTabClick={(key) => setActiveTab(key)}
         style={{
