@@ -1,10 +1,9 @@
 import { api } from "api/api";
 import { EmployeeEndPoints } from "../employeeManager";
 
-const getEmployees = (number, size) => {
-  const params = `?sort=id,desc&number=${number}&size=${size}`;
-  const url = EmployeeEndPoints.EMPLOYEE_MANAGER.concat(params);
-  return api.get(url);
+const getEmployees = (params) => {
+  const url = EmployeeEndPoints.EMPLOYEE_MANAGER;
+  return api.get(url, { params });
 };
 const createDetails = (data) => {
   const url = EmployeeEndPoints.EMPLOYEE_MANAGER;
@@ -28,9 +27,9 @@ const updateDetails = (id, data) => {
   );
   return api.put(url, data);
 };
-const getAccounts = () => {
+const getAccounts = (params) => {
   const url = EmployeeEndPoints.ACCOUNT_MANAGER;
-  return api.get(url);
+  return api.get(url, { params });
 };
 const deleteEmployee = (id) => {
   const url = EmployeeEndPoints.EMPLOYEE_DETAILS.replace(

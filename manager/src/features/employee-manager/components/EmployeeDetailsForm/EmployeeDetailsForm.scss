@@ -27,7 +27,7 @@
 
                .item_choose-avt {
                     position: absolute;
-                    bottom: 0;
+                    top: 0;
                     right: 0;
                     margin: 0;
                }
@@ -57,7 +57,7 @@
                margin-top: 1rem;
                gap: 0.5rem;
           }
-          .ant-upload.ant-upload-select-picture-card {
+          .ant-upload.ant-upload-select {
                width: 5rem;
                height: 5rem;
                padding: 0.5rem 2rem;

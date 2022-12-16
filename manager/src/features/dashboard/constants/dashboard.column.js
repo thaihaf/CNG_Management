@@ -328,3 +328,56 @@ export const yearDashboardColumnsExport = [
     __numFmt__: "#,##0",
   },
 ];
+
+export const productInventoryColumnsExport = [
+  {
+    title: "STT",
+    key: "index",
+    render: (value, row, index) => index + 1,
+  },
+  {
+    title: "Ngày Tháng Năm",
+    key: "date",
+    render: (value, record, index) =>
+      `${record.day}/${record.month}/${record.year}`,
+  },
+  {
+    title: "Số M2 nhập hàng (m2)",
+    dataIndex: "totalSquareMeterImport",
+    key: "totalSquareMeterImport",
+  },
+  {
+    title: "Tiền nhập hàng (vnđ)",
+    dataIndex: "totalCostImport",
+    key: "totalCostImport",
+    __numFmt__: "#,##0",
+  },
+  {
+    title: "Số M2 trả hàng (m2)",
+    dataIndex: "totalSquareMeterReExport",
+    key: "totalSquareMeterReExport",
+  },
+  {
+    title: "Tiền trả hàng (vnđ)",
+    dataIndex: "totalPriceReExport",
+    key: "totalPriceReExport",
+    __numFmt__: "#,##0",
+  },
+  {
+    title: "Số M2 xuất hàng (m2)",
+    dataIndex: "totalSquareMeterExport",
+    key: "totalSquareMeterExport",
+  },
+  {
+    title: "Tiền xuất hàng (vnđ)",
+    dataIndex: "totalPriceExport",
+    key: "totalPriceExport",
+    __numFmt__: "#,##0",
+  },
+  {
+    title: "Lợi nhuận (vnđ)",
+    dataIndex: "revenue",
+    key: "revenue",
+    __numFmt__: "#,##0",
+  },
+];

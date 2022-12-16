@@ -1,9 +1,9 @@
 import { api } from "api/api";
 import { SupplierEndPoints } from "../supplierManager";
 
-const getSuppliers = () => {
+const getSuppliers = (params) => {
   const url = SupplierEndPoints.SUPPLIER_MANAGER;
-  return api.get(url);
+  return api.get(url, { params });
 };
 const getActiveSuppliers = () => {
   const url = SupplierEndPoints.SUPPLIER_ACTIVE;
@@ -36,9 +36,9 @@ const deleteSupplier = (id) => {
 };
 
 // debt
-const getDebtSuppliers = () => {
+const getDebtSuppliers = (params) => {
   const url = SupplierEndPoints.DEBT_MANAGER;
-  return api.get(url);
+  return api.get(url, { params });
 };
 const getDeptSupplierDetails = (id) => {
   const url = SupplierEndPoints.DEBT_MANAGER_DETAILS.replace(":id", id);
@@ -46,7 +46,7 @@ const getDeptSupplierDetails = (id) => {
 };
 const createDeptSupplier = (data) => {
   const url = SupplierEndPoints.DEBT_MANAGER;
-  console.log(data)
+  console.log(data);
   return api.post(url, data);
 };
 const updateDeptSupplier = (id, data) => {

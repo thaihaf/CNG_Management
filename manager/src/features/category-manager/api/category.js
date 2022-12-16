@@ -1,9 +1,9 @@
 import { api } from "api/api";
 import { CategoryEndPoints } from "../categoryManager";
 
-const getCategories = () => {
+const getCategories = (params) => {
   const url = CategoryEndPoints.CATEGORY_MANAGER;
-  return api.get(url);
+  return api.get(url, { params });
 };
 const getActiveCategories = () => {
   const url = CategoryEndPoints.CATEGORY_ACTIVE;

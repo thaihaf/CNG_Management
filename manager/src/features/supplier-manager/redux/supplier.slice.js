@@ -8,10 +8,13 @@ export const SUPPLIERS_FEATURE_KEY = SUPPLIER_KEY;
 
 export const getSuppliers = createAsyncThunk(
   "supplier/getSuppliers",
-  async () => {
-    const response = await api.getSuppliers();
-
-    return response.data;
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await api.getSuppliers(params);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 export const getActiveSuppliers = createAsyncThunk(
@@ -81,9 +84,9 @@ export const createDetails = createAsyncThunk(
 // debt
 export const getDebtSuppliers = createAsyncThunk(
   "supplier/getDebtSuppliers",
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const response = await api.getDebtSuppliers();
+      const response = await api.getDebtSuppliers(params);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -140,14 +143,19 @@ export const createDeptSupplier = createAsyncThunk(
 const initialState = {
   listSuppliers: [],
   listActiveSuppliers: [],
-  totalElements: 0,
+  number: 0,
   totalPages: 0,
   size: 0,
   dataDetails: null,
   errorProcess: "",
   createMode: false,
-  listDebtSupplier: [],
-  debtDataDetails: null,
+  debtSupplier: {
+    listDebtSupplier: [],
+    totalElements: 0,
+    number: 0,
+    size: 0,
+    debtDataDetails: null,
+  },
 };
 
 const supplierSlice = createSlice({
@@ -158,14 +166,14 @@ const supplierSlice = createSlice({
       state.errorProcess = action.payload;
     },
     updateDebtSuppliers: (state, action) => {
-      state.listDebtSupplier = action.payload;
+      state.debtSupplier.listDebtSupplier = action.payload;
     },
   },
   extraReducers: {
     [getSuppliers.fulfilled]: (state, action) => {
       state.listSuppliers = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
+      state.number = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getActiveSuppliers.fulfilled]: (state, action) => {
@@ -184,25 +192,29 @@ const supplierSlice = createSlice({
     },
     // debt
     [createDeptSupplier.fulfilled]: (state, action) => {
-      state.listDebtSupplier = [...state.listDebtSupplier, action.payload.data];
+      state.debtSupplier.listDebtSupplier = [
+        ...state.debtSupplier.listDebtSupplier,
+        action.payload.data,
+      ];
     },
     [updateDeptSupplier.fulfilled]: (state, action) => {
-      state.listDebtSupplier = state.listDebtSupplier.map((item) => {
-        if (item.id === action.payload.data.id) {
-          return action.payload.data;
-        } else {
-          return item;
-        }
-      });
+      state.debtSupplier.listDebtSupplier =
+        state.debtSupplier.listDebtSupplier.map((item) => {
+          if (item.id === action.payload.data.id) {
+            return action.payload.data;
+          } else {
+            return item;
+          }
+        });
     },
     [getDebtSuppliers.fulfilled]: (state, action) => {
-      state.listDebtSupplier = action.payload.content;
-      state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
-      state.size = action.payload.size;
+      state.debtSupplier.listDebtSupplier = action.payload.content;
+      state.debtSupplier.totalElements = action.payload.totalElements;
+      state.debtSupplier.number = action.payload.number + 1;
+      state.debtSupplier.size = action.payload.size;
     },
     [getDeptSupplierDetails.fulfilled]: (state, action) => {
-      state.debtDataDetails = action.payload;
+      state.debtSupplier.debtDataDetails = action.payload;
       state.errorProcess = "";
       state.createMode = false;
     },

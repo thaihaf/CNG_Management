@@ -10,11 +10,13 @@ import {
   Button,
   DatePicker,
   Input,
+  notification,
   Space,
   Statistic,
   Table,
   Typography,
 } from "antd";
+import queryString from "query-string";
 
 import avt_default from "assets/images/avt-default.png";
 import "./CustomerDebtList.css";
@@ -30,18 +32,17 @@ const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
 export default function CustomerDebtList() {
-  const { listCustomerDebt, totalElements, totalPages, size } = useSelector(
+  const { listCustomerDebt, totalElements, number, size } = useSelector(
     (state) => state.customerDebt
   );
-  const { listActiveCategories } = useSelector((state) => state.category);
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
 
+  const params = queryString.parse(location.search);
   const [isLoading, setIsLoading] = useState(false);
   const [datesPicker, setDatesPicker] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -161,7 +162,7 @@ export default function CustomerDebtList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -253,30 +254,77 @@ export default function CustomerDebtList() {
     },
   ];
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const defaultValue =
+    params.startDate && params.endDate
+      ? [
+          dayjs(params.startDate, "DD/MM/YYYY"),
+          dayjs(params.endDate, "DD/MM/YYYY"),
+        ]
+      : [dayjs().startOf("month"), dayjs().endOf("month")];
+
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    const params = queryString.parse(location.search);
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const startDate = datesPicker
+      ? datesPicker.startDate
+      : dayjs().startOf("month").format("DD/MM/YYYY");
+    const endDate = datesPicker
+      ? datesPicker.endDate
+      : dayjs().endOf("month").format("DD/MM/YYYY");
+
+    history.push({
+      pathname: CustomerDebtPaths.SUPPLIER_DEBT_MANAGER,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        number: page,
+        startDate: startDate,
+        endDate: endDate,
+      }),
+    });
   };
+  const onHandleSearch = () => {
+    const params = queryString.parse(location.search);
 
-  const handleGetList = async (defaultSelect) => {
-    setIsLoading(true);
-    let startDate = dayjs().startOf("month").format("MM/DD/YYYY");
-    let endDate = dayjs().endOf("month").format("MM/DD/YYYY");
-
-    dispatch(
-      defaultSelect
-        ? getCustomerDebts(datesPicker)
-        : getCustomerDebts({ startDate: startDate, endDate: endDate })
-    )
-      .then(unwrapResult)
-      .then(() => {
-        setDatesPicker(null);
-        setIsLoading(false);
-      });
+    history.push({
+      pathname: CustomerDebtPaths.SUPPLIER_DEBT_MANAGER,
+      search: queryString.stringify({
+        ...params,
+        startDate: datesPicker.startDate,
+        endDate: datesPicker.endDate,
+      }),
+    });
   };
 
   useEffect(() => {
-    handleGetList(false);
+    setIsLoading(true);
+
+    let query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
+    }
+    query = {
+      ...query,
+      startDate: defaultValue[0].format("DD/MM/YYYY"),
+      endDate: defaultValue[1].format("DD/MM/YYYY"),
+    };
+
+    dispatch(getCustomerDebts(query))
+      .then(unwrapResult)
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+        if (err.response.status === 400) {
+          notification.success({
+            message: "Công nợ Nhà cung cấp",
+            description: "Tham số không đúng, vui lòng kiểm tra lại",
+          });
+        }
+      });
   }, [dispatch, location]);
 
   return (
@@ -287,51 +335,56 @@ export default function CustomerDebtList() {
         </Title>
 
         <RangePicker
-          defaultValue={[dayjs().startOf("month"), dayjs().endOf("month")]}
-          format={"DD/MM/YYYY"}
-          onChange={(dates, dateString) => {
+          defaultValue={
+            defaultValue[0].format("DD/MM/YYYY") !== "Invalid Date" &&
+            defaultValue[1].format("DD/MM/YYYY") !== "Invalid Date"
+              ? defaultValue
+              : null
+          }
+          format="DD/MM/YYYY"
+          onChange={(dates, dateStrings) => {
             if (dates) {
-              let value = {
-                startDate: dates[0].format("MM/DD/YYYY"),
-                endDate: dates[1].format("MM/DD/YYYY"),
-              };
-              setDatesPicker(value);
-            } else {
-              setDatesPicker(null);
+              setDatesPicker({
+                startDate: dateStrings[0],
+                endDate: dateStrings[1],
+              });
             }
           }}
-          renderExtraFooter={(value, a, b) => {
-            return (
-              <Button
-                type="primary"
-                shape={"round"}
-                size={"large"}
-                onClick={async () => await handleGetList(true)}
-                disabled={datesPicker ? false : true}
-              >
-                Tìm kiếm
-              </Button>
-            );
-          }}
         />
+        <Button
+          type="primary"
+          shape={"round"}
+          size={"large"}
+          style={{ marginLeft: "1rem" }}
+          onClick={() => onHandleSearch()}
+        >
+          Tìm kiếm
+        </Button>
       </div>
 
       <Table
-        rowKey={(record) => record.customerDTO.id}
+        rowKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
         dataSource={[...listCustomerDebt]}
         pagination={
-          listCustomerDebt.length !== 0
+          totalElements !== 0
             ? {
+                current: number,
+                pageSize: size,
+                total: totalElements,
                 showSizeChanger: true,
+                showQuickJumper: true,
                 position: ["bottomCenter"],
-                size: "default",
-                pageSize: pageSize,
-                current: currentPage,
-                totalElements,
+                pageSizeOptions: ["10", "20", "50", "100"],
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
                 onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "4", "6"],
+                locale: {
+                  jump_to: "",
+                  page: "trang",
+                  items_per_page: "/ trang",
+                },
               }
             : false
         }

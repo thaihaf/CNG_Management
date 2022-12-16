@@ -1,9 +1,9 @@
 import { api } from "api/api";
 import { WarehouseEndPoints } from "../warehouseManager";
 
-const getWarehouses = () => {
+const getWarehouses = (params) => {
   const url = WarehouseEndPoints.WAREHOUSE_MANAGER;
-  return api.get(url);
+  return api.get(url, { params });
 };
 const createDetails = (data) => {
   const url = WarehouseEndPoints.WAREHOUSE_MANAGER;

@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
+import queryString from "query-string";
 
 import deleteImg from "assets/icons/delete.png";
 import editImg from "assets/icons/edit.png";
@@ -39,30 +40,50 @@ import {
   updateProductDetails,
 } from "features/product-manager/productManager";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { deleteDeptSupplier, updateDebtSuppliers } from "features/supplier-manager/supplierManager";
+import {
+  deleteDeptSupplier,
+  getDebtSuppliers,
+  SupplierManagerPaths,
+  updateDebtSuppliers,
+} from "features/supplier-manager/supplierManager";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
 
 export default function TableDetails({ form }) {
-  const { listDebtSupplier } = useSelector(
-    (state) => state.supplier
+  const { listDebtSupplier, totalElements, number, size } = useSelector(
+    (state) => state.supplier.debtSupplier
   );
 
+  const paramsDetails = useParams();
   const history = useHistory();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
+
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: SupplierManagerPaths.SUPPLIER_DETAIL.replace(
+        ":supplierId",
+        paramsDetails.supplierId || ""
+      ),
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        number: page,
+      }),
+    });
   };
   const handleDelete = (record) => {
     Modal.confirm({
@@ -219,9 +240,9 @@ export default function TableDetails({ form }) {
       ),
   });
 
-  const productColumns = [
+  const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -280,26 +301,46 @@ export default function TableDetails({ form }) {
     },
   ];
 
+  useEffect(() => {
+    const query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
+    }
+
+    dispatch(getDebtSuppliers(query))
+      .then(unwrapResult)
+      .then(() => {
+        setIsLoading(false);
+      });
+  }, [dispatch, location]);
+
   return (
     <Table
-      size="middle"
+      bordered
       className="listProductDetails"
-      columns={productColumns}
+      columns={columns}
       dataSource={[...listDebtSupplier]}
       rowKey={(record) => record.id}
       loading={isLoading}
       scroll={{ x: "maxContent" }}
       pagination={
-        listDebtSupplier.length !== 0
+        totalElements !== 0
           ? {
+              current: number,
+              pageSize: size,
+              total: totalElements,
               showSizeChanger: true,
+              showQuickJumper: true,
               position: ["bottomCenter"],
-              size: "mặc định",
-              pageSize: pageSize,
-              current: currentPage,
-              total: listDebtSupplier.length,
+              pageSizeOptions: ["10", "20", "50", "100"],
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
               onChange: (page, size) => onHandlePagination(page, size),
-              pageSizeOptions: ["2", "4", "10"],
+              locale: {
+                jump_to: "",
+                page: "trang",
+                items_per_page: "/ trang",
+              },
             }
           : false
       }

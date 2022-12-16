@@ -3,6 +3,7 @@ import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
+import queryString from "query-string";
 import {
   DeleteTwoTone,
   DownOutlined,
@@ -48,12 +49,22 @@ export default function EmployeeList() {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
 
-  const onHandlePagination = (number, size) => {
-    setIsLoading(true);
-    dispatch(getEmployees({ number: number - 1, size: size }))
-      .then(unwrapResult)
-      .then(() => setIsLoading(false));
-  };
+   const onHandlePagination = (pageCurrent, pageSize) => {
+     setIsLoading(true);
+
+     const page = pageCurrent.toString();
+     const size = pageSize.toString();
+     const params = queryString.parse(location.search);
+
+     history.push({
+       pathname: EmployeeManagerPaths.EMPLOYEE_MANAGER,
+       search: queryString.stringify({
+         ...params,
+         size: size,
+         number: page,
+       }),
+     });
+   };
 
   const onRowDelete = (record) => {
     Modal.confirm({
@@ -235,6 +246,7 @@ export default function EmployeeList() {
       title: "Tên",
       dataIndex: "lastName",
       key: "lastName",
+      align: "center",
       sorter: (a, b) => a.lastName.length - b.lastName.length,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("lastName"),
@@ -341,8 +353,13 @@ export default function EmployeeList() {
   ];
 
   useEffect(() => {
+    let query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
+    }
+
     setIsLoading(true);
-    dispatch(getEmployees({ number: 0, size: 20 }))
+    dispatch(getEmployees(query))
       .then(unwrapResult)
       .then(() => setIsLoading(false));
   }, [dispatch, location]);

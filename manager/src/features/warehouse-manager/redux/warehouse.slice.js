@@ -8,9 +8,13 @@ export const WAREHOUSE_FEATURE_KEY = WAREHOUSE_KEY;
 
 export const getWarehouses = createAsyncThunk(
   "warehouse/getWarehouses",
-  async () => {
-    const response = await api.getWarehouses();
-    return response.data;
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await api.getWarehouses(params);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
   }
 );
 export const getWarehouseDetails = createAsyncThunk(
@@ -72,7 +76,7 @@ export const createDetails = createAsyncThunk(
 const initialState = {
   listWarehouses: [],
   totalElements: 0,
-  totalPages: 0,
+  number: 0,
   size: 0,
   dataDetails: null,
   errorProcess: "",
@@ -91,7 +95,7 @@ const warehouseSlice = createSlice({
     [getWarehouses.fulfilled]: (state, action) => {
       state.listWarehouses = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
+      state.number = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getWarehouseDetails.fulfilled]: (state, action) => {

@@ -53,7 +53,7 @@ import {
 const { Title, Text } = Typography;
 const { Option } = Select;
 export default function SupplierList() {
-  const { listSuppliers, totalElements, totalPages, size } = useSelector(
+  const { listSuppliers, totalElements, number, size } = useSelector(
     (state) => state.supplier
   );
   const { dataDetails, createMode } = useSelector((state) => state.supplier);
@@ -65,21 +65,29 @@ export default function SupplierList() {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const [componentDisabled, setComponentDisabled] = useState(true);
   const [modal1Open, setModal1Open] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [imgURL, setImgUrl] = useState(null);
+
   const [searchText, setSearchText] = useState("");
-  const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const searchInput = useRef(null);
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
+
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: SupplierManagerPaths.SUPPLIER_LIST,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        number: page,
+      }),
+    });
   };
 
   const defaultValues = {
@@ -104,47 +112,6 @@ export default function SupplierList() {
     });
   };
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: "odd",
-        text: "Select Odd Row",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: "even",
-        text: "Select Even Row",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
-  };
-
   const onRowDelete = (record) => {
     Modal.confirm({
       title: "Xác nhận",
@@ -154,9 +121,7 @@ export default function SupplierList() {
       cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
-        dispatch(
-          record ? deleteSupplier(record.id) : deleteSuppliers(selectedRowKeys)
-        )
+        dispatch(deleteSupplier(record.id))
           .then(unwrapResult)
           .then((res) => {
             console.log(res);
@@ -191,9 +156,13 @@ export default function SupplierList() {
   };
 
   useEffect(() => {
-    const query = queryString.parse(location.search);
     setIsLoading(true);
-    dispatch(getSuppliers())
+
+    let query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
+    }
+    dispatch(getSuppliers(query))
       .then(unwrapResult)
       .then(() => setIsLoading(false));
   }, [dispatch, location]);
@@ -203,12 +172,10 @@ export default function SupplierList() {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
-
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -303,7 +270,7 @@ export default function SupplierList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -313,7 +280,7 @@ export default function SupplierList() {
       title: "Ảnh đại diện",
       dataIndex: "avatarSupplier",
       key: "avatarSupplier",
-      width: "10%",
+      align: "center",
       render: (text, record) => {
         return (
           <div>
@@ -326,7 +293,7 @@ export default function SupplierList() {
       title: "Tên nhà cung cấp",
       dataIndex: "supplierName",
       key: "supplierName",
-      width: "10%",
+      align: "center",
       ...getColumnSearchProps("supplierName"),
       sorter: (a, b) => a.supplierName - b.supplierName,
       sortDirections: ["descend", "ascend"],
@@ -335,7 +302,7 @@ export default function SupplierList() {
       title: "Họ của Người liên hệ",
       dataIndex: "firstContactName",
       key: "firstContactName",
-      width: "10%",
+      align: "center",
       ...getColumnSearchProps("firstContactName"),
       sorter: (a, b) => a.firstContactName.length - b.firstContactName.length,
       sortDirections: ["descend", "ascend"],
@@ -344,7 +311,7 @@ export default function SupplierList() {
       title: "Tên của Người liên hệ",
       dataIndex: "lastContactName",
       key: "lastContactName",
-      width: "10%",
+      align: "center",
       ...getColumnSearchProps("lastContactName"),
       sorter: (a, b) => a.lastContactName.length - b.lastContactName.length,
       sortDirections: ["descend", "ascend"],
@@ -353,7 +320,7 @@ export default function SupplierList() {
       title: "Tên Ngân hàng",
       dataIndex: "bankName",
       key: "bankName",
-      width: "10%",
+      align: "center",
       ...getColumnSearchProps("bankName"),
       sorter: (a, b) => a.bankName.length - b.bankName.length,
     },
@@ -361,7 +328,7 @@ export default function SupplierList() {
       title: "Tài khoản ngân hàng",
       dataIndex: "bankAccountNumber",
       key: "bankAccountNumber",
-      width: "10%",
+      align: "center",
       ...getColumnSearchProps("bankAccountNumber"),
       sorter: (a, b) => a.bankAccountNumber.length - b.bankAccountNumber.length,
     },
@@ -369,7 +336,7 @@ export default function SupplierList() {
       title: "Số điện thoại",
       dataIndex: "phoneNumberContact",
       key: "phoneNumberContact",
-      width: "10%",
+      align: "center",
       ...getColumnSearchProps("phoneNumberContact"),
     },
     {
@@ -400,7 +367,7 @@ export default function SupplierList() {
           </Tag>
         );
       },
-      width: "10%",
+      align: "center",
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend", "ascend"],
     },
@@ -410,22 +377,20 @@ export default function SupplierList() {
       key: "operation",
       render: (_, record) => (
         <Dropdown
-          overlay={
-            <Menu
-              items={[
-                {
-                  key: 1,
-                  label: "Xem chi tiết và Cập nhật",
-                  onClick: () => onRowDetails(record),
-                },
-                {
-                  key: 2,
-                  label: "Xoá Nhà cung cấp",
-                  onClick: () => onRowDelete(record),
-                },
-              ]}
-            />
-          }
+          menu={{
+            items: [
+              {
+                key: 1,
+                label: "Xem chi tiết và Cập nhật",
+                onClick: () => onRowDetails(record),
+              },
+              {
+                key: 2,
+                label: "Xoá Nhà cung cấp",
+                onClick: () => onRowDelete(record),
+              },
+            ],
+          }}
         >
           <a>
             Xem thêm <DownOutlined />
@@ -434,7 +399,6 @@ export default function SupplierList() {
       ),
     },
   ];
-  const hasSelected = selectedRowKeys.length > 0;
 
   const onSubmitCreate = async ({
     apartmentNumber,
@@ -477,11 +441,6 @@ export default function SupplierList() {
   };
 
   useEffect(() => {
-    dispatch(getProvinces());
-    // setComponentDisabled(createMode);
-  }, [dispatch]);
-
-  useEffect(() => {
     form.setFieldsValue(initialValues);
     if (!createMode && initialValues !== null) {
       setImgUrl(initialValues.avatarSupplier);
@@ -493,23 +452,6 @@ export default function SupplierList() {
       <div className="top">
         <Title level={2}>Danh sách Nhà cung cấp</Title>
         <div>
-          <span
-            style={{
-              marginRight: 9,
-            }}
-          >
-            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
-          </span>
-          <Button
-            className="btnDelete"
-            onClick={() => onRowDelete()}
-            disabled={!hasSelected}
-            loading={isLoading}
-            shape="round"
-            icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
-          >
-            Xoá bỏ
-          </Button>
           <Button
             type="primary"
             shape={"round"}
@@ -596,7 +538,7 @@ export default function SupplierList() {
                     },
                     {
                       pattern:
-                      /^[a-zA-ZaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,10}$/,
+                        /^[a-zA-ZaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,10}$/,
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
@@ -641,7 +583,7 @@ export default function SupplierList() {
                     },
                     {
                       pattern:
-                      /^[a-zA-ZaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,50}$/,
+                        /^[a-zA-ZaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,50}$/,
                       message: getMessage(
                         CODE_ERROR.ERROR_FORMAT,
                         MESSAGE_ERROR,
@@ -1067,25 +1009,31 @@ export default function SupplierList() {
         </div>
       </div>
       <Table
-        rowKey="id"
+        rowKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
-        dataSource={listSuppliers}
+        dataSource={[...listSuppliers]}
         pagination={
-          listSuppliers.length !== 0
+          totalElements !== 0
             ? {
+                current: number,
+                pageSize: size,
+                total: totalElements,
                 showSizeChanger: true,
+                showQuickJumper: true,
                 position: ["bottomCenter"],
-                size: "default",
-                pageSize: pageSize,
-                current: currentPage,
-                totalElements,
+                pageSizeOptions: ["10", "20", "50", "100"],
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
                 onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "6", "10"],
+                locale: {
+                  jump_to: "",
+                  page: "trang",
+                  items_per_page: "/ trang",
+                },
               }
             : false
         }
-        rowSelection={rowSelection}
       />
     </div>
   );

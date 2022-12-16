@@ -37,80 +37,41 @@ import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
 import { createDetails } from "features/category-manager/categoryManager";
-import {
-  getDistrict,
-  getProvince,
-  getProvinces,
-} from "features/provinces/provinces";
+import { getProvinces } from "features/provinces/provinces";
 const { Title, Text } = Typography;
 const { Option } = Select;
 export default function CategoryList() {
-  const { listCategories, totalElements, totalPages, size } = useSelector(
+  const { listCategories, totalElements, number, size } = useSelector(
     (state) => state.category
-  );
-  const { provinces, districts, wards } = useSelector(
-    (state) => state.provinces
   );
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const [componentDisabled, setComponentDisabled] = useState(true);
   const [modal1Open, setModal1Open] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const [searchText, setSearchText] = useState("");
-  const [status, setStatus] = useState(null);
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+
   const searchInput = useRef(null);
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
-  };
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: "odd",
-        text: "Select Odd Row",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: "even",
-        text: "Select Even Row",
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: CategoryManagerPaths.CATEGORY_LIST,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        number: page,
+      }),
+    });
   };
 
   const onRowDelete = (record) => {
@@ -122,9 +83,7 @@ export default function CategoryList() {
       cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
-        dispatch(
-          record ? deleteCategory(record.id) : deleteCategories(selectedRowKeys)
-        )
+        dispatch(deleteCategory(record.id))
           .then(unwrapResult)
           .then((res) => {
             console.log(res);
@@ -160,8 +119,11 @@ export default function CategoryList() {
 
   useEffect(() => {
     const query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
+    }
     setIsLoading(true);
-    dispatch(getCategories())
+    dispatch(getCategories(query))
       .then(unwrapResult)
       .then(() => setIsLoading(false));
   }, [dispatch, location]);
@@ -271,7 +233,7 @@ export default function CategoryList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -281,7 +243,7 @@ export default function CategoryList() {
       title: "Tên Chức năng",
       dataIndex: "categoryName",
       key: "categoryName",
-      width: "20%",
+      align: "center",
       ...getColumnSearchProps("categoryName"),
       sorter: (a, b) => a.categoryName - b.categoryName,
       sortDirections: ["descend", "ascend"],
@@ -290,7 +252,7 @@ export default function CategoryList() {
       title: "Miêu tả",
       dataIndex: "description",
       key: "description",
-      width: "20%",
+      align: "center",
       ...getColumnSearchProps("description"),
       sorter: (a, b) => a.description - b.description,
       sortDirections: ["descend", "ascend"],
@@ -323,7 +285,7 @@ export default function CategoryList() {
           </Tag>
         );
       },
-      width: "20%",
+      align: "center",
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend", "ascend"],
     },
@@ -331,24 +293,23 @@ export default function CategoryList() {
       title: "Hành động",
       dataIndex: "operation",
       key: "operation",
+      align: "center",
       render: (_, record) => (
         <Dropdown
-          overlay={
-            <Menu
-              items={[
-                {
-                  key: 1,
-                  label: "Xem chi tiết và Cập nhật",
-                  onClick: () => onRowDetails(record),
-                },
-                {
-                  key: 2,
-                  label: "Xoá Chức năng",
-                  onClick: () => onRowDelete(record),
-                },
-              ]}
-            />
-          }
+          menu={{
+            items: [
+              {
+                key: 1,
+                label: "Xem chi tiết và Cập nhật",
+                onClick: () => onRowDetails(record),
+              },
+              {
+                key: 2,
+                label: "Xoá Chức năng",
+                onClick: () => onRowDelete(record),
+              },
+            ],
+          }}
         >
           <a>
             Xem thêm <DownOutlined />
@@ -357,8 +318,6 @@ export default function CategoryList() {
       ),
     },
   ];
-
-  const hasSelected = selectedRowKeys.length > 0;
 
   const onSubmitCreate = async ({ ...args }) => {
     dispatch(
@@ -387,32 +346,11 @@ export default function CategoryList() {
       });
   };
 
-  useEffect(() => {
-    dispatch(getProvinces());
-  }, [dispatch]);
-
   return (
     <div className="employee-list">
       <div className="top">
         <Title level={2}>Danh sách Chức năng</Title>
         <div>
-          <span
-            style={{
-              marginRight: 9,
-            }}
-          >
-            {hasSelected ? `Đã chọn ${selectedRowKeys.length} mục` : ""}
-          </span>
-          <Button
-            className="btnDelete"
-            onClick={() => onRowDelete()}
-            disabled={!hasSelected}
-            loading={isLoading}
-            shape="round"
-            icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
-          >
-            Xoá
-          </Button>
           <Button
             type="primary"
             shape={"round"}
@@ -532,25 +470,31 @@ export default function CategoryList() {
         </div>
       </div>
       <Table
-        rowKey="id"
+        rowKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
-        dataSource={listCategories}
+        dataSource={[...listCategories]}
         pagination={
-          listCategories.length !== 0
+          totalElements !== 0
             ? {
+                current: number,
+                pageSize: size,
+                total: totalElements,
                 showSizeChanger: true,
+                showQuickJumper: true,
                 position: ["bottomCenter"],
-                size: "mặc định",
-                pageSize: pageSize,
-                current: currentPage,
-                totalElements,
+                pageSizeOptions: ["10", "20", "50", "100"],
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} items`,
                 onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "6", "10"],
+                locale: {
+                  jump_to: "",
+                  page: "trang",
+                  items_per_page: "/ trang",
+                },
               }
             : false
         }
-        rowSelection={rowSelection}
       />
     </div>
   );

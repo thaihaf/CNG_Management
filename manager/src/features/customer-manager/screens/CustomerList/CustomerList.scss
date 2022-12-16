@@ -63,18 +63,19 @@
       bottom: 0;
       right: 0;
       margin: 0;
-    }
-  }
-  .ant-upload.ant-upload-select-picture-card {
-    width: 5rem;
-    height: 5rem;
-    padding: 0.5rem 2rem;
-    border: none;
-    border-radius: 50%;
-    background-color: #52c41a;
-    margin-top: 2rem;
-    .ant-upload {
-      color: white;
+
+      .ant-upload.ant-upload-select {
+        width: 5rem;
+        height: 5rem;
+        padding: 0.5rem 2rem;
+        border: none;
+        border-radius: 50%;
+        background-color: #52c41a;
+        margin-top: 2rem;
+        .ant-upload {
+          color: white;
+        }
+      }
     }
   }
 }
