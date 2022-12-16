@@ -415,7 +415,7 @@ export default function BrandList() {
                     }
                   >
                     {listActiveSuppliers.map((s) => (
-                      <Option value={s.id} key={s.id}>
+                      <Option value={s.id} key={s.id} id={s.id}>
                         {s.supplierName}
                       </Option>
                     ))}

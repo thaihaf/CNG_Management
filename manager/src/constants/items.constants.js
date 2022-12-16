@@ -112,7 +112,6 @@ export const siderBarItems = [
     label: `Chức năng`,
     role: ["admin", "employee"],
   },
-  //
   {
     key: "profile",
     icon: <ReconciliationOutlined style={{ fontSize: "1.6rem" }} />,
