@@ -181,40 +181,58 @@ export default function ProductProfit() {
       align: "center",
     },
     {
-      title: "Số lượng m2 xuất",
+      title: "Số lượng m2 xuất (m2)",
       dataIndex: ["productRevenueDTO", "squareMeterExport"],
       key: "squareMeterExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng m2 nhập lại",
+      title: "Số lượng m2 nhập lại (m2)",
       dataIndex: ["productRevenueDTO", "squareMeterReExport"],
       key: "squareMeterReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Tiền nhập",
+      title: "Tiền nhập (vnđ)",
       dataIndex: ["productRevenueDTO", "totalCostImport"],
       key: "totalCostImport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Tiền nhập lại",
+      title: "Tiền nhập lại (vnđ)",
       dataIndex: ["productRevenueDTO", "totalPriceReExport"],
       key: "totalPriceReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Doanh số",
+      title: "Doanh số (vnđ)",
       dataIndex: ["productRevenueDTO", "totalPriceExport"],
       key: "totalPriceExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Lợi nhuận",
+      title: "Lợi nhuận (vnđ)",
       dataIndex: ["productRevenueDTO", "profit"],
       key: "profit",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
   ];
   const columnsProductProfit = [
@@ -336,8 +354,8 @@ export default function ProductProfit() {
   }, [dispatch, location]);
 
   return (
-    <div className="product-inventory">
-      <div className="top">
+    <div className="product-profit">
+      <div className="filter">
         <Title level={5} style={{ marginBottom: 0 }}>
           Xuất dữ liệu
         </Title>

@@ -185,37 +185,52 @@ export default function SupplierProfit() {
       align: "center",
     },
     {
-      title: "Số lượng m2 xuất",
+      title: "Số lượng m2 xuất (m2)",
       dataIndex: ["supplierRevenueDTO", "squareMeterExport"],
       key: "squareMeterExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng m2 nhập lại",
+      title: "Số lượng m2 nhập lại (m2)",
       dataIndex: ["supplierRevenueDTO", "squareMeterReExport"],
       key: "squareMeterReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Tiền nhập",
+      title: "Tiền nhập (vnđ)",
       dataIndex: ["supplierRevenueDTO", "totalCostImport"],
       key: "totalCostImport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Tiền nhập lại",
+      title: "Tiền nhập lại (vnđ)",
       dataIndex: ["supplierRevenueDTO", "totalPriceReExport"],
       key: "totalPriceReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Doanh số",
+      title: "Doanh số (vnđ)",
       dataIndex: ["supplierRevenueDTO", "totalPriceExport"],
       key: "totalPriceExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Lợi nhuận",
+      title: "Lợi nhuận (vnđ)",
       dataIndex: ["supplierRevenueDTO", "profit"],
       key: "profit",
       align: "center",
@@ -236,43 +251,58 @@ export default function SupplierProfit() {
       align: "center",
     },
     {
-      title: "Số lượng m2 xuất",
+      title: "Số lượng m2 xuất (m2)",
       dataIndex: ["brandRevenueDTO", "squareMeterExport"],
       key: "squareMeterExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng m2 nhập lại",
+      title: "Số lượng m2 nhập lại (m2)",
       dataIndex: ["brandRevenueDTO", "squareMeterReExport"],
       key: "squareMeterReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Tiền nhập",
+      title: "Tiền nhập (vnđ)",
       dataIndex: ["brandRevenueDTO", "totalCostImport"],
       key: "totalCostImport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Tiền nhập lại",
+      title: "Tiền nhập lại (vnđ)",
       dataIndex: ["brandRevenueDTO", "totalPriceReExport"],
       key: "totalPriceReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Doanh số",
+      title: "Doanh số (vnđ)",
       dataIndex: ["brandRevenueDTO", "totalPriceExport"],
       key: "totalPriceExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Lợi nhuận",
+      title: "Lợi nhuận (vnđ)",
       dataIndex: ["brandRevenueDTO", "profit"],
       key: "profit",
       align: "center",
-      // render: (value) => {
-      //   return <Statistic value={value} precision={0} />;
-      // },
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
   ];
 
@@ -334,8 +364,8 @@ export default function SupplierProfit() {
   }, [dispatch, location]);
 
   return (
-    <div className="supplier-inventory">
-      <div className="top">
+    <div className="supplier-profit">
+      <div className="filter">
         <Title level={5} style={{ marginBottom: 0 }}>
           Xuất dữ liệu
         </Title>

@@ -1,8 +1,20 @@
-.daily-report .top {
+.daily-report .top,
+.daily-report .left,
+.daily-report .right {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  gap: 1.5rem;
+  padding: 1rem 2rem !important;
+  margin: 0 !important;
+}
+.daily-report .top .right .ant-form-item {
+  margin: 0;
+}
+.daily-report .top.bg {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  margin: 2rem 0 !important;
+  border-radius: 2rem;
 }
 .daily-report .btns {
   width: 100%;
@@ -21,11 +33,6 @@
 .daily-report .details__group .details__item {
   width: 50%;
 }
-.daily-report .ant-picker {
-  height: 4rem !important;
-  border-radius: 2rem !important;
-  padding: 1rem 2rem !important;
-}
 .daily-report .ant-col {
   max-width: 100% !important;
   flex: none !important;
@@ -33,39 +40,9 @@
 .daily-report .ant-row {
   display: block;
 }
-.daily-report .ant-input {
-  border-radius: 2rem !important;
-  padding: 1rem 2rem;
-  margin-top: 0.7rem;
-}
-.daily-report .login_input {
-  border-radius: 5rem;
-  padding: 0 1.5rem 0 0;
-}
-.daily-report .login_input .ant-input {
-  margin: 0;
-}
 .daily-report .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
 .daily-report .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
 .daily-report .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
 .daily-report .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
   background: unset;
-}
-.daily-report .rowClassName1 {
-  background-color: cadetblue;
-  border-radius: 2rem;
-  border-color: chartreuse;
-  border-width: 2rem;
-  border-style: solid;
-}
-.daily-report .rowClassName1 td:first-child {
-  border-top-left-radius: 2rem;
-  border-bottom-left-radius: 2rem;
-}
-.daily-report .rowClassName1 td:last-child {
-  border-top-right-radius: 2rem;
-  border-bottom-right-radius: 2rem;
-}
-.daily-report .ant-table-cell.ant-table-selection-column {
-  border-spacing: 2rem;
 }

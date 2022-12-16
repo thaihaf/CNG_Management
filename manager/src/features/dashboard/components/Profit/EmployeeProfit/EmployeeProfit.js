@@ -187,40 +187,58 @@ export default function EmployeeProfit() {
       render: (value) => `${value.firstName} ${value.lastName}`,
     },
     {
-      title: "Số lượng m2 xuất",
+      title: "Số lượng m2 xuất (m2)",
       dataIndex: ["employeeRevenueDTO", "squareMeterExport"],
       key: "squareMeterExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng m2 nhập lại",
+      title: "Số lượng m2 nhập lại (m2)",
       dataIndex: ["employeeRevenueDTO", "squareMeterReExport"],
       key: "squareMeterReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Tiền nhập",
+      title: "Tiền nhập (vnđ)",
       dataIndex: ["employeeRevenueDTO", "totalCostImport"],
       key: "totalCostImport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Tiền nhập lại",
+      title: "Tiền nhập lại (vnđ)",
       dataIndex: ["employeeRevenueDTO", "totalPriceReExport"],
       key: "totalPriceReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Doanh số",
+      title: "Doanh số (vnđ)",
       dataIndex: ["employeeRevenueDTO", "totalPriceExport"],
       key: "totalPriceExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Lợi nhuận",
+      title: "Lợi nhuận (vnđ)",
       dataIndex: ["employeeRevenueDTO", "profit"],
       key: "profit",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
   ];
 
@@ -283,7 +301,7 @@ export default function EmployeeProfit() {
 
   return (
     <div className="employee-profit">
-      <div className="top">
+      <div className="filter">
         <Title level={5} style={{ marginBottom: 0 }}>
           Xuất dữ liệu
         </Title>

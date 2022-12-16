@@ -1,14 +1,9 @@
-.category-profit .top,
-.category-profit .left,
-.category-profit .right {
+.category-profit .filter {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem !important;
+  padding: 2rem 3rem !important;
   margin: 0 !important;
-}
-.category-profit .top .right .ant-form-item {
-  margin: 0;
+  gap: 1.5rem;
 }
 .category-profit .btns {
   width: 100%;

@@ -1,9 +1,9 @@
-.product-inventory .top {
+.product-inventory .filter {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem !important;
+  padding: 2rem 3rem !important;
   margin: 0 !important;
+  gap: 1.5rem;
 }
 .product-inventory .btns {
   width: 100%;

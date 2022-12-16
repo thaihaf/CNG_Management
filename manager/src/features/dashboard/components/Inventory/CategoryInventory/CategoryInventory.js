@@ -185,43 +185,61 @@ export default function CategoryInventory() {
       align: "center",
     },
     {
-      title: "Tồn đầu kỳ",
+      title: "Tồn đầu kỳ (m2)",
       dataIndex: [
         "categoryInventoryStoreDTO",
         "squareMeterPerBoxAtBeginPeriod",
       ],
       key: "squareMeterPerBoxAtBeginPeriod",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng nhập",
+      title: "Số lượng nhập (m2)",
       dataIndex: ["categoryInventoryStoreDTO", "squareMeterPerBoxImport"],
       key: "squareMeterPerBoxImport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng xuất",
+      title: "Số lượng xuất (m2)",
       dataIndex: ["categoryInventoryStoreDTO", "squareMeterPerBoxExport"],
       key: "squareMeterPerBoxExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng nhập lại",
+      title: "Số lượng nhập lại (m2)",
       dataIndex: ["categoryInventoryStoreDTO", "squareMeterPerBoxReExport"],
       key: "squareMeterPerBoxReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Tồn cuối kỳ",
+      title: "Tồn cuối kỳ (m2)",
       dataIndex: ["categoryInventoryStoreDTO", "squareMeterPerBoxAtEndPeriod"],
       key: "squareMeterPerBoxAtEndPeriod",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Giá trị tồn",
+      title: "Giá trị tồn (vnđ)",
       dataIndex: ["categoryInventoryStoreDTO", "inventoryCost"],
       key: "inventoryCost",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
   ];
 
@@ -286,7 +304,7 @@ export default function CategoryInventory() {
 
   return (
     <div className="category-inventory">
-      <div className="top">
+      <div className="filter">
         <Title level={5} style={{ marginBottom: 0 }}>
           Xuất dữ liệu
         </Title>

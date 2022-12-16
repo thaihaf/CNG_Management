@@ -192,7 +192,7 @@ export default function DashboardByDay() {
       key: "totalSquareMeterImport",
       align: "center",
       render: (value) => {
-        return <Statistic value={value} precision={0} />;
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
       },
     },
     {
@@ -205,12 +205,12 @@ export default function DashboardByDay() {
       },
     },
     {
-      title: "Số M2 trả hàng (vnđ)",
+      title: "Số M2 trả hàng (m2)",
       dataIndex: "totalSquareMeterReExport",
       key: "totalSquareMeterReExport",
       align: "center",
       render: (value) => {
-        return <Statistic value={value} precision={0} />;
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
       },
     },
     {
@@ -223,12 +223,12 @@ export default function DashboardByDay() {
       },
     },
     {
-      title: "Số M2 xuất hàng (vnđ)",
+      title: "Số M2 xuất hàng (m2)",
       dataIndex: "totalSquareMeterExport",
       key: "totalSquareMeterExport",
       align: "center",
       render: (value) => {
-        return <Statistic value={value} precision={0} />;
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
       },
     },
     {
@@ -382,7 +382,6 @@ export default function DashboardByDay() {
       </div>
 
       <Table
-        size="middle"
         columns={colunns}
         dataSource={[...listDashboardByYear]}
         rowKey={(record) => record.year}
