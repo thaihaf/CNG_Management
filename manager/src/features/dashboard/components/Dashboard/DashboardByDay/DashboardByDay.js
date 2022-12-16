@@ -1,8 +1,10 @@
 import { SearchOutlined } from "@ant-design/icons";
 import {
   Button,
+  DatePicker,
   Form,
   Input,
+  Radio,
   Space,
   Statistic,
   Table,
@@ -19,18 +21,23 @@ import avt_default from "assets/images/avt-default.png";
 import "./DashboardByDay.css";
 import { getDashBoardByDay } from "features/dashboard/dashboard";
 import HeaderTable from "../HeaderTable/HeaderTable";
+import { getMessage } from "helpers/util.helper";
+import { CODE_ERROR } from "constants/errors.constants";
+import { MESSAGE_ERROR } from "constants/messages.constants";
+import { Excel } from "antd-table-saveas-excel";
+import { dayDashboardColumnsExport } from "features/dashboard/constants/dashboard.column";
 
-const { Text } = Typography;
+const { Title, Text } = Typography;
 
 export default function DashboardByDay() {
-  const { listDashboardByDay, totalElements, totalPages, size } = useSelector(
+  const { listDashboardByDay, month, year } = useSelector(
     (state) => state.dashboard.dashboardByDay
   );
 
   const history = useHistory();
   const dispatch = useDispatch();
-  const [DayForm] = Form.useForm();
 
+  const [tabPosition, setTabPosition] = useState();
   const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -247,6 +254,45 @@ export default function DashboardByDay() {
     },
   ];
 
+  const handleExportExcel = () => {
+    const excel = new Excel();
+
+    excel.setTHeadStyle({
+      h: "center",
+      v: "center",
+      border: true,
+      fontName: "SF Mono",
+    });
+    excel.setTBodyStyle({
+      h: "center",
+      v: "center",
+      border: true,
+      fontName: "SF Mono",
+    });
+
+    excel.addSheet("Thống kê theo ngày");
+    excel.drawCell(0, 0, {
+      hMerge: 8,
+      vMerge: 3,
+      value:
+        !month || !year
+          ? "Vui lòng chọn lại thống kê theo ngày và Xuất lại"
+          : `Thống kê theo ngày trong tháng ${month}/${year}`,
+      style: {
+        bold: true,
+        border: true,
+        background: "FFC000",
+        fontSize: 25,
+        h: "center",
+        v: "center",
+        fontName: "SF Mono",
+      },
+    });
+    excel.addColumns(dayDashboardColumnsExport);
+    excel.addDataSource(listDashboardByDay);
+
+    excel.saveAs(`Thống kê ${month}-${year}.xlsx`);
+  };
   const getData = async (defaultValues) => {
     setIsLoading(true);
     dispatch(
@@ -263,7 +309,6 @@ export default function DashboardByDay() {
         console.log(err);
       });
   };
-
   const onFinish = ({ data }) => {
     getData({ month: data.month() + 1, year: data.year() });
   };
@@ -274,8 +319,7 @@ export default function DashboardByDay() {
 
   return (
     <Form
-      className="product"
-      form={DayForm}
+      className="dashboardByDay"
       autoComplete="off"
       layout="vertical"
       onFinish={onFinish}
@@ -283,6 +327,60 @@ export default function DashboardByDay() {
         data: dayjs(`${dayjs().year()}/${dayjs().month() + 1}`, "YYYY/MM"),
       }}
     >
+      <div className="top">
+        <div className="left">
+          <Title level={5} style={{ marginBottom: 0 }}>
+            Xuất dữ liệu
+          </Title>
+
+          <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
+            <Radio.Button value="excel" onClick={() => handleExportExcel()}>
+              Excel
+            </Radio.Button>
+            <Radio.Button value="csv">CSV</Radio.Button>
+            <Radio.Button value="pdf">PDF</Radio.Button>
+            <Radio.Button value="print">Print</Radio.Button>
+          </Radio.Group>
+        </div>
+
+        <div className="right">
+          <Form.Item
+            name={"data"}
+            className="details__item"
+            rules={[
+              {
+                required: true,
+                message: getMessage(
+                  CODE_ERROR.ERROR_REQUIRED,
+                  MESSAGE_ERROR,
+                  "Năm và Tháng"
+                ),
+              },
+            ]}
+          >
+            <DatePicker
+              picker={"month"}
+              format={"MM/YYYY"}
+              placement="bottomRight"
+              onChange={(dates) => {
+                dates ? setCheckDisable(false) : setCheckDisable(true);
+              }}
+            />
+          </Form.Item>
+
+          <Button
+            type="primary"
+            shape="round"
+            htmlType="submit"
+            disabled={checkDisable === false ? false : true}
+            style={{
+              width: 120,
+            }}
+          >
+            Tìm kiếm
+          </Button>
+        </div>
+      </div>
       <Table
         size="middle"
         columns={colunns}
@@ -291,13 +389,13 @@ export default function DashboardByDay() {
         loading={isLoading}
         scroll={{ x: "maxContent" }}
         pagination={false}
-        title={() => (
-          <HeaderTable
-            type={"day"}
-            checkDisable={checkDisable}
-            setCheckDisable={setCheckDisable}
-          />
-        )}
+        // title={() => (
+        //   <HeaderTable
+        //     type={"day"}
+        //     checkDisable={checkDisable}
+        //     setCheckDisable={setCheckDisable}
+        //   />
+        // )}
       />
     </Form>
   );

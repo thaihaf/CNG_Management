@@ -1,0 +1,13 @@
+.dashboardByMonth .top,
+.dashboardByMonth .left,
+.dashboardByMonth .right {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 2rem !important;
+  margin: 0 !important;
+}
+.dashboardByMonth .top .right .ant-form-item {
+  margin: 0;
+}

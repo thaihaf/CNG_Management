@@ -109,8 +109,8 @@ const DetailsForm = ({ updateMode }) => {
               onChange={(dates, dateString) => {
                 if (dates) {
                   let value = {
-                    startDate: dates[0].format("MM/DD/YYYY"),
-                    endDate: dates[1].format("MM/DD/YYYY"),
+                    startDate: dates[0].format("DD/MM/YYYY"),
+                    endDate: dates[1].format("DD/MM/YYYY"),
                   };
                   setDatesPicker(value);
                 } else {

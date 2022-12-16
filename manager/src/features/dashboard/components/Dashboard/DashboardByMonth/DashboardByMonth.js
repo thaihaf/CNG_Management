@@ -1,8 +1,10 @@
 import { SearchOutlined } from "@ant-design/icons";
 import {
   Button,
+  DatePicker,
   Form,
   Input,
+  Radio,
   Select,
   Space,
   Statistic,
@@ -19,18 +21,24 @@ import avt_default from "assets/images/avt-default.png";
 
 import { getDashBoardByMonth } from "features/dashboard/dashboard";
 import HeaderTable from "../HeaderTable/HeaderTable";
+import { getMessage } from "helpers/util.helper";
+import { CODE_ERROR } from "constants/errors.constants";
+import { MESSAGE_ERROR } from "constants/messages.constants";
+import { monthDashboardColumnsExport } from "features/dashboard/constants/dashboard.column";
+import { Excel } from "antd-table-saveas-excel";
+import "./DashboardByMonth.css";
 
-const { Text } = Typography;
+const { Title, Text } = Typography;
 
 export default function DashboardByMonth() {
-  const { listDashboardByMonth, totalElements, totalPages, size } = useSelector(
+  const { listDashboardByMonth, year2 } = useSelector(
     (state) => state.dashboard.dashboardByMonth
   );
 
   const history = useHistory();
   const dispatch = useDispatch();
-  const [DayForm] = Form.useForm();
 
+  const [tabPosition, setTabPosition] = useState();
   const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -247,6 +255,44 @@ export default function DashboardByMonth() {
     },
   ];
 
+  const handleExportExcel = () => {
+    const excel = new Excel();
+
+    excel.setTHeadStyle({
+      h: "center",
+      v: "center",
+      border: true,
+      fontName: "SF Mono",
+    });
+    excel.setTBodyStyle({
+      h: "center",
+      v: "center",
+      border: true,
+      fontName: "SF Mono",
+    });
+
+    excel.addSheet("Thống kê theo tháng");
+    excel.drawCell(0, 0, {
+      hMerge: 8,
+      vMerge: 3,
+      value: year2
+        ? `Thống kê theo tháng trong năm ${year2}`
+        : "Vui lòng chọn Thống kê theo tháng và Xuất lại",
+      style: {
+        bold: true,
+        border: true,
+        background: "FFC000",
+        fontSize: 25,
+        h: "center",
+        v: "center",
+        fontName: "SF Mono",
+      },
+    });
+    excel.addColumns(monthDashboardColumnsExport);
+    excel.addDataSource(listDashboardByMonth);
+
+    excel.saveAs(`Thống kê ${year2}.xlsx`);
+  };
   const getData = async (defaultValues) => {
     setIsLoading(true);
     dispatch(
@@ -259,7 +305,6 @@ export default function DashboardByMonth() {
         console.log(err);
       });
   };
-
   const onFinish = ({ data }) => {
     getData(data.year());
   };
@@ -270,8 +315,7 @@ export default function DashboardByMonth() {
 
   return (
     <Form
-      className="product"
-      form={DayForm}
+      className="dashboardByMonth"
       autoComplete="off"
       layout="vertical"
       onFinish={onFinish}
@@ -279,6 +323,61 @@ export default function DashboardByMonth() {
         data: dayjs(`${dayjs().year()}`, "YYYY"),
       }}
     >
+      <div className="top">
+        <div className="left">
+          <Title level={5} style={{ marginBottom: 0 }}>
+            Xuất dữ liệu
+          </Title>
+
+          <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
+            <Radio.Button value="excel" onClick={() => handleExportExcel()}>
+              Excel
+            </Radio.Button>
+            <Radio.Button value="csv">CSV</Radio.Button>
+            <Radio.Button value="pdf">PDF</Radio.Button>
+            <Radio.Button value="print">Print</Radio.Button>
+          </Radio.Group>
+        </div>
+
+        <div className="right">
+          <Form.Item
+            name="data"
+            className="details__item"
+            rules={[
+              {
+                required: true,
+                message: getMessage(
+                  CODE_ERROR.ERROR_REQUIRED,
+                  MESSAGE_ERROR,
+                  "Năm"
+                ),
+              },
+            ]}
+          >
+            <DatePicker
+              picker={"year"}
+              format={"YYYY"}
+              placement="bottomRight"
+              onChange={(dates) => {
+                dates ? setCheckDisable(false) : setCheckDisable(true);
+              }}
+            />
+          </Form.Item>
+
+          <Button
+            type="primary"
+            shape="round"
+            htmlType="submit"
+            disabled={checkDisable === false ? false : true}
+            style={{
+              width: 120,
+            }}
+          >
+            Tìm kiếm
+          </Button>
+        </div>
+      </div>
+
       <Table
         size="middle"
         columns={colunns}
@@ -287,13 +386,6 @@ export default function DashboardByMonth() {
         loading={isLoading}
         scroll={{ x: "maxContent" }}
         pagination={false}
-        title={() => (
-          <HeaderTable
-            type={"month"}
-            checkDisable={checkDisable}
-            setCheckDisable={setCheckDisable}
-          />
-        )}
       />
     </Form>
   );

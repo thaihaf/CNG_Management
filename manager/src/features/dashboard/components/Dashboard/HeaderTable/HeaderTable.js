@@ -17,7 +17,7 @@ const HeaderTable = ({ type, checkDisable, setCheckDisable }) => {
       {type ? (
         <div className="headerTable wrapper">
           {type === "day" || type === "month" ? (
-            <div className="wrapper dashboard">
+            <div className="wrapper">
               <Form.Item
                 name={"data"}
                 className="details__item"
@@ -42,7 +42,7 @@ const HeaderTable = ({ type, checkDisable, setCheckDisable }) => {
               </Form.Item>
             </div>
           ) : (
-            <div className="wrapper dashboard">
+            <div className="wrapper">
               <Form.Item
                 name={"years"}
                 className="details__item"

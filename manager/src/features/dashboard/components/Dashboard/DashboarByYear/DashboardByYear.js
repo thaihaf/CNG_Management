@@ -1,8 +1,10 @@
 import { SearchOutlined } from "@ant-design/icons";
 import {
   Button,
+  DatePicker,
   Form,
   Input,
+  Radio,
   Select,
   Space,
   Statistic,
@@ -18,18 +20,25 @@ import Highlighter from "react-highlight-words";
 import avt_default from "assets/images/avt-default.png";
 import { getDashBoardByYear } from "features/dashboard/dashboard";
 import HeaderTable from "../HeaderTable/HeaderTable";
+import { Excel } from "antd-table-saveas-excel";
+import { getMessage } from "helpers/util.helper";
+import { CODE_ERROR } from "constants/errors.constants";
+import { MESSAGE_ERROR } from "constants/messages.constants";
+import { yearDashboardColumnsExport } from "features/dashboard/constants/dashboard.column";
+import "./DashboardByYear.css";
 
-const { Text } = Typography;
+const { Title, Text } = Typography;
+const { RangePicker } = DatePicker;
 
 export default function DashboardByDay() {
-  const { listDashboardByYear, totalElements, totalPages, size } = useSelector(
+  const { listDashboardByYear, startYear, endYear } = useSelector(
     (state) => state.dashboard.dashboardByYear
   );
 
   const history = useHistory();
   const dispatch = useDispatch();
-  const [DayForm] = Form.useForm();
 
+  const [tabPosition, setTabPosition] = useState();
   const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -242,6 +251,44 @@ export default function DashboardByDay() {
     },
   ];
 
+  const handleExportExcel = () => {
+    const excel = new Excel();
+
+    excel.setTHeadStyle({
+      h: "center",
+      v: "center",
+      border: true,
+      fontName: "SF Mono",
+    });
+    excel.setTBodyStyle({
+      h: "center",
+      v: "center",
+      border: true,
+      fontName: "SF Mono",
+    });
+
+    excel.addSheet("Thống kê theo năm");
+    excel.drawCell(0, 0, {
+      hMerge: 8,
+      vMerge: 3,
+      value:
+        !startYear || !endYear
+          ? "Vui lòng chọn Thống kê theo năm và Xuất lại"
+          : `Thống kê theo năm : ${startYear} - ${endYear}`,
+      style: {
+        bold: true,
+        border: true,
+        background: "FFC000",
+        fontSize: 25,
+        h: "center",
+        v: "center",
+      },
+    });
+    excel.addColumns(yearDashboardColumnsExport);
+    excel.addDataSource(listDashboardByYear);
+
+    excel.saveAs(`Thống kê ${startYear}-${endYear}.xlsx`);
+  };
   const getData = async (defaultValues) => {
     setIsLoading(true);
     dispatch(
@@ -258,7 +305,6 @@ export default function DashboardByDay() {
         console.log(err);
       });
   };
-
   const onFinish = ({ years }) => {
     getData(years);
   };
@@ -269,8 +315,7 @@ export default function DashboardByDay() {
 
   return (
     <Form
-      className="product"
-      form={DayForm}
+      className="dashboardByYear"
       name="dynamic_form_nest_item"
       autoComplete="off"
       layout="vertical"
@@ -282,6 +327,60 @@ export default function DashboardByDay() {
         ],
       }}
     >
+      <div className="top">
+        <div className="left">
+          <Title level={5} style={{ marginBottom: 0 }}>
+            Xuất dữ liệu
+          </Title>
+
+          <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
+            <Radio.Button value="excel" onClick={() => handleExportExcel()}>
+              Excel
+            </Radio.Button>
+            <Radio.Button value="csv">CSV</Radio.Button>
+            <Radio.Button value="pdf">PDF</Radio.Button>
+            <Radio.Button value="print">Print</Radio.Button>
+          </Radio.Group>
+        </div>
+
+        <div className="right">
+          <Form.Item
+            name={"years"}
+            className="details__item"
+            rules={[
+              {
+                required: true,
+                message: getMessage(
+                  CODE_ERROR.ERROR_REQUIRED,
+                  MESSAGE_ERROR,
+                  "Năm"
+                ),
+              },
+            ]}
+          >
+            <RangePicker
+              picker="year"
+              onChange={(years) => {
+                years ? setCheckDisable(false) : setCheckDisable(true);
+              }}
+              placement="bottomRight"
+            />
+          </Form.Item>
+
+          <Button
+            type="primary"
+            shape="round"
+            htmlType="submit"
+            disabled={checkDisable === false ? false : true}
+            style={{
+              width: 120,
+            }}
+          >
+            Tìm kiếm
+          </Button>
+        </div>
+      </div>
+
       <Table
         size="middle"
         columns={colunns}
@@ -290,13 +389,6 @@ export default function DashboardByDay() {
         loading={isLoading}
         scroll={{ x: "maxContent" }}
         pagination={false}
-        title={() => (
-          <HeaderTable
-            type={"year"}
-            checkDisable={checkDisable}
-            setCheckDisable={setCheckDisable}
-          />
-        )}
       />
     </Form>
   );

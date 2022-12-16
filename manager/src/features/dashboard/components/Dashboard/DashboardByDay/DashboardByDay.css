@@ -1,0 +1,13 @@
+.dashboardByDay .top,
+.dashboardByDay .left,
+.dashboardByDay .right {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 2rem !important;
+  margin: 0 !important;
+}
+.dashboardByDay .top .right .ant-form-item {
+  margin: 0;
+}
