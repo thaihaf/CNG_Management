@@ -14,7 +14,7 @@ import NestedRouteWrapper from "./NestedRouteWrapper";
 const Routes = () => {
      return (
           <Switch>
-               <Redirect exact from="/" to={AuthPaths.LOGIN} />
+               {/* <Redirect exact from="/" to={AuthPaths.LOGIN} /> */}
 
                <NestedRouteWrapper routesWithComponents={ROUTE_LIST} />
 

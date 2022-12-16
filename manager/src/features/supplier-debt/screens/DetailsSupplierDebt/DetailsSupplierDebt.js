@@ -16,8 +16,8 @@ export default function DetailsSupplierDebt() {
 
   useEffect(() => {
     setIsLoading(true);
-    let startDate = dayjs().startOf("month").format("MM/DD/YYYY");
-    let endDate = dayjs().endOf("month").format("MM/DD/YYYY");
+    let startDate = dayjs().startOf("month").format("DD/MM/YYYY");
+    let endDate = dayjs().endOf("month").format("DD/MM/YYYY");
 
     dispatch(
       getSupplierDebtDetails({ id: id, startDate: startDate, endDate: endDate })
