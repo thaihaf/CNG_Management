@@ -164,7 +164,7 @@ const initialState = {
   dailyReport: {
     listDailyReport: [],
     totalElements: 0,
-    totalPages: 0,
+    number: 0,
     size: 0,
   },
   // dashboard
@@ -257,7 +257,7 @@ const dashboardSlice = createSlice({
     [getDashboardCustomerDaily.fulfilled]: (state, action) => {
       state.dailyReport.listDailyReport = action.payload.content;
       state.dailyReport.totalElements = action.payload.totalElements;
-      state.dailyReport.totalPages = action.payload.totalPages;
+      state.dailyReport.number = action.payload.number + 1;
       state.dailyReport.size = action.payload.size;
     },
     // dashboard

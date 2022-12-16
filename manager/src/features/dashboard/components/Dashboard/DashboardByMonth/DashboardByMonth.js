@@ -379,7 +379,6 @@ export default function DashboardByMonth() {
       </div>
 
       <Table
-        size="middle"
         columns={colunns}
         dataSource={[...listDashboardByMonth]}
         rowKey={(record) => record.month}

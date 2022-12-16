@@ -382,20 +382,12 @@ export default function DashboardByDay() {
         </div>
       </div>
       <Table
-        size="middle"
         columns={colunns}
         dataSource={[...listDashboardByDay]}
         rowKey={(record) => record.day}
         loading={isLoading}
         scroll={{ x: "maxContent" }}
         pagination={false}
-        // title={() => (
-        //   <HeaderTable
-        //     type={"day"}
-        //     checkDisable={checkDisable}
-        //     setCheckDisable={setCheckDisable}
-        //   />
-        // )}
       />
     </Form>
   );

@@ -1,8 +1,5 @@
 .category-inventory .top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem !important;
+  padding: 2rem !important;
   margin: 0 !important;
 }
 .category-inventory .btns {
@@ -28,18 +25,6 @@
 }
 .category-inventory .details__group .details__item .ant-row {
   display: block;
-}
-.category-inventory .details__group .details__item .ant-input {
-  border-radius: 2rem !important;
-  padding: 1rem 2rem;
-  margin-top: 0.7rem;
-}
-.category-inventory .details__group .details__item .login_input {
-  border-radius: 5rem;
-  padding: 0 1.5rem 0 0;
-}
-.category-inventory .details__group .details__item .login_input .ant-input {
-  margin: 0;
 }
 .category-inventory .ant-picker {
   height: 4rem !important;

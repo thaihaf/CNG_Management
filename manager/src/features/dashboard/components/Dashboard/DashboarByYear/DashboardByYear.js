@@ -382,7 +382,6 @@ export default function DashboardByDay() {
       </div>
 
       <Table
-        size="middle"
         columns={colunns}
         dataSource={[...listDashboardByYear]}
         rowKey={(record) => record.year}

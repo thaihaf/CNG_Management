@@ -16,6 +16,8 @@ import {
   Divider,
   Form,
   Input,
+  Radio,
+  Select,
   Space,
   Statistic,
   Table,
@@ -38,14 +40,20 @@ import {
   columnsExport,
   dailyReportColumnsExport,
 } from "features/dashboard/constants/dashboard.column";
+import { getMessage } from "helpers/util.helper";
+import { CODE_ERROR } from "constants/errors.constants";
+import { MESSAGE_ERROR } from "constants/messages.constants";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
 export default function CustomerDailyList() {
-  const { listDailyReport, totalElements, totalPages, size } = useSelector(
+  const { listDailyReport, totalElements, number, size } = useSelector(
     (state) => state.dashboard.dailyReport
   );
+  const { listCustomers } = useSelector((state) => state.customer);
+  const { listEmployees } = useSelector((state) => state.employee);
+
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -53,8 +61,11 @@ export default function CustomerDailyList() {
   const [form] = Form.useForm();
   const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [tabPosition, setTabPosition] = useState();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
+
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -461,11 +472,13 @@ export default function CustomerDailyList() {
     excel.setTHeadStyle({
       h: "center",
       v: "center",
+      border: true,
       fontName: "SF Mono",
     });
     excel.setTBodyStyle({
       h: "center",
       v: "center",
+      border: true,
       fontName: "SF Mono",
     });
 
@@ -475,18 +488,19 @@ export default function CustomerDailyList() {
       value: `Báo cáo hằng ngày : ${startDate} - ${endDate}`,
       style: {
         bold: true,
+        border: true,
         v: "center",
         h: "center",
-        background: "FFC000",
         fontSize: 25,
         fontName: "SF Mono",
+        background: "FFC000",
       },
     });
 
     excel.addColumns(dailyReportColumnsExport);
     excel.addDataSource(dataExport);
 
-    excel.saveAs("Báo cáo hằng ngày.xlsx");
+    excel.saveAs(`Báo cáo hằng ngày ${startDate} - ${endDate}.xlsx`);
   };
 
   useEffect(() => {
@@ -513,20 +527,8 @@ export default function CustomerDailyList() {
     <div className="daily-report">
       <div className="top">
         <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-          Báo cáo hàng ngày
+          Báo cáo hằng ngày
         </Title>
-
-        <Button
-          loading={isLoading}
-          type="primary"
-          shape={"round"}
-          size={"large"}
-          icon={<ContainerOutlined />}
-          onClick={() => handleExportExcel()}
-          disabled={listDailyReport.length === 0 ? true : false}
-        >
-          XUẤT EXCEL
-        </Button>
       </div>
 
       <Form
@@ -538,37 +540,124 @@ export default function CustomerDailyList() {
           dates: [dayjs().startOf("month"), dayjs().endOf("month")],
         }}
       >
-        <Divider style={{ margin: 0 }} />
+        <div className="top bg">
+          <div className="left">
+            <Title level={5} style={{ marginBottom: 0 }}>
+              Xuất dữ liệu
+            </Title>
 
-        <HeaderTable
-          checkDisable={checkDisable}
-          setCheckDisable={setCheckDisable}
-        />
+            <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
+              <Radio.Button value="excel" onClick={() => handleExportExcel()}>
+                Excel
+              </Radio.Button>
+              <Radio.Button value="csv">CSV</Radio.Button>
+              <Radio.Button value="pdf">PDF</Radio.Button>
+              <Radio.Button value="print">Print</Radio.Button>
+            </Radio.Group>
+          </div>
 
-        <Divider style={{ margin: 0 }} />
+          <div className="right">
+            <Form.Item name="customer">
+              <Select
+                showSearch
+                allowClear
+                onChange={() => setCheckDisable(false)}
+                placeholder="Khách hàng"
+                style={{ width: "maxContent" }}
+              >
+                {listCustomers.map((c) => (
+                  <Select.Option
+                    value={`${c.id}_${c.firstName} ${c.lastName} ${c.addressDTO.ward}`}
+                    key={c.id}
+                    id={c.id}
+                  >
+                    {`${c.firstName} ${c.lastName} -  ${c.addressDTO.ward}`}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              name={"dates"}
+              className="details__item"
+              rules={[
+                {
+                  required: true,
+                  message: getMessage(
+                    CODE_ERROR.ERROR_REQUIRED,
+                    MESSAGE_ERROR,
+                    "Ngày"
+                  ),
+                },
+              ]}
+            >
+              <RangePicker
+                format={"DD/MM/YYYY"}
+                onChange={(dates) => {
+                  dates ? setCheckDisable(false) : setCheckDisable(true);
+                }}
+              />
+            </Form.Item>
+            <Form.Item name="employee">
+              <Select
+                showSearch
+                allowClear
+                onChange={() => setCheckDisable(false)}
+                placeholder="Người bán hàng"
+              >
+                {listEmployees.map((e) => (
+                  <Select.Option
+                    value={`${e.id}_${e.firstName} ${e.lastName} ${e.ward}`}
+                    key={e.id}
+                    id={e.id}
+                  >
+                    {`${e.firstName} ${e.lastName} -  ${e.ward}`}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Button
+              type="primary"
+              shape="round"
+              htmlType="submit"
+              disabled={checkDisable === false ? false : true}
+              style={{
+                width: 120,
+              }}
+            >
+              Tìm kiếm
+            </Button>
+          </div>
+        </div>
 
         <Table
           rowClassName={() => "rowClassName1"}
           rowKey={(record) => record.id}
           columns={columns}
           loading={isLoading}
-          style={{
-            borderRadius: "2rem",
-          }}
+          // style={{
+          //   borderRadius: "2rem",
+          // }}
           scroll={{ x: "maxContent" }}
-          size="middle"
           dataSource={[...listDailyReport]}
           pagination={
-            listDailyReport.length !== 0
+            totalElements !== 0
               ? {
-                  showSizeChanger: true,
-                  position: ["bottomRight"],
-                  size: "default",
+                  current: number,
                   pageSize: size,
-                  current: currentPage,
-                  totalElements,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomRight"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
                   onChange: (page, size) => onHandlePagination(page, size),
-                  pageSizeOptions: ["2", "4", "6"],
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
                 }
               : false
           }

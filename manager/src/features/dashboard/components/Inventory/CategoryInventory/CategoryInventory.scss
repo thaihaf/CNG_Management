@@ -1,9 +1,6 @@
 .category-inventory {
   .top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem !important;
+    padding: 2rem !important;
     margin: 0 !important;
   }
 
@@ -31,20 +28,6 @@
 
       .ant-row {
         display: block;
-      }
-
-      .ant-input {
-        border-radius: 2rem !important;
-        padding: 1rem 2rem;
-        margin-top: 0.7rem;
-      }
-      .login_input {
-        border-radius: 5rem;
-        padding: 0 1.5rem 0 0;
-
-        .ant-input {
-          margin: 0;
-        }
       }
     }
   }

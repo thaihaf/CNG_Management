@@ -252,3 +252,7 @@
 .ant-drawer-content-wrapper .ant-drawer-content .ant-drawer-body .sidebarMenu .ant-menu-item {
   padding-left: 40px !important;
 }
+
+.ant-statistic-content-value {
+  font-size: 17px !important;
+}

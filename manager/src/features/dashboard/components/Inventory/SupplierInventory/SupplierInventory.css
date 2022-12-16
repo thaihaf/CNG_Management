@@ -1,8 +1,5 @@
 .supplier-inventory .top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem !important;
+  padding: 2rem !important;
   margin: 0 !important;
 }
 .supplier-inventory .btns {

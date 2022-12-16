@@ -1,5 +1,5 @@
 .inventory {
-  .top,
+  .top-wrapper,
   .right {
     display: flex;
     align-items: center;
@@ -10,101 +10,6 @@
     .ant-form-item {
       margin: 0 !important;
     }
-  }
-
-  .ant-select-dropdown {
-    width: max-content !important;
-
-    .searchProduct {
-      width: 100%;
-
-      .ant-select-item-option-content {
-        display: flex;
-        gap: 2rem;
-        align-items: center;
-        padding: 1rem;
-        width: 100%;
-
-        .search-img {
-          width: 5rem;
-          min-width: 5rem;
-          height: 5rem;
-          border-radius: 50%;
-          overflow: hidden;
-        }
-      }
-    }
-  }
-
-  .ant-table-wrapper {
-    button.ant-pagination-item-link {
-      height: 4.5rem;
-      width: 4.5rem;
-      border-radius: 2rem !important;
-    }
-
-    .ant-pagination-item {
-      height: 4.5rem;
-      width: 5.5rem;
-      border-radius: 2rem !important;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .ant-pagination-item a {
-      height: 4.5rem;
-      width: 5.5rem;
-      border-radius: 2rem !important;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-
-  .ant-table-row {
-    .ant-table-cell {
-      .ant-form-item {
-        margin-bottom: 0 !important;
-      }
-
-      .caculator {
-        .ant-input-group-addon {
-          background-color: none !important;
-          border: 1px solid none !important;
-        }
-        .ant-input-disabled {
-          color: black !important;
-        }
-      }
-    }
-  }
-
-  .ant-select-selector {
-    height: 4.5rem !important;
-    border-radius: 2rem !important;
-
-    .ant-select-selection-search,
-    .ant-select-selection-item,
-    .ant-select-selection-placeholder {
-      display: flex;
-      // justify-content: center;
-      padding: 0 1.5rem !important;
-      align-items: center;
-    }
-  }
-
-  .ant-input-number {
-    border-radius: 2rem !important;
-    padding: 0.5rem 0.7rem;
-
-    .ant-input-number-handler-wrap {
-      right: 9px;
-      border-radius: 2rem;
-    }
-  }
-  .ant-input {
-    border-radius: 2rem !important;
-    padding: 1rem 2rem;
   }
 
   .ant-tabs {
