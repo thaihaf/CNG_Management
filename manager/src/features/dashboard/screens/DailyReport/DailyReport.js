@@ -241,8 +241,9 @@ export default function CustomerDailyList() {
       key: "type",
       align: "center",
       render: (value) => {
+        let color = value === "EXPORT" ? "cadetblue" : "crimson";
         return (
-          <Tag color="green">
+          <Tag color={color}>
             {value === "EXPORT" ? "XUẤT HÀNG" : "TRẢ HÀNG"}
           </Tag>
         );
@@ -255,7 +256,7 @@ export default function CustomerDailyList() {
       key: "totalSquareMeterExport",
       align: "center",
       render: (value) => {
-        return <Statistic value={value} precision={2} />;
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
       },
     },
     {
@@ -323,7 +324,7 @@ export default function CustomerDailyList() {
       key: "totalSquareMeter",
       align: "center",
       render: (value) => {
-        return <Text>{value}</Text>;
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
       },
       // ...getColumnSearchProps("id"),
     },
@@ -333,7 +334,7 @@ export default function CustomerDailyList() {
       key: "costPerSquareMeter",
       align: "center",
       render: (value) => {
-        return <Text>{value}</Text>;
+        return <Statistic value={value} precision={0} />;
       },
       // ...getColumnSearchProps("id"),
     },
@@ -343,7 +344,7 @@ export default function CustomerDailyList() {
       key: "pricePerSquareMeter",
       align: "center",
       render: (value) => {
-        return <Text>{value}</Text>;
+        return <Statistic value={value} precision={0} />;
       },
       // ...getColumnSearchProps("id"),
     },
@@ -396,7 +397,7 @@ export default function CustomerDailyList() {
         }}
       >
         <div>{title}</div>
-        <div style={{ color: "green" }}> Total: {total}</div>
+        <div style={{ color: "hotpink" }}> Total: {total}</div>
       </div>
     );
   };

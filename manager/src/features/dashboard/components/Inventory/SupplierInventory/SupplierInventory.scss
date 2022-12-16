@@ -1,7 +1,10 @@
 .supplier-inventory {
-  .top {
-    padding: 2rem !important;
+  .filter {
+    display: flex;
+    align-items: center;
+    padding: 2rem 3rem !important;
     margin: 0 !important;
+    gap : 1.5rem
   }
 
   .btns {

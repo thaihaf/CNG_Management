@@ -1,15 +1,10 @@
-.warehouse-inventory .top,
-.warehouse-inventory .left,
-.warehouse-inventory .right {
-  padding: 2rem !important;
+.warehouse-inventory .filter {
+  display: flex;
+  align-items: center;
+  padding: 2rem 3rem !important;
   margin: 0 !important;
-  display: block !important;
+  gap: 1.5rem;
 }
-
-.warehouse-inventory .top .right .ant-form-item {
-  margin: 0;
-}
-
 .warehouse-inventory .btns {
   width: 100%;
   display: flex;
@@ -17,7 +12,6 @@
   gap: 1rem;
   margin-top: 2rem;
 }
-
 .warehouse-inventory .details__group {
   width: 100%;
   display: flex;
@@ -25,35 +19,28 @@
   justify-content: center;
   gap: 2rem;
 }
-
 .warehouse-inventory .details__group .details__item {
   width: 50%;
 }
-
 .warehouse-inventory .details__group .details__item .ant-col {
   max-width: 100% !important;
   flex: none !important;
 }
-
 .warehouse-inventory .details__group .details__item .ant-row {
   display: block;
 }
-
 .warehouse-inventory .details__group .details__item .ant-input {
   border-radius: 2rem !important;
   padding: 1rem 2rem;
   margin-top: 0.7rem;
 }
-
 .warehouse-inventory .details__group .details__item .login_input {
   border-radius: 5rem;
   padding: 0 1.5rem 0 0;
 }
-
 .warehouse-inventory .details__group .details__item .login_input .ant-input {
   margin: 0;
 }
-
 .warehouse-inventory .ant-picker {
   height: 4rem !important;
   border-radius: 2rem !important;

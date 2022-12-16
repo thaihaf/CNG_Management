@@ -196,7 +196,7 @@ export default function DashboardByMonth() {
       key: "totalSquareMeterImport",
       align: "center",
       render: (value) => {
-        return <Statistic value={value} precision={0} />;
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
       },
     },
     {
@@ -209,12 +209,12 @@ export default function DashboardByMonth() {
       },
     },
     {
-      title: "Số M2 trả hàng (vnđ)",
+      title: "Số M2 trả hàng (m2)",
       dataIndex: "totalSquareMeterReExport",
       key: "totalSquareMeterReExport",
       align: "center",
       render: (value) => {
-        return <Statistic value={value} precision={0} />;
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
       },
     },
     {
@@ -227,12 +227,12 @@ export default function DashboardByMonth() {
       },
     },
     {
-      title: "Số M2 xuất hàng (vnđ)",
+      title: "Số M2 xuất hàng (m2)",
       dataIndex: "totalSquareMeterExport",
       key: "totalSquareMeterExport",
       align: "center",
       render: (value) => {
-        return <Statistic value={value} precision={0} />;
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
       },
     },
     {

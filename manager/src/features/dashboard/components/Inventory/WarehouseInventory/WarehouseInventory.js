@@ -186,40 +186,58 @@ export default function WarehouseInventory() {
       align: "center",
     },
     {
-      title: "Tồn đầu kỳ",
+      title: "Tồn đầu kỳ (m2)",
       dataIndex: ["inventoryStoreDTO", "squareMeterPerBoxAtBeginPeriod"],
       key: "squareMeterPerBoxAtBeginPeriod",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng nhập",
+      title: "Số lượng nhập (m2)",
       dataIndex: ["inventoryStoreDTO", "squareMeterPerBoxImport"],
       key: "squareMeterPerBoxImport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng xuất",
+      title: "Số lượng xuất (m2)",
       dataIndex: ["inventoryStoreDTO", "squareMeterPerBoxExport"],
       key: "squareMeterPerBoxExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng nhập lại",
+      title: "Số lượng nhập lại (m2)",
       dataIndex: ["inventoryStoreDTO", "squareMeterPerBoxReExport"],
       key: "squareMeterPerBoxReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Tồn cuối kỳ",
+      title: "Tồn cuối kỳ (m2)",
       dataIndex: ["inventoryStoreDTO", "squareMeterPerBoxAtEndPeriod"],
       key: "squareMeterPerBoxAtEndPeriod",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Giá trị tồn",
+      title: "Giá trị tồn (vnđ)",
       dataIndex: ["inventoryStoreDTO", "inventoryCost"],
       key: "inventoryCost",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
   ];
 
@@ -284,7 +302,7 @@ export default function WarehouseInventory() {
 
   return (
     <div className="warehouse-inventory">
-      <div className="top">
+      <div className="filter">
         <Title level={5} style={{ marginBottom: 0 }}>
           Xuất dữ liệu
         </Title>

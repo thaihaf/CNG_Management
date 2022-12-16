@@ -1,17 +1,10 @@
 .warehouse-inventory {
-  .top,
-  .left,
-  .right {
-    padding: 2rem !important;
+  .filter {
+    display: flex;
+    align-items: center;
+    padding: 2rem 3rem !important;
     margin: 0 !important;
-  }
-
-  .top {
-    .right {
-      .ant-form-item {
-        margin: 0;
-      }
-    }
+    gap : 1.5rem
   }
   .btns {
     width: 100%;

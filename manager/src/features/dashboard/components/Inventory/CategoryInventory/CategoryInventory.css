@@ -1,6 +1,9 @@
-.category-inventory .top {
-  padding: 2rem !important;
+.category-inventory .filter {
+  display: flex;
+  align-items: center;
+  padding: 2rem 3rem !important;
   margin: 0 !important;
+  gap: 1.5rem;
 }
 .category-inventory .btns {
   width: 100%;
