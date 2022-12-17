@@ -1,0 +1,89 @@
+.customerModal .btns {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.customerModal .details__group {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.customerModal .details__group.align-start {
+  align-items: flex-start;
+}
+.customerModal .details__group .details__item.w-full {
+  width: 100%;
+}
+.customerModal .details__group .details__item .ant-col {
+  max-width: 100% !important;
+  flex: none !important;
+}
+.customerModal .details__group .details__item .ant-row {
+  display: block;
+}
+.customerModal .details__group .details__item .ant-input {
+  border-radius: 2rem !important;
+  padding: 1rem 2rem;
+  margin-top: 0.7rem;
+}
+.customerModal .details__group .details__item textarea.ant-input {
+  margin: 0;
+}
+.customerModal .details__group .details__item .ant-select.ant-select-in-form-item {
+  width: 100% !important;
+}
+.customerModal .details__group .details__item .ant-input,
+.customerModal .details__group .details__item .ant-select-selector,
+.customerModal .details__group .details__item .ant-picker {
+  border-radius: 2rem !important;
+  width: 100% !important;
+}
+.customerModal .details__group .details__item .ant-select-selector {
+  height: 4.2rem;
+  padding: 0.35rem 2rem;
+}
+.customerModal .details__group .details__item .ant-select-selector .ant-select-selection-search {
+  padding: 0.3rem 0.9rem;
+}
+.customerModal .details__group .details__item .ant-select-selector .ant-select-selection-item {
+  padding: 0.1rem 0;
+}
+.customerModal .details__group .details__avatar {
+  position: relative;
+  width: 15rem;
+  height: 15rem;
+  margin: auto;
+  margin-bottom: 3rem;
+}
+.customerModal .details__group .details__avatar .details__avatar-img {
+  border-radius: 50%;
+  -o-object-fit: contain;
+  object-fit: contain;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.customerModal .details__group .details__avatar .item_choose-avt {
+  position: absolute;
+  bottom: 0;
+  right: -2rem;
+  margin: 0;
+}
+.customerModal .details__group .details__avatar .item_choose-avt .ant-upload.ant-upload-select {
+  width: 5rem;
+  height: 5rem;
+  padding: 0.5rem 2rem;
+  border: none;
+  border-radius: 50%;
+  background-color: #52c41a;
+  margin-top: 2rem;
+}
+.customerModal .details__group .details__avatar .item_choose-avt .ant-upload.ant-upload-select .ant-upload {
+  color: white;
+}

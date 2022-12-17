@@ -29,9 +29,12 @@ import {
   getBrands,
   deleteBrand,
   deleteBrands,
+  updateListBrand,
 } from "features/brand-manager/brandManager";
 
 import queryString from "query-string";
+
+import deleteImg from "assets/icons/delete.png";
 
 import "./BrandList.css";
 import { CODE_ERROR } from "constants/errors.constants";
@@ -41,27 +44,23 @@ import { createDetails } from "features/brand-manager/brandManager";
 
 import { getActiveSuppliers } from "features/supplier-manager/supplierManager";
 import { getSuppliers } from "features/supplier-manager/supplierManager";
+import { BrandModal } from "features/brand-manager/components";
 
 const { Title, Text } = Typography;
-const { Option } = Select;
 
 export default function BrandList() {
   const { listBrands, totalElements, number, size } = useSelector(
     (state) => state.brand
   );
-  const { listActiveSuppliers } = useSelector((state) => state.supplier);
 
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
 
-  const [modal1Open, setModal1Open] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-
   const searchInput = useRef(null);
 
   const onHandlePagination = (pageCurrent, pageSize) => {
@@ -81,43 +80,44 @@ export default function BrandList() {
     });
   };
 
-  const onRowDelete = (record) => {
+  const handleDelete = (record) => {
     Modal.confirm({
-      title: "Confirm",
+      title: "Xác nhận",
       icon: <ExclamationCircleOutlined />,
       content: "Bạn có chắc chắn muốn xoá Nhãn hàng không?",
-      okText: "Xoá",
-      cancelText: "Trở lại",
+      okText: "Xoá bỏ",
+      cancelText: "Huỷ bỏ",
       onOk: () => {
         setIsLoading(true);
         dispatch(deleteBrand(record.id))
           .then(unwrapResult)
           .then((res) => {
-            console.log(res);
-            dispatch(getBrands())
-              .then(unwrapResult)
-              .then(() => setIsLoading(false));
-            message.success("Delete success!");
+            const newListBrand = listBrands.map((c) => {
+              if (c.id === record.id) {
+                return { ...record, status: 0 };
+              } else {
+                return c;
+              }
+            });
+
+            dispatch(updateListBrand(newListBrand));
+
             notification.success({
               message: "Xoá Nhãn hàng",
               description: "Xoá nhãn hàng thành công!",
             });
+            setIsLoading(false);
           })
           .catch((error) => {
-            console.log(error);
             notification.error({
               message: "Xoá Nhãn hàng",
               description: "Xoá nhãn hàng không thành công!",
             });
+            setIsLoading(false);
           });
       },
       onCancel: () => {},
     });
-  };
-  const onRowDetails = (record) => {
-    history.push(
-      BrandManagerPaths.BRAND_DETAIL.replace(":brandId", record.id || "")
-    );
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -285,28 +285,26 @@ export default function BrandList() {
       key: "operation",
       align: "center",
       render: (_, record) => (
-        <Dropdown
-          placement="bottomRight"
-          arrow
-          menu={{
-            items: [
-              {
-                key: 1,
-                label: "Xem chi tiết và Chỉnh sửa",
-                onClick: () => onRowDetails(record),
-              },
-              {
-                key: 2,
-                label: "Xoá nhãn hàng",
-                onClick: () => onRowDelete(record),
-              },
-            ],
+        <div
+          style={{
+            display: "flex",
+            alignItem: "center",
+            justifyContent: "center",
+            gap: "2rem",
           }}
         >
-          <a>
-            Xem thêm <DownOutlined />
-          </a>
-        </Dropdown>
+          <BrandModal data={record} />
+          {record.status ? (
+            <img
+              src={deleteImg}
+              alt=""
+              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+              onClick={() => handleDelete(record)}
+            />
+          ) : (
+            ""
+          )}
+        </div>
       ),
     },
   ];
@@ -343,7 +341,7 @@ export default function BrandList() {
     if (query.number) {
       query.number = query.number - 1;
     }
-    
+
     setIsLoading(true);
     dispatch(getBrands(query))
       .then(unwrapResult)
@@ -355,141 +353,11 @@ export default function BrandList() {
   }, [dispatch, location]);
 
   return (
-    <div className="employee-list">
+    <div className="brand-list">
       <div className="top">
         <Title level={2}>Danh sách Nhãn Hàng</Title>
-        <div>
-          <Button
-            type="primary"
-            shape={"round"}
-            size={"large"}
-            onClick={() => setModal1Open(true)}
-          >
-            Tạo Nhãn Hàng
-          </Button>
-          <Modal
-            title="Tạo Mới Nhãn Hàng"
-            style={{ top: 20 }}
-            open={modal1Open}
-            onOk={() => setModal1Open(false)}
-            onCancel={() => setModal1Open(false)}
-            footer={[]}
-          >
-            <Form
-              form={form}
-              labelCol={{
-                span: 4,
-              }}
-              wrapperCol={{
-                span: 14,
-              }}
-              layout="horizontal"
-              name="form"
-              colon={false}
-              onFinish={onSubmitCreate}
-            >
-              <div className="details__group">
-                <Form.Item
-                  name="supplierId"
-                  label={<Text>Tên Nhà cung cấp</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED_SELECT,
-                        MESSAGE_ERROR,
-                        "Tên Nhà cung cấp"
-                      ),
-                    },
-                  ]}
-                >
-                  <Select
-                    showSearch
-                    placeholder="Chọn Nhà cung cấp"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      option.children
-                        .toLowerCase()
-                        .includes(input.toLowerCase())
-                    }
-                  >
-                    {listActiveSuppliers.map((s) => (
-                      <Option value={s.id} key={s.id} id={s.id}>
-                        {s.supplierName}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-                <Form.Item
-                  name="brandName"
-                  label={<Text>Tên Nhãn Hàng</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Tên Nhãn Hàng"
-                      ),
-                    },
-                    {
-                      pattern:
-                        /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]{2,25}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_LETTER,
-                        MESSAGE_ERROR,
-                        "Tên Nhãn Hàng"
-                      ),
-                    },
-                    {
-                      max: 25,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Tên Nhãn Hàng",
-                        25
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Tên Nhãn Hàng",
-                        2
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Tên Nhãn Hàng" />
-                </Form.Item>
-              </div>
-              <div className="btns">
-                <Button
-                  key="back"
-                  shape={"round"}
-                  htmlType="reset"
-                  onClick={() => {
-                    setModal1Open(false);
-                    form.resetFields();
-                  }}
-                >
-                  Huỷ bỏ
-                </Button>
-                <Button
-                  key="submit"
-                  shape={"round"}
-                  type="primary"
-                  htmlType="submit"
-                >
-                  Tạo mới
-                </Button>
-              </div>
-            </Form>
-          </Modal>
-        </div>
+
+        <BrandModal />
       </div>
       <Table
         rowKey={(record) => record.id}

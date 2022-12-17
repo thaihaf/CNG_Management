@@ -27,10 +27,10 @@ export const getWarehouseDetails = createAsyncThunk(
 
 export const updateDetails = createAsyncThunk(
   "warehouse/updateDetails",
-  async ({ id, data }, { rejectWithValue }) => {
+  async ({ id, dataRender }, { rejectWithValue }) => {
     try {
-      const response = await api.updateDetails(id, data);
-      return response;
+      const response = await api.updateDetails(id, dataRender);
+      return response.data;
     } catch (error) {
       throw rejectWithValue(error);
     }
@@ -63,10 +63,10 @@ export const deleteWarehouses = createAsyncThunk(
 
 export const createDetails = createAsyncThunk(
   "warehouse/createDetails",
-  async ({ data }, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await api.createDetails(data);
-      return response;
+      return response.data;
     } catch (error) {
       throw rejectWithValue(error);
     }
@@ -90,6 +90,9 @@ const warehouseSlice = createSlice({
     updateErrorProcess: (state, action) => {
       state.errorProcess = action.payload;
     },
+    updateListWarehouses: (state, action) => {
+      state.listWarehouses = action.payload;
+    },
   },
   extraReducers: {
     [getWarehouses.fulfilled]: (state, action) => {
@@ -103,6 +106,16 @@ const warehouseSlice = createSlice({
       state.errorProcess = "";
       state.createMode = false;
     },
+    [updateDetails.fulfilled]: (state, action) => {
+      const res = action.payload;
+      state.listWarehouses = state.listWarehouses.map((c) => {
+        if (c.id === res.id) {
+          return res;
+        } else {
+          return c;
+        }
+      });
+    },
     [getWarehouseDetails.rejected]: (state, action) => {
       state.createMode = true;
     },
@@ -114,6 +127,6 @@ const warehouseSlice = createSlice({
     },
   },
 });
-export const { updateErrorProcess, updateDataDetails } = warehouseSlice.actions;
+export const { updateErrorProcess, updateListWarehouses } = warehouseSlice.actions;
 
 export const warehousesReducer = warehouseSlice.reducer;
