@@ -1,0 +1,57 @@
+.warehouseModal .btns {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.warehouseModal .details__group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.warehouseModal .details__group.align-start {
+  align-items: flex-start;
+}
+.warehouseModal .details__group .details__item {
+  width: 50%;
+}
+.warehouseModal .details__group .details__item.w-full {
+  width: 100%;
+}
+.warehouseModal .details__group .details__item .ant-col {
+  max-width: 100% !important;
+  flex: none !important;
+}
+.warehouseModal .details__group .details__item .ant-row {
+  display: block;
+}
+.warehouseModal .details__group .details__item .ant-input {
+  border-radius: 2rem !important;
+  padding: 1rem 2rem;
+  margin-top: 0.7rem;
+}
+.warehouseModal .details__group .details__item textarea.ant-input {
+  margin: 0;
+}
+.warehouseModal .details__group .details__item .ant-select.ant-select-in-form-item {
+  width: 100% !important;
+}
+.warehouseModal .details__group .details__item .ant-input,
+.warehouseModal .details__group .details__item .ant-select-selector,
+.warehouseModal .details__group .details__item .ant-picker {
+  border-radius: 2rem !important;
+  width: 100% !important;
+}
+.warehouseModal .details__group .details__item .ant-select-selector {
+  height: 4.2rem;
+  padding: 0.35rem 2rem;
+}
+.warehouseModal .details__group .details__item .ant-select-selector .ant-select-selection-search {
+  padding: 0.3rem 0.9rem;
+}
+.warehouseModal .details__group .details__item .ant-select-selector .ant-select-selection-item {
+  padding: 0.1rem 0;
+}

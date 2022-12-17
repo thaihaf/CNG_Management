@@ -10,8 +10,8 @@ export const getCategories = createAsyncThunk(
   "category/getCategories",
   async (params, { rejectWithValue }) => {
     try {
-       const response = await api.getCategories(params);
-       return response.data;
+      const response = await api.getCategories(params);
+      return response.data;
     } catch (error) {
       throw rejectWithValue(error);
     }
@@ -37,7 +37,7 @@ export const updateDetails = createAsyncThunk(
   async ({ id, data }, { rejectWithValue }) => {
     try {
       const response = await api.updateDetails(id, data);
-      return response;
+      return response.data;
     } catch (error) {
       throw rejectWithValue(error);
     }
@@ -48,7 +48,7 @@ export const deleteCategory = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await api.deleteCategory(id);
-      return response;
+      return response.data;
     } catch (error) {
       throw rejectWithValue(error);
     }
@@ -85,7 +85,7 @@ const initialState = {
   listCategories: [],
   listActiveCategories: [],
   totalElements: 0,
-  totalPages: 0,
+  number: 0,
   size: 0,
   dataDetails: null,
   errorProcess: "",
@@ -99,12 +99,16 @@ const categorySlice = createSlice({
     updateErrorProcess: (state, action) => {
       state.errorProcess = action.payload;
     },
+    updateListCategories: (state, action) => {
+      console.log(action.payload);
+      state.listCategories = action.payload;
+    },
   },
   extraReducers: {
     [getCategories.fulfilled]: (state, action) => {
       state.listCategories = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
+      state.number = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getActiveCategories.fulfilled]: (state, action) => {
@@ -114,6 +118,16 @@ const categorySlice = createSlice({
       state.dataDetails = action.payload;
       state.errorProcess = "";
       state.createMode = false;
+    },
+    [updateDetails.fulfilled]: (state, action) => {
+      const res = action.payload;
+      state.listCategories = state.listCategories.map((c) => {
+        if (c.id === res.id) {
+          return res;
+        } else {
+          return c;
+        }
+      });
     },
     [getCategoryDetails.rejected]: (state, action) => {
       state.createMode = true;
@@ -126,6 +140,6 @@ const categorySlice = createSlice({
     },
   },
 });
-export const { updateErrorProcess, updateDataDetails } = categorySlice.actions;
+export const { updateErrorProcess, updateListCategories } = categorySlice.actions;
 
 export const categoriesReducer = categorySlice.reducer;

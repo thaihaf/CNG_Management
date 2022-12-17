@@ -115,6 +115,9 @@ const employeesSlice = createSlice({
     updateErrorProcess: (state, action) => {
       state.errorProcess = action.payload;
     },
+    updateListEmployees: (state, action) => {
+      state.listEmployees = action.payload;
+    },
   },
   extraReducers: {
     [getEmployees.fulfilled]: (state, action) => {
@@ -150,6 +153,6 @@ const employeesSlice = createSlice({
   },
 });
 
-export const { updateErrorProcess, updateDataDetails } = employeesSlice.actions;
+export const { updateErrorProcess, updateListEmployees } = employeesSlice.actions;
 
 export const employeesReducer = employeesSlice.reducer;

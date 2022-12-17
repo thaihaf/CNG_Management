@@ -27,10 +27,10 @@ export const getBrandDetails = createAsyncThunk(
 
 export const updateDetails = createAsyncThunk(
   "brand/updateDetails",
-  async ({ id, data }, { rejectWithValue }) => {
+  async ({ id, dataRender }, { rejectWithValue }) => {
     try {
-      const response = await api.updateDetails(id, data);
-      return response;
+      const response = await api.updateDetails(id, dataRender);
+      return response.data;
     } catch (error) {
       throw rejectWithValue(error);
     }
@@ -64,7 +64,7 @@ export const deleteBrands = createAsyncThunk(
 
 export const createDetails = createAsyncThunk(
   "brand/createDetails",
-  async ({ data }, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await api.createDetails(data);
       return response;
@@ -91,6 +91,9 @@ const brandSlice = createSlice({
     updateErrorProcess: (state, action) => {
       state.errorProcess = action.payload;
     },
+    updateListBrand: (state, action) => {
+      state.listBrands = action.payload;
+    },
   },
   extraReducers: {
     [getBrands.fulfilled]: (state, action) => {
@@ -104,6 +107,16 @@ const brandSlice = createSlice({
       state.errorProcess = "";
       state.createMode = false;
     },
+    [updateDetails.fulfilled]: (state, action) => {
+      const res = action.payload;
+      state.listBrands = state.listBrands.map((c) => {
+        if (c.id === res.id) {
+          return res;
+        } else {
+          return c;
+        }
+      });
+    },
     [getBrandDetails.rejected]: (state, action) => {
       state.createMode = true;
     },
@@ -115,6 +128,6 @@ const brandSlice = createSlice({
     },
   },
 });
-export const { updateErrorProcess, updateDataDetails } = brandSlice.actions;
+export const { updateErrorProcess, updateListBrand } = brandSlice.actions;
 
 export const brandsReducer = brandSlice.reducer;

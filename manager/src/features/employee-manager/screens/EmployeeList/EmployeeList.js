@@ -29,9 +29,13 @@ import {
   getEmployees,
   deleteEmployee,
   deleteEmployees,
+  updateListEmployees,
 } from "features/employee-manager/employeeManager";
 
+import editImg from "assets/icons/edit.png";
+import deleteImg from "assets/icons/delete.png";
 import avt_default from "assets/images/avt-default.png";
+
 import "./EmployeeList.css";
 const { Title, Text } = Typography;
 
@@ -49,28 +53,28 @@ export default function EmployeeList() {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
 
-   const onHandlePagination = (pageCurrent, pageSize) => {
-     setIsLoading(true);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
 
-     const page = pageCurrent.toString();
-     const size = pageSize.toString();
-     const params = queryString.parse(location.search);
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
 
-     history.push({
-       pathname: EmployeeManagerPaths.EMPLOYEE_MANAGER,
-       search: queryString.stringify({
-         ...params,
-         size: size,
-         number: page,
-       }),
-     });
-   };
+    history.push({
+      pathname: EmployeeManagerPaths.EMPLOYEE_MANAGER,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        number: page,
+      }),
+    });
+  };
 
   const onRowDelete = (record) => {
     Modal.confirm({
       title: "Xác nhận",
       icon: <ExclamationCircleOutlined />,
-      content: "Bạn chắc chắn muốn xoá không?",
+      content: "Bạn chắc chắn muốn xoá Nhân viên không?",
       okText: "Xoá",
       cancelText: "Huỷ bỏ",
       onOk: () => {
@@ -78,21 +82,27 @@ export default function EmployeeList() {
         dispatch(deleteEmployee(record.id))
           .then(unwrapResult)
           .then((res) => {
-            dispatch(getEmployees({ number: number - 1, size: size }))
-              .then(unwrapResult)
-              .then(() => {
-                notification.success({
-                  message: "Chức năng",
-                  description: "Xoá Chức năng thành công",
-                });
-                setIsLoading(false);
-              });
+            const newListEmployees = listEmployees.map((c) => {
+              if (c.id === record.id) {
+                return { ...record, status: 0 };
+              } else {
+                return c;
+              }
+            });
+
+            dispatch(updateListEmployees(newListEmployees));
+
+            notification.success({
+              message: "Nhân viên",
+              description: "Xoá Nhân viên thành công",
+            });
+            setIsLoading(false);
           })
           .catch((error) => {
             console.log(error);
             notification.error({
-              message: "Chức năng",
-              description: "Xoá Chức năng thất bại",
+              message: "Nhân viên",
+              description: "Xoá Nhân viên thất bại",
             });
           });
       },
@@ -234,22 +244,10 @@ export default function EmployeeList() {
       ),
     },
     {
-      title: "Họ",
-      dataIndex: "firstName",
-      key: "firstName",
+      title: "Họ và tênf",
+      key: "fullName",
       align: "center",
-      sorter: (a, b) => a.firstName.length - b.firstName.length,
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("firstName"),
-    },
-    {
-      title: "Tên",
-      dataIndex: "lastName",
-      key: "lastName",
-      align: "center",
-      sorter: (a, b) => a.lastName.length - b.lastName.length,
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("lastName"),
+      render: (record) => `${record.firstName} ${record.lastName}`,
     },
     {
       title: "Giới tính",
@@ -326,28 +324,31 @@ export default function EmployeeList() {
       key: "operation",
       align: "center",
       render: (_, record) => (
-        <Dropdown
-          placement="bottomRight"
-          arrow
-          menu={{
-            items: [
-              {
-                key: 1,
-                label: "Xem Chi tiết và Cập nhật",
-                onClick: () => onRowDetails(record),
-              },
-              {
-                key: 2,
-                label: "Xoá Nhân viên",
-                onClick: () => onRowDelete(record),
-              },
-            ],
+        <div
+          style={{
+            display: "flex",
+            alignItem: "center",
+            justifyContent: "center",
+            gap: "2rem",
           }}
         >
-          <a>
-            Xem thêm <DownOutlined />
-          </a>
-        </Dropdown>
+          <img
+            src={editImg}
+            alt=""
+            style={{ width: "2.3rem", height: "2.3rem", cursor: "pointer" }}
+            onClick={() => onRowDetails(record)}
+          />
+          {record.status ? (
+            <img
+              src={deleteImg}
+              alt=""
+              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+              onClick={() => onRowDelete(record)}
+            />
+          ) : (
+            ""
+          )}
+        </div>
       ),
     },
   ];

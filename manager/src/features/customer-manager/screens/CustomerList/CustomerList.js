@@ -34,6 +34,7 @@ import {
   getCustomers,
   deleteCustomer,
   deleteCustomers,
+  updateListCustomers,
 } from "features/customer-manager/customerManager";
 import avt_default from "assets/images/avt-default.png";
 import "./CustomerList.css";
@@ -49,26 +50,22 @@ import {
   getProvince,
   getProvinces,
 } from "features/provinces/provinces";
+import editImg from "assets/icons/edit.png";
+import deleteImg from "assets/icons/delete.png";
+import { CustomerModal } from "features/customer-manager/components";
 
 const { Title, Text } = Typography;
-const { Option } = Select;
+
 export default function CustomerList() {
   const { listCustomers, totalElements, number, size } = useSelector(
     (state) => state.customer
   );
-  const { dataDetails, createMode } = useSelector((state) => state.customer);
-  const { provinces, districts, wards } = useSelector(
-    (state) => state.provinces
-  );
+
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
 
-  const [modal1Open, setModal1Open] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [imgURL, setImgUrl] = useState(null);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -90,26 +87,7 @@ export default function CustomerList() {
       }),
     });
   };
-
-  const defaultValues = {
-    status: 0,
-    gender: true,
-  };
-  const initialValues = createMode ? defaultValues : dataDetails;
-
-  const upLoadImg = async (file) => {
-    if (file == null) return;
-
-    const imgRef = ref(storage, `images/${file.name + v4()}`);
-    uploadBytes(imgRef, file).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setIsLoading(false);
-        setImgUrl(url);
-      });
-    });
-  };
-
-  const onRowDelete = (record) => {
+  const handleDelete = (record) => {
     Modal.confirm({
       title: "Xác nhận",
       icon: <ExclamationCircleOutlined />,
@@ -121,14 +99,21 @@ export default function CustomerList() {
         dispatch(deleteCustomer(record.id))
           .then(unwrapResult)
           .then((res) => {
-            console.log(res);
-            dispatch(getProvinces())
-              .then(unwrapResult)
-              .then(() => setIsLoading(false));
+            const newListCustomers = listCustomers.map((c) => {
+              if (c.id === record.id) {
+                return { ...record, status: 0 };
+              } else {
+                return c;
+              }
+            });
+
+            dispatch(updateListCustomers(newListCustomers));
+
             notification.success({
               message: "Khách hàng",
               description: "Xoá Khách hàng thành công",
             });
+            setIsLoading(false);
           })
           .catch((error) => {
             console.log(error);
@@ -141,26 +126,6 @@ export default function CustomerList() {
       onCancel: () => {},
     });
   };
-  const onRowDetails = (record) => {
-    history.push(
-      CustomerManagerPaths.CUSTOMER_DETAIL.replace(
-        ":customerId",
-        record.id || ""
-      )
-    );
-  };
-
-  useEffect(() => {
-    const query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
-    }
-    
-    setIsLoading(true);
-    dispatch(getCustomers(query))
-      .then(unwrapResult)
-      .then(() => setIsLoading(false));
-  }, [dispatch, location]);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -273,12 +238,12 @@ export default function CustomerList() {
     },
     {
       title: "Ảnh đại diện",
-      dataIndex: "avatar",
+      dataIndex: ["fileAttachDTO", "filePath"],
       key: "avatar",
       align: "center",
       align: "center",
-      render: (_, record) => (
-        <Avatar size={50} src={record.fileAttachDTO.filePath} />
+      render: (value) => (
+        <Avatar size={50} src={value || value !== "" ? value : avt_default} />
       ),
     },
     {
@@ -291,22 +256,30 @@ export default function CustomerList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Họ tên",
-      dataIndex: "firstName",
-      key: "firstName",
+      title: "Người liên hệ",
+      key: "fullname",
       align: "center",
-      ...getColumnSearchProps("firstName"),
-      sorter: (a, b) => a.firstName.length - b.firstName.length,
-      sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: "Tên đệm",
-      dataIndex: "lastName",
-      key: "lastName",
-      align: "center",
-      ...getColumnSearchProps("lastName"),
-      sorter: (a, b) => a.lastName.length - b.lastName.length,
-      sortDirections: ["descend", "ascend"],
+      render: (record) => `${record.firstName} ${record.lastName}`,
+      // children: [
+      //   {
+      //     title: "Họ tên",
+      //     dataIndex: "firstName",
+      //     key: "firstName",
+      //     align: "center",
+      //     ...getColumnSearchProps("firstName"),
+      //     sorter: (a, b) => a.firstName.length - b.firstName.length,
+      //     sortDirections: ["descend", "ascend"],
+      //   },
+      //   {
+      //     title: "Tên đệm",
+      //     dataIndex: "lastName",
+      //     key: "lastName",
+      //     align: "center",
+      //     ...getColumnSearchProps("lastName"),
+      //     sorter: (a, b) => a.lastName.length - b.lastName.length,
+      //     sortDirections: ["descend", "ascend"],
+      //   },
+      // ],
     },
     {
       title: "Số điện thoại",
@@ -353,564 +326,60 @@ export default function CustomerList() {
       key: "operation",
       align: "center",
       render: (_, record) => (
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: 1,
-                label: "Xem chi tiết và Chỉnh sửa",
-                onClick: () => onRowDetails(record),
-              },
-              {
-                key: 2,
-                label: "Xoá Khách hàng",
-                onClick: () => onRowDelete(record),
-              },
-            ],
+        <div
+          style={{
+            display: "flex",
+            alignItem: "center",
+            justifyContent: "center",
+            gap: "2rem",
           }}
         >
-          <a>
-            Nhiều hơn <DownOutlined />
-          </a>
-        </Dropdown>
+          <img
+            src={editImg}
+            alt=""
+            style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+            onClick={() =>
+              history.push(
+                CustomerManagerPaths.CUSTOMER_DETAIL.replace(
+                  ":customerId",
+                  record.id || ""
+                )
+              )
+            }
+          />
+          {record.status ? (
+            <img
+              src={deleteImg}
+              alt=""
+              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+              onClick={() => handleDelete(record)}
+            />
+          ) : (
+            ""
+          )}
+        </div>
       ),
     },
   ];
 
-  const onSubmitCreate = async ({
-    apartmentNumber,
-    city,
-    district,
-    ward,
-    ...args
-  }) => {
-    console.log(apartmentNumber);
-    dispatch(
-      createDetails({
-        data: {
-          addressDTO: {
-            city: city.value,
-            district: district.value,
-            ward: ward.value,
-            apartmentNumber: apartmentNumber,
-          },
-          ...args,
-          status: 1,
-          fileAttachDTO: {
-            filePath: imgURL === null ? "" : imgURL,
-          },
-        },
-      })
-    )
-      .then(unwrapResult)
-      .then((res) => {
-        console.log(res);
-        notification.success({
-          message: "Khách hàng",
-          description: "Tạo khách hàng thành công",
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log(args);
-        notification.success({
-          message: "Khách hàng",
-          description: "Tạo khách hàng thất bại",
-        });
-        //  dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
-      });
-  };
-
   useEffect(() => {
-    form.setFieldsValue(initialValues);
-    if (!createMode && initialValues !== null) {
-      setImgUrl(initialValues.avatarSupplier);
+    const query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
     }
-  }, [dispatch, createMode, initialValues]);
+
+    setIsLoading(true);
+    dispatch(getCustomers(query))
+      .then(unwrapResult)
+      .then(() => setIsLoading(false));
+  }, [dispatch, location]);
 
   return (
-    <div className="employee-list">
+    <div className="cusmtomer-list">
       <div className="top">
         <Title level={2}>Danh sách Khách hàng</Title>
-        <div>
-          <Button
-            type="primary"
-            shape={"round"}
-            size={"large"}
-            onClick={() => setModal1Open(true)}
-          >
-            Tạo mới
-          </Button>
-          <Modal
-            title="Tạo mới Khách hàng"
-            style={{ top: 20 }}
-            open={modal1Open}
-            onOk={() => setModal1Open(false)}
-            onCancel={() => setModal1Open(false)}
-            footer={[]}
-          >
-            <Form
-              form={form}
-              labelCol={{
-                span: 4,
-              }}
-              wrapperCol={{
-                span: 14,
-              }}
-              layout="horizontal"
-              name="form"
-              colon={false}
-              onFinish={onSubmitCreate}
-            >
-              <div className="details__group">
-                <div className="details__avatar">
-                  <div className="details__avatar-img">
-                    <img
-                      src={!imgURL || imgURL === "" ? avt_default : imgURL}
-                      alt="avt"
-                    />
-                  </div>
-                  <Form.Item
-                    valuePropName="fileList"
-                    className="item_choose-avt"
-                    name="avt"
-                  >
-                    <ImgCrop rotate>
-                      <Upload
-                        listType="picture-card"
-                        maxCount={1}
-                        beforeUpload={(file) => {
-                          setIsLoading(true);
-                          return new Promise((resolve) => {
-                            const reader = new FileReader();
-                            reader.onload = () => {
-                              if (reader.readyState === 2) {
-                                setImgUrl(reader.result);
-                                upLoadImg(file);
-                              }
-                            };
-                            reader.readAsDataURL(file);
-                          });
-                        }}
-                      >
-                        <CameraOutlined
-                          style={{
-                            fontSize: "2rem",
-                          }}
-                        />
-                      </Upload>
-                    </ImgCrop>
-                  </Form.Item>
-                </div>
-              </div>
 
-              <div className="details__group">
-                <Form.Item
-                  name="firstName"
-                  label={<Text>Họ</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Họ"
-                      ),
-                    },
-                    {
-                      pattern:
-                        /^[a-zA-ZaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,10}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_FORMAT,
-                        MESSAGE_ERROR,
-                        "Họ"
-                      ),
-                    },
-                    {
-                      max: 10,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Họ",
-                        10
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Tên",
-                        2
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Tên" />
-                </Form.Item>
-
-                <Form.Item
-                  name="lastName"
-                  label={<Text>Tên đệm</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Tên đệm"
-                      ),
-                    },
-                    {
-                      pattern:
-                        /^[a-zA-ZaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,50}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_FORMAT,
-                        MESSAGE_ERROR,
-                        "Tên đệm"
-                      ),
-                    },
-                    {
-                      max: 50,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Tên đệm",
-                        50
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Tên đệm",
-                        2
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="LastName" />
-                </Form.Item>
-              </div>
-              <div className="details__group">
-                <Form.Item
-                  name="phoneNumber"
-                  label={<Text>Số điện thoại</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Số điện thoại"
-                      ),
-                    },
-                    {
-                      pattern: /^[0]{1}[0-9]{9,10}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_FORMAT_NUMBER,
-                        MESSAGE_ERROR,
-                        "Số điện thoại"
-                      ),
-                    },
-                    {
-                      max: 11,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Số điện thoại",
-                        11
-                      ),
-                    },
-                    {
-                      min: 9,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Số điện thoại",
-                        9
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Số điện thoại" />
-                </Form.Item>
-
-                <Form.Item
-                  name="shopName"
-                  label={<Text>Tên cửa hàng</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Tên cửa hàng"
-                      ),
-                    },
-                    {
-                      pattern:
-                        /^[a-zA-Z0-9aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,50}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_LETTER,
-                        MESSAGE_ERROR,
-                        "Tên cửa hàng"
-                      ),
-                    },
-                    {
-                      max: 50,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Tên cửa hàng",
-                        50
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Tên cửa hàng",
-                        2
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Tên cửa hàng" />
-                </Form.Item>
-              </div>
-              <div className="details__group">
-                <Form.Item
-                  name="taxCode"
-                  label={<Text>Mã số thuế</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Mã số thuế"
-                      ),
-                    },
-                    {
-                      pattern: /^[0-9]{10,13}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER,
-                        MESSAGE_ERROR,
-                        "Mã số thuế"
-                      ),
-                    },
-                    {
-                      max: 13,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Mã số thuế",
-                        13
-                      ),
-                    },
-                    {
-                      min: 10,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Mã số thuế",
-                        10
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Mã số thuế" />
-                </Form.Item>
-              </div>
-              <div className="details__group">
-                <Form.Item
-                  name="apartmentNumber"
-                  label={<Text>Tên đường, Số nhà</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Tên đường, Số nhà"
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Tên đường, Số nhà" />
-                </Form.Item>
-                <Form.Item
-                  name="city"
-                  label={<Text>Tỉnh, Thành Phố</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Tỉnh, Thành Phố"
-                      ),
-                    },
-                  ]}
-                >
-                  <Select
-                    labelInValue
-                    showSearch
-                    style={{
-                      width: 200,
-                    }}
-                    onChange={(value) => {
-                      dispatch(getProvince(value.key));
-                    }}
-                    placeholder="Search to Select"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      option.children.includes(input)
-                    }
-                    filterSort={(optionA, optionB) =>
-                      optionA.children
-                        .toLowerCase()
-                        .localeCompare(optionB.children.toLowerCase())
-                    }
-                  >
-                    {provinces?.map((p) => {
-                      return (
-                        <Option value={p.name} key={p.code}>
-                          {`${p.name}`}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </div>
-              <div className="details__group">
-                <Form.Item
-                  name="district"
-                  label={<Text>Quận, Huyện</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Quận, Huyện"
-                      ),
-                    },
-                  ]}
-                >
-                  <Select
-                    labelInValue
-                    showSearch
-                    style={{
-                      width: 200,
-                    }}
-                    onChange={(value, e) => {
-                      dispatch(getDistrict(value.key));
-                    }}
-                    placeholder="Search to Select"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      option.children.includes(input)
-                    }
-                    filterSort={(optionA, optionB) =>
-                      optionA.children
-                        .toLowerCase()
-                        .localeCompare(optionB.children.toLowerCase())
-                    }
-                  >
-                    {districts?.map((d) => {
-                      return (
-                        <Option value={d.name} key={d.code}>
-                          {`${d.name}`}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-
-                <Form.Item
-                  name="ward"
-                  label={<Text>Phường, Xã</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Phường, Xã"
-                      ),
-                    },
-                  ]}
-                >
-                  <Select
-                    labelInValue
-                    showSearch
-                    style={{
-                      width: 200,
-                    }}
-                    onChange={(value, e) => {
-                      console.log(value.value);
-                      // dispatch(
-                      // 		 getDistrict(value.key)
-                      // );
-                    }}
-                    placeholder="Search to Select"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                      option.children.includes(input)
-                    }
-                    filterSort={(optionA, optionB) =>
-                      optionA.children
-                        .toLowerCase()
-                        .localeCompare(optionB.children.toLowerCase())
-                    }
-                  >
-                    {wards?.map((w) => {
-                      return (
-                        <Option value={w.name} key={w.code}>
-                          {`${w.name}`}
-                        </Option>
-                      );
-                    })}
-                  </Select>
-                </Form.Item>
-              </div>
-              <div className="btns">
-                <Button
-                  key="back"
-                  shape={"round"}
-                  htmlType="reset"
-                  onClick={() => {
-                    setModal1Open(false);
-                    form.resetFields();
-                  }}
-                >
-                  Huỷ bỏ
-                </Button>
-                <Button
-                  key="submit"
-                  shape={"round"}
-                  type="primary"
-                  htmlType="submit"
-                >
-                  Gửi đi
-                </Button>
-              </div>
-            </Form>
-          </Modal>
-        </div>
+        <CustomerModal />
       </div>
       <Table
         rowKey={(record) => record.id}
@@ -938,6 +407,17 @@ export default function CustomerList() {
               }
             : false
         }
+        // onRow={(record) => {
+        //   return {
+        //     onClick: () =>
+        //       history.push(
+        //         CustomerManagerPaths.CUSTOMER_DETAIL.replace(
+        //           ":customerId",
+        //           record.id || ""
+        //         )
+        //       ),
+        //   };
+        // }}
       />
     </div>
   );
