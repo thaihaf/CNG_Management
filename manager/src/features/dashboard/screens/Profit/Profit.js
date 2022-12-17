@@ -168,7 +168,7 @@ export default function Profit() {
             children: <ProductProfit />,
           },
           {
-            label: `Theo cung cấp`,
+            label: `Theo nhà cung cấp`,
             key: DashboardPaths.SUPPLIER_PROFIT,
             children: <SupplierProfit />,
           },
