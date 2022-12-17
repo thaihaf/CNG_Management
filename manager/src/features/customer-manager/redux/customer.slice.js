@@ -64,7 +64,7 @@ export const deleteCustomers = createAsyncThunk(
 
 export const createDetails = createAsyncThunk(
   "customer/createDetails",
-  async ({ data }, { rejectWithValue }) => {
+  async (data , { rejectWithValue }) => {
     try {
       const response = await api.createDetails(data);
       return response;
@@ -160,6 +160,9 @@ const customerSlice = createSlice({
     updateDebtCustomers: (state, action) => {
       state.debtCustomer.listDebtCustomer = action.payload;
     },
+    updateListCustomers: (state, action) => {
+      state.listCustomers = action.payload;
+    },
   },
   extraReducers: {
     [getCustomers.fulfilled]: (state, action) => {
@@ -212,7 +215,7 @@ const customerSlice = createSlice({
     },
   },
 });
-export const { updateErrorProcess, updateDataDetails, updateDebtCustomers } =
+export const { updateErrorProcess, updateListCustomers, updateDebtCustomers } =
   customerSlice.actions;
 
 export const customersReducer = customerSlice.reducer;

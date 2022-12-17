@@ -1,0 +1,40 @@
+.brandModal .btns {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.brandModal .details__group {
+  width: 100%;
+}
+.brandModal .details__group .details__item {
+  width: 100%;
+}
+.brandModal .details__group .details__item .ant-col {
+  max-width: 100% !important;
+  flex: none !important;
+}
+.brandModal .details__group .details__item .ant-row {
+  display: block;
+}
+.brandModal .details__group .details__item .ant-input {
+  border-radius: 2rem !important;
+  padding: 1rem 2rem;
+  margin-top: 0.7rem;
+}
+.brandModal .details__group .details__item .ant-select.ant-select-in-form-item {
+  width: 100% !important;
+}
+.brandModal .details__group .details__item .ant-input,
+.brandModal .details__group .details__item .ant-select-selector,
+.brandModal .details__group .details__item .ant-picker {
+  border-radius: 2rem !important;
+  width: 100% !important;
+}
+.brandModal .details__group .details__item .ant-select-selector {
+  height: 4.2rem;
+}
+.brandModal .details__group .details__item .ant-select-selector .ant-select-selection-item {
+  padding: 0.5rem 0.7rem;
+}

@@ -114,7 +114,7 @@ export default function Profit() {
       onFinish={onFinish}
       initialValues={initialValues}
     >
-      <div className="top">
+      <div className="top-wrapper">
         <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
           Lợi nhuận
         </Title>

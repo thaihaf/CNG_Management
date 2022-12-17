@@ -30,16 +30,16 @@ import {
   getCategories,
   deleteCategory,
   deleteCategories,
+  updateListCategories,
 } from "features/category-manager/categoryManager";
+import deleteImg from "assets/icons/delete.png";
 
 import "./CategoryList.css";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import { getMessage } from "helpers/util.helper";
-import { createDetails } from "features/category-manager/categoryManager";
-import { getProvinces } from "features/provinces/provinces";
+
+import { CategoryModal } from "features/category-manager/components";
+
 const { Title, Text } = Typography;
-const { Option } = Select;
+
 export default function CategoryList() {
   const { listCategories, totalElements, number, size } = useSelector(
     (state) => state.category
@@ -47,14 +47,10 @@ export default function CategoryList() {
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
 
-  const [modal1Open, setModal1Open] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-
   const searchInput = useRef(null);
 
   const onHandlePagination = (pageCurrent, pageSize) => {
@@ -73,8 +69,7 @@ export default function CategoryList() {
       }),
     });
   };
-
-  const onRowDelete = (record) => {
+  const handleDelete = (record) => {
     Modal.confirm({
       title: "Xác nhận",
       icon: <ExclamationCircleOutlined />,
@@ -85,20 +80,24 @@ export default function CategoryList() {
         setIsLoading(true);
         dispatch(deleteCategory(record.id))
           .then(unwrapResult)
-          .then((res) => {
-            console.log(res);
-            dispatch(getCategories())
-              .then(unwrapResult)
-              .then(() => {
-                notification.success({
-                  message: "Chức năng",
-                  description: "Xoá Chức năng thành công",
-                });
-                setIsLoading(false);
-              });
+          .then(() => {
+            const newListCategories = listCategories.map((c) => {
+              if (c.id === record.id) {
+                return { ...record, status: 0 };
+              } else {
+                return c;
+              }
+            });
+
+            dispatch(updateListCategories(newListCategories));
+
+            notification.success({
+              message: "Chức năng",
+              description: "Xoá Chức năng thành công",
+            });
+            setIsLoading(false);
           })
           .catch((error) => {
-            console.log(error);
             notification.error({
               message: "Chức năng",
               description: "Xoá Chức năng thất bại",
@@ -108,37 +107,16 @@ export default function CategoryList() {
       onCancel: () => {},
     });
   };
-  const onRowDetails = (record) => {
-    history.push(
-      CategoryManagerPaths.CATEGORY_DETAIL.replace(
-        ":categoryId",
-        record.id || ""
-      )
-    );
-  };
-
-  useEffect(() => {
-    const query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
-    }
-    setIsLoading(true);
-    dispatch(getCategories(query))
-      .then(unwrapResult)
-      .then(() => setIsLoading(false));
-  }, [dispatch, location]);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
-
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -249,7 +227,7 @@ export default function CategoryList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Miêu tả",
+      title: "Mô tả",
       dataIndex: "description",
       key: "description",
       align: "center",
@@ -277,11 +255,11 @@ export default function CategoryList() {
         let color = s === 1 ? "green" : "volcano";
         return s === 1 ? (
           <Tag color={color} key={s}>
-            Hoạt động
+            HOẠT ĐỘNG
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            Không hoạt động
+            KHÔNG HOẠT ĐỘNG
           </Tag>
         );
       },
@@ -291,189 +269,61 @@ export default function CategoryList() {
     },
     {
       title: "Hành động",
-      dataIndex: "operation",
       key: "operation",
       align: "center",
-      render: (_, record) => (
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: 1,
-                label: "Xem chi tiết và Cập nhật",
-                onClick: () => onRowDetails(record),
-              },
-              {
-                key: 2,
-                label: "Xoá Chức năng",
-                onClick: () => onRowDelete(record),
-              },
-            ],
+      render: (record) => (
+        <div
+          style={{
+            display: "flex",
+            alignItem: "center",
+            justifyContent: "center",
+            gap: "2rem",
           }}
         >
-          <a>
-            Xem thêm <DownOutlined />
-          </a>
-        </Dropdown>
+          <CategoryModal data={record} />
+          {record.status ? (
+            <img
+              src={deleteImg}
+              alt=""
+              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+              onClick={() => handleDelete(record)}
+            />
+          ) : (
+            ""
+          )}
+        </div>
       ),
     },
   ];
 
-  const onSubmitCreate = async ({ ...args }) => {
-    dispatch(
-      createDetails({
-        data: {
-          ...args,
-          status: 1,
-        },
-      })
-    )
+  useEffect(() => {
+    const query = queryString.parse(location.search);
+    if (query.number) {
+      query.number = query.number - 1;
+    }
+    setIsLoading(true);
+    dispatch(getCategories(query))
       .then(unwrapResult)
-      .then((res) => {
-        console.log(res);
-        notification.success({
-          message: "Tạo Chức năng",
-          description: "Tạo chức năng thành công",
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log(args);
-        notification.error({
-          message: "Tạo Chức năng",
-          description: "Tạo chức năng thất bại",
-        });
-      });
-  };
+      .then(() => setIsLoading(false));
+  }, [dispatch, location]);
 
   return (
-    <div className="employee-list">
+    <div className="category-list">
       <div className="top">
         <Title level={2}>Danh sách Chức năng</Title>
-        <div>
-          <Button
-            type="primary"
-            shape={"round"}
-            size={"large"}
-            onClick={() => setModal1Open(true)}
-          >
-            Tạo Chức năng
-          </Button>
-          <Modal
-            title="Tạo Chức năg"
-            style={{ top: 20 }}
-            open={modal1Open}
-            onOk={() => setModal1Open(false)}
-            onCancel={() => setModal1Open(false)}
-            footer={[]}
-          >
-            <Form
-              form={form}
-              labelCol={{
-                span: 4,
-              }}
-              wrapperCol={{
-                span: 14,
-              }}
-              layout="horizontal"
-              name="form"
-              colon={false}
-              onFinish={onSubmitCreate}
-            >
-              <div className="details__group">
-                <Form.Item
-                  name="categoryName"
-                  label={<Text>Tên Chức năng</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Tên Chức năng"
-                      ),
-                    },
-                    {
-                      pattern:
-                        /^[a-zA-Z0-9aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ\s]{2,50}$/,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_LETTER,
-                        MESSAGE_ERROR,
-                        "Tên Chức năng"
-                      ),
-                    },
-                    {
-                      max: 50,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MAX,
-                        MESSAGE_ERROR,
-                        "Tên Chức năng",
-                        50
-                      ),
-                    },
-                    {
-                      min: 2,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_NUMBER_MIN,
-                        MESSAGE_ERROR,
-                        "Tên Chức năng",
-                        2
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Tên Chức năng" />
-                </Form.Item>
 
-                <Form.Item
-                  name="description"
-                  label={<Text>Mô tả</Text>}
-                  className="details__item"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Mô tả"
-                      ),
-                    },
-                  ]}
-                >
-                  <Input placeholder="Mô tả" />
-                </Form.Item>
-              </div>
-              <div className="btns">
-                <Button
-                  key="back"
-                  shape={"round"}
-                  htmlType="reset"
-                  onClick={() => {
-                    setModal1Open(false);
-                    form.resetFields();
-                  }}
-                >
-                  Huỷ bỏ
-                </Button>
-                <Button
-                  key="submit"
-                  shape={"round"}
-                  type="primary"
-                  htmlType="submit"
-                >
-                  Gửi
-                </Button>
-              </div>
-            </Form>
-          </Modal>
-        </div>
+        <CategoryModal />
       </div>
       <Table
         rowKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
         dataSource={[...listCategories]}
+        // style={{
+        //   boxShadow:
+        //     "rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px",
+        //   borderRadius: "2rem",
+        // }}
         pagination={
           totalElements !== 0
             ? {

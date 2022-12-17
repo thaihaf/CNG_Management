@@ -176,52 +176,48 @@
   margin-right: 2rem;
 }
 
-.ant-modal-content {
-  border-radius: 2rem !important;
+// .ant-modal-content {
+//   border-radius: 2rem !important;
+//   min-width: 230px;
 
-  .ant-modal-header {
-    border-radius: 2rem 2rem 0 0 !important;
-  }
-  .ant-modal-body {
-    padding: 20px 35px !important;
+//   .ant-modal-header {
+//     border-radius: 2rem 2rem 0 0 !important;
+//   }
+//   .ant-modal-body {
+//     padding: 20px 15px !important;
 
-    .ant-spin-nested-loading {
-      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-      border-radius: 2rem;
-      padding: 1.5rem 0;
-    }
-    .ant-tabs-tabpane {
-      padding-right: 2rem;
-    }
-  }
-  .img-crop-modal {
-    .img-crop-container {
-      border-radius: 2rem !important;
-    }
-  }
-  .ant-modal-footer {
-    padding: 20px 35px !important;
+//     .ant-tabs-tabpane {
+//       padding-right: 2rem;
+//     }
+//   }
+//   .img-crop-modal {
+//     .img-crop-container {
+//       border-radius: 2rem !important;
+//     }
+//   }
+//   .ant-modal-footer {
+//     padding: 20px 35px !important;
 
-    .ant-btn {
-      border-radius: 2rem !important;
-      padding: 0.5rem 4rem !important;
-      width: fit-content !important;
-      height: fit-content !important;
-    }
-  }
-}
-.modalSetting {
-  .details__group {
-    .details__item {
-      width: 100% !important;
+//     .ant-btn {
+//       border-radius: 2rem !important;
+//       padding: 0.5rem 4rem !important;
+//       width: fit-content !important;
+//       height: fit-content !important;
+//     }
+//   }
+// }
+// .modalSetting {
+//   .details__group {
+//     .details__item {
+//       width: 100% !important;
 
-      .ant-form-item-explain-error {
-        font-size: 1.2rem;
-        padding-left: 1rem;
-      }
-    }
-  }
-}
+//       .ant-form-item-explain-error {
+//         font-size: 1.2rem;
+//         padding-left: 1rem;
+//       }
+//     }
+//   }
+// }
 
 .ant-drawer-content-wrapper {
   width: fit-content !important;
@@ -247,6 +243,20 @@
   }
 }
 
-.ant-statistic-content-value{
+.ant-statistic-content-value {
   font-size: 17px !important;
+}
+
+.ant-spin-nested-loading {
+  box-shadow: unset !important;
+  // border-radius: 2rem;
+  padding: 0 !important;
+}
+.ant-modal-content {
+    border-radius: 2rem !important;
+    padding: 16px 45px !important;
+
+    .ant-modal-body{
+      margin: 3rem 0;
+    }
 }
