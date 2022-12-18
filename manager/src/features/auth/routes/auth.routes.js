@@ -59,11 +59,11 @@ const RESET_SCREEN = {
   exact: true,
 };
 const NOT_FOUND_SCREEN = {
-  id: "home",
+  id: "note-found",
   path: AuthPaths.NOT_FOUND,
   component: NotFound,
   isAuthRoute: true,
-  pageTitle: "CNG Home",
+  pageTitle: "Not Found",
   exact: true,
 };
 

@@ -1,6 +1,7 @@
 export const getAccessToken = () => {
   const auth = JSON.parse(localStorage.getItem("persist:auth"));
   let t = auth.accessToken;
+  console.log(auth);
 
   if (t || !t.isEmpty()) {
     t = t.substring(1, t.length - 1);
@@ -18,13 +19,8 @@ export const getRole = () => {
   }
   return null;
 };
-export const checkPermission = (listRole) => {
-  if (!listRole) {
-    return false;
-  }
-  const r = getRole();
-
-  let a = listRole.find((i) => r.includes(i));
+export const checkPermission = (listRole, role) => {
+  let a = listRole.find((i) => i.includes(role));
   return a ? true : false;
 };
 

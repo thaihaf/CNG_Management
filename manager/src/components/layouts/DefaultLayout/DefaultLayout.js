@@ -53,7 +53,8 @@ const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
 
 const DefaultLayout = ({ children }) => {
-  const { userName, role, avatar } = useSelector((state) => state.auth);
+  // const { userName, role, avatar } = useSelector((state) => state.auth);
+  const auth = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -75,7 +76,9 @@ const DefaultLayout = ({ children }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    dispatch(getAccountAvatar());
+    if (auth?.role === "employee") {
+      dispatch(getAccountAvatar());
+    }
   }, [dispatch, location]);
 
   const getSelect = ({ key }) => {
@@ -153,7 +156,7 @@ const DefaultLayout = ({ children }) => {
             selectedKeys={[pathname]}
             style={{ height: "100%" }}
             items={siderBarItems.map((item) => {
-              if (item.role.includes(role)) {
+              if (item.role.includes(auth?.role)) {
                 return {
                   key: item.key,
                   icon: item.icon,
@@ -186,7 +189,7 @@ const DefaultLayout = ({ children }) => {
             <Tooltip placement="topRight" title={"Chọn để hiện thị Cài đặt"}>
               <div className="info_avt" onClick={() => setModal1Open(true)}>
                 <img
-                  src={avatar ? avatar : avt_default}
+                  src={auth?.avatar ? auth?.avatar : avt_default}
                   alt=""
                   className="info_avt_img"
                 />
@@ -194,8 +197,8 @@ const DefaultLayout = ({ children }) => {
             </Tooltip>
 
             <div className="info_detail">
-              <div className="info_fullname">{userName}</div>
-              <div className="info_role">{role}</div>
+              <div className="info_fullname">{auth?.userName}</div>
+              <div className="info_role">{auth?.role}</div>
             </div>
 
             <Modal

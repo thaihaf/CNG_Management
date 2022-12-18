@@ -365,7 +365,7 @@ export default function ProductList() {
       </div>
 
       <Table
-        owKey={(record) => record.id}
+        rowKey={(record) => record.id}
         columns={columns}
         loading={isLoading}
         dataSource={[...listProducts]}

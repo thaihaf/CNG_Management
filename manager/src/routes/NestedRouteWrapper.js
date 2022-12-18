@@ -55,11 +55,9 @@ const NestedRouteWrapper = ({ routesWithComponents }) => {
                       <title>{pageTitle}</title>
                     </Helmet>
                     <Layout>
-                      {checkPermission(roles) ? (
+                      <RestrictAccess {...routeProps} roles={roles}>
                         <Component {...routeProps} />
-                      ) : (
-                        <RestrictAccess {...routeProps} />
-                      )}
+                      </RestrictAccess>
                     </Layout>
                   </>
                 );

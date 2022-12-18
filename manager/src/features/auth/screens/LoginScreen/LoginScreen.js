@@ -73,8 +73,7 @@ export default function LoginScreen() {
             history.push(ProductManagerPaths.PRODUCT_MANAGER);
             break;
           case "ROLE_EMPLOYEE":
-            console.log(res);
-            window.location.href = SupplierManagerPaths.SUPPLIER_LIST;
+            history.push(SupplierManagerPaths.SUPPLIER_LIST);
             break;
         }
       })
