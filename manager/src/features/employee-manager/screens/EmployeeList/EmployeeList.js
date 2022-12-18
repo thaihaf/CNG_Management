@@ -244,7 +244,7 @@ export default function EmployeeList() {
       ),
     },
     {
-      title: "Họ và tênf",
+      title: "Họ và tên",
       key: "fullName",
       align: "center",
       render: (record) => `${record.firstName} ${record.lastName}`,
