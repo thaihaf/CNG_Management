@@ -3,24 +3,9 @@ import axios from "axios";
 import { ENV } from "constants/env";
 import { AuthPaths, updateAccessToken } from "features/auth/auth";
 import { notification } from "antd";
-import {
-  getAccessToken,
-  getRefreshToken,
-  setToken,
-} from "helpers/auth.helpers";
+import { getAccessToken } from "helpers/auth.helpers";
+import { ApiStatusCodes } from "constants/api.constants";
 
-/**
- * All the endpoint that do not require an access token
- */
-const openNotificationWithIcon = (type, mess, des) => {
-  notification[type]({
-    message: "Notification Title",
-    description:
-      "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
-  });
-};
-
-/** Setup an API instance */
 export const api = axios.create({
   baseURL: "http://ec2-3-224-110-74.compute-1.amazonaws.com/api",
   headers: {
@@ -46,33 +31,28 @@ api.interceptors.response.use(
     return response;
   },
   function (error) {
-    const res = error.response;
-    // const originalRequest = error.config;
-
-    if (res.status === 401) {
-      if (res.config.url !== AuthPaths.LOGIN) {
-        window.location.href = AuthPaths.LOGIN;
-      }
+    if (error.message === "Network Error" && !error.response) {
+      notification.success({
+        message: "Lỗi mạng",
+        description: "Đảm bảo API đang chạy",
+      });
       return Promise.reject(error);
     }
 
-    // if (error.response.status === 401 && !originalRequest._retry) {
-    //      originalRequest._retry = true;
-    //      const refreshToken = getRefreshToken();
-    //      return axios
-    //           .post("/auth/token", {
-    //                refresh_token: refreshToken,
-    //           })
-    //           .then((res) => {
-    //                if (res.status === 201) {
-    //                     setToken(res.data);
-    //                     axios.defaults.headers.common["Authorization"] =
-    //                          "Bearer " +
-    //                          getAccessToken();
-    //                     return axios(originalRequest);
-    //                }
-    //           });
-    // }
+    const res = error.response;
+    //401
+    if (res.status === ApiStatusCodes.UNAUTHORIZED) {
+      if (res.config.url !== AuthPaths.LOGIN) {
+        window.location.href = AuthPaths.LOGIN;
+      }
+      localStorage.clear();
+      notification.success({
+        message: "Lỗi rồi",
+        description: "Vui lòng đăng nhập lại!",
+      });
+      return Promise.reject(error);
+    }
+
     return Promise.reject(error);
   }
 );

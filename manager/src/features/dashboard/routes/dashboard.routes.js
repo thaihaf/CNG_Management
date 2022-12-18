@@ -19,6 +19,7 @@ const DASHBOARD = {
   component: DashboardScreen,
   isPrivateRoute: true,
   pageTitle: "Thống kê",
+  roles: ["admin"],
 };
 
 // inventory
@@ -28,6 +29,8 @@ const PRODUCT_INVENTORY = {
   component: InventoryScreen,
   isPrivateRoute: true,
   pageTitle: "Tồn kho",
+  roles: ["admin"],
+  exact: true,
 };
 const SUPPLIER_INVENTORY = {
   id: "inventory-supplier",
@@ -35,6 +38,8 @@ const SUPPLIER_INVENTORY = {
   component: InventoryScreen,
   isPrivateRoute: true,
   pageTitle: "Tồn kho",
+  roles: ["admin"],
+  exact: true,
 };
 const CATEGORY_INVENTORY = {
   id: "inventory-category",
@@ -42,6 +47,8 @@ const CATEGORY_INVENTORY = {
   component: InventoryScreen,
   isPrivateRoute: true,
   pageTitle: "Tồn kho",
+  roles: ["admin"],
+  exact: true,
 };
 const WAREHOUSE_INVENTORY = {
   id: "inventory-warehouse",
@@ -49,6 +56,8 @@ const WAREHOUSE_INVENTORY = {
   component: InventoryScreen,
   isPrivateRoute: true,
   pageTitle: "Tồn kho",
+  roles: ["admin"],
+  exact: true,
 };
 
 // profit
@@ -58,6 +67,8 @@ const PRODUCT_PROFIT = {
   component: ProfitScreen,
   isPrivateRoute: true,
   pageTitle: "Lợi nhuận",
+  roles: ["admin"],
+  exact: true,
 };
 const SUPPLIER_PROFIT = {
   id: "profit-supplier",
@@ -65,6 +76,8 @@ const SUPPLIER_PROFIT = {
   component: ProfitScreen,
   isPrivateRoute: true,
   pageTitle: "Lợi nhuận",
+  roles: ["admin"],
+  exact: true,
 };
 const CATEGORY_PROFIT = {
   id: "profit-warehouse",
@@ -72,6 +85,8 @@ const CATEGORY_PROFIT = {
   component: ProfitScreen,
   isPrivateRoute: true,
   pageTitle: "Lợi nhuận",
+  roles: ["admin"],
+  exact: true,
 };
 const CUSTOMER_PROFIT = {
   id: "profit-customer",
@@ -79,6 +94,8 @@ const CUSTOMER_PROFIT = {
   component: ProfitScreen,
   isPrivateRoute: true,
   pageTitle: "Lợi nhuận",
+  roles: ["admin"],
+  exact: true,
 };
 const EMPLOYEE_PROFIT = {
   id: "profit-employee",
@@ -86,6 +103,8 @@ const EMPLOYEE_PROFIT = {
   component: ProfitScreen,
   isPrivateRoute: true,
   pageTitle: "Lợi nhuận",
+  roles: ["admin"],
+  exact: true,
 };
 
 // daily report
@@ -95,12 +114,15 @@ const CUSTOMER_DAILY_LIST_SCREEN = {
   component: DailyReport,
   isPrivateRoute: true,
   pageTitle: "Báo cáo hàng ngày",
+  roles: ["admin"],
+  exact: true,
 };
 const DASHBOARD_CUSTOMER = {
   id: "dashboard-customer",
   isRoot: true,
   path2: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
-  isPrivateRoute: true,
+  roles: ["admin"],
+  exact: true,
 };
 
 const DASHBOARD_ROUTES = [

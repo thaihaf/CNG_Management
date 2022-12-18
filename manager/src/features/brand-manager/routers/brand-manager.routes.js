@@ -13,6 +13,8 @@ const BRAND_LIST_SCREEN = {
   component: BrandListScreen,
   isPrivateRoute: true,
   pageTitle: "Brand Manager",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const BRAND_DETAILS_SCREEN = {
   id: "brand_id",
@@ -20,6 +22,8 @@ const BRAND_DETAILS_SCREEN = {
   component: BrandDetailsScreen,
   isPrivateRoute: true,
   pageTitle: "Brand Detail",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const BRAND_MANAGER_ROUTES = [BRAND_LIST_SCREEN, BRAND_DETAILS_SCREEN];

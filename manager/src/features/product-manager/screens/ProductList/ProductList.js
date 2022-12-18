@@ -236,19 +236,15 @@ export default function ProductList() {
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Tên chức năng",
+      title: "Chức năng",
       dataIndex: "categoriesName",
       key: "categoriesName",
       align: "center",
       render: (_, { categoryDTO }) => (
         <>
           {categoryDTO.map((c) => {
-            // let color = tag.length > 5 ? 'geekblue' : 'green';
-            // if (tag === 'loser') {
-            // 	color = 'volcano';
-            // }
             return (
-              <Tag color="blue" key={c.id}>
+              <Tag color="darkseagreen" key={c.id} style={{ margin: "0.2rem" }}>
                 {c.categoryName.toUpperCase()}
               </Tag>
             );
@@ -263,25 +259,25 @@ export default function ProductList() {
       filterSearch: true,
     },
     {
-      title: "Tên nhãn hàng",
+      title: "Nhãn hàng",
       dataIndex: "brandDTO",
       key: "brandName",
       align: "center",
       ...getColumnSearchProps("brandDTO", "brandName"),
       render: (_, { brandDTO }) => (
-        <Tag color="blue" key={brandDTO.id}>
+        <Tag color="darkorange" key={brandDTO.id}>
           {brandDTO.brandName.toUpperCase()}
         </Tag>
       ),
     },
     {
-      title: "Tên nhà cung cấp",
+      title: "Nhà cung cấp",
       dataIndex: "supplierDTO",
       key: "supplierName",
       align: "center",
       ...getColumnSearchProps("supplierDTO", "supplierName"),
       render: (_, { supplierDTO }) => (
-        <Tag color="blue" key={supplierDTO?.id}>
+        <Tag color="darkturquoise" key={supplierDTO?.id}>
           {supplierDTO?.supplierName.toUpperCase()}
         </Tag>
       ),
@@ -307,11 +303,11 @@ export default function ProductList() {
         let color = s == 1 ? "green" : "volcano";
         return s == 1 ? (
           <Tag color={color} key={s}>
-            Hoạt động
+            HOẠT ĐỘNG
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            Không hoạt động
+            KHÔNG HOẠT ĐỘNG
           </Tag>
         );
       },

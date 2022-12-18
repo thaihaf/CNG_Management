@@ -14,6 +14,9 @@ const VerifyCodeScreen = React.lazy(() =>
 const ResetPasswordScreen = React.lazy(() =>
   import("../screens/ResetPassword/ResetPassword")
 );
+const NotFound = React.lazy(() =>
+  import("components/modules/NotFound/NotFound")
+);
 
 const HOME_SCREEN = {
   id: "home",
@@ -21,6 +24,7 @@ const HOME_SCREEN = {
   component: HomeScreen,
   isAuthRoute: true,
   pageTitle: "CNG Home",
+  exact: true,
 };
 const LOGIN_SCREEN = {
   id: "login",
@@ -28,6 +32,7 @@ const LOGIN_SCREEN = {
   component: LoginScreen,
   isAuthRoute: true,
   pageTitle: "CNG Login",
+  exact: true,
 };
 const FORGOT_SCREEN = {
   id: "forgot",
@@ -35,6 +40,7 @@ const FORGOT_SCREEN = {
   component: ForgotPasswordScreen,
   isAuthRoute: true,
   pageTitle: "Forgot Password",
+  exact: true,
 };
 const VERIFY_CODE_SCREEN = {
   id: "verify",
@@ -42,6 +48,7 @@ const VERIFY_CODE_SCREEN = {
   component: VerifyCodeScreen,
   isAuthRoute: true,
   pageTitle: "Verify Code",
+  exact: true,
 };
 const RESET_SCREEN = {
   id: "reset",
@@ -49,6 +56,15 @@ const RESET_SCREEN = {
   component: ResetPasswordScreen,
   isAuthRoute: true,
   pageTitle: "Reset Password",
+  exact: true,
+};
+const NOT_FOUND_SCREEN = {
+  id: "home",
+  path: AuthPaths.NOT_FOUND,
+  component: NotFound,
+  isAuthRoute: true,
+  pageTitle: "CNG Home",
+  exact: true,
 };
 
 const AUTH_ROUTES = [
@@ -57,6 +73,7 @@ const AUTH_ROUTES = [
   FORGOT_SCREEN,
   VERIFY_CODE_SCREEN,
   RESET_SCREEN,
+  NOT_FOUND_SCREEN,
 ];
 
 export default AUTH_ROUTES;

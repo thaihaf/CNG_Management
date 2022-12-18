@@ -46,9 +46,8 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const isLogin = getIsLogin();
-    if (isLogin === true) {
-      history.push(EmployeeManagerPaths.EMPLOYEE_LIST);
+    if (getIsLogin()) {
+      history.push("/");
     }
   });
 
@@ -74,7 +73,8 @@ export default function LoginScreen() {
             history.push(ProductManagerPaths.PRODUCT_MANAGER);
             break;
           case "ROLE_EMPLOYEE":
-            history.push(SupplierManagerPaths.SUPPLIER_LIST);
+            console.log(res);
+            window.location.href = SupplierManagerPaths.SUPPLIER_LIST;
             break;
         }
       })

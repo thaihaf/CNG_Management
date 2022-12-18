@@ -1,41 +1,100 @@
-.ant-modal-content {
-  border-radius: 2rem !important;
+.supplierDebtModal .btns {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
-.ant-modal-content .ant-modal-header {
-  border-radius: 2rem 2rem 0 0 !important;
+.supplierDebtModal .details__group {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
-.ant-modal-content .ant-modal-body {
-  padding: 20px 35px !important;
+.supplierDebtModal .details__group.align-start {
+  align-items: flex-start;
 }
-.ant-modal-content .ant-modal-body .ant-spin-nested-loading {
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  border-radius: 2rem;
-  padding: 1.5rem 0;
+.supplierDebtModal .details__group .details__item.w-full {
+  width: 100%;
 }
-.ant-modal-content .ant-modal-body .ant-tabs-tabpane {
-  padding-right: 2rem;
+.supplierDebtModal .details__group .details__item .ant-col {
+  max-width: 100% !important;
+  flex: none !important;
 }
-.ant-modal-content .img-crop-modal .img-crop-container {
-  border-radius: 2rem !important;
+.supplierDebtModal .details__group .details__item .ant-row {
+  display: block;
 }
-.ant-modal-content .ant-modal-footer {
-  padding: 20px 35px !important;
+.supplierDebtModal .details__group .details__item textarea.ant-input {
+  margin: 0;
 }
-.ant-modal-content .ant-modal-footer .ant-btn {
-  border-radius: 2rem !important;
-  padding: 0.5rem 4rem !important;
-  width: -webkit-fit-content !important;
-  width: -moz-fit-content !important;
-  width: fit-content !important;
-  height: -webkit-fit-content !important;
-  height: -moz-fit-content !important;
-  height: fit-content !important;
-}
-
-.modalSetting .details__group .details__item {
+.supplierDebtModal .details__group .details__item .ant-select.ant-select-in-form-item {
   width: 100% !important;
 }
-.modalSetting .details__group .details__item .ant-form-item-explain-error {
-  font-size: 1.2rem;
-  padding-left: 1rem;
+.supplierDebtModal .details__group .details__item .ant-input,
+.supplierDebtModal .details__group .details__item .ant-select-selector,
+.supplierDebtModal .details__group .details__item .ant-picker,
+.supplierDebtModal .details__group .details__item .ant-input-number {
+  border-radius: 2rem !important;
+  width: 100% !important;
+}
+.supplierDebtModal .details__group .details__item .ant-input {
+  padding: 1rem 2rem;
+  margin-top: 0.7rem;
+}
+.supplierDebtModal .details__group .details__item .ant-picker {
+  height: 4.2rem;
+  padding: 2rem;
+}
+.supplierDebtModal .details__group .details__item .ant-input-number {
+  height: 4.2rem;
+  padding: 0.5rem 1rem;
+}
+.supplierDebtModal .details__group .details__item .ant-input-number .ant-input-number-handler-wrap {
+  margin-right: 1.6rem;
+}
+.supplierDebtModal .details__group .details__item .ant-select-selector {
+  height: 4.2rem;
+  padding: 0.35rem 2rem;
+}
+.supplierDebtModal .details__group .details__item .ant-select-selector .ant-select-selection-search {
+  padding: 0.3rem 0.9rem;
+}
+.supplierDebtModal .details__group .details__item .ant-select-selector .ant-select-selection-item {
+  padding: 0.1rem 0;
+}
+.supplierDebtModal .details__group .details__avatar {
+  position: relative;
+  width: 15rem;
+  height: 15rem;
+  margin: auto;
+  margin-bottom: 3rem;
+}
+.supplierDebtModal .details__group .details__avatar .details__avatar-img {
+  border-radius: 50%;
+  -o-object-fit: contain;
+  object-fit: contain;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.supplierDebtModal .details__group .details__avatar .item_choose-avt {
+  position: absolute;
+  bottom: 0;
+  right: -2rem;
+  margin: 0;
+}
+.supplierDebtModal .details__group .details__avatar .item_choose-avt .ant-upload.ant-upload-select {
+  width: 5rem;
+  height: 5rem;
+  padding: 0.5rem 2rem;
+  border: none;
+  border-radius: 50%;
+  background-color: #52c41a;
+  margin-top: 2rem;
+}
+.supplierDebtModal .details__group .details__avatar .item_choose-avt .ant-upload.ant-upload-select .ant-upload {
+  color: white;
 }

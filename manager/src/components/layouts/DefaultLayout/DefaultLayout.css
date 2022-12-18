@@ -222,8 +222,8 @@
 
 .ant-modal-content {
   border-radius: 2rem !important;
-  padding: 16px 45px !important;
 }
-.ant-modal-content .ant-modal-body {
-  margin: 3rem 0;
+
+.ant-input-disabled {
+  color: black;
 }

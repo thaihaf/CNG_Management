@@ -1,11 +1,9 @@
 import React from "react";
 import { AuthLayout, DefaultLayout } from "components";
-import { AuthPaths } from "features/auth/auth";
 import { Helmet } from "react-helmet";
 import { Redirect, Route } from "react-router-dom";
-
-// import { Permission } from "@app/features/permissions/permissions";
-// import RestrictAccess from "./components/RestrictAccess/RestrictAccess";
+import { checkPermission } from "helpers/auth.helpers";
+import RestrictAccess from "components/modules/RestrictAccess/RestrictAccess";
 
 const NestedRouteWrapper = ({ routesWithComponents }) => {
   return (
@@ -17,49 +15,53 @@ const NestedRouteWrapper = ({ routesWithComponents }) => {
           component,
           pageTitle,
           isPrivateRoute,
-          permissions, //
-          // isRoot,
-          // path2,
+          isAuthRoute,
+          roles,
+          exact,
         }) => {
           const Layout = isPrivateRoute ? DefaultLayout : AuthLayout;
 
           return (
             <Route
-              exact
+              exact={exact}
               key={id}
               path={path}
               render={(routeProps) => {
-                //  const isLogin = localStorage.getItem("isLogin");
-                const isLogin = true;
-                if (isPrivateRoute && !isLogin) {
-                  return <Redirect key="AUTH_ROUTE" to={AuthPaths.LOGIN} />;
-                }
-               //  if (isRoot && isLogin) {
-               //    console.log("path", path2);
-               //    return <Redirect key={id} to={path2} />;
-               //  }
-
+                // const isLogin = getIsLogin();
+                // if (isPrivateRoute && !isLogin) {
+                //   console.log("first")
+                // }
+                //  if (isRoot && isLogin) {
+                //    console.log("path", path2);
+                //    return <Redirect key={id} to={path2} />;
+                //  }
                 const Component = component;
-                const renderContent = (
+                if (isAuthRoute) {
+                  return (
+                    <>
+                      <Helmet>
+                        <title>{pageTitle}</title>
+                      </Helmet>
+                      <Layout>
+                        <Component {...routeProps} />
+                      </Layout>
+                    </>
+                  );
+                }
+
+                return (
                   <>
                     <Helmet>
                       <title>{pageTitle}</title>
                     </Helmet>
                     <Layout>
-                      <Component {...routeProps} />
+                      {checkPermission(roles) ? (
+                        <Component {...routeProps} />
+                      ) : (
+                        <RestrictAccess {...routeProps} />
+                      )}
                     </Layout>
                   </>
-                );
-                return (
-                  //  (permissions && (
-                  //       <Permission
-                  //            fallback={<RestrictAccess />}
-                  //            requiredPermissions={permissions}
-                  //       >
-                  //            {renderContent}
-                  //       </Permission>
-                  //  )) ||
-                  renderContent
                 );
               }}
             />

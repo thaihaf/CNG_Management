@@ -14,6 +14,8 @@ const WAREHOUSE_LIST_SCREEN = {
   component: WarehouseListScreen,
   isPrivateRoute: true,
   pageTitle: "Warehouse Manager",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const WAREHOUSE_DETAILS_SCREEN = {
   id: "warehouse_id",
@@ -21,6 +23,8 @@ const WAREHOUSE_DETAILS_SCREEN = {
   component: WarehouseDetailsScreen,
   isPrivateRoute: true,
   pageTitle: "Warehouse Detail",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const WAREHOUSE_MANAGER_ROUTES = [

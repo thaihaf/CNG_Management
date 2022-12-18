@@ -262,6 +262,9 @@ export default function TableDetails({ form }) {
       sorter: (a, b) =>
         parseFloat(a.paymentAmount) < parseFloat(b.paymentAmount),
       sortDirections: ["descend", "ascend"],
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
       title: "Loại Thanh toán",

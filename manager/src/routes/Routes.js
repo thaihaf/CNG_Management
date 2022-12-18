@@ -8,31 +8,18 @@ import { AuthPaths } from "features/auth/auth";
 import { ROUTE_LIST } from "./routes.config";
 
 import { DefaultLayout } from "components";
-import NotFound from "./components/NotFound/NotFound";
+import NotFound from "../components/modules/NotFound/NotFound";
 import NestedRouteWrapper from "./NestedRouteWrapper";
 
 const Routes = () => {
-     return (
-          <Switch>
-               {/* <Redirect exact from="/" to={AuthPaths.LOGIN} /> */}
+  return (
+    <Switch>
+      <NestedRouteWrapper routesWithComponents={ROUTE_LIST} />
 
-               <NestedRouteWrapper routesWithComponents={ROUTE_LIST} />
-
-               <Route
-                    path="*"
-                    render={() => (
-                         <>
-                              <Helmet>
-                                   <title>Page Not Found</title>
-                              </Helmet>
-                              <DefaultLayout>
-                                   <NotFound />
-                              </DefaultLayout>
-                         </>
-                    )}
-               />
-          </Switch>
-     );
+      <Route exact path="/404" component={NotFound} />
+      <Redirect to="/404" />
+    </Switch>
+  );
 };
 
 export default memo(Routes);

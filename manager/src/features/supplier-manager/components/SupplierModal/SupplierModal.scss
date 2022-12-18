@@ -1,4 +1,4 @@
-.supplierDebtModal{
+.supplierModal {
   .btns {
     width: 100%;
     display: flex;
@@ -32,6 +32,11 @@
         display: block;
       }
 
+      .ant-input {
+        border-radius: 2rem !important;
+        padding: 1rem 2rem;
+        margin-top: 0.7rem;
+      }
       textarea.ant-input {
         margin: 0;
       }
@@ -40,27 +45,9 @@
       }
       .ant-input,
       .ant-select-selector,
-      .ant-picker,
-      .ant-input-number {
+      .ant-picker {
         border-radius: 2rem !important;
         width: 100% !important;
-      }
-
-      .ant-input {
-        padding: 1rem 2rem;
-        margin-top: 0.7rem;
-      }
-      .ant-picker {
-        height: 4.2rem;
-        padding: 2rem;
-      }
-      .ant-input-number {
-        height: 4.2rem;
-        padding: 0.5rem 1rem;
-
-        .ant-input-number-handler-wrap {
-          margin-right: 1.6rem;
-        }
       }
       .ant-select-selector {
         height: 4.2rem;

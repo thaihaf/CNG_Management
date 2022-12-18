@@ -18,6 +18,8 @@ const DETAILS_PRODUCT_EXPORT_SCREEN = {
   component: DetailsProductExportScreen,
   isPrivateRoute: true,
   pageTitle: "Details Product Export",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const LIST_PRODUCT_EXPORT_SCREEN = {
   id: "list-product-export",
@@ -25,6 +27,8 @@ const LIST_PRODUCT_EXPORT_SCREEN = {
   component: ListProductExportScreen,
   isPrivateRoute: true,
   pageTitle: "List Product Export",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const CREATE_PRODUCT_EXPORT_SCREEN = {
   id: "create-product-export",
@@ -32,6 +36,8 @@ const CREATE_PRODUCT_EXPORT_SCREEN = {
   component: CreateProductExportScreen,
   isPrivateRoute: true,
   pageTitle: "Create Product Export",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const PRODUCT_MANAGER_ROUTES = [

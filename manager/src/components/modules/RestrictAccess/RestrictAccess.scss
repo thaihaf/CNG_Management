@@ -1,0 +1,14 @@
+.restrictAccess {
+  .ant-result-title,
+  .ant-result-subtitle {
+    color: lightcoral !important;
+    font-weight: bold;
+  }
+
+  .btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+  }
+}

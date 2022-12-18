@@ -260,26 +260,6 @@ export default function CustomerList() {
       key: "fullname",
       align: "center",
       render: (record) => `${record.firstName} ${record.lastName}`,
-      // children: [
-      //   {
-      //     title: "Họ tên",
-      //     dataIndex: "firstName",
-      //     key: "firstName",
-      //     align: "center",
-      //     ...getColumnSearchProps("firstName"),
-      //     sorter: (a, b) => a.firstName.length - b.firstName.length,
-      //     sortDirections: ["descend", "ascend"],
-      //   },
-      //   {
-      //     title: "Tên đệm",
-      //     dataIndex: "lastName",
-      //     key: "lastName",
-      //     align: "center",
-      //     ...getColumnSearchProps("lastName"),
-      //     sorter: (a, b) => a.lastName.length - b.lastName.length,
-      //     sortDirections: ["descend", "ascend"],
-      //   },
-      // ],
     },
     {
       title: "Số điện thoại",
@@ -309,11 +289,11 @@ export default function CustomerList() {
         let color = s === 1 ? "green" : "volcano";
         return s === 1 ? (
           <Tag color={color} key={s}>
-            Hoạt động
+            HOẠT ĐỘNG
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            Không hoạt động
+            KHÔNG HOẠT ĐỘNG
           </Tag>
         );
       },
@@ -337,7 +317,7 @@ export default function CustomerList() {
           <img
             src={editImg}
             alt=""
-            style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+            style={{ width: "2.3rem", height: "2.3rem", cursor: "pointer" }}
             onClick={() =>
               history.push(
                 CustomerManagerPaths.CUSTOMER_DETAIL.replace(

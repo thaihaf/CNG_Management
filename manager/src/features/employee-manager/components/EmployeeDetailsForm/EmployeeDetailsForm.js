@@ -210,7 +210,7 @@ function EmployeeDetailsForm() {
         colon={false}
         className="employee"
       >
-        <div className="product-details">
+        <div className="employee-details">
           <div className="actions-group">
             <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
               {createMode ? "Tạo mới Nhân viên" : "Chi tiết nhân viên"}
@@ -306,16 +306,6 @@ function EmployeeDetailsForm() {
                   valuePropName="fileList"
                   className="item_choose-avt"
                   name="avt"
-                  rules={[
-                    {
-                      required: true,
-                      message: getMessage(
-                        CODE_ERROR.ERROR_REQUIRED,
-                        MESSAGE_ERROR,
-                        "Ảnh đại diện"
-                      ),
-                    },
-                  ]}
                 >
                   <ImgCrop rotate>
                     <Upload
@@ -388,7 +378,7 @@ function EmployeeDetailsForm() {
             <div className="details__right">
               <Steps direction="vertical" className="list-data">
                 <Step
-                  title="Thông tin cá nhân"
+                  title="Thông tin liên hệ"
                   status="finish"
                   description={
                     <div className="group-data">
@@ -648,7 +638,7 @@ function EmployeeDetailsForm() {
                 />
 
                 <Step
-                  title="Thông tin địa chỉ"
+                  title="Địa chỉ nhân viên"
                   status="finish"
                   description={
                     <div className="group-data">

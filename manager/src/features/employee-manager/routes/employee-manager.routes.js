@@ -14,33 +14,40 @@ const AccountListScreen = React.lazy(() =>
 );
 
 const EMPLOYEE_LIST_SCREEN = {
-     id: "employee-list",
-     path: EmployeeManagerPaths.EMPLOYEE_MANAGER,
-     component: EmployeeListScreen,
-     isPrivateRoute: true,
-     pageTitle: "Employe Manager",
+  id: "employee-list",
+  path: EmployeeManagerPaths.EMPLOYEE_MANAGER,
+  component: EmployeeListScreen,
+  isPrivateRoute: true,
+  pageTitle: "Employe Manager",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const PROFILE_SCREEN = {
-     id: "profile",
-     path: EmployeeManagerPaths.EMPLOYEE_PROFILE,
-     component: ProfileScreen,
-     isPrivateRoute: true,
-     pageTitle: "Profile",
+  id: "profile",
+  path: EmployeeManagerPaths.EMPLOYEE_PROFILE,
+  component: ProfileScreen,
+  isPrivateRoute: true,
+  pageTitle: "Profile",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const ACCOUNT_LIST_SCREEN = {
-     id: "account-list",
-     path: EmployeeManagerPaths.ACCOUNT_LIST,
-     component: AccountListScreen,
-     isPrivateRoute: true,
-     pageTitle: "Account List",
+  id: "account-list",
+  path: EmployeeManagerPaths.ACCOUNT_LIST,
+  component: AccountListScreen,
+  isPrivateRoute: true,
+  pageTitle: "Account List",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const EMPLOYEE_DETAILS_SCREEN = {
-     id: "employee_id",
-     path: EmployeeManagerPaths.EMPLOYEE_DETAILS,
-     component: EmployeeDetailsScreen,
-     isPrivateRoute: true,
-     pageTitle: "Employee Detail",
+  id: "employee_id",
+  path: EmployeeManagerPaths.EMPLOYEE_DETAILS,
+  component: EmployeeDetailsScreen,
+  isPrivateRoute: true,
+  pageTitle: "Employee Detail",
+  roles: ["admin", "employee"],
 };
 
 const EMPLOYEE_MANAGER_ROUTES = [

@@ -14,6 +14,8 @@ const CUSTOMER_LIST_SCREEN = {
   component: CustomerListScreen,
   isPrivateRoute: true,
   pageTitle: "Customer Manager",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const CUSTOMER_DETAILS_SCREEN = {
   id: "customer_id",
@@ -21,6 +23,8 @@ const CUSTOMER_DETAILS_SCREEN = {
   component: CustomerDetailsScreen,
   isPrivateRoute: true,
   pageTitle: "Customer Detail",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const CUSTOMER_MANAGER_ROUTES = [
