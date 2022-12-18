@@ -247,11 +247,11 @@ export default function AccountList() {
         let color = s == 1 ? "green" : "volcano";
         return s == 1 ? (
           <Tag color={color} key={s}>
-            Hoạt động
+            HOẠT ĐỘNG
           </Tag>
         ) : (
           <Tag color={color} key={s}>
-            Không Hoạt động
+            KHÔNG HOẠT ĐỘNG
           </Tag>
         );
       },

@@ -99,7 +99,7 @@ export default function DetailsModal({ record, updateMode }) {
         <img
           src={editImg}
           alt=""
-          style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+          style={{ width: "2.3rem", height: "2.3rem", cursor: "pointer" }}
           onClick={() => {
             setModal1Open(true);
           }}
@@ -108,16 +108,12 @@ export default function DetailsModal({ record, updateMode }) {
         <Button
           type="primary"
           shape="round"
-          size={"large"}
           style={{
             width: "fitContent",
             display: "flex",
             alignItems: "center",
             gap: "1rem",
-            paddingTop: "2.1rem",
-            paddingBottom: "2.1rem",
-            paddingLeft: "2.8rem",
-            paddingRight: "2.8rem",
+            padding: "2rem",
           }}
           onClick={() => {
             setModal1Open(true);
@@ -138,8 +134,8 @@ export default function DetailsModal({ record, updateMode }) {
         open={modal1Open}
         onOk={() => setModal1Open(false)}
         onCancel={() => setModal1Open(false)}
-        footer={[]}
-        className="modalSetting"
+        footer={false}
+        className="customerDebtModal"
       >
         <Spin spinning={isLoadingModal}>
           <Form
@@ -167,17 +163,14 @@ export default function DetailsModal({ record, updateMode }) {
                   },
                 ]}
               >
-                <Input
-                  type="text"
-                  className="login_input pass"
-                  disabled={true}
-                />
+                <Input type="text" disabled={true} />
               </Form.Item>
             </div>
+
             <div className="details__group">
               <Form.Item
                 name="paymentAmount"
-                label={<Text>Số tiền thanh toán</Text>}
+                label={<Text>Số tiền thanh toán (vnđ)</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -189,12 +182,17 @@ export default function DetailsModal({ record, updateMode }) {
                     ),
                   },
                 ]}
-                initialValue={1}
+                initialValue={10000}
               >
-                <InputNumber min={1} className="details__item" />
+                <InputNumber
+                  min={1}
+                  formatter={(value) =>
+                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                  }
+                  parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                  className="details__item"
+                />
               </Form.Item>
-            </div>
-            <div className="details__group">
               <Form.Item
                 name="paymentType"
                 label={<Text>Loại Thanh toán</Text>}
@@ -211,10 +209,6 @@ export default function DetailsModal({ record, updateMode }) {
                 ]}
               >
                 <Select
-                  placeholder="Chọn Loại Thanh toán"
-                  style={{
-                    width: 200,
-                  }}
                   options={[
                     {
                       key: "Chuyển khoản",
@@ -223,19 +217,10 @@ export default function DetailsModal({ record, updateMode }) {
                     },
                     { key: "Tiền mặt", value: "Tiền mặt", label: "Tiền mặt" },
                   ]}
-                  showSearch
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "").includes(input)
-                  }
-                  filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? "")
-                      .toLowerCase()
-                      .localeCompare((optionB?.label ?? "").toLowerCase())
-                  }
                 />
               </Form.Item>
             </div>
+
             <div className="details__group">
               <Form.Item
                 name="debtDate"
@@ -258,6 +243,7 @@ export default function DetailsModal({ record, updateMode }) {
                 <DatePicker format="DD/MM/YYYY" />
               </Form.Item>
             </div>
+
             <div className="details__group">
               <Form.Item
                 name="note"

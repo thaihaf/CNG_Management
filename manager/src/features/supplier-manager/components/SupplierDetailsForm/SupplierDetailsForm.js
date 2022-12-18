@@ -623,6 +623,21 @@ function SupplierDetailsForm() {
                         disabled={false}
                       />
                     </Form.Item>
+                    <Form.Item
+                      name="description"
+                      label={<Text>Ghi chú</Text>}
+                      className="details__item"
+                    >
+                      <TextArea
+                        showCount
+                        maxLength={300}
+                        style={{
+                          height: "100%",
+                          resize: "none",
+                          minWidth: "200px",
+                        }}
+                      />
+                    </Form.Item>
                   </div>
                 }
               />
@@ -777,21 +792,6 @@ function SupplierDetailsForm() {
                           );
                         })}
                       </Select>
-                    </Form.Item>
-                    <Form.Item
-                      name="description"
-                      label={<Text>Mô tả</Text>}
-                      className="details__item"
-                    >
-                      <TextArea
-                        showCount
-                        maxLength={300}
-                        style={{
-                          height: "100%",
-                          resize: "none",
-                          minWidth: "200px",
-                        }}
-                      />
                     </Form.Item>
                   </div>
                 }

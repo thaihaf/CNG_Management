@@ -36,12 +36,12 @@ import {
   getCustomers,
 } from "features/customer-manager/customerManager";
 
-import "./CustomerModal.css";
+import "./SupplierModal.css";
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
-export default function CustomerModal() {
+export default function SupplierModal() {
   const { provinces, districts, wards } = useSelector(
     (state) => state.provinces
   );
@@ -128,14 +128,14 @@ export default function CustomerModal() {
       </Button>
 
       <Modal
-        title={"Tạo mới Khách hàng"}
-        style={{ top: 50 }}
+        title="Tạo mới Nhà cung cấp"
+        style={{ top: 10 }}
         open={modal1Open}
         onOk={() => setModal1Open(false)}
         onCancel={() => setModal1Open(false)}
         footer={false}
         width={700}
-        className="customerModal"
+        className="supplierModal"
       >
         <Spin spinning={isLoading}>
           <Form form={form} colon={false} onFinish={onFinish}>
@@ -180,10 +180,11 @@ export default function CustomerModal() {
                 </Form.Item>
               </div>
             </div>
+
             <div className="details__group">
               <Form.Item
-                name="firstName"
-                label={<Text>Họ người liên hệ</Text>}
+                name="firstContactName"
+                label={<Text>Họ của liên hệ</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -191,7 +192,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Họ"
+                      "Họ của Người cung cấp"
                     ),
                   },
                   {
@@ -200,7 +201,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT,
                       MESSAGE_ERROR,
-                      "Họ"
+                      "Họ của Người cung cấp"
                     ),
                   },
                   {
@@ -208,7 +209,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Họ",
+                      "Họ của Người cung cấp",
                       10
                     ),
                   },
@@ -217,7 +218,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Tên",
+                      "Họ của Người cung cấp",
                       2
                     ),
                   },
@@ -225,10 +226,9 @@ export default function CustomerModal() {
               >
                 <Input />
               </Form.Item>
-
               <Form.Item
-                name="lastName"
-                label={<Text>Tên đệm người liên hệ</Text>}
+                name="lastContactName"
+                label={<Text>Tên đệm của người liên hệ</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -236,7 +236,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Tên đệm"
+                      "Tên của nhà cung cấp"
                     ),
                   },
                   {
@@ -245,7 +245,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT,
                       MESSAGE_ERROR,
-                      "Tên đệm"
+                      "Tên của nhà cung cấp"
                     ),
                   },
                   {
@@ -253,7 +253,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Tên đệm",
+                      "Tên của nhà cung cấp",
                       50
                     ),
                   },
@@ -262,7 +262,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Tên đệm",
+                      "Tên của nhà cung cấp",
                       2
                     ),
                   },
@@ -270,10 +270,9 @@ export default function CustomerModal() {
               >
                 <Input />
               </Form.Item>
-
               <Form.Item
-                name="phoneNumber"
-                label={<Text>Số điện thoại</Text>}
+                name="phoneNumberContact"
+                label={<Text>Số điện thoại người liên hệ</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -281,7 +280,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Số điện thoại"
+                      "Số điện thoại người liên hệ"
                     ),
                   },
                   {
@@ -289,7 +288,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_FORMAT_NUMBER,
                       MESSAGE_ERROR,
-                      "Số điện thoại"
+                      "Số điện thoại người liên hệ"
                     ),
                   },
                   {
@@ -297,7 +296,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Số điện thoại",
+                      "Số điện thoại người liên hệ",
                       11
                     ),
                   },
@@ -306,7 +305,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Số điện thoại",
+                      "Số điện thoại người liên hệ",
                       9
                     ),
                   },
@@ -316,8 +315,8 @@ export default function CustomerModal() {
               </Form.Item>
 
               <Form.Item
-                name="shopName"
-                label={<Text>Tên cửa hàng</Text>}
+                name="supplierName"
+                label={<Text>Tên nhà cung cấp</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -325,7 +324,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Tên cửa hàng"
+                      "Tên nhà cung cấp"
                     ),
                   },
                   {
@@ -334,7 +333,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_LETTER,
                       MESSAGE_ERROR,
-                      "Tên cửa hàng"
+                      "Tên nhà cung cấp"
                     ),
                   },
                   {
@@ -342,7 +341,7 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MAX,
                       MESSAGE_ERROR,
-                      "Tên cửa hàng",
+                      "Tên nhà cung cấp",
                       50
                     ),
                   },
@@ -351,8 +350,86 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_NUMBER_MIN,
                       MESSAGE_ERROR,
-                      "Tên cửa hàng",
+                      "Tên nhà cung cấp",
                       2
+                    ),
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="bankName"
+                label={<Text>Tên Ngân hàng</Text>}
+                className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Tên Ngân hàng"
+                    ),
+                  },
+                  {
+                    max: 10,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MAX,
+                      MESSAGE_ERROR,
+                      "Tên Ngân hàng",
+                      10
+                    ),
+                  },
+                  {
+                    min: 2,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MIN,
+                      MESSAGE_ERROR,
+                      "Tên Ngân hàng",
+                      2
+                    ),
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="bankAccountNumber"
+                label={<Text>Số tài khoản</Text>}
+                className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Số tài khoản"
+                    ),
+                  },
+                  {
+                    pattern: /^[1-9]{1}[0-9]{5,14}$/,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_FORMAT_NUMBER,
+                      MESSAGE_ERROR,
+                      "Số tài khoản"
+                    ),
+                  },
+                  {
+                    max: 14,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MAX,
+                      MESSAGE_ERROR,
+                      "Số tài khoản",
+                      14
+                    ),
+                  },
+                  {
+                    min: 5,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_NUMBER_MIN,
+                      MESSAGE_ERROR,
+                      "Số tài khoản",
+                      5
                     ),
                   },
                 ]}
@@ -405,7 +482,7 @@ export default function CustomerModal() {
               </Form.Item>
 
               <Form.Item
-                name={["addressDTO", "apartmentNumber"]}
+                name="apartmentNumber"
                 label={<Text>Tên đường, số nhà</Text>}
                 className="details__item"
                 rules={[
@@ -414,17 +491,16 @@ export default function CustomerModal() {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Tên đường, Số nhà"
+                      "Tên đường, số nhà"
                     ),
                   },
                 ]}
               >
                 <Input />
               </Form.Item>
-
               <Form.Item
-                name={["addressDTO", "city"]}
-                label="Tỉnh, Thành phố"
+                name="city"
+                label={<Text>Tỉnh, Thành phố</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -445,8 +521,8 @@ export default function CustomerModal() {
                   }}
                   onChange={(value) => {
                     dispatch(getProvince(value.key));
-                    form.setFieldValue(["addressDTO", "district"]);
-                    form.setFieldValue(["addressDTO", "ward"]);
+                    form.setFieldValue("district");
+                    form.setFieldValue("ward");
                   }}
                   optionFilterProp="children"
                   filterOption={(input, option) =>
@@ -467,9 +543,8 @@ export default function CustomerModal() {
                   })}
                 </Select>
               </Form.Item>
-
               <Form.Item
-                name={["addressDTO", "district"]}
+                name="district"
                 label={<Text>Quận, Huyện</Text>}
                 className="details__item"
                 rules={[
@@ -491,7 +566,7 @@ export default function CustomerModal() {
                   }}
                   onChange={(value, e) => {
                     dispatch(getDistrict(value.key));
-                    form.setFieldValue(["addressDTO", "ward"]);
+                    form.setFieldValue("ward");
                   }}
                   optionFilterProp="children"
                   filterOption={(input, option) =>
@@ -514,7 +589,7 @@ export default function CustomerModal() {
               </Form.Item>
 
               <Form.Item
-                name={["addressDTO", "ward"]}
+                name="ward"
                 label={<Text>Xã, Phường</Text>}
                 className="details__item"
                 rules={[
@@ -536,9 +611,6 @@ export default function CustomerModal() {
                   }}
                   onChange={(value, e) => {
                     console.log(value.value);
-                    // dispatch(
-                    // 		 getDistrict(value.key)
-                    // );
                   }}
                   optionFilterProp="children"
                   filterOption={(input, option) =>

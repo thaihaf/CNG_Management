@@ -1,24 +1,24 @@
 .employee {
-.title {
+  .title {
     margin-bottom: 2rem;
   }
 
   .details {
     display: flex;
     justify-content: center;
-  
+
     .details__left {
-      width: 35%;
+      width: 30%;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding-top: 10rem;
-  
+
       .details__avatar {
         position: relative;
         width: 20rem;
         height: 20rem;
-  
+
         .details__avatar-img {
           border-radius: 50%;
           object-fit: contain;
@@ -27,7 +27,7 @@
           align-items: center;
           justify-content: center;
         }
-  
+
         .item_choose-avt {
           position: absolute;
           bottom: 0;
@@ -42,6 +42,9 @@
         font-weight: 500;
       }
       .details__username {
+        font-weight: bold;
+        color: darkorange;
+        margin-top: 1rem;
       }
       .details__status {
         font-size: 1.5rem;
@@ -52,7 +55,9 @@
         margin: 0;
         margin-top: 2rem;
         border: 1.8px solid;
-        border-radius: 2rem;
+        border-radius: 1rem;
+        text-transform: uppercase;
+        padding-bottom: 0.8rem;
       }
       .details__location {
         display: flex;
@@ -68,37 +73,37 @@
         border-radius: 50%;
         background-color: #52c41a;
         margin-top: 2rem;
-  
+
         .ant-upload {
           color: white;
         }
       }
     }
     .details__right {
-      width: 65%;
+      width: 70%;
       padding-right: 7rem;
-  
+
       // .details__group {
       //      display: flex;
       //      align-items: center;
       //      justify-content: space-between;
       //      gap: 3rem;
-  
+
       //      .item-sm {
       //           margin: 0;
       //      }
       //      .details__item {
       //           width: 45%;
-  
+
       //           .ant-col {
       //                max-width: 100% !important;
       //                flex: none !important;
       //           }
-  
+
       //           .ant-row {
       //                display: block;
       //           }
-  
+
       //           .ant-select.ant-select-in-form-item {
       //                width: 100% !important;
       //           }
@@ -118,35 +123,35 @@
       // .btn_group {
       //      margin-top: 3rem;
       // }
-  
+
       .list-data {
         width: 100%;
-  
+
         .ant-steps-item-title {
           font-weight: bold;
           margin-bottom: 1rem;
         }
-  
+
         .ant-steps-item-description {
           margin-left: 2rem;
           margin-top: 1rem;
         }
-  
+
         .group-data {
           display: grid;
           grid-column-gap: 3rem;
           align-items: center;
           grid-template-columns: repeat(auto-fit, minmax(50px, 280px));
-  
+
           .ant-col {
             max-width: 100% !important;
             flex: none !important;
           }
-  
+
           .ant-row {
             display: block;
           }
-  
+
           .ant-select.ant-select-in-form-item {
             width: 100% !important;
           }
@@ -158,22 +163,22 @@
           }
           .ant-select-selector {
             height: 4.2rem;
-  
+
             .ant-select-selection-item {
               padding: 0.5rem 0.7rem;
             }
           }
-  
+
           .ant-picker {
             height: 4.2rem;
             padding: 2rem;
           }
-  
+
           .ant-select-multiple {
             .ant-select-selector {
               height: 4.2rem;
               padding-left: 1rem;
-  
+
               .ant-select-selection-item {
                 height: 100%;
                 border: none;
@@ -188,7 +193,7 @@
             width: 100%;
             border-radius: 2rem;
             padding: 0.5rem 0.7rem;
-  
+
             .ant-input-number-handler-wrap {
               right: 9px;
               border-radius: 2rem;
@@ -208,7 +213,7 @@
     align-items: center;
     gap: 3rem;
   }
-  
+
   .actions-group {
     display: flex;
     gap: 2rem;
@@ -216,7 +221,7 @@
     border-radius: 2rem 2rem 0 0;
     background-color: #fafafa;
     margin-bottom: 2rem;
-  
+
     .details__item {
       margin-bottom: 0;
     }
