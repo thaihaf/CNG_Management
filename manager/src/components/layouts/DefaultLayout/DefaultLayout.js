@@ -41,6 +41,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AuthPaths,
+  LOCAL_STORAGE_AUTH_KEY,
   changePassword,
   getAccountAvatar,
 } from "features/auth/auth";
@@ -91,7 +92,8 @@ const DefaultLayout = ({ children }) => {
       onOk: () => {
         dispatch({ type: "LOGOUT" });
         history.push(AuthPaths.LOGIN);
-        localStorage.removeItem("persist:auth");
+        localStorage.removeItem(LOCAL_STORAGE_AUTH_KEY);
+        localStorage.clear();
       },
       onCancel: () => {},
     });

@@ -13,6 +13,8 @@ const CATEGORY_LIST_SCREEN = {
   component: CategoryListScreen,
   isPrivateRoute: true,
   pageTitle: "Category Manager",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const CATEGORY_DETAILS_SCREEN = {
   id: "category_id",
@@ -20,6 +22,8 @@ const CATEGORY_DETAILS_SCREEN = {
   component: CategoryDetailsScreen,
   isPrivateRoute: true,
   pageTitle: "Category Detail",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const CATEGORY_MANAGER_ROUTES = [CATEGORY_LIST_SCREEN, CATEGORY_DETAILS_SCREEN];

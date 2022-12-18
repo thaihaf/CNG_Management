@@ -1,0 +1,10 @@
+.restrictAccess .ant-result-title,
+.restrictAccess .ant-result-subtitle {
+  color: black !important;
+}
+.restrictAccess .btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5rem;
+}

@@ -5,4 +5,5 @@ export const AuthPaths = {
   FORGOT_PASS: "/forgot-password",
   VERIFY_CODE: "/verify",
   RESET_PASSWORD: "/reset-password",
+  NOT_FOUND: "/404",
 };

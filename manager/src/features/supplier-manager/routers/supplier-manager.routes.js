@@ -14,6 +14,8 @@ const SUPPLIER_LIST_SCREEN = {
   component: SupplierListScreen,
   isPrivateRoute: true,
   pageTitle: "Supplier Manager",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const SUPPLIER_DETAILS_SCREEN = {
@@ -22,6 +24,8 @@ const SUPPLIER_DETAILS_SCREEN = {
   component: SupplierDetailsScreen,
   isPrivateRoute: true,
   pageTitle: "Supplier Detail",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const SUPPLIER_MANAGER_ROUTES = [SUPPLIER_LIST_SCREEN, SUPPLIER_DETAILS_SCREEN];

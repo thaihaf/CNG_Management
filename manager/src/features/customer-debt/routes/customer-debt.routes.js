@@ -15,6 +15,8 @@ const CUSTOMER_DEBT_SCREEN = {
   component: CustomerDebtListScreen,
   isPrivateRoute: true,
   pageTitle: "Customer Debt Manager",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const CUSTOMER_DEBT_DETAILS_SCREEN = {
   id: "customer-debt-details",
@@ -22,6 +24,8 @@ const CUSTOMER_DEBT_DETAILS_SCREEN = {
   component: DetailsCustomerDebtScreen,
   isPrivateRoute: true,
   pageTitle: "Customer Debt Details",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const CUSTOMER_DEBT_ROUTES = [

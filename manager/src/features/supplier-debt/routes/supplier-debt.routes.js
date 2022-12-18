@@ -15,6 +15,8 @@ const SUPPLIER_DEBT_SCREEN = {
   component: SupplierDebtListScreen,
   isPrivateRoute: true,
   pageTitle: "Supplier Debt Manager",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const SUPPLIER_DEBT_DETAILS_SCREEN = {
   id: "supplier-debt-details",
@@ -22,6 +24,8 @@ const SUPPLIER_DEBT_DETAILS_SCREEN = {
   component: DetailsSupplierDebtScreen,
   isPrivateRoute: true,
   pageTitle: "Supplier Debt Details",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const SUPPLIER_DEBT_ROUTES = [

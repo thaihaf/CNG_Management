@@ -18,6 +18,8 @@ const PRODUCT_LIST_SCREEN = {
   component: ProductListScreen,
   isPrivateRoute: true,
   pageTitle: "Product Manager",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const CREATE_PRODUCT_SCREEN = {
   id: "create-product",
@@ -25,6 +27,8 @@ const CREATE_PRODUCT_SCREEN = {
   component: CreateProductScreen,
   isPrivateRoute: true,
   pageTitle: "Create Product",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const PRODUCT_DETAILS_SCREEN = {
   id: "product-details",
@@ -32,6 +36,8 @@ const PRODUCT_DETAILS_SCREEN = {
   component: ProductDetailsScreen,
   isPrivateRoute: true,
   pageTitle: "Product Details",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const PRODUCT_MANAGER_ROUTES = [

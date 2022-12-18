@@ -18,6 +18,8 @@ const DETAILS_PRODUCT_IMPORT_SCREEN = {
   component: DetailsProductImportScreen,
   isPrivateRoute: true,
   pageTitle: "Details Product Import",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const LIST_PRODUCT_IMPORT_SCREEN = {
   id: "list-product-import",
@@ -25,6 +27,8 @@ const LIST_PRODUCT_IMPORT_SCREEN = {
   component: ListProductImportScreen,
   isPrivateRoute: true,
   pageTitle: "List Product Import",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 const CREATE_PRODUCT_IMPORT_SCREEN = {
   id: "create-product-import",
@@ -32,6 +36,8 @@ const CREATE_PRODUCT_IMPORT_SCREEN = {
   component: CreateProductImportScreen,
   isPrivateRoute: true,
   pageTitle: "Create Product Import",
+  roles: ["admin", "employee"],
+  exact: true,
 };
 
 const PRODUCT_MANAGER_ROUTES = [
