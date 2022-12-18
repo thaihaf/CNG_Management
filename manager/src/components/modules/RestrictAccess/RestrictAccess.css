@@ -1,6 +1,7 @@
 .restrictAccess .ant-result-title,
 .restrictAccess .ant-result-subtitle {
-  color: black !important;
+  color: lightcoral !important;
+  font-weight: bold;
 }
 .restrictAccess .btns {
   display: flex;
