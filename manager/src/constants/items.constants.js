@@ -55,7 +55,7 @@ export const siderBarItems = [
   {
     key: "dashboard/product/profit",
     icon: <ExportOutlined style={{ fontSize: "1.6rem" }} />,
-    label: `Lợi nhận`,
+    label: `Lợi nhuận`,
     role: ["admin", "employee"],
   },
   {
