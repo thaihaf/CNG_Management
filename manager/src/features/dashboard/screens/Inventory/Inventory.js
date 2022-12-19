@@ -156,7 +156,7 @@ export default function Inventory() {
             children: <ProductInventory />,
           },
           {
-            label: `Theo cung cấp`,
+            label: `Theo nhà cung cấp`,
             key: DashboardPaths.SUPPLIER_INVENTORY,
             children: <SupplierInventory />,
           },
