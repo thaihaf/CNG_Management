@@ -11,6 +11,7 @@
   flex-direction: column;
   align-items: center;
   padding-top: 10rem;
+  border: unset !important;
 }
 .employee .details .details__left .details__avatar {
   position: relative;
@@ -106,6 +107,14 @@
 .employee .details .details__right .list-data .group-data .ant-row {
   display: block;
 }
+.employee .details .details__right .list-data .group-data .ant-input {
+  border-radius: 2rem !important;
+  padding: 1rem 2rem;
+  margin-top: 0.7rem;
+}
+.employee .details .details__right .list-data .group-data textarea.ant-input {
+  margin: 0;
+}
 .employee .details .details__right .list-data .group-data .ant-select.ant-select-in-form-item {
   width: 100% !important;
 }
@@ -117,38 +126,13 @@
 }
 .employee .details .details__right .list-data .group-data .ant-select-selector {
   height: 4.2rem;
+  padding: 0.35rem 2rem;
+}
+.employee .details .details__right .list-data .group-data .ant-select-selector .ant-select-selection-search {
+  padding: 0.5rem 0.9rem;
 }
 .employee .details .details__right .list-data .group-data .ant-select-selector .ant-select-selection-item {
-  padding: 0.5rem 0.7rem;
-}
-.employee .details .details__right .list-data .group-data .ant-picker {
-  height: 4.2rem;
-  padding: 2rem;
-}
-.employee .details .details__right .list-data .group-data .ant-select-multiple .ant-select-selector {
-  height: 4.2rem;
-  padding-left: 1rem;
-}
-.employee .details .details__right .list-data .group-data .ant-select-multiple .ant-select-selector .ant-select-selection-item {
-  height: 100%;
-  border: none;
-  margin: 0;
-  margin-right: 1rem;
-  border-radius: 1rem;
-  padding: 5px 1rem;
-}
-.employee .details .details__right .list-data .group-data .ant-input-number {
-  width: 100%;
-  border-radius: 2rem;
-  padding: 0.5rem 0.7rem;
-}
-.employee .details .details__right .list-data .group-data .ant-input-number .ant-input-number-handler-wrap {
-  right: 9px;
-  border-radius: 2rem;
-}
-.employee .details .details__right .list-data .group-data .ant-input {
-  border-radius: 2rem !important;
-  padding: 1rem 2rem;
+  padding: 0.1rem 0;
 }
 .employee-btn-groups {
   display: flex;

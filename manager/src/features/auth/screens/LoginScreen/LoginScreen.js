@@ -41,7 +41,6 @@ const { Title } = Typography;
 
 export default function LoginScreen() {
   const dispatch = useDispatch();
-  const { errorLogin, role } = useSelector((state) => state.auth);
   const history = useHistory();
   const [loading, setLoading] = useState(false);
 
@@ -68,21 +67,20 @@ export default function LoginScreen() {
           description: "Đăng nhập thành công!",
         });
 
-        switch (res.role.substring(1, res.role.length - 1)) {
-          case "ROLE_ADMIN":
-            history.push(ProductManagerPaths.PRODUCT_MANAGER);
-            break;
-          case "ROLE_EMPLOYEE":
-            history.push(SupplierManagerPaths.SUPPLIER_LIST);
-            break;
-        }
+        history.push(ProductManagerPaths.PRODUCT_MANAGER);
+        // switch (res.role.substring(1, res.role.length - 1)) {
+        //   case "ROLE_ADMIN":
+        //     history.push(ProductManagerPaths.PRODUCT_MANAGER);
+        //     break;
+        //   case "ROLE_EMPLOYEE":
+        //     history.push(SupplierManagerPaths.SUPPLIER_LIST);
+        //     break;
+        // }
       })
       .catch((error) => {
-        console.log(error);
         notification.error({
           message: "Đăng nhập",
-          description:
-            "Đăng nhập thất bại, vui lòng kiểm tra lại Tài khoản hoặc Mật khẩu",
+          description: error?.Error?.message || "Lỗi rồi!!!",
         });
         setLoading(false);
         dispatch(updateError(CODE_ERROR.ERROR_LOGIN));

@@ -15,7 +15,7 @@ export const postLogin = createAsyncThunk(
       const response = await api.loginApi(data);
       return response.data;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -27,7 +27,7 @@ export const changePassword = createAsyncThunk(
       const response = await api.changePassword(data);
       return response;
     } catch (error) {
-      throw rejectWithValue(error.response.data.Error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -38,7 +38,7 @@ export const forgotPassword = createAsyncThunk(
       const response = await api.forgotPassword(data);
       return response.data;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -49,7 +49,7 @@ export const verifyCode = createAsyncThunk(
       const response = await api.verifyCode(data);
       return response.data;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -60,7 +60,7 @@ export const resetPassword = createAsyncThunk(
       const response = await api.resetPassword(data);
       return response.data;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -72,7 +72,7 @@ export const getAccountEmail = createAsyncThunk(
       const response = await api.getAccountEmail();
       return response.data;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -84,7 +84,7 @@ export const getAccountAvatar = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.log(error);
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );

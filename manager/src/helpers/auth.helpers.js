@@ -1,7 +1,6 @@
 export const getAccessToken = () => {
   const auth = JSON.parse(localStorage.getItem("persist:auth"));
   let t = auth.accessToken;
-  console.log(auth);
 
   if (t || !t.isEmpty()) {
     t = t.substring(1, t.length - 1);

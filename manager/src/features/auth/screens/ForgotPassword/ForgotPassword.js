@@ -32,14 +32,14 @@ export default function ForgotPassword() {
       .then((res) => {
         notification.success({
           message: "Quên mật khẩu",
-          description: "Lấy mã thành công, vui lòng kiểm tra Mã trong email",
+          description: "Lấy mã thành công, vui lòng kiểm tra trong email",
         });
         history.push(AuthPaths.LOGIN);
       })
       .catch((error) => {
         notification.error({
           message: "Quên mật khẩu",
-          description: "Không tìm thấy Email",
+          description: error?.Error?.message || "Lỗi rồi!!!",
         });
         setLoading(false);
         dispatch(updateError(CODE_ERROR.ERROR_LOGIN));

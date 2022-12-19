@@ -55,7 +55,7 @@ const { Option } = Select;
 const { Text, Title } = Typography;
 const { Step } = Steps;
 
-function EmployeeDetailsForm() {
+function EmployeeDetailsForm({ updateNew }) {
   const { dataDetails, createMode } = useSelector((state) => state.employee);
   const { email, role } = useSelector((state) => state.auth);
   const { provinces, districts, wards } = useSelector(
@@ -212,9 +212,15 @@ function EmployeeDetailsForm() {
       >
         <div className="employee-details">
           <div className="actions-group">
-            <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-              {createMode ? "Tạo mới Nhân viên" : "Chi tiết nhân viên"}
-            </Title>
+            {updateNew ? (
+              <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
+                Cập nhật thông tin
+              </Title>
+            ) : (
+              <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
+                {createMode ? "Tạo mới Nhân viên" : "Chi tiết nhân viên"}
+              </Title>
+            )}
 
             <Button
               type="primary"
@@ -288,7 +294,7 @@ function EmployeeDetailsForm() {
                   alt=""
                   style={{ height: "2.5rem", width: "2.5rem" }}
                 />
-                Tạo mới
+                {updateNew ? "Cập nhật" : "Tạo mới"}
               </Button>
             )}
           </div>
