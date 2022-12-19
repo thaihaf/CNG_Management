@@ -5,9 +5,21 @@ import homeImg from "assets/icons/home.png";
 import undoImg from "assets/icons/undo.png";
 import "./RestrictAccess.css";
 import { AuthPaths } from "features/auth/auth";
+import { useEffect } from "react";
+import { checkPermission, getRole } from "helpers/auth.helpers";
+import { useSelector } from "react-redux";
 
-const RestrictAccess = ({ history }) => {
+const RestrictAccess = ({ history, roles, children }) => {
   //  const { t } = useTranslation();
+  const auth = useSelector((state) => state.auth);
+
+  if (!auth.isSignedIn) {
+    history.push(AuthPaths.LOGIN);
+  }
+  if (checkPermission(roles, auth?.role)) {
+    return children;
+  }
+
   return (
     // <Result
     //   status="403"

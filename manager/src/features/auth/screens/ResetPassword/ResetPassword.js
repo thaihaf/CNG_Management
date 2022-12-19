@@ -52,7 +52,7 @@ export default function ResetPassword() {
       .catch((error) => {
         notification.error({
           message: "Quên mật khẩu",
-          description: "Không tìm thấy Tên đăng nhập",
+          description: error?.Error?.message || "Lỗi rồi!!!",
         });
         setLoading(false);
       });

@@ -49,21 +49,20 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
+import SettingModal from "components/modules/SettingModal/SettingModal";
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
 
 const DefaultLayout = ({ children }) => {
-  const { userName, role, avatar } = useSelector((state) => state.auth);
+  // const { userName, role, avatar } = useSelector((state) => state.auth);
+  const auth = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  const [changePassForm] = Form.useForm();
   const pathname = location.pathname.split("/")[1];
 
   const [collapsed, setCollapsed] = useState(false);
-  const [modal1Open, setModal1Open] = useState(false);
-  const [isLoadingModal, setIsLoadingModal] = useState(false);
 
   const [open, setOpen] = useState(false);
   const showDrawer = () => {
@@ -75,7 +74,9 @@ const DefaultLayout = ({ children }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    dispatch(getAccountAvatar());
+    if (auth?.role === "employee") {
+      dispatch(getAccountAvatar());
+    }
   }, [dispatch, location]);
 
   const getSelect = ({ key }) => {
@@ -97,34 +98,6 @@ const DefaultLayout = ({ children }) => {
       },
       onCancel: () => {},
     });
-  };
-
-  const handleChangePassword = (values) => {
-    setIsLoadingModal(true);
-    dispatch(changePassword({ data: values }))
-      .then(unwrapResult)
-      .then((res) => {
-        notification.success({
-          message: "Thay đổi mật khẩu",
-          description: "Thay đổi mật khẩu thành công!",
-        });
-        setIsLoadingModal(false);
-        changePassForm.resetFields();
-      })
-      .catch((error) => {
-        if (error.errorKey === "currentPassword") {
-          setIsLoadingModal(false);
-          notification.warning({
-            message: "Thay đổi mật khẩu",
-            description: "Mật khẩu hiện tại không đúng, vui lòng kiểm tra lại!",
-          });
-        } else {
-          notification.error({
-            message: "Thay đổi mật khẩu",
-            description: "Thay đổi mật khẩu thất bại!",
-          });
-        }
-      });
   };
 
   return (
@@ -153,7 +126,7 @@ const DefaultLayout = ({ children }) => {
             selectedKeys={[pathname]}
             style={{ height: "100%" }}
             items={siderBarItems.map((item) => {
-              if (item.role.includes(role)) {
+              if (item.role.includes(auth?.role)) {
                 return {
                   key: item.key,
                   icon: item.icon,
@@ -182,282 +155,7 @@ const DefaultLayout = ({ children }) => {
                               )}
                          </span> */}
 
-          <div className="info">
-            <Tooltip placement="topRight" title={"Chọn để hiện thị Cài đặt"}>
-              <div className="info_avt" onClick={() => setModal1Open(true)}>
-                <img
-                  src={avatar ? avatar : avt_default}
-                  alt=""
-                  className="info_avt_img"
-                />
-              </div>
-            </Tooltip>
-
-            <div className="info_detail">
-              <div className="info_fullname">{userName}</div>
-              <div className="info_role">{role}</div>
-            </div>
-
-            <Modal
-              title="Cài đặt"
-              style={{ top: 20 }}
-              open={modal1Open}
-              onOk={() => setModal1Open(false)}
-              onCancel={() => setModal1Open(false)}
-              footer={[]}
-              width={800}
-              className="modalSetting"
-            >
-              <Spin spinning={isLoadingModal}>
-                <Tabs
-                  //  defaultActiveKey="2"
-                  tabPosition={"left"}
-                  items={[
-                    {
-                      label: (
-                        <span>
-                          <BarcodeOutlined />
-                          Thay đổi mật khẩu
-                        </span>
-                      ),
-                      key: "changePassword",
-                      children: (
-                        <Form
-                          form={changePassForm}
-                          labelCol={{
-                            span: 4,
-                          }}
-                          wrapperCol={{
-                            span: 14,
-                          }}
-                          layout="horizontal"
-                          name="changePassForm"
-                          id="changePassForm"
-                          colon={false}
-                          onFinish={handleChangePassword}
-                        >
-                          <div className="details__group">
-                            <Form.Item
-                              name="currentPassword"
-                              label={<Text>Mật khẩu hiện tại</Text>}
-                              className="details__item"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: getMessage(
-                                    CODE_ERROR.ERROR_REQUIRED,
-                                    MESSAGE_ERROR,
-                                    "Mật khẩu hiện tại"
-                                  ),
-                                },
-                                // {
-                                //   pattern:
-                                //     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,25}$/,
-                                //   message: getMessage(
-                                //     CODE_ERROR.ERROR_FORMAT_PASSWORD,
-                                //     MESSAGE_ERROR,
-                                //     "Mật khẩu hiện tại"
-                                //   ),
-                                // },
-                                {
-                                  max: 25,
-                                  message: getMessage(
-                                    CODE_ERROR.ERROR_MAX_LENGTH,
-                                    MESSAGE_ERROR,
-                                    "Mật khẩu hiện tại",
-                                    25
-                                  ),
-                                },
-                                {
-                                  min: 8,
-                                  message: getMessage(
-                                    CODE_ERROR.ERROR_MIN_LENGTH,
-                                    MESSAGE_ERROR,
-                                    "Mật khẩu hiện tại",
-                                    8
-                                  ),
-                                },
-                              ]}
-                            >
-                              <Input.Password
-                                type="password"
-                                placeholder="●●●●●●●●●"
-                                className="login_input pass"
-                              />
-                            </Form.Item>
-                          </div>
-                          <div className="details__group">
-                            <Form.Item
-                              name="newPassword"
-                              label={<Text>Mật khẩu mới</Text>}
-                              className="details__item"
-                              dependencies={["currentPassword"]}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: getMessage(
-                                    CODE_ERROR.ERROR_REQUIRED,
-                                    MESSAGE_ERROR,
-                                    "Mật khẩu mới"
-                                  ),
-                                },
-                                // {
-                                //   pattern:
-                                //     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,25}$/,
-                                //   message: getMessage(
-                                //     CODE_ERROR.ERROR_FORMAT_PASSWORD,
-                                //     MESSAGE_ERROR,
-                                //     "Mật khẩu mới"
-                                //   ),
-                                // },
-                                {
-                                  max: 25,
-                                  message: getMessage(
-                                    CODE_ERROR.ERROR_MAX_LENGTH,
-                                    MESSAGE_ERROR,
-                                    "Mật khẩu mới",
-                                    25
-                                  ),
-                                },
-                                {
-                                  min: 8,
-                                  message: getMessage(
-                                    CODE_ERROR.ERROR_MIN_LENGTH,
-                                    MESSAGE_ERROR,
-                                    "Mật khẩu mới",
-                                    8
-                                  ),
-                                },
-                                ({ getFieldValue }) => ({
-                                  validator(_, value) {
-                                    if (
-                                      !value ||
-                                      getFieldValue("currentPassword") !== value
-                                    ) {
-                                      return Promise.resolve();
-                                    }
-                                    return Promise.reject(
-                                      new Error(
-                                        "Mật khẩu mới và Mật khẩu hiện tại phải khác nhau"
-                                      )
-                                    );
-                                  },
-                                }),
-                              ]}
-                            >
-                              <Input.Password
-                                type="password"
-                                placeholder="●●●●●●●●●"
-                                className="login_input pass"
-                              />
-                            </Form.Item>
-                          </div>
-                          <div className="details__group">
-                            <Form.Item
-                              name="confirmNewPassword"
-                              label={<Text>Xác nhận mật khẩu</Text>}
-                              className="details__item"
-                              dependencies={["newPassword"]}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: getMessage(
-                                    CODE_ERROR.ERROR_REQUIRED,
-                                    MESSAGE_ERROR,
-                                    "Xác nhận mật khẩu"
-                                  ),
-                                },
-                                // {
-                                //   pattern:
-                                //     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,25}$/,
-                                //   message: getMessage(
-                                //     CODE_ERROR.ERROR_FORMAT_PASSWORD,
-                                //     MESSAGE_ERROR,
-                                //     "Xác nhận mật khẩu"
-                                //   ),
-                                // },
-                                {
-                                  max: 25,
-                                  message: getMessage(
-                                    CODE_ERROR.ERROR_MAX_LENGTH,
-                                    MESSAGE_ERROR,
-                                    "Xác nhận mật khẩu",
-                                    25
-                                  ),
-                                },
-                                {
-                                  min: 8,
-                                  message: getMessage(
-                                    CODE_ERROR.ERROR_MIN_LENGTH,
-                                    MESSAGE_ERROR,
-                                    "Xác nhận mật khẩu",
-                                    8
-                                  ),
-                                },
-                                ({ getFieldValue }) => ({
-                                  validator(_, value) {
-                                    if (
-                                      !value ||
-                                      getFieldValue("newPassword") === value
-                                    ) {
-                                      return Promise.resolve();
-                                    }
-                                    return Promise.reject(
-                                      new Error(
-                                        "Xác nhận mật khẩu và Mật khẩu mới phải giống nhau"
-                                      )
-                                    );
-                                  },
-                                }),
-                              ]}
-                            >
-                              <Input.Password
-                                type="password"
-                                placeholder="●●●●●●●●●"
-                                className="login_input pass"
-                              />
-                            </Form.Item>
-                          </div>
-
-                          <div className="btns">
-                            <Button
-                              key="back"
-                              shape={"round"}
-                              htmlType="reset"
-                              onClick={() => {
-                                setModal1Open(false);
-                                changePassForm.resetFields();
-                              }}
-                            >
-                              Huỷ bỏ
-                            </Button>
-                            <Button
-                              key="submit"
-                              shape={"round"}
-                              type="primary"
-                              htmlType="submit"
-                            >
-                              Xác nhận
-                            </Button>
-                          </div>
-                        </Form>
-                      ),
-                    },
-                    {
-                      label: (
-                        <span>
-                          <SettingOutlined />
-                          Hệ thống
-                        </span>
-                      ),
-                      key: "setting",
-                      children: `Content of Tab Pane 2`,
-                    },
-                  ]}
-                />
-              </Spin>
-            </Modal>
-          </div>
+          <SettingModal />
         </div>
       </Drawer>
       <Layout className="wrapper_layout">

@@ -19,7 +19,7 @@ const EMPLOYEE_LIST_SCREEN = {
   component: EmployeeListScreen,
   isPrivateRoute: true,
   pageTitle: "Employe Manager",
-  roles: ["admin", "employee"],
+  roles: ["admin"],
   exact: true,
 };
 const PROFILE_SCREEN = {
@@ -37,7 +37,7 @@ const ACCOUNT_LIST_SCREEN = {
   component: AccountListScreen,
   isPrivateRoute: true,
   pageTitle: "Account List",
-  roles: ["admin", "employee"],
+  roles: ["admin"],
   exact: true,
 };
 
@@ -47,7 +47,7 @@ const EMPLOYEE_DETAILS_SCREEN = {
   component: EmployeeDetailsScreen,
   isPrivateRoute: true,
   pageTitle: "Employee Detail",
-  roles: ["admin", "employee"],
+  roles: ["admin"],
 };
 
 const EMPLOYEE_MANAGER_ROUTES = [

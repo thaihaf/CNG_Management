@@ -18,13 +18,8 @@ export const getRole = () => {
   }
   return null;
 };
-export const checkPermission = (listRole) => {
-  if (!listRole) {
-    return false;
-  }
-  const r = getRole();
-
-  let a = listRole.find((i) => r.includes(i));
+export const checkPermission = (listRole, role) => {
+  let a = listRole.find((i) => i.includes(role));
   return a ? true : false;
 };
 

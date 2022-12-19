@@ -13,7 +13,7 @@ export const getEmployees = createAsyncThunk(
       const response = await api.getEmployees(params);
       return response.data;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -24,7 +24,7 @@ export const createAccEmployee = createAsyncThunk(
       const response = await api.createAccEmployee(data);
       return response;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -43,7 +43,7 @@ export const updateDetails = createAsyncThunk(
       const response = await api.updateDetails(id, data);
       return response;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -54,7 +54,7 @@ export const deleteEmployee = createAsyncThunk(
       const response = await api.deleteEmployee(id);
       return response;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -68,7 +68,7 @@ export const deleteEmployees = createAsyncThunk(
       return true;
     } catch (error) {
       console.log(error);
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -80,7 +80,7 @@ export const createDetails = createAsyncThunk(
       const response = await api.createDetails(data);
       return response.data;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -92,7 +92,7 @@ export const getAccounts = createAsyncThunk(
       const response = await api.getAccounts(params);
       return response.data;
     } catch (error) {
-      throw rejectWithValue(error);
+      throw rejectWithValue(error?.response?.data);
     }
   }
 );
@@ -106,6 +106,7 @@ const initialState = {
   dataDetails: null,
   errorProcess: "",
   createMode: false,
+  firstTime: false,
 };
 
 const employeesSlice = createSlice({
@@ -117,6 +118,10 @@ const employeesSlice = createSlice({
     },
     updateListEmployees: (state, action) => {
       state.listEmployees = action.payload;
+    },
+    updateFirstTime: (state, action) => {
+      state.firstTime = action.payload;
+      console.log(state.firstTime);
     },
   },
   extraReducers: {
@@ -153,6 +158,7 @@ const employeesSlice = createSlice({
   },
 });
 
-export const { updateErrorProcess, updateListEmployees } = employeesSlice.actions;
+export const { updateErrorProcess, updateListEmployees, updateFirstTime } =
+  employeesSlice.actions;
 
 export const employeesReducer = employeesSlice.reducer;

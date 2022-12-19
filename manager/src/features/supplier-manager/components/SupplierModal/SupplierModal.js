@@ -95,23 +95,23 @@ export default function SupplierModal() {
             setIsLoading(false);
             setModal1Open(false);
             notification.success({
-              message: "Tạo mới Khách hàng",
-              description: "Tạo mới Khách hàng thành công",
+              message: "Tạo mới Nhà cung cấp",
+              description: "Tạo mới Nhà cung cấp thành công",
             });
           })
           .catch(() => {
             setIsLoading(false);
             notification.error({
-              message: "Tải danh sách Khách hàng",
-              description: "Tải danh sách Khách hàng thất bại",
+              message: "Tải danh sách Nhà cung cấp",
+              description: "Tải danh sách Nhà cung cấp thất bại",
             });
           });
       })
       .catch((error) => {
         setIsLoading(false);
         notification.error({
-          message: "Tạo mới Khách hàng",
-          description: "Tạo mới Khách hàng thất bại",
+          message: "Tạo mới Nhà cung cấp",
+          description: "Tạo mới Nhà cung cấp thất bại",
         });
       });
   };
@@ -124,7 +124,7 @@ export default function SupplierModal() {
         onClick={() => setModal1Open(true)}
         style={{ width: "15rem", height: "3.8rem" }}
       >
-        Tạo Khách hàng
+        Tạo Nhà cung cấp
       </Button>
 
       <Modal

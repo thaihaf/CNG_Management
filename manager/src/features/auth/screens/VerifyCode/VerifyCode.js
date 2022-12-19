@@ -41,8 +41,8 @@ export default function VerifyCode() {
       .catch((error) => {
         notification.error({
           message: "Quên mật khẩu",
-          description: "Mã Code không đúng, vui lòng thử lại",
-        });
+          description: error?.Error?.message || "Lỗi rồi!!!",
+        });;
         setLoading(false);
       });
   };

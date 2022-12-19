@@ -46,8 +46,6 @@ export default function AccountList() {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
 
   const onHandlePagination = (pageCurrent, pageSize) => {
     setIsLoading(true);
@@ -264,18 +262,24 @@ export default function AccountList() {
     setIsLoadingModal(true);
     dispatch(createAccEmployee({ data: { ...params, role: "ROLE_EMPLOYEE" } }))
       .then(unwrapResult)
-      .then(({ data, status }) => {
+      .then(({ data }) => {
         if (data === true) {
-          notification.success({
-            message: "Tài khoản",
-            description: "Tạo tài khoản Nhân viên mới thành công",
-          });
-          setModal1Open(false);
-          form.resetFields();
+          const query = queryString.parse(location.search);
+          if (query.number) {
+            query.number = query.number - 1;
+          }
 
-          dispatch(getAccounts())
+          dispatch(getAccounts({ ...query, sort: "createAt,desc" }))
             .then(unwrapResult)
-            .then(() => setIsLoadingModal(false));
+            .then(() => {
+              notification.success({
+                message: "Tài khoản",
+                description: "Tạo tài khoản Nhân viên mới thành công",
+              });
+              form.resetFields();
+              setModal1Open(false);
+              setIsLoadingModal(false);
+            });
         } else {
           notification.success({
             message: "Tài khoản",
@@ -284,7 +288,10 @@ export default function AccountList() {
         }
       })
       .catch((error) => {
-        console.log("err", error);
+        notification.error({
+          message: "Đăng nhập",
+          description: error?.Error?.message || "Lỗi rồi!!!",
+        });
         // dispatch(updateErrorProcess(CODE_ERROR.ERROR_CREATE));
       });
   };

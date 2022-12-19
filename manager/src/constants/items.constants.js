@@ -50,13 +50,13 @@ export const siderBarItems = [
     key: "dashboard/product/inventory",
     icon: <ExportOutlined style={{ fontSize: "1.6rem" }} />,
     label: `Tồn kho`,
-    role: ["admin", "employee"],
+    role: ["admin"],
   },
   {
     key: "dashboard/product/profit",
     icon: <ExportOutlined style={{ fontSize: "1.6rem" }} />,
-    label: `Lợi nhuận`,
-    role: ["admin", "employee"],
+    label: `Lợi nhận`,
+    role: ["admin"],
   },
   {
     key: "brand",
@@ -86,7 +86,7 @@ export const siderBarItems = [
     key: "supplier-debt",
     icon: <ContactsOutlined style={{ fontSize: "1.6rem" }} />,
     label: `Công nợ Nhà cung cấp`,
-    role: ["admin", "employee"],
+    role: ["admin"],
   },
   {
     key: "customer",
