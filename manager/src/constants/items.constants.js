@@ -47,13 +47,13 @@ export const siderBarItems = [
     role: ["admin", "employee"],
   },
   {
-    key: "dashboard/product/inventory",
+    key: "dashboard/inventory/product",
     icon: <ExportOutlined style={{ fontSize: "1.6rem" }} />,
     label: `Tồn kho`,
     role: ["admin"],
   },
   {
-    key: "dashboard/product/profit",
+    key: "dashboard/profit/product",
     icon: <ExportOutlined style={{ fontSize: "1.6rem" }} />,
     label: `Lợi nhận`,
     role: ["admin"],

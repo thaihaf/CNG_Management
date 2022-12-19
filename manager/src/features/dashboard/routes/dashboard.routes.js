@@ -20,6 +20,7 @@ const DASHBOARD = {
   isPrivateRoute: true,
   pageTitle: "Thống kê",
   roles: ["admin"],
+  exact: true,
 };
 
 // inventory
