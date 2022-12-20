@@ -37,6 +37,8 @@ import { SupplierManagerPaths } from "features/supplier-manager/supplierManager"
 
 import userProfileImg from "assets/icons/userProfile.png";
 import { ProductManagerPaths } from "features/product-manager/productManager";
+import { motion } from "framer-motion/dist/framer-motion";
+
 const { Title } = Typography;
 
 export default function LoginScreen() {
@@ -88,120 +90,124 @@ export default function LoginScreen() {
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="login">
-        <Form
-          name="login"
-          className="form"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          layout="vertical"
+    <motion.div
+      className="login"
+      animate={{ opacity: [0, 1], x: [-50, 0] }}
+      exit={{ opacity: [1, 0] }}
+      transition={{ duration: 1 }}
+    >
+      <Form
+        name="login"
+        className="form"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onFinish}
+        layout="vertical"
+      >
+        <div className="top">
+          <img src={userProfileImg} alt="" />
+          <Title level={1}>Đăng nhập</Title>
+        </div>
+        <Form.Item
+          name="username"
+          label={"Tên đăng nhập"}
+          rules={[
+            {
+              required: true,
+              message: getMessage(
+                CODE_ERROR.ERROR_REQUIRED,
+                MESSAGE_ERROR,
+                "Tên Đăng Nhập"
+              ),
+            },
+            {
+              max: 25,
+              message: getMessage(
+                CODE_ERROR.ERROR_NUMBER_MAX,
+                MESSAGE_ERROR,
+                "Tên Đăng Nhập",
+                25
+              ),
+            },
+            {
+              min: 8,
+              message: getMessage(
+                CODE_ERROR.ERROR_NUMBER_MIN,
+                MESSAGE_ERROR,
+                "Tên Đăng Nhập",
+                8
+              ),
+            },
+          ]}
+          className="form_item"
         >
-          <div className="top">
-            <img src={userProfileImg} alt="" />
-            <Title level={1}>Đăng nhập</Title>
-          </div>
-          <Form.Item
-            name="username"
-            label={"Tên đăng nhập"}
-            rules={[
-              {
-                required: true,
-                message: getMessage(
-                  CODE_ERROR.ERROR_REQUIRED,
-                  MESSAGE_ERROR,
-                  "Tên Đăng Nhập"
-                ),
-              },
-              {
-                max: 25,
-                message: getMessage(
-                  CODE_ERROR.ERROR_NUMBER_MAX,
-                  MESSAGE_ERROR,
-                  "Tên Đăng Nhập",
-                  25
-                ),
-              },
-              {
-                min: 8,
-                message: getMessage(
-                  CODE_ERROR.ERROR_NUMBER_MIN,
-                  MESSAGE_ERROR,
-                  "Tên Đăng Nhập",
-                  8
-                ),
-              },
-            ]}
-            className="form_item"
-          >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Tên đăng nhập"
-              className="login_input"
-            />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            label="Mật khẩu"
-            rules={[
-              {
-                required: true,
-                message: getMessage(
-                  CODE_ERROR.ERROR_REQUIRED,
-                  MESSAGE_ERROR,
-                  "Mật khẩu"
-                ),
-              },
-              {
-                max: 25,
-                message: getMessage(
-                  CODE_ERROR.ERROR_NUMBER_MAX,
-                  MESSAGE_ERROR,
-                  "Mật khẩu",
-                  25
-                ),
-              },
-              {
-                min: 8,
-                message: getMessage(
-                  CODE_ERROR.ERROR_NUMBER_MIN,
-                  MESSAGE_ERROR,
-                  "Mật khẩu",
-                  8
-                ),
-              },
-            ]}
-            className="form_item"
-          >
-            <Input.Password
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="●●●●●●●●●"
-              className="login_input"
-            />
-          </Form.Item>
-          <Form.Item className="form_item d-flex">
-            {/* <Form.Item name="remember" valuePropName="checked" noStyle>
+          <Input
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Tên đăng nhập"
+            className="login_input"
+          />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          label="Mật khẩu"
+          rules={[
+            {
+              required: true,
+              message: getMessage(
+                CODE_ERROR.ERROR_REQUIRED,
+                MESSAGE_ERROR,
+                "Mật khẩu"
+              ),
+            },
+            {
+              max: 25,
+              message: getMessage(
+                CODE_ERROR.ERROR_NUMBER_MAX,
+                MESSAGE_ERROR,
+                "Mật khẩu",
+                25
+              ),
+            },
+            {
+              min: 8,
+              message: getMessage(
+                CODE_ERROR.ERROR_NUMBER_MIN,
+                MESSAGE_ERROR,
+                "Mật khẩu",
+                8
+              ),
+            },
+          ]}
+          className="form_item"
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="●●●●●●●●●"
+            className="login_input"
+          />
+        </Form.Item>
+        <Form.Item className="form_item d-flex">
+          {/* <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox>Ghi nhớ</Checkbox>
             </Form.Item> */}
 
-            <a className="/login-form-forgot forgot" href="/forgot-password">
-              Quên mật khẩu
-            </a>
-          </Form.Item>
-          <Form.Item className="form_item">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button= btn_signUp"
-            >
-              Đăng nhập
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
-    </Spin>
+          <a className="/login-form-forgot forgot" href="/forgot-password">
+            Quên mật khẩu
+          </a>
+        </Form.Item>
+        <Form.Item className="form_item">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button= btn_signUp"
+            loading={loading}
+          >
+            Đăng nhập
+          </Button>
+        </Form.Item>
+      </Form>
+    </motion.div>
   );
 }

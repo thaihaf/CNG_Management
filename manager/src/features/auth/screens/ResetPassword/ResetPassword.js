@@ -23,8 +23,9 @@ import { resetPassword, AuthPaths } from "../../auth";
 
 import "../LoginScreen/LoginScreen.css";
 import { LoadingSpinner } from "components";
-
-import userProfileImg from "assets/icons/userProfile.png";
+import { motion } from "framer-motion/dist/framer-motion";
+import leftArrowImg from "assets/icons/leftArrow.png";
+import confirmEmailImg from "assets/icons/confirmEmail.png";
 const { Title } = Typography;
 
 export default function ResetPassword() {
@@ -34,8 +35,6 @@ export default function ResetPassword() {
 
   const [loading, setLoading] = useState(false);
 
-  console.log(location);
-
   const onFinish = (values) => {
     setLoading(true);
     console.log(values);
@@ -44,14 +43,14 @@ export default function ResetPassword() {
       .then(unwrapResult)
       .then((res) => {
         notification.success({
-          message: "Quên mật khẩu",
+          message: "Mật khẩu mới",
           description: "Thay đổi mật khẩu thành công",
         });
         history.push(AuthPaths.LOGIN);
       })
       .catch((error) => {
         notification.error({
-          message: "Quên mật khẩu",
+          message: "Mật khẩu mới",
           description: error?.Error?.message || "Lỗi rồi!!!",
         });
         setLoading(false);
@@ -59,135 +58,113 @@ export default function ResetPassword() {
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="login">
-        <Form
-          name="login"
-          className="form"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          layout="vertical"
+    <motion.div
+      className="login"
+      animate={{ opacity: [0, 1], x: [-50, 0] }}
+      exit={{ opacity: [1, 0] }}
+      transition={{ duration: 1 }}
+    >
+      <Form name="reset" className="form" onFinish={onFinish} layout="vertical">
+        <div className="action" onClick={() => history.push(AuthPaths.LOGIN)}>
+          <img src={leftArrowImg} alt="back" />
+        </div>
+
+        <div className="top">
+          <img src={confirmEmailImg} alt="" />
+          <Title level={1}>Mật khẩu mới</Title>
+        </div>
+
+        <Form.Item
+          name="newPassword"
+          label="Mật khẩu"
+          rules={[
+            {
+              required: true,
+              message: getMessage(
+                CODE_ERROR.ERROR_REQUIRED,
+                MESSAGE_ERROR,
+                "Mật khẩu mới"
+              ),
+            },
+            //  {
+            //    pattern:
+            //      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,25}$/,
+            //    message: getMessage(
+            //      CODE_ERROR.ERROR_FORMAT_PASSWORD,
+            //      MESSAGE_ERROR,
+            //      "Mật khẩu"
+            //    ),
+            //  },
+            {
+              max: 25,
+              message: getMessage(
+                CODE_ERROR.ERROR_NUMBER_MAX,
+                MESSAGE_ERROR,
+                "Mật khẩu mới",
+                25
+              ),
+            },
+            {
+              min: 8,
+              message: getMessage(
+                CODE_ERROR.ERROR_NUMBER_MIN,
+                MESSAGE_ERROR,
+                "Mật khẩu mới",
+                8
+              ),
+            },
+          ]}
+          className="form_item"
         >
-          <div className="top">
-            <img src={userProfileImg} alt="" />
-            <Title level={1}>Lấy lại mật khẩu</Title>
-          </div>
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="●●●●●●●●●"
+            className="login_input"
+          />
+        </Form.Item>
+        <Form.Item
+          name="confirmPassword"
+          label="Xác nhận mật khẩu"
+          rules={[
+            {
+              required: true,
+              message: getMessage(
+                CODE_ERROR.ERROR_REQUIRED,
+                MESSAGE_ERROR,
+                "Mật khẩu mới"
+              ),
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("newPassword") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error("Mật khẩu không trùng khớp"));
+              },
+            }),
+          ]}
+          className="form_item"
+        >
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="●●●●●●●●●"
+            className="login_input"
+          />
+        </Form.Item>
 
-          <Form.Item
-            name="newPassword"
-            label="Mật khẩu mới"
-            rules={[
-              {
-                required: true,
-                message: getMessage(
-                  CODE_ERROR.ERROR_REQUIRED,
-                  MESSAGE_ERROR,
-                  "Mật khẩu mới"
-                ),
-              },
-              //  {
-              //    pattern:
-              //      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,25}$/,
-              //    message: getMessage(
-              //      CODE_ERROR.ERROR_FORMAT_PASSWORD,
-              //      MESSAGE_ERROR,
-              //      "Mật khẩu"
-              //    ),
-              //  },
-              {
-                max: 25,
-                message: getMessage(
-                  CODE_ERROR.ERROR_NUMBER_MAX,
-                  MESSAGE_ERROR,
-                  "Mật khẩu mới",
-                  25
-                ),
-              },
-              {
-                min: 8,
-                message: getMessage(
-                  CODE_ERROR.ERROR_NUMBER_MIN,
-                  MESSAGE_ERROR,
-                  "Mật khẩu mới",
-                  8
-                ),
-              },
-            ]}
-            className="form_item"
+        <Form.Item className="form_item">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button= btn_signUp"
+            loading={loading}
           >
-            <Input.Password
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="●●●●●●●●●"
-              className="login_input"
-            />
-          </Form.Item>
-          <Form.Item
-            name="confirmPassword"
-            label="Mật khẩu xác nhận"
-            rules={[
-              {
-                required: true,
-                message: getMessage(
-                  CODE_ERROR.ERROR_REQUIRED,
-                  MESSAGE_ERROR,
-                  "Mật khẩu xác nhận"
-                ),
-              },
-              {
-                max: 25,
-                message: getMessage(
-                  CODE_ERROR.ERROR_NUMBER_MAX,
-                  MESSAGE_ERROR,
-                  "Mật khẩu xác nhận",
-                  25
-                ),
-              },
-              {
-                min: 8,
-                message: getMessage(
-                  CODE_ERROR.ERROR_NUMBER_MIN,
-                  MESSAGE_ERROR,
-                  "Mật khẩu xác nhận",
-                  8
-                ),
-              },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("newPassword") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error(
-                      "Mật khẩu xác nhận và Mật khẩu mới phải giống nhau"
-                    )
-                  );
-                },
-              }),
-            ]}
-            className="form_item"
-          >
-            <Input.Password
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="●●●●●●●●●"
-              className="login_input"
-            />
-          </Form.Item>
-
-          <Form.Item className="form_item">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button= btn_signUp"
-            >
-              Xác nhận
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
-    </Spin>
+            Xác nhận
+          </Button>
+        </Form.Item>
+      </Form>
+    </motion.div>
   );
 }

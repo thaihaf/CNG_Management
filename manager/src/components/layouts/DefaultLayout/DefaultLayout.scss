@@ -2,7 +2,7 @@
 @import "../../../styles/colors.scss";
 
 .defaultLayout {
-  background-color: #f0f2f5 !important;
+  background-color: var(--bg-color) !important;
   min-height: 100vh;
 
   .left-bar {

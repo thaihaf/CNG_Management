@@ -1,68 +1,47 @@
 import React, { useEffect, useRef, useState } from "react";
-import queryString from "query-string";
-import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import { DownOutlined } from "@ant-design/icons";
-import ImgCrop from "antd-img-crop";
-import {
-  CameraOutlined,
-  DeleteTwoTone,
-  ExclamationCircleOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+
+import queryString from "query-string";
+import Highlighter from "react-highlight-words";
+
+import { ExclamationCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
   Form,
   Input,
-  message,
   Modal,
   Space,
   Table,
   Tag,
   Typography,
-  Dropdown,
-  Menu,
-  Upload,
-  Select,
   notification,
 } from "antd";
+import avt_default from "assets/images/avt-default.png";
+import { motion } from "framer-motion/dist/framer-motion";
+
+import { getProvinces } from "features/provinces/provinces";
 import {
   SupplierManagerPaths,
   getSuppliers,
   deleteSupplier,
-  deleteSuppliers,
-  bankNameList,
 } from "features/supplier-manager/supplierManager";
-import avt_default from "assets/images/avt-default.png";
-import "./SupplierList.css";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import { getMessage } from "helpers/util.helper";
-import { storage } from "firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
-import { createDetails } from "features/supplier-manager/supplierManager";
-import {
-  getDistrict,
-  getProvince,
-  getProvinces,
-} from "features/provinces/provinces";
+import { SupplierModal } from "features/supplier-manager/components";
 
 import editImg from "assets/icons/edit.png";
 import deleteImg from "assets/icons/delete.png";
-import { SupplierModal } from "features/supplier-manager/components";
+
+import "./SupplierList.css";
 
 const { Title, Text } = Typography;
-const { Option } = Select;
 
 export default function SupplierList() {
   const { listSuppliers, totalElements, number, size } = useSelector(
     (state) => state.supplier
   );
- 
+
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -372,38 +351,50 @@ export default function SupplierList() {
 
   return (
     <div className="supplier-list">
-      <div className="top">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={2}>Danh sách Nhà cung cấp</Title>
 
         <SupplierModal />
-      </div>
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listSuppliers]}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-      />
+      </motion.div>
+
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.id}
+          columns={columns}
+          loading={isLoading}
+          dataSource={[...listSuppliers]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: number,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+        />
+      </motion.div>
     </div>
   );
 }

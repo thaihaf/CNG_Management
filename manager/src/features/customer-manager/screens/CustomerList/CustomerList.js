@@ -4,55 +4,34 @@ import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import { DownOutlined } from "@ant-design/icons";
-import ImgCrop from "antd-img-crop";
-import {
-  CameraOutlined,
-  DeleteTwoTone,
-  ExclamationCircleOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { motion } from "framer-motion/dist/framer-motion";
+
+import { ExclamationCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
-  Form,
   Input,
-  message,
   Modal,
   Space,
   Table,
   Tag,
   Typography,
-  Dropdown,
-  Menu,
-  Upload,
-  Select,
   notification,
 } from "antd";
+
 import {
   CustomerManagerPaths,
   getCustomers,
   deleteCustomer,
-  deleteCustomers,
   updateListCustomers,
 } from "features/customer-manager/customerManager";
+import { CustomerModal } from "features/customer-manager/components";
+
 import avt_default from "assets/images/avt-default.png";
-import "./CustomerList.css";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import { getMessage } from "helpers/util.helper";
-import { storage } from "firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
-import { createDetails } from "features/customer-manager/customerManager";
-import {
-  getDistrict,
-  getProvince,
-  getProvinces,
-} from "features/provinces/provinces";
 import editImg from "assets/icons/edit.png";
 import deleteImg from "assets/icons/delete.png";
-import { CustomerModal } from "features/customer-manager/components";
+
+import "./CustomerList.css";
 
 const { Title, Text } = Typography;
 
@@ -356,49 +335,50 @@ export default function CustomerList() {
 
   return (
     <div className="cusmtomer-list">
-      <div className="top">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={2}>Danh sách Khách hàng</Title>
 
         <CustomerModal />
-      </div>
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listCustomers]}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-        // onRow={(record) => {
-        //   return {
-        //     onClick: () =>
-        //       history.push(
-        //         CustomerManagerPaths.CUSTOMER_DETAIL.replace(
-        //           ":customerId",
-        //           record.id || ""
-        //         )
-        //       ),
-        //   };
-        // }}
-      />
+      </motion.div>
+
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.id}
+          columns={columns}
+          loading={isLoading}
+          dataSource={[...listCustomers]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: number,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+        />
+      </motion.div>
     </div>
   );
 }

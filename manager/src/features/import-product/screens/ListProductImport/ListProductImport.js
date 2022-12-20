@@ -4,18 +4,17 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import dayjs from "dayjs";
+import { motion } from "framer-motion/dist/framer-motion";
 
 import { SearchOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
   Input,
-  message,
   Space,
   Statistic,
   Table,
   Tag,
-  Tooltip,
   Typography,
 } from "antd";
 
@@ -33,10 +32,9 @@ import { getStatusString } from "helpers/util.helper";
 const { Title, Text } = Typography;
 
 export default function ListProductImport() {
-  const { listAllProductImport, totalElements, totalPages, size } = useSelector(
+  const { listAllProductImport, totalElements, number, size } = useSelector(
     (state) => state.productImport
   );
-  const { listActiveCategories } = useSelector((state) => state.category);
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -322,7 +320,12 @@ export default function ListProductImport() {
 
   return (
     <div className="product-list">
-      <div className="top">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={2} style={{ cursor: "pointer" }}>
           Danh sách Đơn nhập
         </Title>
@@ -330,47 +333,59 @@ export default function ListProductImport() {
         <Button
           type="primary"
           shape={"round"}
-          size={"large"}
           onClick={() =>
             history.push(ImportProductManagerPaths.CREATE_PRODUCT_IMPORT)
           }
+          style={{ width: "15rem", height: "3.8rem" }}
         >
-          Tạo mới
+          Tạo đơn nhập
         </Button>
-      </div>
+      </motion.div>
 
-      <Table
-        size="large"
-        rowKey="id"
-        columns={columns}
-        loading={isLoading}
-        dataSource={listAllProductImport}
-        pagination={
-          listAllProductImport.length !== 0
-            ? {
-                showSizeChanger: true,
-                position: ["bottomCenter"],
-                size: "default",
-                pageSize: pageSize,
-                current: currentPage,
-                totalElements,
-                onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "4", "6"],
-              }
-            : false
-        }
-        onRow={(record) => {
-          return {
-            onClick: () =>
-              history.push(
-                ImportProductManagerPaths.DETAILS_PRODUCT_IMPORT.replace(
-                  ":importId",
-                  record.id
-                )
-              ),
-          };
-        }}
-      />
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.id}
+          columns={columns}
+          loading={isLoading}
+          dataSource={[...listAllProductImport]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: number,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+          onRow={(record) => {
+            return {
+              onClick: () =>
+                history.push(
+                  ImportProductManagerPaths.DETAILS_PRODUCT_IMPORT.replace(
+                    ":importId",
+                    record.id
+                  )
+                ),
+            };
+          }}
+        />
+      </motion.div>
     </div>
   );
 }

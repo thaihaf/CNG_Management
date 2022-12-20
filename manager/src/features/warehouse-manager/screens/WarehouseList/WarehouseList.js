@@ -4,57 +4,39 @@ import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import { DownOutlined } from "@ant-design/icons";
-import {
-  DeleteTwoTone,
-  ExclamationCircleOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { motion } from "framer-motion/dist/framer-motion";
+
+import { ExclamationCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Button,
-  Form,
   Input,
-  message,
   Modal,
   Space,
   Table,
   Tag,
   Typography,
-  Dropdown,
-  Menu,
-  Select,
   notification,
 } from "antd";
+
 import {
   WarehouseManagerPaths,
   getWarehouses,
   deleteWarehouse,
-  deleteWarehouses,
   updateListWarehouses,
 } from "features/warehouse-manager/warehouseManager";
-import "./WarehouseList.css";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import { getMessage } from "helpers/util.helper";
-
-import { createDetails } from "features/warehouse-manager/warehouseManager";
-import {
-  getDistrict,
-  getProvince,
-  getProvinces,
-} from "features/provinces/provinces";
-
-import deleteImg from "assets/icons/delete.png";
 import { WarehouseModal } from "features/warehouse-manager/components";
 
+import deleteImg from "assets/icons/delete.png";
+
+import "./WarehouseList.css";
+
 const { Title, Text } = Typography;
-const { Option } = Select;
 
 export default function WarehouseList() {
   const { listWarehouses, totalElements, number, size } = useSelector(
     (state) => state.warehouse
   );
- 
+
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -94,15 +76,15 @@ export default function WarehouseList() {
         dispatch(deleteWarehouse(record.id))
           .then(unwrapResult)
           .then((res) => {
-             const newListWarehouses = listWarehouses.map((c) => {
-               if (c.id === record.id) {
-                 return { ...record, status: 0 };
-               } else {
-                 return c;
-               }
-             });
+            const newListWarehouses = listWarehouses.map((c) => {
+              if (c.id === record.id) {
+                return { ...record, status: 0 };
+              } else {
+                return c;
+              }
+            });
 
-             dispatch(updateListWarehouses(newListWarehouses));
+            dispatch(updateListWarehouses(newListWarehouses));
 
             notification.success({
               message: "Xoá Kho",
@@ -334,38 +316,50 @@ export default function WarehouseList() {
 
   return (
     <div className="warehouse-list">
-      <div className="top">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={2}>Danh sách Kho</Title>
 
         <WarehouseModal />
-      </div>
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listWarehouses]}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-      />
+      </motion.div>
+
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.id}
+          columns={columns}
+          loading={isLoading}
+          dataSource={[...listWarehouses]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: number,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+        />
+      </motion.div>
     </div>
   );
 }

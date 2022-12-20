@@ -17,6 +17,7 @@ import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import queryString from "query-string";
 import dayjs from "dayjs";
+import { motion } from "framer-motion/dist/framer-motion";
 
 const { Title } = Typography;
 

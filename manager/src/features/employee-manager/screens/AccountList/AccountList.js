@@ -300,12 +300,13 @@ export default function AccountList() {
     <div className="employee-list">
       <div className="top">
         <Title level={2}>Danh sách Tài khoản</Title>
+       
         <Button
           type="primary"
           shape={"round"}
-          size={"large"}
           onClick={() => setModal1Open(true)}
-        >
+          style={{ width: "15rem", height: "3.8rem" }}
+          >
           Tạo Tài khoản
         </Button>
 

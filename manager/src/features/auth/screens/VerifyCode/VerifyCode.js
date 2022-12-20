@@ -5,16 +5,25 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import queryString from "query-string";
 
 import { LockOutlined } from "@ant-design/icons";
-import { Button, Form, Input, message, notification, Spin, Typography } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  notification,
+  Spin,
+  Typography,
+} from "antd";
 
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { verifyCode, AuthPaths } from "../../auth";
+import { motion } from "framer-motion/dist/framer-motion";
 
 import "../LoginScreen/LoginScreen.css";
-
-import userProfileImg from "assets/icons/userProfile.png";
+import leftArrowImg from "assets/icons/leftArrow.png";
+import emailImg from "assets/icons/email.png";
 const { Title } = Typography;
 
 export default function VerifyCode() {
@@ -32,81 +41,90 @@ export default function VerifyCode() {
     dispatch(verifyCode({ data: { ...values, ...query } }))
       .then(unwrapResult)
       .then((res) => {
+        setLoading(false);
         notification.success({
-          message: "Quên mật khẩu",
+          message: "Tìm lại mật khẩu",
           description: "Mã Code hợp lệ",
         });
         history.push(AuthPaths.RESET_PASSWORD, { id: query.accountId });
       })
       .catch((error) => {
-        notification.error({
-          message: "Quên mật khẩu",
-          description: error?.Error?.message || "Lỗi rồi!!!",
-        });;
         setLoading(false);
+        notification.error({
+          message: "Tìm lại mật khẩu",
+          description: error?.Error?.message || "Lỗi rồi!!!",
+        });
       });
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="login">
-        <Form
-          name="login"
-          className="form"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          layout="vertical"
+    <motion.div
+      className="login"
+      animate={{ opacity: [0, 1], x: [-50, 0] }}
+      exit={{ opacity: [1, 0] }}
+      transition={{ duration: 1 }}
+    >
+      <Form
+        name="verify"
+        className="form"
+        onFinish={onFinish}
+        layout="vertical"
+      >
+        <div className="action" onClick={() => history.push(AuthPaths.LOGIN)}>
+          <img src={leftArrowImg} alt="back" />
+        </div>
+
+        <div className="top">
+          <img src={emailImg} alt="" />
+          <Title level={1}>Tìm lại mật khẩu</Title>
+          <p style={{ color: "gray", fontSize: "1.3rem" }}>
+            Nhập mã OTP đã được gửi đến email
+          </p>
+        </div>
+
+        <Form.Item
+          name="verifCodes"
+          label="Mã code"
+          rules={[
+            {
+              required: true,
+              message: getMessage(
+                CODE_ERROR.ERROR_REQUIRED,
+                MESSAGE_ERROR,
+                "Code"
+              ),
+            },
+            {
+              len: 6,
+              message: getMessage(
+                CODE_ERROR.ERROR_LENGTH,
+                MESSAGE_ERROR,
+                "Code",
+                6
+              ),
+            },
+          ]}
+          className="form_item"
         >
-          <div className="top">
-            <img src={userProfileImg} alt="" />
-            <Title level={1}>Quên mật khẩu</Title>
-          </div>
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="●●●●●●●●●"
+            className="login_input"
+          />
+        </Form.Item>
 
-          <Form.Item
-            name="verifCodes"
-            label="Mã code"
-            rules={[
-              {
-                required: true,
-                message: getMessage(
-                  CODE_ERROR.ERROR_REQUIRED,
-                  MESSAGE_ERROR,
-                  "Code"
-                ),
-              },
-              {
-                len: 6,
-                message: getMessage(
-                  CODE_ERROR.ERROR_LENGTH,
-                  MESSAGE_ERROR,
-                  "Code",
-                  6
-                ),
-              },
-            ]}
-            className="form_item"
+        <Form.Item className="form_item">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button= btn_signUp"
+            loading={loading}
           >
-            <Input.Password
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="●●●●●●●●●"
-              className="login_input"
-            />
-          </Form.Item>
-
-          <Form.Item className="form_item">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button= btn_signUp"
-            >
-              Xác nhận
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
-    </Spin>
+            Xác nhận
+          </Button>
+        </Form.Item>
+      </Form>
+    </motion.div>
   );
 }

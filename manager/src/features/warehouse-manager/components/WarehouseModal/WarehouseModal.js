@@ -1,4 +1,10 @@
+import React from "react";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
+import queryString from "query-string";
+
 import {
   Button,
   Form,
@@ -6,28 +12,23 @@ import {
   Modal,
   Select,
   Spin,
-  Switch,
   Typography,
   notification,
 } from "antd";
+
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
-import React from "react";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import editImg from "assets/icons/edit.png";
-import queryString from "query-string";
 
-import "./WarehouseModal.css";
-
-import { useLocation } from "react-router-dom";
 import { getDistrict, getProvince } from "features/provinces/provinces";
 import {
   createDetails,
   getWarehouses,
   updateDetails,
 } from "features/warehouse-manager/warehouseManager";
+
+import editImg from "assets/icons/edit.png";
+import "./WarehouseModal.css";
 
 const { Text } = Typography;
 const { TextArea } = Input;
