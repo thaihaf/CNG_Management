@@ -398,6 +398,7 @@ export default function ProductInventory() {
           rowKey={(record) => record.productDTO.id}
           columns={columns}
           dataSource={[...listProductInventory]}
+          loading={isLoading}
           pagination={
             totalElements !== 0
               ? {

@@ -327,6 +327,7 @@ export default function CategoryInventory() {
           rowKey={(record) => record.categoryDTO.id}
           columns={columns}
           dataSource={[...listCategoryInventory]}
+          loading={isLoading}
           pagination={
             totalElements !== 0
               ? {

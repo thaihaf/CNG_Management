@@ -4,3 +4,18 @@
   justify-content: space-between;
   margin-bottom: 1rem;
 }
+.warehouse-list .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.warehouse-list .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.warehouse-list .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.warehouse-list .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.warehouse-list td.ant-table-cell {
+  border: unset !important;
+}
+.warehouse-list .table-row-even {
+  background: #fff;
+}
+.warehouse-list .table-row-odd {
+  background: #f9fafe;
+}

@@ -324,6 +324,7 @@ export default function CategoryProfit() {
           rowKey={(record) => record.categoryDTO.id}
           columns={columns}
           dataSource={[...listCategoryProfit]}
+          loading={isLoading}
           pagination={
             totalElements !== 0
               ? {

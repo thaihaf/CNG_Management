@@ -293,10 +293,17 @@ export default function CustomerList() {
             gap: "2rem",
           }}
         >
-          <img
-            src={editImg}
-            alt=""
-            style={{ width: "2.3rem", height: "2.3rem", cursor: "pointer" }}
+          <div
+            style={{
+              width: "4rem",
+              height: "4rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              borderRadius: "50%",
+              background: "#eaf0f6",
+            }}
             onClick={() =>
               history.push(
                 CustomerManagerPaths.CUSTOMER_DETAIL.replace(
@@ -305,14 +312,39 @@ export default function CustomerList() {
                 )
               )
             }
-          />
-          {record.status ? (
+          >
             <img
-              src={deleteImg}
-              alt=""
-              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
-              onClick={() => handleDelete(record)}
+              src={editImg}
+              alt="Edit"
+              style={{ width: "2.2rem", height: "2.2rem", margin: "auto" }}
             />
+          </div>
+
+          {record.status ? (
+            <div
+              style={{
+                width: "4rem",
+                height: "4rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                borderRadius: "50%",
+                background: "#eaf0f6",
+              }}
+              onClick={() => handleDelete(record)}
+            >
+              <img
+                src={deleteImg}
+                alt="delete"
+                style={{
+                  width: " 1.4rem",
+                  height: " 1.5rem",
+                  margin: "auto",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
           ) : (
             ""
           )}
@@ -354,6 +386,11 @@ export default function CustomerList() {
         <Table
           rowKey={(record) => record.id}
           columns={columns}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
           loading={isLoading}
           dataSource={[...listCustomers]}
           pagination={

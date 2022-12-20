@@ -328,19 +328,51 @@ export default function SupplierList() {
             gap: "2rem",
           }}
         >
-          <img
-            src={editImg}
-            alt=""
-            style={{ width: "2.3rem", height: "2.3rem", cursor: "pointer" }}
+          <div
+            style={{
+              width: "4rem",
+              height: "4rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              borderRadius: "50%",
+              background: "#eaf0f6",
+            }}
             onClick={() => onRowDetails(record)}
-          />
-          {record.status ? (
+          >
             <img
-              src={deleteImg}
-              alt=""
-              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
-              onClick={() => onRowDelete(record)}
+              src={editImg}
+              alt="Edit"
+              style={{ width: "2.2rem", height: "2.2rem", margin: "auto" }}
             />
+          </div>
+
+          {record.status ? (
+            <div
+              style={{
+                width: "4rem",
+                height: "4rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                borderRadius: "50%",
+                background: "#eaf0f6",
+              }}
+              onClick={() => onRowDelete(record)}
+            >
+              <img
+                src={deleteImg}
+                alt="delete"
+                style={{
+                  width: " 1.4rem",
+                  height: " 1.5rem",
+                  margin: "auto",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
           ) : (
             ""
           )}
@@ -371,6 +403,11 @@ export default function SupplierList() {
           rowKey={(record) => record.id}
           columns={columns}
           loading={isLoading}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
           dataSource={[...listSuppliers]}
           pagination={
             totalElements !== 0

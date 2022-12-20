@@ -324,6 +324,7 @@ export default function WarehouseInventory() {
           rowKey={(record) => record.warehouseDTO.id}
           columns={columns}
           dataSource={[...listWarehouseInventory]}
+          loading={isLoading}
           pagination={
             totalElements !== 0
               ? {

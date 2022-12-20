@@ -321,6 +321,7 @@ export default function CustomerProfit() {
           rowKey={(record) => record.customerDTO.id}
           columns={columns}
           dataSource={[...listCustomerProfit]}
+          loading={isLoading}
           pagination={
             totalElements !== 0
               ? {

@@ -40,3 +40,19 @@
 .product-list .details__group .details__item .login_input .ant-input {
   margin: 0;
 }
+.product-list .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.product-list .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.product-list .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.product-list .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.product-list td.ant-table-cell {
+  border: unset !important;
+  cursor: pointer;
+}
+.product-list .table-row-even {
+  background: #fff;
+}
+.product-list .table-row-odd {
+  background: #f9fafe;
+}

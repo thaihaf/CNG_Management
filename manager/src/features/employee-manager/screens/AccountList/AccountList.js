@@ -4,6 +4,7 @@ import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
+import { motion } from "framer-motion/dist/framer-motion";
 
 import { SearchOutlined } from "@ant-design/icons";
 import {
@@ -20,7 +21,7 @@ import {
   Typography,
 } from "antd";
 
-import "../EmployeeList/EmployeeList.css";
+import "./AccountList.css";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
@@ -29,6 +30,11 @@ import {
   EmployeeManagerPaths,
   getAccounts,
 } from "features/employee-manager/employeeManager";
+
+import editImg from "assets/icons/edit.png";
+import deleteImg from "assets/icons/delete.png";
+import avt_default from "assets/images/avt-default.png";
+
 const { Title, Text } = Typography;
 
 export default function AccountList() {
@@ -256,6 +262,51 @@ export default function AccountList() {
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend", "ascend"],
     },
+    {
+      title: "Hành động",
+      dataIndex: "operation",
+      key: "operation",
+      align: "center",
+      render: (_, record) => (
+        <div
+          style={{
+            display: "flex",
+            alignItem: "center",
+            justifyContent: "center",
+            gap: "2rem",
+          }}
+        >
+          {record.status ? (
+            <div
+              style={{
+                width: "4rem",
+                height: "4rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                borderRadius: "50%",
+                background: "#eaf0f6",
+              }}
+              // onClick={() => onRowDelete(record)}
+            >
+              <img
+                src={deleteImg}
+                alt="delete"
+                style={{
+                  width: " 1.4rem",
+                  height: " 1.5rem",
+                  margin: "auto",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+      ),
+    },
   ];
 
   const onSubmitCreate = ({ rePassword, ...params }) => {
@@ -297,16 +348,21 @@ export default function AccountList() {
   };
 
   return (
-    <div className="employee-list">
-      <div className="top">
+    <div className="account-list">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={2}>Danh sách Tài khoản</Title>
-       
+
         <Button
           type="primary"
           shape={"round"}
           onClick={() => setModal1Open(true)}
           style={{ width: "15rem", height: "3.8rem" }}
-          >
+        >
           Tạo Tài khoản
         </Button>
 
@@ -527,34 +583,46 @@ export default function AccountList() {
             </Form>
           </Spin>
         </Modal>
-      </div>
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listAccounts]}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-      />
+      </motion.div>
+
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.id}
+          columns={columns}
+          loading={isLoading}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          dataSource={[...listAccounts]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: number,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+        />
+      </motion.div>
     </div>
   );
 }

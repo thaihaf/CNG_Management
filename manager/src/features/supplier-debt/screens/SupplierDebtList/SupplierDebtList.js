@@ -28,6 +28,7 @@ import {
   SupplierDebtPaths,
 } from "features/supplier-debt/supplierDebt";
 import dayjs from "dayjs";
+import { motion } from "framer-motion/dist/framer-motion";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -329,8 +330,13 @@ export default function SupplierDebtList() {
   }, [dispatch, location]);
 
   return (
-    <div className="product-list">
-      <div className="top">
+    <div className="supplier-debt-list">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
           Công nợ Nhà cung cấp
         </Title>
@@ -352,55 +358,66 @@ export default function SupplierDebtList() {
             }
           }}
         />
+
         <Button
           type="primary"
           shape={"round"}
-          size={"large"}
-          style={{ marginLeft: "1rem" }}
           onClick={() => onHandleSearch()}
+          style={{ marginLeft: "1rem", width: "15rem", height: "3.8rem" }}
         >
           Tìm kiếm
         </Button>
-      </div>
+      </motion.div>
 
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listSupplierDebt]}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-        onRow={(record) => {
-          return {
-            onClick: () =>
-              history.push(
-                SupplierDebtPaths.SUPPLIER_DEBT_DETAILS.replace(
-                  ":id",
-                  record.supplierDTO.id
-                )
-              ),
-          };
-        }}
-      />
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.supplierDTO.id}
+          columns={columns}
+          loading={isLoading}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          dataSource={[...listSupplierDebt]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: number,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+          onRow={(record) => {
+            return {
+              onClick: () =>
+                history.push(
+                  SupplierDebtPaths.SUPPLIER_DEBT_DETAILS.replace(
+                    ":id",
+                    record.supplierDTO.id
+                  )
+                ),
+            };
+          }}
+        />
+      </motion.div>
     </div>
   );
 }

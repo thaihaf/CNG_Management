@@ -4,3 +4,21 @@
   justify-content: space-between;
   margin-bottom: 1rem;
 }
+.category-list .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.category-list .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.category-list .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.category-list .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.category-list td.ant-table-cell {
+  border: unset !important;
+}
+.category-list .table-row:hover {
+  border-left: 2px solid black;
+}
+.category-list .table-row-even {
+  background: #fff;
+}
+.category-list .table-row-odd {
+  background: #f9fafe;
+}

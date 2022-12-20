@@ -1,44 +1,57 @@
-.top {
+.employee-list .top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
 }
-
-.btns {
+.employee-list .btns {
   width: 100%;
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
   margin-top: 2rem;
 }
-
-.details__group {
+.employee-list .details__group {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 2rem;
 }
-.details__group .details__item {
+.employee-list .details__group .details__item {
   width: 50%;
 }
-.details__group .details__item .ant-col {
+.employee-list .details__group .details__item .ant-col {
   max-width: 100% !important;
   flex: none !important;
 }
-.details__group .details__item .ant-row {
+.employee-list .details__group .details__item .ant-row {
   display: block;
 }
-.details__group .details__item .ant-input {
+.employee-list .details__group .details__item .ant-input {
   border-radius: 2rem !important;
   padding: 1rem 2rem;
   margin-top: 0.7rem;
 }
-.details__group .details__item .login_input {
+.employee-list .details__group .details__item .login_input {
   border-radius: 5rem;
   padding: 0 1.5rem 0 0;
 }
-.details__group .details__item .login_input .ant-input {
+.employee-list .details__group .details__item .login_input .ant-input {
   margin: 0;
+}
+.employee-list .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.employee-list .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.employee-list .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.employee-list .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.employee-list td.ant-table-cell {
+  border: unset !important;
+}
+.employee-list .table-row-even {
+  background: #fff;
+}
+.employee-list .table-row-odd {
+  background: #f9fafe;
 }

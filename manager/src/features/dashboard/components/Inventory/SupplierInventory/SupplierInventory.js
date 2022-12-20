@@ -396,6 +396,7 @@ export default function SupplierInventory() {
           columns={columns}
           dataSource={[...listSupplierInventory]}
           rowKey={(record) => record.supplierDTO.id}
+          loading={isLoading}
           pagination={
             totalElements !== 0
               ? {

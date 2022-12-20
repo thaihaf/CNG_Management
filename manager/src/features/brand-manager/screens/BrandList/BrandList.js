@@ -4,6 +4,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { DownOutlined } from "@ant-design/icons";
+import { motion } from "framer-motion/dist/framer-motion";
 import {
   DeleteTwoTone,
   SearchOutlined,
@@ -295,12 +296,30 @@ export default function BrandList() {
         >
           <BrandModal data={record} />
           {record.status ? (
-            <img
-              src={deleteImg}
-              alt=""
-              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+            <div
+              style={{
+                width: "4rem",
+                height: "4rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                borderRadius: "50%",
+                background: "#eaf0f6",
+              }}
               onClick={() => handleDelete(record)}
-            />
+            >
+              <img
+                src={deleteImg}
+                alt="delete"
+                style={{
+                  width: " 1.4rem",
+                  height: " 1.5rem",
+                  margin: "auto",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
           ) : (
             ""
           )}
@@ -308,33 +327,6 @@ export default function BrandList() {
       ),
     },
   ];
-
-  const onSubmitCreate = async ({ ...args }) => {
-    dispatch(
-      createDetails({
-        data: {
-          ...args,
-          status: 1,
-        },
-      })
-    )
-      .then(unwrapResult)
-      .then((res) => {
-        console.log(res);
-        notification.success({
-          message: "Nhãn hàng",
-          description: "Tạo mới Nhãn hàng thành công",
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log(args);
-        notification.error({
-          message: "Nhãn hàng",
-          description: "Tạo mới Nhãn hàng thất bại",
-        });
-      });
-  };
 
   useEffect(() => {
     const query = queryString.parse(location.search);
@@ -354,38 +346,55 @@ export default function BrandList() {
 
   return (
     <div className="brand-list">
-      <div className="top">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={2}>Danh sách Nhãn Hàng</Title>
 
         <BrandModal />
-      </div>
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listBrands]}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-      />
+      </motion.div>
+
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.id}
+          columns={columns}
+          loading={isLoading}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          dataSource={[...listBrands]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: number,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+        />
+      </motion.div>
     </div>
   );
 }

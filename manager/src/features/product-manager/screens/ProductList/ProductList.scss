@@ -1,50 +1,66 @@
-.product-list{
-.top {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 1rem;
-}
-.btns {
-	width: 100%;
-	display: flex;
-	justify-content: flex-end;
-	gap : 1rem;
-	margin-top: 2rem;
-}
-.details__group {
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 2rem;
+.product-list {
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .btns {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .details__group {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
 
-	.details__item {
-			 width: 50%;
+    .details__item {
+      width: 50%;
 
-			 .ant-col {
-						max-width: 100% !important;
-						flex: none !important;
-			 }
+      .ant-col {
+        max-width: 100% !important;
+        flex: none !important;
+      }
 
-			 .ant-row {
-						display: block;
-			 }
+      .ant-row {
+        display: block;
+      }
 
-			 .ant-input {
-						border-radius: 2rem !important;
-						padding: 1rem 2rem;
-						margin-top: 0.7rem;
-			 }
-			 .login_input {
-						border-radius: 5rem;
-						padding: 0 1.5rem 0 0;
+      .ant-input {
+        border-radius: 2rem !important;
+        padding: 1rem 2rem;
+        margin-top: 0.7rem;
+      }
+      .login_input {
+        border-radius: 5rem;
+        padding: 0 1.5rem 0 0;
 
-						.ant-input {
-								 margin: 0;
-						}
-			 }
-	}
-}
+        .ant-input {
+          margin: 0;
+        }
+      }
+    }
+  }
+  .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+    background: unset; //Change the existing color to `unset`
+  }
 
+  td.ant-table-cell {
+    border: unset !important;
+    cursor: pointer;
+  }
+  .table-row-even {
+    background: #fff;
+  }
+  .table-row-odd {
+    background: #f9fafe;
+  }
 }

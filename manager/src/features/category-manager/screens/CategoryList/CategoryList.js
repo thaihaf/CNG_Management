@@ -273,12 +273,30 @@ export default function CategoryList() {
         >
           <CategoryModal data={record} />
           {record.status ? (
-            <img
-              src={deleteImg}
-              alt=""
-              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+            <div
+              style={{
+                width: "4rem",
+                height: "4rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                borderRadius: "50%",
+                background: "#eaf0f6",
+              }}
               onClick={() => handleDelete(record)}
-            />
+            >
+              <img
+                src={deleteImg}
+                alt="delete"
+                style={{
+                  width: " 1.4rem",
+                  height: " 1.5rem",
+                  margin: "auto",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
           ) : (
             ""
           )}
@@ -319,6 +337,9 @@ export default function CategoryList() {
         <Table
           rowKey={(record) => record.id}
           columns={columns}
+          rowClassName={(record, index) =>
+            index % 2 === 0 ? "table-row table-row-even" : "table-row table-row-odd"
+          }
           loading={isLoading}
           dataSource={[...listCategories]}
           pagination={

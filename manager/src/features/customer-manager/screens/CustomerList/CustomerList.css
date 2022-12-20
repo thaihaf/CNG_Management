@@ -4,3 +4,21 @@
   justify-content: space-between;
   margin-bottom: 1rem;
 }
+.cusmtomer-list .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.cusmtomer-list .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.cusmtomer-list .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.cusmtomer-list .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.cusmtomer-list td.ant-table-cell {
+  border: unset !important;
+}
+.cusmtomer-list .table-row:hover {
+  border-left: 2px solid black;
+}
+.cusmtomer-list .table-row-even {
+  background: #fff;
+}
+.cusmtomer-list .table-row-odd {
+  background: #f9fafe;
+}

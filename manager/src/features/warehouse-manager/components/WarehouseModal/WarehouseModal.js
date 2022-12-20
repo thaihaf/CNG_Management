@@ -124,14 +124,22 @@ export default function WarehouseModal({ data }) {
       {data ? (
         <div
           style={{
-            width: "2.5rem",
+            width: "4rem",
+            height: "4rem",
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
             cursor: "pointer",
+            borderRadius: "50%",
+            background: "#eaf0f6",
           }}
           onClick={() => setModal1Open(true)}
         >
-          <img src={editImg} alt="Edit" />
+          <img
+            src={editImg}
+            alt="Edit"
+            style={{ width: "2.2rem", height: "2.2rem", margin: "auto" }}
+          />
         </div>
       ) : (
         <Button

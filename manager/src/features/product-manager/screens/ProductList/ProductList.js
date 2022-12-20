@@ -34,7 +34,7 @@ import { ActionsModal } from "features/product-manager/components";
 const { Title, Text } = Typography;
 
 export default function ProductList() {
-  const { listProducts, totalElements, number, size } = useSelector(
+  const { listProducts, totalElements, page, size } = useSelector(
     (state) => state.product
   );
   const { listActiveCategories } = useSelector((state) => state.category);
@@ -329,15 +329,15 @@ export default function ProductList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
 
   useEffect(() => {
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
 
     setIsLoading(true);
@@ -377,13 +377,18 @@ export default function ProductList() {
       >
         <Table
           rowKey={(record) => record.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
           columns={columns}
           loading={isLoading}
           dataSource={[...listProducts]}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

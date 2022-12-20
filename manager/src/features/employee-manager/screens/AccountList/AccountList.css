@@ -1,0 +1,57 @@
+.account-list .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.account-list .btns {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.account-list .details__group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.account-list .details__group .details__item {
+  width: 50%;
+}
+.account-list .details__group .details__item .ant-col {
+  max-width: 100% !important;
+  flex: none !important;
+}
+.account-list .details__group .details__item .ant-row {
+  display: block;
+}
+.account-list .details__group .details__item .ant-input {
+  border-radius: 2rem !important;
+  padding: 1rem 2rem;
+  margin-top: 0.7rem;
+}
+.account-list .details__group .details__item .login_input {
+  border-radius: 5rem;
+  padding: 0 1.5rem 0 0;
+}
+.account-list .details__group .details__item .login_input .ant-input {
+  margin: 0;
+}
+.account-list .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.account-list .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.account-list .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.account-list .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.account-list td.ant-table-cell {
+  border: unset !important;
+}
+.account-list .table-row-even {
+  background: #fff;
+}
+.account-list .table-row-odd {
+  background: #f9fafe;
+}

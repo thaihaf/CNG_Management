@@ -387,6 +387,7 @@ export default function SupplierProfit() {
           rowKey={(record) => record.supplierDTO.id}
           columns={columns}
           dataSource={[...listSupplierProfit]}
+          loading={isLoading}
           pagination={
             totalElements !== 0
               ? {

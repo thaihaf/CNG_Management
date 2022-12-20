@@ -322,6 +322,7 @@ export default function EmployeeProfit() {
         <Table
           rowKey={(record) => record.employeeDTO.id}
           columns={columns}
+          loading={isLoading}
           dataSource={[...listEmployeeProfit]}
           pagination={
             totalElements !== 0
