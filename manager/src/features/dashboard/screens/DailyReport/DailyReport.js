@@ -24,7 +24,7 @@ import {
   Tag,
   Typography,
 } from "antd";
-
+import { motion } from "framer-motion/dist/framer-motion";
 import avt_default from "assets/images/avt-default.png";
 import "./DailyReport.css";
 
@@ -33,8 +33,10 @@ import dayjs from "dayjs";
 
 import { getEmployees } from "features/employee-manager/employeeManager";
 import { getCustomers } from "features/customer-manager/customerManager";
-import { getDashboardCustomerDaily } from "features/dashboard/dashboard";
-import HeaderTable from "features/dashboard/components/Dashboard/HeaderTable/HeaderTable";
+import {
+  DashboardPaths,
+  getDashboardCustomerDaily,
+} from "features/dashboard/dashboard";
 import { Excel } from "antd-table-saveas-excel";
 import {
   columnsExport,
@@ -43,12 +45,13 @@ import {
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
+import queryString from "query-string";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
 export default function CustomerDailyList() {
-  const { listDailyReport, totalElements, number, size } = useSelector(
+  const { listDailyReport, totalElements, page, size } = useSelector(
     (state) => state.dashboard.dailyReport
   );
   const { listCustomers } = useSelector((state) => state.customer);
@@ -62,9 +65,7 @@ export default function CustomerDailyList() {
   const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [tabPosition, setTabPosition] = useState();
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(6);
+  const params = queryString.parse(location.search);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -185,7 +186,7 @@ export default function CustomerDailyList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -401,27 +402,40 @@ export default function CustomerDailyList() {
       </div>
     );
   };
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
+
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+
+    history.push({
+      pathname: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        page: page,
+      }),
+    });
   };
   const onFinish = (values) => {
     setIsLoading(true);
 
-    dispatch(
-      getDashboardCustomerDaily({
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
+      search: queryString.stringify({
+        ...params,
         startDate: values.dates[0]?.format("DD/MM/YYYY"),
         endDate: values.dates[1]?.format("DD/MM/YYYY"),
         customer: values.customer?.split("_")[0],
         employee: values.employee?.split("_")[0],
-      })
-    )
-      .then(unwrapResult)
-      .then(() => {
-        setCheckDisable(true);
-        setIsLoading(false);
-      });
+      }),
+    });
+
+    setCheckDisable(true);
   };
+
   const handleExportExcel = () => {
     const excel = new Excel();
 
@@ -504,179 +518,209 @@ export default function CustomerDailyList() {
     excel.saveAs(`Báo cáo hằng ngày ${startDate} - ${endDate}.xlsx`);
   };
 
+  const initialValues =
+    params.startDate && params.endDate
+      ? {
+          data: [
+            dayjs(params.startDate, "DD/MM/YYYY"),
+            dayjs(params.endDate, "DD/MM/YYYY"),
+          ],
+        }
+      : {
+          data: [dayjs().startOf("month"), dayjs().endOf("month")],
+        };
+
   useEffect(() => {
     setIsLoading(true);
-    let startDate = dayjs().startOf("month").format("DD/MM/YYYY");
-    let endDate = dayjs().endOf("month").format("DD/MM/YYYY");
 
-    dispatch(
-      getDashboardCustomerDaily({ startDate: startDate, endDate: endDate })
-    )
+    let query = queryString.parse(location.search);
+    if (query.page) {
+      query.page = query.page - 1;
+    }
+    query = {
+      ...query,
+      startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
+      endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
+    };
+
+    dispatch(getDashboardCustomerDaily(query))
       .then(unwrapResult)
       .then(() => {
-        dispatch(getEmployees());
-        dispatch(getCustomers())
-          .then(unwrapResult)
-          .then(() => {
-            setCheckDisable(true);
-            setIsLoading(false);
-          });
+        setCheckDisable(true);
+        setIsLoading(false);
       });
   }, [dispatch, location]);
 
+  useEffect(() => {
+    dispatch(getEmployees());
+    dispatch(getCustomers());
+  }, []);
+
   return (
     <div className="daily-report">
-      <div className="top">
-        <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Title level={2} style={{ marginBottom: 0, marginRight: "auto" }}>
           Báo cáo hằng ngày
         </Title>
-      </div>
+      </motion.div>
 
-      <Form
-        form={form}
-        onFinish={onFinish}
-        autoComplete="off"
-        layout="vertical"
-        initialValues={{
-          dates: [dayjs().startOf("month"), dayjs().endOf("month")],
-        }}
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
       >
-        <div className="top bg">
-          <div className="left">
-            <Title level={5} style={{ marginBottom: 0 }}>
-              Xuất dữ liệu
-            </Title>
-
-            <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
-              <Radio.Button value="excel" onClick={() => handleExportExcel()}>
-                Excel
-              </Radio.Button>
-              <Radio.Button value="csv">CSV</Radio.Button>
-              <Radio.Button value="pdf">PDF</Radio.Button>
-              <Radio.Button value="print">Print</Radio.Button>
-            </Radio.Group>
-          </div>
-
-          <div className="right">
-            <Form.Item name="customer">
-              <Select
-                showSearch
-                allowClear
-                onChange={() => setCheckDisable(false)}
-                placeholder="Khách hàng"
-                style={{ width: "maxContent" }}
-              >
-                {listCustomers.map((c) => (
-                  <Select.Option
-                    value={`${c.id}_${c.firstName} ${c.lastName} ${c.addressDTO.ward}`}
-                    key={c.id}
-                    id={c.id}
-                  >
-                    {`${c.firstName} ${c.lastName} -  ${c.addressDTO.ward}`}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name={"dates"}
-              className="details__item"
-              rules={[
-                {
-                  required: true,
-                  message: getMessage(
-                    CODE_ERROR.ERROR_REQUIRED,
-                    MESSAGE_ERROR,
-                    "Ngày"
-                  ),
-                },
-              ]}
-            >
-              <RangePicker
-                format={"DD/MM/YYYY"}
-                onChange={(dates) => {
-                  dates ? setCheckDisable(false) : setCheckDisable(true);
-                }}
-              />
-            </Form.Item>
-            <Form.Item name="employee">
-              <Select
-                showSearch
-                allowClear
-                onChange={() => setCheckDisable(false)}
-                placeholder="Người bán hàng"
-              >
-                {listEmployees.map((e) => (
-                  <Select.Option
-                    value={`${e.id}_${e.firstName} ${e.lastName} ${e.ward}`}
-                    key={e.id}
-                    id={e.id}
-                  >
-                    {`${e.firstName} ${e.lastName} -  ${e.ward}`}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Button
-              type="primary"
-              shape="round"
-              htmlType="submit"
-              disabled={checkDisable === false ? false : true}
-              style={{
-                width: 120,
-              }}
-            >
-              Tìm kiếm
-            </Button>
-          </div>
-        </div>
-
-        <Table
-          rowClassName={() => "rowClassName1"}
-          rowKey={(record) => record.id}
-          columns={columns}
-          loading={isLoading}
-          // style={{
-          //   borderRadius: "2rem",
-          // }}
-          scroll={{ x: "maxContent" }}
-          dataSource={[...listDailyReport]}
-          pagination={
-            totalElements !== 0
-              ? {
-                  current: number,
-                  pageSize: size,
-                  total: totalElements,
-                  showSizeChanger: true,
-                  showQuickJumper: true,
-                  position: ["bottomRight"],
-                  pageSizeOptions: ["10", "20", "50", "100"],
-                  showTotal: (total, range) =>
-                    `${range[0]}-${range[1]} of ${total} items`,
-                  onChange: (page, size) => onHandlePagination(page, size),
-                  locale: {
-                    jump_to: "",
-                    page: "trang",
-                    items_per_page: "/ trang",
-                  },
-                }
-              : false
-          }
-          expandable={{
-            expandedRowRender: (record) => (
-              <Table
-                bordered
-                loading={isLoading}
-                columns={columnsDailyReport}
-                rowKey={(record) => record.id}
-                dataSource={[...record.exportProductDetailDTOS]}
-                pagination={false}
-                className="productsExpande"
-              />
-            ),
+        <Form
+          form={form}
+          onFinish={onFinish}
+          autoComplete="off"
+          layout="vertical"
+          initialValues={{
+            dates: [dayjs().startOf("month"), dayjs().endOf("month")],
           }}
-        />
-      </Form>
+        >
+          <div className="top bg">
+            <div className="left">
+              <Title level={5} style={{ marginBottom: 0 }}>
+                Xuất dữ liệu
+              </Title>
+
+              <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
+                <Radio.Button value="excel" onClick={() => handleExportExcel()}>
+                  Excel
+                </Radio.Button>
+                <Radio.Button value="csv">CSV</Radio.Button>
+                <Radio.Button value="pdf">PDF</Radio.Button>
+                <Radio.Button value="print">Print</Radio.Button>
+              </Radio.Group>
+            </div>
+
+            <div className="right">
+              <Form.Item name="customer">
+                <Select
+                  showSearch
+                  allowClear
+                  onChange={() => setCheckDisable(false)}
+                  placeholder="Khách hàng"
+                  style={{ width: "maxContent" }}
+                >
+                  {listCustomers.map((c) => (
+                    <Select.Option
+                      value={`${c.id}_${c.firstName} ${c.lastName} ${c.addressDTO.ward}`}
+                      key={c.id}
+                      id={c.id}
+                    >
+                      {`${c.firstName} ${c.lastName} -  ${c.addressDTO.ward}`}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name={"dates"}
+                className="details__item"
+                rules={[
+                  {
+                    required: true,
+                    message: getMessage(
+                      CODE_ERROR.ERROR_REQUIRED,
+                      MESSAGE_ERROR,
+                      "Ngày"
+                    ),
+                  },
+                ]}
+              >
+                <RangePicker
+                  format={"DD/MM/YYYY"}
+                  onChange={(dates) => {
+                    dates ? setCheckDisable(false) : setCheckDisable(true);
+                  }}
+                />
+              </Form.Item>
+              <Form.Item name="employee">
+                <Select
+                  showSearch
+                  allowClear
+                  onChange={() => setCheckDisable(false)}
+                  placeholder="Người bán hàng"
+                >
+                  {listEmployees.map((e) => (
+                    <Select.Option
+                      value={`${e.id}_${e.firstName} ${e.lastName} ${e.ward}`}
+                      key={e.id}
+                      id={e.id}
+                    >
+                      {`${e.firstName} ${e.lastName} -  ${e.ward}`}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Button
+                type="primary"
+                shape="round"
+                htmlType="submit"
+                disabled={checkDisable === false ? false : true}
+                style={{
+                  width: 120,
+                }}
+              >
+                Tìm kiếm
+              </Button>
+            </div>
+          </div>
+
+          <Table
+            rowClassName={(record, index) =>
+              index % 2 === 0
+                ? "table-row table-row-even"
+                : "table-row table-row-odd"
+            }
+            rowKey={(record) => record.id}
+            columns={columns}
+            loading={isLoading}
+            scroll={{ x: "maxContent" }}
+            dataSource={[...listDailyReport]}
+            pagination={
+              totalElements !== 0
+                ? {
+                    current: page,
+                    pageSize: size,
+                    total: totalElements,
+                    showSizeChanger: true,
+                    showQuickJumper: true,
+                    position: ["bottomCenter"],
+                    pageSizeOptions: ["10", "20", "50", "100"],
+                    showTotal: (total, range) =>
+                      `${range[0]}-${range[1]} of ${total} items`,
+                    onChange: (page, size) => onHandlePagination(page, size),
+                    locale: {
+                      jump_to: "",
+                      page: "trang",
+                      items_per_page: "/ trang",
+                    },
+                  }
+                : false
+            }
+            expandable={{
+              expandedRowRender: (record) => (
+                <Table
+                  bordered
+                  loading={isLoading}
+                  columns={columnsDailyReport}
+                  rowKey={(record) => record.id}
+                  dataSource={[...record.exportProductDetailDTOS]}
+                  pagination={false}
+                  className="productsExpande"
+                />
+              ),
+            }}
+          />
+        </Form>
+      </motion.div>
     </div>
   );
 }

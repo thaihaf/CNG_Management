@@ -4,18 +4,17 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import dayjs from "dayjs";
+import { motion } from "framer-motion/dist/framer-motion";
 
 import { SearchOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
   Input,
-  message,
   Space,
   Statistic,
   Table,
   Tag,
-  Tooltip,
   Typography,
 } from "antd";
 
@@ -23,6 +22,7 @@ import avt_default from "assets/images/avt-default.png";
 import "./ListProductImport.css";
 
 import { get } from "lodash";
+import queryString from "query-string";
 import {
   getAllProductImport,
   ImportProductManagerPaths,
@@ -33,17 +33,14 @@ import { getStatusString } from "helpers/util.helper";
 const { Title, Text } = Typography;
 
 export default function ListProductImport() {
-  const { listAllProductImport, totalElements, totalPages, size } = useSelector(
+  const { listAllProductImport, totalElements, page, size } = useSelector(
     (state) => state.productImport
   );
-  const { listActiveCategories } = useSelector((state) => state.category);
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -298,15 +295,31 @@ export default function ListProductImport() {
     },
   ];
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
+
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        page: page,
+      }),
+    });
   };
 
   useEffect(() => {
+    let query = queryString.parse(location.search);
+    if (query.page) {
+      query.page = query.page - 1;
+    }
     setIsLoading(true);
 
-    dispatch(getAllProductImport())
+    dispatch(getAllProductImport(query))
       .then(unwrapResult)
       .then((res) => {
         setIsLoading(false);
@@ -322,7 +335,12 @@ export default function ListProductImport() {
 
   return (
     <div className="product-list">
-      <div className="top">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={2} style={{ cursor: "pointer" }}>
           Danh sách Đơn nhập
         </Title>
@@ -330,47 +348,65 @@ export default function ListProductImport() {
         <Button
           type="primary"
           shape={"round"}
-          size={"large"}
           onClick={() =>
             history.push(ImportProductManagerPaths.CREATE_PRODUCT_IMPORT)
           }
+          style={{ width: "15rem", height: "3.8rem" }}
         >
-          Tạo mới
+          Tạo đơn nhập
         </Button>
-      </div>
+      </motion.div>
 
-      <Table
-        size="large"
-        rowKey="id"
-        columns={columns}
-        loading={isLoading}
-        dataSource={listAllProductImport}
-        pagination={
-          listAllProductImport.length !== 0
-            ? {
-                showSizeChanger: true,
-                position: ["bottomCenter"],
-                size: "default",
-                pageSize: pageSize,
-                current: currentPage,
-                totalElements,
-                onChange: (page, size) => onHandlePagination(page, size),
-                pageSizeOptions: ["2", "4", "6"],
-              }
-            : false
-        }
-        onRow={(record) => {
-          return {
-            onClick: () =>
-              history.push(
-                ImportProductManagerPaths.DETAILS_PRODUCT_IMPORT.replace(
-                  ":importId",
-                  record.id
-                )
-              ),
-          };
-        }}
-      />
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
+          columns={columns}
+          loading={isLoading}
+          dataSource={[...listAllProductImport]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: page,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+          onRow={(record) => {
+            return {
+              onClick: () =>
+                history.push(
+                  ImportProductManagerPaths.DETAILS_PRODUCT_IMPORT.replace(
+                    ":importId",
+                    record.id
+                  )
+                ),
+            };
+          }}
+        />
+      </motion.div>
     </div>
   );
 }

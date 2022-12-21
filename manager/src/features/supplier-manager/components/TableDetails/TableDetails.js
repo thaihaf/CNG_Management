@@ -51,7 +51,7 @@ const { Option } = Select;
 const { Text, Title } = Typography;
 
 export default function TableDetails({ form }) {
-  const { listDebtSupplier, totalElements, number, size } = useSelector(
+  const { listDebtSupplier, totalElements, page, size } = useSelector(
     (state) => state.supplier.debtSupplier
   );
 
@@ -81,7 +81,7 @@ export default function TableDetails({ form }) {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
@@ -307,8 +307,8 @@ export default function TableDetails({ form }) {
 
   useEffect(() => {
     const query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
 
     dispatch(getDebtSuppliers(query))
@@ -330,7 +330,7 @@ export default function TableDetails({ form }) {
       pagination={
         totalElements !== 0
           ? {
-              current: number,
+              current: page,
               pageSize: size,
               total: totalElements,
               showSizeChanger: true,

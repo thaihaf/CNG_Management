@@ -4,13 +4,10 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
-
+import { motion } from "framer-motion/dist/framer-motion";
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
-  DatePicker,
-  Form,
   Input,
   notification,
   Radio,
@@ -20,32 +17,19 @@ import {
   Typography,
 } from "antd";
 
-import avt_default from "assets/images/avt-default.png";
 import "./CategoryProfit.css";
 
 import { get } from "lodash";
 
-import {
-  getSupplierDebts,
-  SupplierDebtPaths,
-} from "features/supplier-debt/supplierDebt";
 import dayjs from "dayjs";
-import { getMessage } from "helpers/util.helper";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
 import {
-  DashboardPaths,
-  getCategoryInventory,
   getCategoryProfit,
-  getProductInventory,
-  getWarehouseInventory,
-  getWarehouseProfit,
 } from "features/dashboard/dashboard";
 
 const { Title, Text } = Typography;
 
 export default function CategoryProfit() {
-  const { listCategoryProfit, totalElements, number, size } = useSelector(
+  const { listCategoryProfit, totalElements, page, size } = useSelector(
     (state) => state.dashboard.categoryProfit
   );
   const history = useHistory();
@@ -188,7 +172,7 @@ export default function CategoryProfit() {
       align: "center",
     },
     {
-      title: "Số lượng m2 xuất (m2)",
+      title: "Số lượng xuất (m2)",
       dataIndex: ["categoryRevenueDTO", "squareMeterExport"],
       key: "squareMeterExport",
       align: "center",
@@ -197,7 +181,7 @@ export default function CategoryProfit() {
       },
     },
     {
-      title: "Số lượng m2 nhập lại (m2)",
+      title: "Số lượng nhập lại (m2)",
       dataIndex: ["categoryRevenueDTO", "squareMeterReExport"],
       key: "squareMeterReExport",
       align: "center",
@@ -264,7 +248,7 @@ export default function CategoryProfit() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
         startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
         endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
       }),
@@ -275,8 +259,8 @@ export default function CategoryProfit() {
     setIsLoading(true);
 
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     query = {
       ...query,
@@ -315,33 +299,45 @@ export default function CategoryProfit() {
         </Radio.Group>
       </div>
 
-      <Table
-        rowKey={(record) => record.categoryDTO.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listCategoryProfit]}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-      />
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.categoryDTO.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
+          columns={columns}
+          dataSource={[...listCategoryProfit]}
+          loading={isLoading}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: page,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+        />
+      </motion.div>
     </div>
   );
 }

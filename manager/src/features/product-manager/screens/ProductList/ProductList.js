@@ -4,6 +4,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
+import { motion } from "framer-motion/dist/framer-motion";
 
 import { SearchOutlined } from "@ant-design/icons";
 import {
@@ -33,7 +34,7 @@ import { ActionsModal } from "features/product-manager/components";
 const { Title, Text } = Typography;
 
 export default function ProductList() {
-  const { listProducts, totalElements, number, size } = useSelector(
+  const { listProducts, totalElements, page, size } = useSelector(
     (state) => state.product
   );
   const { listActiveCategories } = useSelector((state) => state.category);
@@ -328,15 +329,15 @@ export default function ProductList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
 
   useEffect(() => {
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
 
     setIsLoading(true);
@@ -351,57 +352,74 @@ export default function ProductList() {
 
   return (
     <div className="product-list">
-      <div className="top">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <ActionsModal />
 
         <Button
           type="primary"
           shape={"round"}
-          size={"large"}
           onClick={() => history.push(ProductManagerPaths.CREATE_PRODUCT)}
+          style={{ width: "15rem", height: "3.8rem" }}
         >
-          Tạo mới
+          Tạo Sản phẩm
         </Button>
-      </div>
+      </motion.div>
 
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listProducts]}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-        onRow={(record) => {
-          return {
-            onClick: () =>
-              history.push(
-                ProductManagerPaths.PRODUCT_DETAILS.replace(
-                  ":productId",
-                  record.id
-                )
-              ),
-          };
-        }}
-      />
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
+          columns={columns}
+          loading={isLoading}
+          dataSource={[...listProducts]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: page,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+          onRow={(record) => {
+            return {
+              onClick: () =>
+                history.push(
+                  ProductManagerPaths.PRODUCT_DETAILS.replace(
+                    ":productId",
+                    record.id
+                  )
+                ),
+            };
+          }}
+        />
+      </motion.div>
     </div>
   );
 }

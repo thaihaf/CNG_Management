@@ -384,6 +384,11 @@ export default function DashboardByMonth() {
         rowKey={(record) => record.month}
         loading={isLoading}
         scroll={{ x: "maxContent" }}
+        rowClassName={(record, index) =>
+          index % 2 === 0
+            ? "table-row table-row-even"
+            : "table-row table-row-odd"
+        }
         pagination={false}
       />
     </Form>

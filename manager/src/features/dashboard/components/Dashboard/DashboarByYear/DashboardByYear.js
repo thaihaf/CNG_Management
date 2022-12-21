@@ -383,6 +383,11 @@ export default function DashboardByDay() {
 
       <Table
         columns={colunns}
+        rowClassName={(record, index) =>
+          index % 2 === 0
+            ? "table-row table-row-even"
+            : "table-row table-row-odd"
+        }
         dataSource={[...listDashboardByYear]}
         rowKey={(record) => record.year}
         loading={isLoading}

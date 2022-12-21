@@ -19,9 +19,9 @@ const updateProductImports = (id, data) => {
   );
   return api.put(url, data);
 };
-const getAllProductImport = () => {
+const getAllProductImport = (params) => {
   const url = ImportProductEndPoints.PRODUCT_IMPORT_MANAGER;
-  return api.get(url);
+  return api.get(url, {params});
 };
 const deleteProductImport = (id) => {
   const url = ImportProductEndPoints.PRODUCT_IMPORT_DETAILS.replace(

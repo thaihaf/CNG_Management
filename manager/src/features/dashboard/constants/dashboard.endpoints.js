@@ -1,6 +1,6 @@
 export const DashboardEndPoints = {
   DASHBOARD_CUSTOMER_DAILY:
-    "/dashboard/customer/daily?startDate=:startDate&endDate=:endDate&sort=createDate,ASC",
+    "/dashboard/customer/daily",
   DASHBOARD_MANAGER: "/dashboard",
   //inventory
   PRODUCT_INVENTORY: "/dashboard/product/inventory",

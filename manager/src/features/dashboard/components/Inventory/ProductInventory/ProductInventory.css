@@ -46,3 +46,19 @@
   border-radius: 2rem !important;
   padding: 1rem 2rem !important;
 }
+.product-inventory .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.product-inventory .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.product-inventory .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.product-inventory .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.product-inventory td.ant-table-cell {
+  border: unset !important;
+  cursor: pointer;
+}
+.product-inventory .table-row-even {
+  background: #fff;
+}
+.product-inventory .table-row-odd {
+  background: #f9fafe;
+}

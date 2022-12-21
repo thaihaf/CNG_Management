@@ -21,7 +21,7 @@ import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 
 import avt_default from "assets/images/avt-default.png";
 import newFileImg from "assets/icons/newFile.png";
@@ -33,35 +33,42 @@ import minusButtonImg from "assets/icons/minusButton.png";
 
 import TableDetails from "../TableDetails/TableDetails";
 import dayjs from "dayjs";
-import { getCustomerDebtDetails } from "features/customer-debt/customerDebt";
+import {
+  CustomerDebtPaths,
+  getCustomerDebtDetails,
+} from "features/customer-debt/customerDebt";
 import StatisticGroups from "../StatisticGroups/StatisticGroups";
+import queryString from "query-string";
+import { motion } from "framer-motion/dist/framer-motion";
 
 const { Title } = Typography;
 const { Step } = Steps;
 const { RangePicker } = DatePicker;
 
-const DetailsForm = ({ updateMode }) => {
-  const { provinces } = useSelector((state) => state.provinces);
+const DetailsForm = ({ isLoading }) => {
   const { customerDebtDetails } = useSelector((state) => state.customerDebt);
 
   const { id } = useParams();
-  const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
 
-  const [isLoading, setIsLoading] = useState(false);
   const [imgURL, setImgUrl] = useState(null);
   const [datesPicker, setDatesPicker] = useState(null);
 
   const handleGetList = async () => {
-    setIsLoading(true);
-    dispatch(getCustomerDebtDetails({ id: id, ...datesPicker }))
-      .then(unwrapResult)
-      .then(() => {
-        setDatesPicker(null);
-        setIsLoading(false);
-      }).catch((err) => console.log(err))
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: CustomerDebtPaths.CUSTOMER_DEBT_DETAILS.replace(":id", id),
+      search: queryString.stringify({
+        ...params,
+        ...datesPicker,
+      }),
+    });
   };
+
   useEffect(() => {
     setImgUrl(customerDebtDetails?.customerDTO?.fileAttachDTO?.filePath);
 
@@ -85,55 +92,55 @@ const DetailsForm = ({ updateMode }) => {
   }, [dispatch, customerDebtDetails]);
 
   return (
-    <Spin spinning={isLoading}>
-      <Form
-        form={form}
-        autoComplete="off"
-        layout="vertical"
-        initialValues={customerDebtDetails}
-      >
-        <StatisticGroups />
+    <Form
+      form={form}
+      autoComplete="off"
+      layout="vertical"
+      initialValues={customerDebtDetails}
+      className="details-form-customer-debt"
+    >
+      <StatisticGroups />
 
-        <div className="product-details">
-          <div className="actions-group">
-            <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-              Công nợ Khách hàng
-            </Title>
+      <div className="product-details">
+        <div className="actions-group">
+          <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
+            Công nợ Khách hàng
+          </Title>
 
-            <RangePicker
-              defaultValue={[
-                dayjs().startOf("month"),
-                dayjs().endOf("month"),
-              ]}
-              format={"DD/MM/YYYY"}
-              onChange={(dates, dateString) => {
-                if (dates) {
-                  let value = {
-                    startDate: dates[0].format("DD/MM/YYYY"),
-                    endDate: dates[1].format("DD/MM/YYYY"),
-                  };
-                  setDatesPicker(value);
-                } else {
-                  setDatesPicker(null);
-                }
-              }}
-              renderExtraFooter={(value, a, b) => {
-                return (
-                  <Button
-                    type="primary"
-                    shape={"round"}
-                    size={"large"}
-                    onClick={async () => await handleGetList()}
-                    disabled={datesPicker ? false : true}
-                  >
-                    Tìm kiếm
-                  </Button>
-                );
-              }}
-            />
-          </div>
+          <RangePicker
+            defaultValue={[dayjs().startOf("month"), dayjs().endOf("month")]}
+            format={"DD/MM/YYYY"}
+            onChange={(dates, dateString) => {
+              if (dates) {
+                let value = {
+                  startDate: dates[0].format("DD/MM/YYYY"),
+                  endDate: dates[1].format("DD/MM/YYYY"),
+                };
+                setDatesPicker(value);
+              } else {
+                setDatesPicker(null);
+              }
+            }}
+          />
 
-          <div className="details">
+          <Button
+            type="primary"
+            shape={"round"}
+            size={"large"}
+            onClick={async () => await handleGetList()}
+            disabled={datesPicker ? false : true}
+          >
+            Tìm kiếm
+          </Button>
+        </div>
+
+        <Spin spinning={isLoading}>
+          <motion.div
+            className="details"
+            animate={{ opacity: [0, 1], y: [100, 0] }}
+            exit={{ opacity: [1, 0] }}
+            transition={{ duration: 1 }}
+          >
             <div className="details__avatar">
               <div className="details__avatar-img">
                 <img
@@ -225,10 +232,10 @@ const DetailsForm = ({ updateMode }) => {
 
               <Step title="" status="finish" />
             </Steps>
-          </div>
-        </div>
-      </Form>
-    </Spin>
+          </motion.div>
+        </Spin>
+      </div>
+    </Form>
   );
 };
 

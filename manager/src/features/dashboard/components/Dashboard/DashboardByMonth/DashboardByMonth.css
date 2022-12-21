@@ -11,3 +11,19 @@
 .dashboardByMonth .top .right .ant-form-item {
   margin: 0;
 }
+.dashboardByMonth .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.dashboardByMonth .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.dashboardByMonth .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.dashboardByMonth .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.dashboardByMonth td.ant-table-cell {
+  border: unset !important;
+  cursor: pointer;
+}
+.dashboardByMonth .table-row-even {
+  background: #fff;
+}
+.dashboardByMonth .table-row-odd {
+  background: #f9fafe;
+}

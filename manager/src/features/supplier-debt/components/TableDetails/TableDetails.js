@@ -13,35 +13,47 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import queryString from "query-string";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
 import { ImportProductManagerPaths } from "features/import-product/importProduct";
 
 import "./TableDetails.css";
 import dayjs from "dayjs";
+import { SupplierDebtPaths } from "features/supplier-debt/supplierDebt";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
 
 export default function TableDetails({ form }) {
-  const { listDebtMoney, totalElements, number, size } = useSelector(
+  const { listDebtMoney, totalElements, page, size } = useSelector(
     (state) => state.supplierDebt.debtMoney
   );
 
-  const history = useHistory();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
+  const { id } = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: SupplierDebtPaths.SUPPLIER_DEBT_DETAILS.replace(":id", id),
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        page: page,
+      }),
+    });
   };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -255,8 +267,8 @@ export default function TableDetails({ form }) {
 
   return (
     <Table
-      size="middle"
-      className="listProductDetails"
+      bordered
+      className="table-details-supplier-debt"
       columns={columns}
       dataSource={[...listDebtMoney]}
       rowKey={(record) => record.id}
@@ -265,7 +277,7 @@ export default function TableDetails({ form }) {
       pagination={
         totalElements !== 0
           ? {
-              current: number,
+              current: page,
               pageSize: size,
               total: totalElements,
               showSizeChanger: true,

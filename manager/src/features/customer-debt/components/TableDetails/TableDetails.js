@@ -15,33 +15,45 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
+import queryString from "query-string";
 import { ProductExportManagerPaths } from "features/export-product/exportProduct";
 
 import "./TableDetails.css";
 import dayjs from "dayjs";
+import { CustomerDebtPaths } from "features/customer-debt/customerDebt";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
 
 export default function TableDetails({ form }) {
-  const { listDebtMoney, totalElements, totalPages, size } = useSelector(
+  const { listDebtMoney, totalElements, page, size } = useSelector(
     (state) => state.customerDebt.debtMoney
   );
 
-  const history = useHistory();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
+  const { id } = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: CustomerDebtPaths.CUSTOMER_DEBT_DETAILS.replace(":id", id),
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        page: page,
+      }),
+    });
   };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -166,9 +178,9 @@ export default function TableDetails({ form }) {
       ),
   });
 
-  const productColumns = [
+  const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -255,24 +267,31 @@ export default function TableDetails({ form }) {
 
   return (
     <Table
-      size="middle"
-      className="listProductDetails"
-      columns={productColumns}
+      bordered
+      className="table-details-customer-debt"
+      columns={columns}
       dataSource={[...listDebtMoney]}
-      rowKey={(record) => record.id}
+      rowKey={(record) => record.orderId}
       loading={isLoading}
       scroll={{ x: "maxContent" }}
       pagination={
         totalElements !== 0
           ? {
-              showSizeChanger: true,
-              position: ["bottomCenter"],
-              size: "default",
+              current: page,
               pageSize: size,
-              current: currentPage,
               total: totalElements,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              position: ["bottomCenter"],
+              pageSizeOptions: ["10", "20", "50", "100"],
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
               onChange: (page, size) => onHandlePagination(page, size),
-              pageSizeOptions: ["2", "4", "10"],
+              locale: {
+                jump_to: "",
+                page: "trang",
+                items_per_page: "/ trang",
+              },
             }
           : false
       }

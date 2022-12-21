@@ -65,8 +65,8 @@ export default function BrandModal({ data }) {
           });
         } else {
           const query = queryString.parse(location.search);
-          if (query.number) {
-            query.number = query.number - 1;
+          if (query.page) {
+            query.page = query.page - 1;
           }
           dispatch(getBrands({ ...query, sort: "createAt,desc" }))
             .then(unwrapResult)
@@ -105,14 +105,22 @@ export default function BrandModal({ data }) {
       {data ? (
         <div
           style={{
-            width: "2.5rem",
+            width: "4rem",
+            height: "4rem",
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
             cursor: "pointer",
+            borderRadius: "50%",
+            background: "#eaf0f6",
           }}
           onClick={() => setModal1Open(true)}
         >
-          <img src={editImg} alt="Edit" />
+          <img
+            src={editImg}
+            alt="Edit"
+            style={{ width: "2.2rem", height: "2.2rem", margin: "auto" }}
+          />
         </div>
       ) : (
         <Button
@@ -218,7 +226,7 @@ export default function BrandModal({ data }) {
               </Form.Item>
             </div>
             <div className="details__group">
-               {data && (
+              {data && (
                 <Form.Item
                   name="status"
                   label="Trạng thái"

@@ -3,6 +3,7 @@ import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
+import { motion } from "framer-motion/dist/framer-motion";
 
 import { SearchOutlined } from "@ant-design/icons";
 import {
@@ -32,7 +33,7 @@ const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
 export default function CustomerDebtList() {
-  const { listCustomerDebt, totalElements, number, size } = useSelector(
+  const { listCustomerDebt, totalElements, page, size } = useSelector(
     (state) => state.customerDebt
   );
   const history = useHistory();
@@ -278,7 +279,7 @@ export default function CustomerDebtList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
         startDate: startDate,
         endDate: endDate,
       }),
@@ -301,8 +302,8 @@ export default function CustomerDebtList() {
     setIsLoading(true);
 
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     query = {
       ...query,
@@ -328,8 +329,13 @@ export default function CustomerDebtList() {
   }, [dispatch, location]);
 
   return (
-    <div className="product-list">
-      <div className="top">
+    <div className="customer-debt-list">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
           Công nợ Khách hàng
         </Title>
@@ -351,55 +357,67 @@ export default function CustomerDebtList() {
             }
           }}
         />
+
         <Button
           type="primary"
           shape={"round"}
-          size={"large"}
-          style={{ marginLeft: "1rem" }}
           onClick={() => onHandleSearch()}
+          style={{ marginLeft: "1rem", width: "15rem", height: "3.8rem" }}
         >
           Tìm kiếm
         </Button>
-      </div>
+      </motion.div>
 
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listCustomerDebt]}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-        onRow={(record) => {
-          return {
-            onClick: () =>
-              history.push(
-                CustomerDebtPaths.CUSTOMER_DEBT_DETAILS.replace(
-                  ":id",
-                  record.customerDTO.id
-                )
-              ),
-          };
-        }}
-      />
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.customerDTO.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
+          columns={columns}
+          loading={isLoading}
+          dataSource={[...listCustomerDebt]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: page,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+          onRow={(record) => {
+            return {
+              onClick: () =>
+                history.push(
+                  CustomerDebtPaths.CUSTOMER_DEBT_DETAILS.replace(
+                    ":id",
+                    record.customerDTO.id
+                  )
+                ),
+            };
+          }}
+        />
+      </motion.div>
     </div>
   );
 }

@@ -4,13 +4,11 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
+import { motion } from "framer-motion/dist/framer-motion";
 
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
-  DatePicker,
-  Form,
   Input,
   notification,
   Radio,
@@ -20,29 +18,20 @@ import {
   Typography,
 } from "antd";
 
-import avt_default from "assets/images/avt-default.png";
 import "./SupplierInventory.css";
 
 import { get } from "lodash";
 
-import {
-  getSupplierDebts,
-  SupplierDebtPaths,
-} from "features/supplier-debt/supplierDebt";
 import dayjs from "dayjs";
-import { getMessage } from "helpers/util.helper";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
 import {
   DashboardPaths,
-  getProductInventory,
   getSupplierInventory,
 } from "features/dashboard/dashboard";
 
 const { Title, Text } = Typography;
 
 export default function SupplierInventory() {
-  const { listSupplierInventory, totalElements, number, size } = useSelector(
+  const { listSupplierInventory, totalElements, page, size } = useSelector(
     (state) => state.dashboard.supplierInventory
   );
   const history = useHistory();
@@ -335,7 +324,7 @@ export default function SupplierInventory() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
         month: `${initialValues.data.month() + 1}`,
         year: `${initialValues.data.year()}`,
       }),
@@ -346,8 +335,8 @@ export default function SupplierInventory() {
     setIsLoading(true);
 
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     query = {
       ...query,
@@ -386,47 +375,59 @@ export default function SupplierInventory() {
         </Radio.Group>
       </div>
 
-      <Table
-        loading={isLoading}
-        columns={columns}
-        dataSource={[...listSupplierInventory]}
-        rowKey={(record) => record.supplierDTO.id}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-        expandable={{
-          expandedRowRender: (record) =>
-            record.brandInventoryDTOS && (
-              <Table
-                bordered
-                loading={isLoading}
-                columns={columnsSupplierInventory}
-                rowKey={(record) => record.brandDTO.id}
-                dataSource={[...record.brandInventoryDTOS]}
-                pagination={false}
-                className="productsExpande"
-              />
-            ),
-        }}
-      />
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          columns={columns}
+          dataSource={[...listSupplierInventory]}
+          rowKey={(record) => record.supplierDTO.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
+          loading={isLoading}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: page,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+          expandable={{
+            expandedRowRender: (record) =>
+              record.brandInventoryDTOS && (
+                <Table
+                  bordered
+                  loading={isLoading}
+                  columns={columnsSupplierInventory}
+                  rowKey={(record) => record.brandDTO.id}
+                  dataSource={[...record.brandInventoryDTOS]}
+                  pagination={false}
+                  className="productsExpande"
+                />
+              ),
+          }}
+        />
+      </motion.div>
     </div>
   );
 }

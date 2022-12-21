@@ -5,4 +5,24 @@
     justify-content: space-between;
     margin-bottom: 1rem;
   }
+  .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+    background: unset; //Change the existing color to `unset`
+  }
+
+   td.ant-table-cell {
+    border: unset !important;
+  }
+  
+  .table-row:hover {
+    border-left: 2px solid black;
+  }
+  .table-row-even {
+    background: #fff;
+  }
+  .table-row-odd {
+    background: #f9fafe;
+  }
 }

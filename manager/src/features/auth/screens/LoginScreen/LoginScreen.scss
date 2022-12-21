@@ -14,11 +14,22 @@
     background-color: #ffffff;
     padding: 5rem;
     border-radius: 2.5rem;
+    position: relative;
+
+    .action{
+      width: 3rem;
+      height: 3rem;
+      position: absolute;
+      top : 2.5rem;
+      left: 3.5rem;
+      cursor: pointer;
+    }
 
     .top {
       width: fit-content;
       text-align: center;
       width: 100%;
+      display: block ;
 
       img {
         width: 15rem;

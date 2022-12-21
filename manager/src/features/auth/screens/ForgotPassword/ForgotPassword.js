@@ -5,7 +5,15 @@ import { useHistory } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, message, notification, Spin, Typography } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  notification,
+  Spin,
+  Typography,
+} from "antd";
 
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
@@ -14,8 +22,11 @@ import { forgotPassword, updateError, AuthPaths } from "../../auth";
 
 import "../LoginScreen/LoginScreen.css";
 import { LoadingSpinner } from "components";
+import { motion } from "framer-motion/dist/framer-motion";
 
-import userProfileImg from "assets/icons/userProfile.png";
+import emailImg from "assets/icons/email.png";
+import leftArrowImg from "assets/icons/leftArrow.png";
+
 const { Title } = Typography;
 
 export default function ForgotPassword() {
@@ -31,14 +42,14 @@ export default function ForgotPassword() {
       .then(unwrapResult)
       .then((res) => {
         notification.success({
-          message: "Quên mật khẩu",
+          message: "Tìm lại mật khẩu",
           description: "Lấy mã thành công, vui lòng kiểm tra trong email",
         });
         history.push(AuthPaths.LOGIN);
       })
       .catch((error) => {
         notification.error({
-          message: "Quên mật khẩu",
+          message: "Tìm lại mật khẩu",
           description: error?.Error?.message || "Lỗi rồi!!!",
         });
         setLoading(false);
@@ -47,63 +58,71 @@ export default function ForgotPassword() {
   };
 
   return (
-    <Spin spinning={loading}>
-      <div className="login">
-        <Form
-          name="login"
-          className="form"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-          layout="vertical"
+    <motion.div
+      className="login"
+      animate={{ opacity: [0, 1], x: [-50, 0] }}
+      exit={{ opacity: [1, 0] }}
+      transition={{ duration: 1 }}
+    >
+      <Form
+        name="forgot"
+        className="form"
+        onFinish={onFinish}
+        layout="vertical"
+      >
+        <div className="action" onClick={() => history.push(AuthPaths.LOGIN)}>
+          <img src={leftArrowImg} alt="back" />
+        </div>
+
+        <div className="top">
+          <img src={emailImg} alt="" />
+          <Title level={1}>Tìm lại mật khẩu</Title>
+          <p style={{ color: "gray", fontSize: "1.3rem" }}>
+            Nhập email để lấy lại mật khẩu
+          </p>
+        </div>
+
+        <Form.Item
+          name="email"
+          label="Địa chỉ email"
+          rules={[
+            {
+              required: true,
+              message: getMessage(
+                CODE_ERROR.ERROR_REQUIRED,
+                MESSAGE_ERROR,
+                "Email"
+              ),
+            },
+            {
+              type: "email",
+              message: getMessage(
+                CODE_ERROR.ERROR_EMAIL,
+                MESSAGE_ERROR,
+                "Email"
+              ),
+            },
+          ]}
+          className="form_item"
         >
-          <div className="top">
-            <img src={userProfileImg} alt="" />
-            <Title level={1}>Quên mật khẩu</Title>
-          </div>
+          <Input
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="email@gmail.com"
+            className="login_input"
+          />
+        </Form.Item>
 
-          <Form.Item
-            name="email"
-            label="Địa chỉ email"
-            rules={[
-              {
-                required: true,
-                message: getMessage(
-                  CODE_ERROR.ERROR_REQUIRED,
-                  MESSAGE_ERROR,
-                  "Email"
-                ),
-              },
-              {
-                type: "email",
-                message: getMessage(
-                  CODE_ERROR.ERROR_EMAIL,
-                  MESSAGE_ERROR,
-                  "Email"
-                ),
-              },
-            ]}
-            className="form_item"
+        <Form.Item className="form_item">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button= btn_signUp"
+            loading={loading}
           >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="email@gmail.com"
-              className="login_input"
-            />
-          </Form.Item>
-
-          <Form.Item className="form_item">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-form-button= btn_signUp"
-            >
-              Lấy mã
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
-    </Spin>
+            Lấy mã
+          </Button>
+        </Form.Item>
+      </Form>
+    </motion.div>
   );
 }

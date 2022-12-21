@@ -8,14 +8,9 @@ export const DASHBOARD_FEATURE_KEY = DASHBOARD_KEY;
 // daily report
 export const getDashboardCustomerDaily = createAsyncThunk(
   "product/getDashboardCustomerDaily",
-  async ({ startDate, endDate, customer, employee }, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const response = await api.getDashboardCustomerDaily(
-        startDate,
-        endDate,
-        customer,
-        employee
-      );
+      const response = await api.getDashboardCustomerDaily(params);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -164,7 +159,7 @@ const initialState = {
   dailyReport: {
     listDailyReport: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
   // dashboard
@@ -195,56 +190,56 @@ const initialState = {
   productInventory: {
     listProductInventory: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
   categoryInventory: {
     listCategoryInventory: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
   supplierInventory: {
     listSupplierInventory: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
   warehouseInventory: {
     listWarehouseInventory: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
   // profit
   productProfit: {
     listProductProfit: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
   customerProfit: {
     listCustomerProfit: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
   employeeProfit: {
     listEmployeeProfit: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
   supplierProfit: {
     listSupplierProfit: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
   categoryProfit: {
     listCategoryProfit: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
 };
@@ -257,7 +252,7 @@ const dashboardSlice = createSlice({
     [getDashboardCustomerDaily.fulfilled]: (state, action) => {
       state.dailyReport.listDailyReport = action.payload.content;
       state.dailyReport.totalElements = action.payload.totalElements;
-      state.dailyReport.number = action.payload.number + 1;
+      state.dailyReport.page = action.payload.number + 1;
       state.dailyReport.size = action.payload.size;
     },
     // dashboard
@@ -290,56 +285,56 @@ const dashboardSlice = createSlice({
     [getProductInventory.fulfilled]: (state, action) => {
       state.productInventory.listProductInventory = action.payload.content;
       state.productInventory.totalElements = action.payload.totalElements;
-      state.productInventory.number = action.payload.number + 1;
+      state.productInventory.page = action.payload.number + 1;
       state.productInventory.size = action.payload.size;
     },
     [getCategoryInventory.fulfilled]: (state, action) => {
       state.categoryInventory.listCategoryInventory = action.payload.content;
       state.categoryInventory.totalElements = action.payload.totalElements;
-      state.categoryInventory.number = action.payload.number + 1;
+      state.categoryInventory.page = action.payload.number + 1;
       state.categoryInventory.size = action.payload.size;
     },
     [getSupplierInventory.fulfilled]: (state, action) => {
       state.supplierInventory.listSupplierInventory = action.payload.content;
       state.supplierInventory.totalElements = action.payload.totalElements;
-      state.supplierInventory.number = action.payload.number + 1;
+      state.supplierInventory.page = action.payload.number + 1;
       state.supplierInventory.size = action.payload.size;
     },
     [getWarehouseInventory.fulfilled]: (state, action) => {
       state.warehouseInventory.listWarehouseInventory = action.payload.content;
       state.warehouseInventory.totalElements = action.payload.totalElements;
-      state.warehouseInventory.number = action.payload.number + 1;
+      state.warehouseInventory.page = action.payload.number + 1;
       state.warehouseInventory.size = action.payload.size;
     },
     // profit
     [getProductProfit.fulfilled]: (state, action) => {
       state.productProfit.listProductProfit = action.payload.content;
       state.productProfit.totalElements = action.payload.totalElements;
-      state.productProfit.number = action.payload.number + 1;
+      state.productProfit.page = action.payload.number + 1;
       state.productProfit.size = action.payload.size;
     },
     [getCustomerProfit.fulfilled]: (state, action) => {
       state.customerProfit.listCustomerProfit = action.payload.content;
       state.customerProfit.totalElements = action.payload.totalElements;
-      state.customerProfit.number = action.payload.number + 1;
+      state.customerProfit.page = action.payload.number + 1;
       state.customerProfit.size = action.payload.size;
     },
     [getEmployeeProfit.fulfilled]: (state, action) => {
       state.employeeProfit.listEmployeeProfit = action.payload.content;
       state.employeeProfit.totalElements = action.payload.totalElements;
-      state.employeeProfit.number = action.payload.number + 1;
+      state.employeeProfit.page = action.payload.number + 1;
       state.employeeProfit.size = action.payload.size;
     },
     [getSupplierProfit.fulfilled]: (state, action) => {
       state.supplierProfit.listSupplierProfit = action.payload.content;
       state.supplierProfit.totalElements = action.payload.totalElements;
-      state.supplierProfit.number = action.payload.number + 1;
+      state.supplierProfit.page = action.payload.number + 1;
       state.supplierProfit.size = action.payload.size;
     },
     [getCategoryProfit.fulfilled]: (state, action) => {
       state.categoryProfit.listCategoryProfit = action.payload.content;
       state.categoryProfit.totalElements = action.payload.totalElements;
-      state.categoryProfit.number = action.payload.number + 1;
+      state.categoryProfit.page = action.payload.number + 1;
       state.categoryProfit.size = action.payload.size;
     },
     ["LOGOUT"]: (state) => {

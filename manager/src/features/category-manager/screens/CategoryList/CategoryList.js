@@ -4,44 +4,35 @@ import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import { DownOutlined } from "@ant-design/icons";
-import {
-  DeleteTwoTone,
-  SearchOutlined,
-  ExclamationCircleOutlined,
-} from "@ant-design/icons";
+import { motion } from "framer-motion/dist/framer-motion";
+
+import { SearchOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import {
   Button,
-  Form,
   Input,
-  message,
   Modal,
   Space,
   Table,
   Tag,
   Typography,
-  Dropdown,
-  Menu,
-  Select,
   notification,
 } from "antd";
 import {
   CategoryManagerPaths,
   getCategories,
   deleteCategory,
-  deleteCategories,
   updateListCategories,
 } from "features/category-manager/categoryManager";
+import { CategoryModal } from "features/category-manager/components";
+
 import deleteImg from "assets/icons/delete.png";
 
 import "./CategoryList.css";
 
-import { CategoryModal } from "features/category-manager/components";
-
 const { Title, Text } = Typography;
 
 export default function CategoryList() {
-  const { listCategories, totalElements, number, size } = useSelector(
+  const { listCategories, totalElements, page, size } = useSelector(
     (state) => state.category
   );
   const history = useHistory();
@@ -65,7 +56,7 @@ export default function CategoryList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
@@ -282,12 +273,30 @@ export default function CategoryList() {
         >
           <CategoryModal data={record} />
           {record.status ? (
-            <img
-              src={deleteImg}
-              alt=""
-              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+            <div
+              style={{
+                width: "4rem",
+                height: "4rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                borderRadius: "50%",
+                background: "#eaf0f6",
+              }}
               onClick={() => handleDelete(record)}
-            />
+            >
+              <img
+                src={deleteImg}
+                alt="delete"
+                style={{
+                  width: " 1.4rem",
+                  height: " 1.5rem",
+                  margin: "auto",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
           ) : (
             ""
           )}
@@ -298,8 +307,8 @@ export default function CategoryList() {
 
   useEffect(() => {
     const query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     setIsLoading(true);
     dispatch(getCategories(query))
@@ -309,43 +318,56 @@ export default function CategoryList() {
 
   return (
     <div className="category-list">
-      <div className="top">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={2}>Danh sách Chức năng</Title>
 
         <CategoryModal />
-      </div>
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listCategories]}
-        // style={{
-        //   boxShadow:
-        //     "rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px",
-        //   borderRadius: "2rem",
-        // }}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-      />
+      </motion.div>
+
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.id}
+          columns={columns}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
+          loading={isLoading}
+          dataSource={[...listCategories]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: page,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+        />
+      </motion.div>
     </div>
   );
 }

@@ -163,6 +163,7 @@ const DefaultLayout = ({ children }) => {
           style={{
             padding: "3rem 24px 24px",
             minHeight: "100vh",
+            backgroundColor: "var(--bg-color)",
           }}
         >
           <div className="top2">

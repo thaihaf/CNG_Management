@@ -11,3 +11,19 @@
 .dashboardByDay .top .right .ant-form-item {
   margin: 0;
 }
+.dashboardByDay .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.dashboardByDay .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.dashboardByDay .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.dashboardByDay .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.dashboardByDay td.ant-table-cell {
+  border: unset !important;
+  cursor: pointer;
+}
+.dashboardByDay .table-row-even {
+  background: #fff;
+}
+.dashboardByDay .table-row-odd {
+  background: #f9fafe;
+}

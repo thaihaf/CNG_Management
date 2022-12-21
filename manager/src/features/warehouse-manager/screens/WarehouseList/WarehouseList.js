@@ -4,57 +4,39 @@ import Highlighter from "react-highlight-words";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import { DownOutlined } from "@ant-design/icons";
-import {
-  DeleteTwoTone,
-  ExclamationCircleOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { motion } from "framer-motion/dist/framer-motion";
+
+import { ExclamationCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   Button,
-  Form,
   Input,
-  message,
   Modal,
   Space,
   Table,
   Tag,
   Typography,
-  Dropdown,
-  Menu,
-  Select,
   notification,
 } from "antd";
+
 import {
   WarehouseManagerPaths,
   getWarehouses,
   deleteWarehouse,
-  deleteWarehouses,
   updateListWarehouses,
 } from "features/warehouse-manager/warehouseManager";
-import "./WarehouseList.css";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import { getMessage } from "helpers/util.helper";
-
-import { createDetails } from "features/warehouse-manager/warehouseManager";
-import {
-  getDistrict,
-  getProvince,
-  getProvinces,
-} from "features/provinces/provinces";
-
-import deleteImg from "assets/icons/delete.png";
 import { WarehouseModal } from "features/warehouse-manager/components";
 
+import deleteImg from "assets/icons/delete.png";
+
+import "./WarehouseList.css";
+
 const { Title, Text } = Typography;
-const { Option } = Select;
 
 export default function WarehouseList() {
-  const { listWarehouses, totalElements, number, size } = useSelector(
+  const { listWarehouses, totalElements, page, size } = useSelector(
     (state) => state.warehouse
   );
- 
+
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -77,7 +59,7 @@ export default function WarehouseList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
@@ -94,15 +76,15 @@ export default function WarehouseList() {
         dispatch(deleteWarehouse(record.id))
           .then(unwrapResult)
           .then((res) => {
-             const newListWarehouses = listWarehouses.map((c) => {
-               if (c.id === record.id) {
-                 return { ...record, status: 0 };
-               } else {
-                 return c;
-               }
-             });
+            const newListWarehouses = listWarehouses.map((c) => {
+              if (c.id === record.id) {
+                return { ...record, status: 0 };
+              } else {
+                return c;
+              }
+            });
 
-             dispatch(updateListWarehouses(newListWarehouses));
+            dispatch(updateListWarehouses(newListWarehouses));
 
             notification.success({
               message: "Xoá Kho",
@@ -307,12 +289,30 @@ export default function WarehouseList() {
         >
           <WarehouseModal data={record} />
           {record.status ? (
-            <img
-              src={deleteImg}
-              alt=""
-              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+            <div
+              style={{
+                width: "4rem",
+                height: "4rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                borderRadius: "50%",
+                background: "#eaf0f6",
+              }}
               onClick={() => handleDelete(record)}
-            />
+            >
+              <img
+                src={deleteImg}
+                alt="delete"
+                style={{
+                  width: " 1.4rem",
+                  height: " 1.5rem",
+                  margin: "auto",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
           ) : (
             ""
           )}
@@ -323,8 +323,8 @@ export default function WarehouseList() {
 
   useEffect(() => {
     const query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     setIsLoading(true);
     dispatch(getWarehouses(query))
@@ -334,38 +334,56 @@ export default function WarehouseList() {
 
   return (
     <div className="warehouse-list">
-      <div className="top">
+      <motion.div
+        className="top"
+        animate={{ opacity: [0, 1] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
         <Title level={2}>Danh sách Kho</Title>
 
         <WarehouseModal />
-      </div>
-      <Table
-        rowKey={(record) => record.id}
-        columns={columns}
-        loading={isLoading}
-        dataSource={[...listWarehouses]}
-        pagination={
-          totalElements !== 0
-            ? {
-                current: number,
-                pageSize: size,
-                total: totalElements,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                position: ["bottomCenter"],
-                pageSizeOptions: ["10", "20", "50", "100"],
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} items`,
-                onChange: (page, size) => onHandlePagination(page, size),
-                locale: {
-                  jump_to: "",
-                  page: "trang",
-                  items_per_page: "/ trang",
-                },
-              }
-            : false
-        }
-      />
+      </motion.div>
+
+      <motion.div
+        animate={{ opacity: [0, 1], y: [50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        <Table
+          rowKey={(record) => record.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
+          columns={columns}
+          loading={isLoading}
+          dataSource={[...listWarehouses]}
+          pagination={
+            totalElements !== 0
+              ? {
+                  current: page,
+                  pageSize: size,
+                  total: totalElements,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  position: ["bottomCenter"],
+                  pageSizeOptions: ["10", "20", "50", "100"],
+                  showTotal: (total, range) =>
+                    `${range[0]}-${range[1]} of ${total} items`,
+                  onChange: (page, size) => onHandlePagination(page, size),
+                  locale: {
+                    jump_to: "",
+                    page: "trang",
+                    items_per_page: "/ trang",
+                  },
+                }
+              : false
+          }
+        />
+      </motion.div>
     </div>
   );
 }
