@@ -1,0 +1,18 @@
+.table-details-customer-debt .ant-table-container {
+  transition: all 0.3s ease;
+}
+.table-details-customer-debt .ant-table-title {
+  padding: 0 !important;
+}
+.table-details-customer-debt .ant-select-selector {
+  border: 1px solid rgb(211, 211, 211) !important;
+  border-radius: 2rem !important;
+}
+.table-details-customer-debt .ant-table-title {
+  background-color: #fafafa;
+  display: flex;
+  justify-content: flex-end;
+}
+.table-details-customer-debt .ant-table-title .ant-select {
+  margin: 1rem 2rem !important;
+}

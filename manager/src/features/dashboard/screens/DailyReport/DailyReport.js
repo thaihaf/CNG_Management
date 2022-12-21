@@ -33,8 +33,10 @@ import dayjs from "dayjs";
 
 import { getEmployees } from "features/employee-manager/employeeManager";
 import { getCustomers } from "features/customer-manager/customerManager";
-import { getDashboardCustomerDaily } from "features/dashboard/dashboard";
-import HeaderTable from "features/dashboard/components/Dashboard/HeaderTable/HeaderTable";
+import {
+  DashboardPaths,
+  getDashboardCustomerDaily,
+} from "features/dashboard/dashboard";
 import { Excel } from "antd-table-saveas-excel";
 import {
   columnsExport,
@@ -43,12 +45,13 @@ import {
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
+import queryString from "query-string";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
 export default function CustomerDailyList() {
-  const { listDailyReport, totalElements, number, size } = useSelector(
+  const { listDailyReport, totalElements, page, size } = useSelector(
     (state) => state.dashboard.dailyReport
   );
   const { listCustomers } = useSelector((state) => state.customer);
@@ -62,9 +65,7 @@ export default function CustomerDailyList() {
   const [checkDisable, setCheckDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [tabPosition, setTabPosition] = useState();
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(6);
+  const params = queryString.parse(location.search);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -185,7 +186,7 @@ export default function CustomerDailyList() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",
@@ -401,27 +402,40 @@ export default function CustomerDailyList() {
       </div>
     );
   };
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
+
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+
+    history.push({
+      pathname: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        page: page,
+      }),
+    });
   };
   const onFinish = (values) => {
     setIsLoading(true);
 
-    dispatch(
-      getDashboardCustomerDaily({
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
+      search: queryString.stringify({
+        ...params,
         startDate: values.dates[0]?.format("DD/MM/YYYY"),
         endDate: values.dates[1]?.format("DD/MM/YYYY"),
         customer: values.customer?.split("_")[0],
         employee: values.employee?.split("_")[0],
-      })
-    )
-      .then(unwrapResult)
-      .then(() => {
-        setCheckDisable(true);
-        setIsLoading(false);
-      });
+      }),
+    });
+
+    setCheckDisable(true);
   };
+
   const handleExportExcel = () => {
     const excel = new Excel();
 
@@ -504,25 +518,43 @@ export default function CustomerDailyList() {
     excel.saveAs(`Báo cáo hằng ngày ${startDate} - ${endDate}.xlsx`);
   };
 
+  const initialValues =
+    params.startDate && params.endDate
+      ? {
+          data: [
+            dayjs(params.startDate, "DD/MM/YYYY"),
+            dayjs(params.endDate, "DD/MM/YYYY"),
+          ],
+        }
+      : {
+          data: [dayjs().startOf("month"), dayjs().endOf("month")],
+        };
+
   useEffect(() => {
     setIsLoading(true);
-    let startDate = dayjs().startOf("month").format("DD/MM/YYYY");
-    let endDate = dayjs().endOf("month").format("DD/MM/YYYY");
 
-    dispatch(
-      getDashboardCustomerDaily({ startDate: startDate, endDate: endDate })
-    )
+    let query = queryString.parse(location.search);
+    if (query.page) {
+      query.page = query.page - 1;
+    }
+    query = {
+      ...query,
+      startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
+      endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
+    };
+
+    dispatch(getDashboardCustomerDaily(query))
       .then(unwrapResult)
       .then(() => {
-        dispatch(getEmployees());
-        dispatch(getCustomers())
-          .then(unwrapResult)
-          .then(() => {
-            setCheckDisable(true);
-            setIsLoading(false);
-          });
+        setCheckDisable(true);
+        setIsLoading(false);
       });
   }, [dispatch, location]);
+
+  useEffect(() => {
+    dispatch(getEmployees());
+    dispatch(getCustomers());
+  }, []);
 
   return (
     <div className="daily-report">
@@ -642,7 +674,11 @@ export default function CustomerDailyList() {
           </div>
 
           <Table
-            rowClassName={() => "rowClassName1"}
+            rowClassName={(record, index) =>
+              index % 2 === 0
+                ? "table-row table-row-even"
+                : "table-row table-row-odd"
+            }
             rowKey={(record) => record.id}
             columns={columns}
             loading={isLoading}
@@ -651,12 +687,12 @@ export default function CustomerDailyList() {
             pagination={
               totalElements !== 0
                 ? {
-                    current: number,
+                    current: page,
                     pageSize: size,
                     total: totalElements,
                     showSizeChanger: true,
                     showQuickJumper: true,
-                    position: ["bottomRight"],
+                    position: ["bottomCenter"],
                     pageSizeOptions: ["10", "20", "50", "100"],
                     showTotal: (total, range) =>
                       `${range[0]}-${range[1]} of ${total} items`,

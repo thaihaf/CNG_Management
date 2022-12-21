@@ -41,9 +41,9 @@ export const updateProductImports = createAsyncThunk(
 );
 export const getAllProductImport = createAsyncThunk(
   "productImport/getAllProductImport",
-  async (_, { rejectWithValue }) => {
+  async (params, { rejectWithValue }) => {
     try {
-      const response = await api.getAllProductImport();
+      const response = await api.getAllProductImport(params);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -89,7 +89,7 @@ const initialState = {
   productsImport: [],
   listProductLv2: [],
   totalElements: 0,
-  totalPages: 0,
+  page: 0,
   size: 0,
   productImportDetails: null,
 };
@@ -114,7 +114,7 @@ const importProductSlice = createSlice({
     [getAllProductImport.fulfilled]: (state, action) => {
       state.listAllProductImport = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.totalPages = action.payload.totalPages;
+      state.page = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getProductImportDetails.fulfilled]: (state, action) => {

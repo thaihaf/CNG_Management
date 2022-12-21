@@ -387,6 +387,11 @@ export default function DashboardByDay() {
         rowKey={(record) => record.day}
         loading={isLoading}
         scroll={{ x: "maxContent" }}
+        rowClassName={(record, index) =>
+          index % 2 === 0
+            ? "table-row table-row-even"
+            : "table-row table-row-odd"
+        }
         pagination={false}
       />
     </Form>

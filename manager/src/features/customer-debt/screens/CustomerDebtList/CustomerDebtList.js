@@ -33,7 +33,7 @@ const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
 export default function CustomerDebtList() {
-  const { listCustomerDebt, totalElements, number, size } = useSelector(
+  const { listCustomerDebt, totalElements, page, size } = useSelector(
     (state) => state.customerDebt
   );
   const history = useHistory();
@@ -279,7 +279,7 @@ export default function CustomerDebtList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
         startDate: startDate,
         endDate: endDate,
       }),
@@ -302,8 +302,8 @@ export default function CustomerDebtList() {
     setIsLoading(true);
 
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     query = {
       ...query,
@@ -380,13 +380,14 @@ export default function CustomerDebtList() {
               ? "table-row table-row-even"
               : "table-row table-row-odd"
           }
+          scroll={{ x: "maxContent" }}
           columns={columns}
           loading={isLoading}
           dataSource={[...listCustomerDebt]}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

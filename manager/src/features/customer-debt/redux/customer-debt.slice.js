@@ -19,9 +19,9 @@ export const getCustomerDebts = createAsyncThunk(
 );
 export const getCustomerDebtDetails = createAsyncThunk(
   "product/getCustomerDebtDetails",
-  async ({ id, startDate, endDate }, { rejectWithValue }) => {
+  async ({id, params}, { rejectWithValue }) => {
     try {
-      const response = await api.getCustomerDebtDetails(id, startDate, endDate);
+      const response = await api.getCustomerDebtDetails(id, params);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -32,14 +32,14 @@ export const getCustomerDebtDetails = createAsyncThunk(
 const initialState = {
   listCustomerDebt: [],
   totalElements: 0,
-  number: 0,
+  page: 0,
   size: 0,
   errorProcess: "",
   customerDebtDetails: null,
   debtMoney: {
     listDebtMoney: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
   },
 };
@@ -59,7 +59,7 @@ const customerDebtSlice = createSlice({
     [getCustomerDebts.fulfilled]: (state, action) => {
       state.listCustomerDebt = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.number = action.payload.number + 1;
+      state.page = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getCustomerDebtDetails.fulfilled]: (state, action) => {
@@ -68,7 +68,7 @@ const customerDebtSlice = createSlice({
       state.customerDebtDetails = action.payload;
       state.debtMoney.listDebtMoney = debtMoneyOb.content;
       state.debtMoney.totalElements = debtMoneyOb.totalElements;
-      state.debtMoney.number = debtMoneyOb.number + 1;
+      state.debtMoney.page = debtMoneyOb.number + 1;
       state.debtMoney.size = debtMoneyOb.size;
     },
     ["LOGOUT"]: (state) => {

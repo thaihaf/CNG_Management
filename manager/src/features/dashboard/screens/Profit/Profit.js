@@ -47,40 +47,41 @@ export default function Profit() {
 
   const handleTabClick = (key) => {
     let size = 20;
-    let number = 0;
+    let page = 1;
 
     switch (key) {
       case DashboardPaths.PRODUCT_PROFIT:
         if (productProfit.size !== 0) {
           size = productProfit.size;
-          number = productProfit.number;
+          page = productProfit.page;
         }
         break;
       case DashboardPaths.CUSTOMER_PROFIT:
         if (customerProfit.size !== 0) {
           size = customerProfit.size;
-          number = customerProfit.number;
+          page = customerProfit.page;
         }
         break;
       case DashboardPaths.EMPLOYEE_PROFIT:
         if (employeeProfit.size !== 0) {
           size = employeeProfit.size;
-          number = employeeProfit.number;
+          page = employeeProfit.page;
         }
         break;
       case DashboardPaths.SUPPLIER_PROFIT:
         if (supplierProfit.size !== 0) {
           size = supplierProfit.size;
-          number = supplierProfit.number;
+          page = supplierProfit.page;
         }
         break;
       case DashboardPaths.CATEGORY_PROFIT:
         if (categoryProfit.size !== 0) {
           size = categoryProfit.size;
-          number = categoryProfit.number;
+          page = categoryProfit.page;
         }
         break;
     }
+
     const params = queryString.parse(location.search);
     history.push({
       pathname: key,
@@ -89,7 +90,7 @@ export default function Profit() {
         startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
         endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
         size: size,
-        number: number + 1,
+        page: page,
       }),
     });
   };

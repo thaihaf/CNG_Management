@@ -8,10 +8,7 @@ import { motion } from "framer-motion/dist/framer-motion";
 
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
-  DatePicker,
-  Form,
   Input,
   notification,
   Radio,
@@ -21,19 +18,11 @@ import {
   Typography,
 } from "antd";
 
-import avt_default from "assets/images/avt-default.png";
 import "./ProductInventory.css";
 
 import { get } from "lodash";
 
-import {
-  getSupplierDebts,
-  SupplierDebtPaths,
-} from "features/supplier-debt/supplierDebt";
 import dayjs from "dayjs";
-import { getMessage } from "helpers/util.helper";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
 import {
   DashboardPaths,
   getProductInventory,
@@ -42,7 +31,7 @@ import {
 const { Title, Text } = Typography;
 
 export default function ProductInventory() {
-  const { listProductInventory, totalElements, number, size } = useSelector(
+  const { listProductInventory, totalElements, page, size } = useSelector(
     (state) => state.dashboard.productInventory
   );
   const history = useHistory();
@@ -260,58 +249,76 @@ export default function ProductInventory() {
       align: "center",
     },
     {
-      title: "Giá nhập",
+      title: "Giá nhập (vnđ)",
       dataIndex: ["productDetailDTO", "costPerSquareMeter"],
       key: "costPerSquareMeter",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
     {
-      title: "Tồn đầu kỳ",
+      title: "Tồn đầu kỳ (m2)",
       dataIndex: [
         "productDetailInventoryStoreDTO",
         "squareMeterPerBoxAtBeginPeriod",
       ],
       key: "squareMeterPerBoxAtBeginPeriod",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng nhập",
+      title: "Số lượng nhập (m2)",
       dataIndex: ["productDetailInventoryStoreDTO", "squareMeterPerBoxImport"],
       key: "squareMeterPerBoxImport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng xuất",
+      title: "Số lượng xuất (m2)",
       dataIndex: ["productDetailInventoryStoreDTO", "squareMeterPerBoxExport"],
       key: "squareMeterPerBoxExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Số lượng nhập lại",
+      title: "Số lượng nhập lại (m2)",
       dataIndex: [
         "productDetailInventoryStoreDTO",
         "squareMeterPerBoxReExport",
       ],
       key: "squareMeterPerBoxReExport",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Tồn cuối kỳ",
+      title: "Tồn cuối kỳ (m2)",
       dataIndex: [
         "productDetailInventoryStoreDTO",
         "squareMeterPerBoxAtEndPeriod",
       ],
       key: "squareMeterPerBoxAtEndPeriod",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={value === 0 ? 0 : 2} />;
+      },
     },
     {
-      title: "Giá trị tồn",
+      title: "Giá trị tồn (vnđ)",
       dataIndex: ["productDetailInventoryStoreDTO", "inventoryCost"],
       key: "inventoryCost",
       align: "center",
-      // render: (value) => {
-      //   return <Statistic value={value} precision={0} />;
-      // },
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
   ];
 
@@ -338,7 +345,7 @@ export default function ProductInventory() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
         month: `${initialValues.data.month() + 1}`,
         year: `${initialValues.data.year()}`,
       }),
@@ -349,8 +356,8 @@ export default function ProductInventory() {
     setIsLoading(true);
 
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     query = {
       ...query,
@@ -396,13 +403,19 @@ export default function ProductInventory() {
       >
         <Table
           rowKey={(record) => record.productDTO.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
           columns={columns}
           dataSource={[...listProductInventory]}
           loading={isLoading}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

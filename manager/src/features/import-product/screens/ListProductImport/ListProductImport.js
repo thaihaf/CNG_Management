@@ -22,6 +22,7 @@ import avt_default from "assets/images/avt-default.png";
 import "./ListProductImport.css";
 
 import { get } from "lodash";
+import queryString from "query-string";
 import {
   getAllProductImport,
   ImportProductManagerPaths,
@@ -32,7 +33,7 @@ import { getStatusString } from "helpers/util.helper";
 const { Title, Text } = Typography;
 
 export default function ListProductImport() {
-  const { listAllProductImport, totalElements, number, size } = useSelector(
+  const { listAllProductImport, totalElements, page, size } = useSelector(
     (state) => state.productImport
   );
   const history = useHistory();
@@ -40,8 +41,6 @@ export default function ListProductImport() {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -296,15 +295,31 @@ export default function ListProductImport() {
     },
   ];
 
-  const onHandlePagination = (page, size) => {
-    setCurrentPage(page);
-    setPageSize(size);
+  const onHandlePagination = (pageCurrent, pageSize) => {
+    setIsLoading(true);
+
+    const page = pageCurrent.toString();
+    const size = pageSize.toString();
+    const params = queryString.parse(location.search);
+
+    history.push({
+      pathname: ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
+      search: queryString.stringify({
+        ...params,
+        size: size,
+        page: page,
+      }),
+    });
   };
 
   useEffect(() => {
+    let query = queryString.parse(location.search);
+    if (query.page) {
+      query.page = query.page - 1;
+    }
     setIsLoading(true);
 
-    dispatch(getAllProductImport())
+    dispatch(getAllProductImport(query))
       .then(unwrapResult)
       .then((res) => {
         setIsLoading(false);
@@ -349,13 +364,19 @@ export default function ListProductImport() {
       >
         <Table
           rowKey={(record) => record.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
           columns={columns}
           loading={isLoading}
           dataSource={[...listAllProductImport]}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

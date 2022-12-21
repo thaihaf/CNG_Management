@@ -382,6 +382,7 @@ export default function ProductList() {
               ? "table-row table-row-even"
               : "table-row table-row-odd"
           }
+          scroll={{ x: "maxContent" }}
           columns={columns}
           loading={isLoading}
           dataSource={[...listProducts]}

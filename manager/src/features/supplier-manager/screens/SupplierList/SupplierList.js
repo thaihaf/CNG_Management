@@ -38,7 +38,7 @@ import "./SupplierList.css";
 const { Title, Text } = Typography;
 
 export default function SupplierList() {
-  const { listSuppliers, totalElements, number, size } = useSelector(
+  const { listSuppliers, totalElements, page, size } = useSelector(
     (state) => state.supplier
   );
 
@@ -66,7 +66,7 @@ export default function SupplierList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
@@ -118,8 +118,8 @@ export default function SupplierList() {
     setIsLoading(true);
 
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     dispatch(getSuppliers(query))
       .then(unwrapResult)
@@ -408,11 +408,12 @@ export default function SupplierList() {
               ? "table-row table-row-even"
               : "table-row table-row-odd"
           }
+          scroll={{ x: "maxContent" }}
           dataSource={[...listSuppliers]}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

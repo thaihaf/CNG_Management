@@ -34,7 +34,7 @@ const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
 export default function SupplierDebtList() {
-  const { listSupplierDebt, totalElements, number, size } = useSelector(
+  const { listSupplierDebt, totalElements, page, size } = useSelector(
     (state) => state.supplierDebt
   );
   const history = useHistory();
@@ -280,7 +280,7 @@ export default function SupplierDebtList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
         startDate: startDate,
         endDate: endDate,
       }),
@@ -303,8 +303,8 @@ export default function SupplierDebtList() {
     setIsLoading(true);
 
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     query = {
       ...query,
@@ -378,6 +378,7 @@ export default function SupplierDebtList() {
           rowKey={(record) => record.supplierDTO.id}
           columns={columns}
           loading={isLoading}
+          scroll={{ x: "maxContent" }}
           rowClassName={(record, index) =>
             index % 2 === 0
               ? "table-row table-row-even"
@@ -387,7 +388,7 @@ export default function SupplierDebtList() {
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

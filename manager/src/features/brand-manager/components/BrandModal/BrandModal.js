@@ -65,8 +65,8 @@ export default function BrandModal({ data }) {
           });
         } else {
           const query = queryString.parse(location.search);
-          if (query.number) {
-            query.number = query.number - 1;
+          if (query.page) {
+            query.page = query.page - 1;
           }
           dispatch(getBrands({ ...query, sort: "createAt,desc" }))
             .then(unwrapResult)

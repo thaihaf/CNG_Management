@@ -50,7 +50,7 @@ import { BrandModal } from "features/brand-manager/components";
 const { Title, Text } = Typography;
 
 export default function BrandList() {
-  const { listBrands, totalElements, number, size } = useSelector(
+  const { listBrands, totalElements, page, size } = useSelector(
     (state) => state.brand
   );
 
@@ -76,7 +76,7 @@ export default function BrandList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
@@ -330,8 +330,8 @@ export default function BrandList() {
 
   useEffect(() => {
     const query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
 
     setIsLoading(true);
@@ -371,11 +371,12 @@ export default function BrandList() {
               ? "table-row table-row-even"
               : "table-row table-row-odd"
           }
+          scroll={{ x: "maxContent" }}
           dataSource={[...listBrands]}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

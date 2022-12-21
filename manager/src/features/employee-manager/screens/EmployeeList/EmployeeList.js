@@ -42,7 +42,7 @@ import "./EmployeeList.css";
 const { Title, Text } = Typography;
 
 export default function EmployeeList() {
-  const { listEmployees, totalElements, number, size } = useSelector(
+  const { listEmployees, totalElements, page, size } = useSelector(
     (state) => state.employee
   );
   const history = useHistory();
@@ -67,7 +67,7 @@ export default function EmployeeList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
@@ -389,8 +389,8 @@ export default function EmployeeList() {
 
   useEffect(() => {
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
 
     setIsLoading(true);
@@ -419,6 +419,7 @@ export default function EmployeeList() {
           rowKey={(record) => record.id}
           columns={columns}
           loading={isLoading}
+          scroll={{ x: "maxContent" }}
           rowClassName={(record, index) =>
             index % 2 === 0
               ? "table-row table-row-even"
@@ -428,7 +429,7 @@ export default function EmployeeList() {
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

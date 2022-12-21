@@ -38,7 +38,7 @@ import avt_default from "assets/images/avt-default.png";
 const { Title, Text } = Typography;
 
 export default function AccountList() {
-  const { listAccounts, totalElements, number, size } = useSelector(
+  const { listAccounts, totalElements, page, size } = useSelector(
     (state) => state.employee
   );
   const history = useHistory();
@@ -65,15 +65,15 @@ export default function AccountList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
 
   useEffect(() => {
     const query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
 
     setIsLoading(true);
@@ -316,8 +316,8 @@ export default function AccountList() {
       .then(({ data }) => {
         if (data === true) {
           const query = queryString.parse(location.search);
-          if (query.number) {
-            query.number = query.number - 1;
+          if (query.page) {
+            query.page = query.page - 1;
           }
 
           dispatch(getAccounts({ ...query, sort: "createAt,desc" }))
@@ -594,6 +594,7 @@ export default function AccountList() {
           rowKey={(record) => record.id}
           columns={columns}
           loading={isLoading}
+          scroll={{ x: "maxContent" }}
           rowClassName={(record, index) =>
             index % 2 === 0
               ? "table-row table-row-even"
@@ -603,7 +604,7 @@ export default function AccountList() {
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

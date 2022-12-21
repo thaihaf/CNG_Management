@@ -36,7 +36,7 @@ import "./CustomerList.css";
 const { Title, Text } = Typography;
 
 export default function CustomerList() {
-  const { listCustomers, totalElements, number, size } = useSelector(
+  const { listCustomers, totalElements, page, size } = useSelector(
     (state) => state.customer
   );
 
@@ -62,7 +62,7 @@ export default function CustomerList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
@@ -355,8 +355,8 @@ export default function CustomerList() {
 
   useEffect(() => {
     const query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
 
     setIsLoading(true);
@@ -391,12 +391,13 @@ export default function CustomerList() {
               ? "table-row table-row-even"
               : "table-row table-row-odd"
           }
+          scroll={{ x: "maxContent" }}
           loading={isLoading}
           dataSource={[...listCustomers]}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

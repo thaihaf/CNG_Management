@@ -1,20 +1,9 @@
 import { api } from "api/api";
 import { DashboardEndPoints } from "../dashboard";
 
-const getDashboardCustomerDaily = (startDate, endDate, customer, employee) => {
-  let url = DashboardEndPoints.DASHBOARD_CUSTOMER_DAILY.replace(
-    ":startDate",
-    startDate
-  );
-  url = url.replace(":endDate", endDate);
-
-  if (customer) {
-    url += `&customer=${customer}`;
-  }
-  if (employee) {
-    url += `&employee=${employee}`;
-  }
-  return api.get(url);
+const getDashboardCustomerDaily = (params) => {
+  let url = DashboardEndPoints.DASHBOARD_CUSTOMER_DAILY;
+  return api.get(url, { params });
 };
 
 // dashboard

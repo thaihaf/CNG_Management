@@ -143,7 +143,7 @@ export const createDeptSupplier = createAsyncThunk(
 const initialState = {
   listSuppliers: [],
   listActiveSuppliers: [],
-  number: 0,
+  page: 0,
   totalPages: 0,
   size: 0,
   dataDetails: null,
@@ -152,7 +152,7 @@ const initialState = {
   debtSupplier: {
     listDebtSupplier: [],
     totalElements: 0,
-    number: 0,
+    page: 0,
     size: 0,
     debtDataDetails: null,
   },
@@ -173,7 +173,7 @@ const supplierSlice = createSlice({
     [getSuppliers.fulfilled]: (state, action) => {
       state.listSuppliers = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.number = action.payload.number + 1;
+      state.page = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getActiveSuppliers.fulfilled]: (state, action) => {
@@ -210,7 +210,7 @@ const supplierSlice = createSlice({
     [getDebtSuppliers.fulfilled]: (state, action) => {
       state.debtSupplier.listDebtSupplier = action.payload.content;
       state.debtSupplier.totalElements = action.payload.totalElements;
-      state.debtSupplier.number = action.payload.number + 1;
+      state.debtSupplier.page = action.payload.number + 1;
       state.debtSupplier.size = action.payload.size;
     },
     [getDeptSupplierDetails.fulfilled]: (state, action) => {

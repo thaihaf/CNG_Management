@@ -48,34 +48,35 @@ export default function Inventory() {
 
   const handleTabClick = (key) => {
     let size = 20;
-    let number = 0;
+    let page = 1;
 
     switch (key) {
       case DashboardPaths.PRODUCT_INVENTORY:
         if (productInventory.size !== 0) {
           size = productInventory.size;
-          number = productInventory.number;
+          page = productInventory.page;
         }
         break;
       case DashboardPaths.CATEGORY_INVENTORY:
         if (categoryInventory.size !== 0) {
           size = categoryInventory.size;
-          number = categoryInventory.number;
+          page = categoryInventory.page;
         }
         break;
       case DashboardPaths.SUPPLIER_INVENTORY:
         if (supplierInventory.size !== 0) {
           size = supplierInventory.size;
-          number = supplierInventory.number;
+          page = supplierInventory.page;
         }
         break;
       case DashboardPaths.WAREHOUSE_INVENTORY:
         if (warehouseInventory.size !== 0) {
           size = warehouseInventory.size;
-          number = warehouseInventory.number;
+          page = warehouseInventory.page;
         }
         break;
     }
+
     const params = queryString.parse(location.search);
     history.push({
       pathname: key,
@@ -84,7 +85,7 @@ export default function Inventory() {
         month: `${initialValues.data.month() + 1}`,
         year: `${initialValues.data.year()}`,
         size: size,
-        number: number + 1,
+        page: page,
       }),
     });
   };

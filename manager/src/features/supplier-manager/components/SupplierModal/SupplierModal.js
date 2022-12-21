@@ -86,8 +86,8 @@ export default function SupplierModal() {
       .then(unwrapResult)
       .then((res) => {
         const query = queryString.parse(location.search);
-        if (query.number) {
-          query.number = query.number - 1;
+        if (query.page) {
+          query.page = query.page - 1;
         }
         dispatch(getCustomers({ ...query, sort: "createAt,desc" }))
           .then(unwrapResult)

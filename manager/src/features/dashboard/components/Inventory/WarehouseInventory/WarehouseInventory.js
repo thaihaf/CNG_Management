@@ -7,10 +7,7 @@ import queryString from "query-string";
 import { motion } from "framer-motion/dist/framer-motion";
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
-  DatePicker,
-  Form,
   Input,
   notification,
   Radio,
@@ -20,30 +17,20 @@ import {
   Typography,
 } from "antd";
 
-import avt_default from "assets/images/avt-default.png";
 import "./WarehouseInventory.css";
 
 import { get } from "lodash";
 
-import {
-  getSupplierDebts,
-  SupplierDebtPaths,
-} from "features/supplier-debt/supplierDebt";
 import dayjs from "dayjs";
-import { getMessage } from "helpers/util.helper";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
 import {
   DashboardPaths,
-  getCategoryInventory,
-  getProductInventory,
   getWarehouseInventory,
 } from "features/dashboard/dashboard";
 
 const { Title, Text } = Typography;
 
 export default function WarehouseInventory() {
-  const { listWarehouseInventory, totalElements, number, size } = useSelector(
+  const { listWarehouseInventory, totalElements, page, size } = useSelector(
     (state) => state.dashboard.warehouseInventory
   );
   const history = useHistory();
@@ -264,7 +251,7 @@ export default function WarehouseInventory() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
         month: `${initialValues.data.month() + 1}`,
         year: `${initialValues.data.year()}`,
       }),
@@ -275,8 +262,8 @@ export default function WarehouseInventory() {
     setIsLoading(true);
 
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     query = {
       ...query,
@@ -322,13 +309,19 @@ export default function WarehouseInventory() {
       >
         <Table
           rowKey={(record) => record.warehouseDTO.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
           columns={columns}
           dataSource={[...listWarehouseInventory]}
           loading={isLoading}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

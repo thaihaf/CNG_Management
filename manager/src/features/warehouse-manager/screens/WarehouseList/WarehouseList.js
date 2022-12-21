@@ -33,7 +33,7 @@ import "./WarehouseList.css";
 const { Title, Text } = Typography;
 
 export default function WarehouseList() {
-  const { listWarehouses, totalElements, number, size } = useSelector(
+  const { listWarehouses, totalElements, page, size } = useSelector(
     (state) => state.warehouse
   );
 
@@ -59,7 +59,7 @@ export default function WarehouseList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
@@ -323,8 +323,8 @@ export default function WarehouseList() {
 
   useEffect(() => {
     const query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     setIsLoading(true);
     dispatch(getWarehouses(query))
@@ -357,13 +357,14 @@ export default function WarehouseList() {
               ? "table-row table-row-even"
               : "table-row table-row-odd"
           }
+          scroll={{ x: "maxContent" }}
           columns={columns}
           loading={isLoading}
           dataSource={[...listWarehouses]}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

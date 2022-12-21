@@ -101,7 +101,7 @@ const initialState = {
   listEmployees: [],
   listAccounts: [],
   totalElements: 0,
-  number: 0,
+  page: 0,
   size: 0,
   dataDetails: null,
   errorProcess: "",
@@ -128,7 +128,7 @@ const employeesSlice = createSlice({
     [getEmployees.fulfilled]: (state, action) => {
       state.listEmployees = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.number = action.payload.number + 1;
+      state.page = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [createAccEmployee.fulfilled]: (state, action) => {
@@ -149,7 +149,7 @@ const employeesSlice = createSlice({
     [getAccounts.fulfilled]: (state, action) => {
       state.listAccounts = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.number = action.payload.number + 1;
+      state.page = action.payload.number + 1;
       state.size = action.payload.size;
     },
     ["LOGOUT"]: (state) => {

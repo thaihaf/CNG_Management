@@ -32,7 +32,7 @@ import "./CategoryList.css";
 const { Title, Text } = Typography;
 
 export default function CategoryList() {
-  const { listCategories, totalElements, number, size } = useSelector(
+  const { listCategories, totalElements, page, size } = useSelector(
     (state) => state.category
   );
   const history = useHistory();
@@ -56,7 +56,7 @@ export default function CategoryList() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
       }),
     });
   };
@@ -307,8 +307,8 @@ export default function CategoryList() {
 
   useEffect(() => {
     const query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     setIsLoading(true);
     dispatch(getCategories(query))
@@ -338,14 +338,17 @@ export default function CategoryList() {
           rowKey={(record) => record.id}
           columns={columns}
           rowClassName={(record, index) =>
-            index % 2 === 0 ? "table-row table-row-even" : "table-row table-row-odd"
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
           }
+          scroll={{ x: "maxContent" }}
           loading={isLoading}
           dataSource={[...listCategories]}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

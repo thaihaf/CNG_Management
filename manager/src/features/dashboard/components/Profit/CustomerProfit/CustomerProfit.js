@@ -7,10 +7,7 @@ import queryString from "query-string";
 import { motion } from "framer-motion/dist/framer-motion";
 import { SearchOutlined } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
-  DatePicker,
-  Form,
   Input,
   notification,
   Radio,
@@ -20,29 +17,19 @@ import {
   Typography,
 } from "antd";
 
-import avt_default from "assets/images/avt-default.png";
 import "./CustomerProfit.css";
 
 import { get } from "lodash";
 
-import {
-  getSupplierDebts,
-  SupplierDebtPaths,
-} from "features/supplier-debt/supplierDebt";
 import dayjs from "dayjs";
-import { getMessage } from "helpers/util.helper";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
 import {
-  DashboardPaths,
   getCustomerProfit,
-  getProductProfit,
 } from "features/dashboard/dashboard";
 
 const { Title, Text } = Typography;
 
 export default function CustomerProfit() {
-  const { listCustomerProfit, totalElements, number, size } = useSelector(
+  const { listCustomerProfit, totalElements, page, size } = useSelector(
     (state) => state.dashboard.customerProfit
   );
   const history = useHistory();
@@ -185,7 +172,7 @@ export default function CustomerProfit() {
       align: "center",
     },
     {
-      title: "Số lượng m2 xuất (m2)",
+      title: "Số lượng xuất (m2)",
       dataIndex: ["customerRevenueDTO", "squareMeterExport"],
       key: "squareMeterExport",
       align: "center",
@@ -194,7 +181,7 @@ export default function CustomerProfit() {
       },
     },
     {
-      title: "Số lượng m2 nhập lại (m2)",
+      title: "Số lượng nhập lại (m2)",
       dataIndex: ["customerRevenueDTO", "squareMeterReExport"],
       key: "squareMeterReExport",
       align: "center",
@@ -261,7 +248,7 @@ export default function CustomerProfit() {
       search: queryString.stringify({
         ...params,
         size: size,
-        number: page,
+        page: page,
         startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
         endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
       }),
@@ -272,8 +259,8 @@ export default function CustomerProfit() {
     setIsLoading(true);
 
     let query = queryString.parse(location.search);
-    if (query.number) {
-      query.number = query.number - 1;
+    if (query.page) {
+      query.page = query.page - 1;
     }
     query = {
       ...query,
@@ -319,13 +306,19 @@ export default function CustomerProfit() {
       >
         <Table
           rowKey={(record) => record.customerDTO.id}
+          rowClassName={(record, index) =>
+            index % 2 === 0
+              ? "table-row table-row-even"
+              : "table-row table-row-odd"
+          }
+          scroll={{ x: "maxContent" }}
           columns={columns}
           dataSource={[...listCustomerProfit]}
           loading={isLoading}
           pagination={
             totalElements !== 0
               ? {
-                  current: number,
+                  current: page,
                   pageSize: size,
                   total: totalElements,
                   showSizeChanger: true,

@@ -77,7 +77,7 @@ export const createDetails = createAsyncThunk(
 const initialState = {
   listBrands: [],
   totalElements: 0,
-  number: 0,
+  page: 0,
   size: 0,
   dataDetails: null,
   errorProcess: "",
@@ -99,7 +99,7 @@ const brandSlice = createSlice({
     [getBrands.fulfilled]: (state, action) => {
       state.listBrands = action.payload.content;
       state.totalElements = action.payload.totalElements;
-      state.number = action.payload.number + 1;
+      state.page = action.payload.number + 1;
       state.size = action.payload.size;
     },
     [getBrandDetails.fulfilled]: (state, action) => {
