@@ -1,20 +1,11 @@
-import React, { useEffect, useState } from "react";
-import cx from "classnames";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { unwrapResult } from "@reduxjs/toolkit";
 import queryString from "query-string";
 
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  notification,
-  Spin,
-  Typography,
-} from "antd";
+import { LockOutlined } from "@ant-design/icons";
+import { Button, Form, Input, notification, Typography } from "antd";
 
 import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
@@ -22,9 +13,7 @@ import { MESSAGE_ERROR } from "constants/messages.constants";
 import { resetPassword, AuthPaths } from "../../auth";
 
 import "../LoginScreen/LoginScreen.css";
-import { LoadingSpinner } from "components";
 import { motion } from "framer-motion/dist/framer-motion";
-import leftArrowImg from "assets/icons/leftArrow.png";
 import confirmEmailImg from "assets/icons/confirmEmail.png";
 const { Title } = Typography;
 
@@ -34,12 +23,12 @@ export default function ResetPassword() {
   const history = useHistory();
 
   const [loading, setLoading] = useState(false);
+  const query = queryString.parse(location.search);
 
   const onFinish = (values) => {
     setLoading(true);
-    console.log(values);
 
-    dispatch(resetPassword({ data: { id: location.state.id, ...values } }))
+    dispatch(resetPassword({ data: { id: query.id, ...values } }))
       .then(unwrapResult)
       .then((res) => {
         notification.success({
@@ -58,16 +47,16 @@ export default function ResetPassword() {
   };
 
   return (
-    <motion.div
-      className="login"
-      animate={{ opacity: [0, 1], x: [-50, 0] }}
-      exit={{ opacity: [1, 0] }}
-      transition={{ duration: 1 }}
-    >
-      <Form name="reset" className="form" onFinish={onFinish} layout="vertical">
-        <div className="action" onClick={() => history.push(AuthPaths.LOGIN)}>
+    <Form name="reset" className="login" onFinish={onFinish} layout="vertical">
+      <motion.div
+        className="form"
+        animate={{ opacity: [0, 1], x: [-50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
+      >
+        {/* <div className="action" onClick={() => history.push(AuthPaths.LOGIN)}>
           <img src={leftArrowImg} alt="back" />
-        </div>
+        </div> */}
 
         <div className="top">
           <img src={confirmEmailImg} alt="" />
@@ -164,7 +153,7 @@ export default function ResetPassword() {
             Xác nhận
           </Button>
         </Form.Item>
-      </Form>
-    </motion.div>
+      </motion.div>
+    </Form>
   );
 }

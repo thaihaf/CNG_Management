@@ -2,8 +2,7 @@
 @import "../../../../styles/variables.scss";
 
 .login {
-  padding: 5rem 8rem;
-  height: 100vh;
+  padding: 5rem 2rem 10rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -16,11 +15,11 @@
     border-radius: 2.5rem;
     position: relative;
 
-    .action{
+    .action {
       width: 3rem;
       height: 3rem;
       position: absolute;
-      top : 2.5rem;
+      top: 2.5rem;
       left: 3.5rem;
       cursor: pointer;
     }
@@ -29,7 +28,7 @@
       width: fit-content;
       text-align: center;
       width: 100%;
-      display: block ;
+      display: block;
 
       img {
         width: 15rem;

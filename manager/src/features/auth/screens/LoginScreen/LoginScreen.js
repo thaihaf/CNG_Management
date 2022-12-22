@@ -82,7 +82,7 @@ export default function LoginScreen() {
       .catch((error) => {
         notification.error({
           message: "Đăng nhập",
-          description: error?.Error?.message || "Lỗi rồi!!!",
+          description: error?.Error?.message || "Lỗi mạng rồi!!!",
         });
         setLoading(false);
         dispatch(updateError(CODE_ERROR.ERROR_LOGIN));
@@ -90,20 +90,20 @@ export default function LoginScreen() {
   };
 
   return (
-    <motion.div
+    <Form
+      name="login"
       className="login"
-      animate={{ opacity: [0, 1], x: [-50, 0] }}
-      exit={{ opacity: [1, 0] }}
-      transition={{ duration: 1 }}
+      layout="vertical"
+      onFinish={onFinish}
+      initialValues={{
+        remember: true,
+      }}
     >
-      <Form
-        name="login"
+      <motion.div
         className="form"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-        layout="vertical"
+        animate={{ opacity: [0, 1], x: [-50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
       >
         <div className="top">
           <img src={userProfileImg} alt="" />
@@ -194,7 +194,7 @@ export default function LoginScreen() {
             </Form.Item> */}
 
           <a className="/login-form-forgot forgot" href="/forgot-password">
-            Quên mật khẩu
+            Quên mật khẩu?
           </a>
         </Form.Item>
         <Form.Item className="form_item">
@@ -207,7 +207,7 @@ export default function LoginScreen() {
             Đăng nhập
           </Button>
         </Form.Item>
-      </Form>
-    </motion.div>
+      </motion.div>
+    </Form>
   );
 }

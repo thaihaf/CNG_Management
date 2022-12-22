@@ -58,17 +58,12 @@ export default function ForgotPassword() {
   };
 
   return (
-    <motion.div
-      className="login"
-      animate={{ opacity: [0, 1], x: [-50, 0] }}
-      exit={{ opacity: [1, 0] }}
-      transition={{ duration: 1 }}
-    >
-      <Form
-        name="forgot"
+    <Form name="forgot" className="login" onFinish={onFinish} layout="vertical">
+      <motion.div
         className="form"
-        onFinish={onFinish}
-        layout="vertical"
+        animate={{ opacity: [0, 1], x: [-50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
       >
         <div className="action" onClick={() => history.push(AuthPaths.LOGIN)}>
           <img src={leftArrowImg} alt="back" />
@@ -122,7 +117,7 @@ export default function ForgotPassword() {
             Lấy mã
           </Button>
         </Form.Item>
-      </Form>
-    </motion.div>
+      </motion.div>
+    </Form>
   );
 }

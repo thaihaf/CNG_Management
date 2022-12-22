@@ -7,7 +7,7 @@ import { getAccessToken } from "helpers/auth.helpers";
 import { ApiStatusCodes } from "constants/api.constants";
 
 export const api = axios.create({
-  baseURL: "http://ec2-3-224-110-74.compute-1.amazonaws.com/api",
+  baseURL: "http://54.71.145.163:8080/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -32,10 +32,10 @@ api.interceptors.response.use(
   },
   function (error) {
     if (error.message === "Network Error" && !error.response) {
-      notification.success({
-        message: "Lỗi mạng",
-        description: "Đảm bảo API đang chạy",
-      });
+      // notification.error({
+      //   message: "Lỗi mạng",
+      //   description: "Đảm bảo API đang chạy",
+      // });
       return Promise.reject(error);
     }
 

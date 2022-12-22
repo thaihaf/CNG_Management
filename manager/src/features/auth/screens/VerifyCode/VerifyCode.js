@@ -58,19 +58,17 @@ export default function VerifyCode() {
   };
 
   return (
-    <motion.div
-      className="login"
-      animate={{ opacity: [0, 1], x: [-50, 0] }}
-      exit={{ opacity: [1, 0] }}
-      transition={{ duration: 1 }}
-    >
-      <Form
-        name="verify"
+    <Form name="verify" className="login" onFinish={onFinish} layout="vertical">
+      <motion.div
         className="form"
-        onFinish={onFinish}
-        layout="vertical"
+        animate={{ opacity: [0, 1], x: [-50, 0] }}
+        exit={{ opacity: [1, 0] }}
+        transition={{ duration: 1 }}
       >
-        <div className="action" onClick={() => history.push(AuthPaths.LOGIN)}>
+        <div
+          className="action"
+          onClick={() => history.push(AuthPaths.FORGOT_PASS)}
+        >
           <img src={leftArrowImg} alt="back" />
         </div>
 
@@ -124,7 +122,7 @@ export default function VerifyCode() {
             Xác nhận
           </Button>
         </Form.Item>
-      </Form>
-    </motion.div>
+      </motion.div>
+    </Form>
   );
 }
