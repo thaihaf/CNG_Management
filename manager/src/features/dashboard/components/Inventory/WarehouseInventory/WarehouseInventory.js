@@ -6,6 +6,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { motion } from "framer-motion/dist/framer-motion";
 import { SearchOutlined } from "@ant-design/icons";
+import api from "features/dashboard/api/dashboard.api";
 import {
   Button,
   Input,
@@ -26,6 +27,8 @@ import {
   DashboardPaths,
   getWarehouseInventory,
 } from "features/dashboard/dashboard";
+import { Excel } from "antd-table-saveas-excel";
+import { warehouseInventoryColumnsExport } from "features/dashboard/constants/dashboard.column";
 
 const { Title, Text } = Typography;
 
@@ -167,7 +170,7 @@ export default function WarehouseInventory() {
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Mã sản phẩm",
+      title: "Tên kho",
       dataIndex: ["warehouseDTO", "warehouseName"],
       key: "warehouseName",
       align: "center",
@@ -257,6 +260,70 @@ export default function WarehouseInventory() {
       }),
     });
   };
+const handlExportExcel = async () => {
+  let query = queryString.parse(location.search);
+  if (query.page) {
+    query.page = query.page - 1;
+  }
+  query = {
+    ...query,
+    month: initialValues.data.month() + 1,
+    year: initialValues.data.year(),
+    size: 999999,
+  };
+
+  try {
+    let res = await api.getWarehouseInventory(query);
+    let dataExport = res.data.content;
+
+    const excel = new Excel();
+    excel.addSheet("Tồn kho theo Kho");
+
+    excel.setTHeadStyle({
+      h: "center",
+      v: "center",
+      border: true,
+      fontName: "SF Mono",
+    });
+    excel.setTBodyStyle({
+      h: "center",
+      v: "center",
+      border: true,
+      fontName: "SF Mono",
+    });
+
+    excel.drawCell(0, 0, {
+      hMerge: 7,
+      vMerge: 3,
+      value: `Tồn kho theo Kho : ${
+        initialValues.data.month() + 1
+      }-${initialValues.data.year()}`,
+      style: {
+        bold: true,
+        border: true,
+        v: "center",
+        h: "center",
+        fontSize: 25,
+        fontName: "SF Mono",
+        background: "FFC000",
+      },
+    });
+
+    excel.addColumns(warehouseInventoryColumnsExport);
+    excel.addDataSource(dataExport);
+
+    excel.saveAs(
+      `Tồn kho theo Kho ${
+        initialValues.data.month() + 1
+      }-${initialValues.data.year()}.xlsx`
+    );
+  } catch (err) {
+    notification.error({
+      message: "Tồn kho theo Kho",
+      description: "Xuất dữ liệu không thành công!",
+    });
+  }
+};
 
   useEffect(() => {
     setIsLoading(true);
@@ -295,7 +362,9 @@ export default function WarehouseInventory() {
         </Title>
 
         <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
-          <Radio.Button value="excel">Excel</Radio.Button>
+          <Radio.Button value="excel" onClick={() => handlExportExcel()}>
+            Excel
+          </Radio.Button>
           <Radio.Button value="csv">CSV</Radio.Button>
           <Radio.Button value="pdf">PDF</Radio.Button>
           <Radio.Button value="print">Print</Radio.Button>

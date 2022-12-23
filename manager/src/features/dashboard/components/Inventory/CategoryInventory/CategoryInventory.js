@@ -19,7 +19,7 @@ import {
 } from "antd";
 
 import "./CategoryInventory.css";
-
+import api from "features/dashboard/api/dashboard.api";
 import { get } from "lodash";
 
 import dayjs from "dayjs";
@@ -27,6 +27,8 @@ import {
   DashboardPaths,
   getCategoryInventory,
 } from "features/dashboard/dashboard";
+import { categoryInventoryColumnsExport } from "features/dashboard/constants/dashboard.column";
+import { Excel } from "antd-table-saveas-excel";
 
 const { Title, Text } = Typography;
 
@@ -168,7 +170,7 @@ export default function CategoryInventory() {
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Mã sản phẩm",
+      title: "Tên chức năng",
       dataIndex: ["categoryDTO", "categoryName"],
       key: "categoryName",
       align: "center",
@@ -262,6 +264,71 @@ export default function CategoryInventory() {
     });
   };
 
+  const handlExportExcel = async () => {
+    let query = queryString.parse(location.search);
+    if (query.page) {
+      query.page = query.page - 1;
+    }
+    query = {
+      ...query,
+      month: initialValues.data.month() + 1,
+      year: initialValues.data.year(),
+      size: 999999,
+    };
+
+    try {
+      let res = await api.getCategoryInventory(query);
+      let dataExport = res.data.content;
+
+      const excel = new Excel();
+      excel.addSheet("Tồn kho theo Chức năng");
+
+      excel.setTHeadStyle({
+        h: "center",
+        v: "center",
+        border: true,
+        fontName: "SF Mono",
+      });
+      excel.setTBodyStyle({
+        h: "center",
+        v: "center",
+        border: true,
+        fontName: "SF Mono",
+      });
+
+      excel.drawCell(0, 0, {
+        hMerge: 7,
+        vMerge: 3,
+        value: `Tồn kho theo Chức năng : ${
+          initialValues.data.month() + 1
+        }-${initialValues.data.year()}`,
+        style: {
+          bold: true,
+          border: true,
+          v: "center",
+          h: "center",
+          fontSize: 25,
+          fontName: "SF Mono",
+          background: "FFC000",
+        },
+      });
+
+      excel.addColumns(categoryInventoryColumnsExport);
+      excel.addDataSource(dataExport);
+
+      excel.saveAs(
+        `Tồn kho theo Chức năng ${
+          initialValues.data.month() + 1
+        }-${initialValues.data.year()}.xlsx`
+      );
+    } catch (err) {
+      notification.error({
+        message: "Tồn kho theo Chức năng",
+        description: "Xuất dữ liệu không thành công!",
+      });
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
 
@@ -299,7 +366,9 @@ export default function CategoryInventory() {
         </Title>
 
         <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
-          <Radio.Button value="excel">Excel</Radio.Button>
+          <Radio.Button value="excel" onClick={() => handlExportExcel()}>
+            Excel
+          </Radio.Button>
           <Radio.Button value="csv">CSV</Radio.Button>
           <Radio.Button value="pdf">PDF</Radio.Button>
           <Radio.Button value="print">Print</Radio.Button>

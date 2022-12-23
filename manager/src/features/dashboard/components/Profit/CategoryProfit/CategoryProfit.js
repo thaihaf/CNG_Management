@@ -18,13 +18,15 @@ import {
 } from "antd";
 
 import "./CategoryProfit.css";
-
+import api from "features/dashboard/api/dashboard.api";
 import { get } from "lodash";
 
 import dayjs from "dayjs";
 import {
   getCategoryProfit,
 } from "features/dashboard/dashboard";
+import { Excel } from "antd-table-saveas-excel";
+import { categoryProfitColumnsExport } from "features/dashboard/constants/dashboard.column";
 
 const { Title, Text } = Typography;
 
@@ -255,6 +257,66 @@ export default function CategoryProfit() {
     });
   };
 
+   const handlExportExcel = async () => {
+     let query = queryString.parse(location.search);
+     if (query.page) {
+       query.page = query.page - 1;
+     }
+     query = {
+       ...query,
+       startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
+       endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
+     };
+
+     try {
+       let res = await api.getCategoryProfit(query);
+       let dataExport = res.data.content;
+
+       const excel = new Excel();
+       excel.addSheet("Lợi nhuận theo Chức năng");
+
+       excel.setTHeadStyle({
+         h: "center",
+         v: "center",
+         border: true,
+         fontName: "SF Mono",
+       });
+       excel.setTBodyStyle({
+         h: "center",
+         v: "center",
+         border: true,
+         fontName: "SF Mono",
+       });
+
+       excel.drawCell(0, 0, {
+         hMerge: 7,
+         vMerge: 3,
+         value: `Lợi nhuận theo Chức năng : ${query.startDate}-${query.endDate}`,
+         style: {
+           bold: true,
+           border: true,
+           v: "center",
+           h: "center",
+           fontSize: 25,
+           fontName: "SF Mono",
+           background: "FFC000",
+         },
+       });
+
+       excel.addColumns(categoryProfitColumnsExport);
+       excel.addDataSource(dataExport);
+
+       excel.saveAs(
+         `Lợi nhuận theo Chức năng ${query.startDate}-${query.endDate}.xlsx`
+       );
+     } catch (err) {
+       notification.error({
+         message: "Lợi nhuận theo Chức năng",
+         description: "Xuất dữ liệu không thành công!",
+       });
+     }
+   };
+
   useEffect(() => {
     setIsLoading(true);
 
@@ -292,7 +354,9 @@ export default function CategoryProfit() {
         </Title>
 
         <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
-          <Radio.Button value="excel">Excel</Radio.Button>
+          <Radio.Button value="excel" onClick={() => handlExportExcel()}>
+            Excel
+          </Radio.Button>
           <Radio.Button value="csv">CSV</Radio.Button>
           <Radio.Button value="pdf">PDF</Radio.Button>
           <Radio.Button value="print">Print</Radio.Button>

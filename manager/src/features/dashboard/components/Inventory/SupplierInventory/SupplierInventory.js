@@ -27,6 +27,9 @@ import {
   DashboardPaths,
   getSupplierInventory,
 } from "features/dashboard/dashboard";
+import { Excel } from "antd-table-saveas-excel";
+import api from "features/dashboard/api/dashboard.api";
+import { supplierInventoryColumnsExport } from "features/dashboard/constants/dashboard.column";
 
 const { Title, Text } = Typography;
 
@@ -331,6 +334,92 @@ export default function SupplierInventory() {
     });
   };
 
+  const handlExportExcel = async () => {
+    let query = queryString.parse(location.search);
+    if (query.page) {
+      query.page = query.page - 1;
+    }
+    query = {
+      ...query,
+      month: initialValues.data.month() + 1,
+      year: initialValues.data.year(),
+      size: 999999,
+    };
+
+    try {
+      let res = await api.getSupplierInventory(query);
+      let dataExport = [];
+
+      res.data.content.map((item) => {
+        let list2 = item.brandInventoryDTOS;
+
+        if (list2) {
+          const dataTemp = {
+            brandInventoryStoreDTO: {
+              ...item.supplierInventoryStoreDTO,
+            },
+          };
+          dataExport = [...dataExport, ...list2, dataTemp];
+        } else {
+          const dataTemp = {
+            brandInventoryStoreDTO: {
+              ...item.supplierInventoryStoreDTO,
+            },
+            brandDTO: { supplierName: item.supplierDTO.supplierName },
+          };
+          dataExport = [...dataExport, dataTemp];
+        }
+      });
+
+      const excel = new Excel();
+      excel.addSheet("Tồn kho theo nhà cung cấp");
+
+      excel.setTHeadStyle({
+        h: "center",
+        v: "center",
+        border: true,
+        fontName: "SF Mono",
+      });
+      excel.setTBodyStyle({
+        h: "center",
+        v: "center",
+        border: true,
+        fontName: "SF Mono",
+      });
+
+      excel.drawCell(0, 0, {
+        hMerge: 8,
+        vMerge: 3,
+        value: `Tồn kho theo nhà cung cấp : ${
+          initialValues.data.month() + 1
+        }-${initialValues.data.year()}`,
+        style: {
+          bold: true,
+          border: true,
+          v: "center",
+          h: "center",
+          fontSize: 25,
+          fontName: "SF Mono",
+          background: "FFC000",
+        },
+      });
+
+      excel.addColumns(supplierInventoryColumnsExport);
+      excel.addDataSource(dataExport);
+
+      excel.saveAs(
+        `Tồn kho theo nhà cung cấp ${
+          initialValues.data.month() + 1
+        }-${initialValues.data.year()}.xlsx`
+      );
+    } catch (err) {
+      notification.error({
+        message: "Tồn kho theo nhà cung cấp",
+        description: "Xuất dữ liệu không thành công!",
+      });
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
 
@@ -368,7 +457,9 @@ export default function SupplierInventory() {
         </Title>
 
         <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
-          <Radio.Button value="excel">Excel</Radio.Button>
+          <Radio.Button value="excel" onClick={() => handlExportExcel()}>
+            Excel
+          </Radio.Button>
           <Radio.Button value="csv">CSV</Radio.Button>
           <Radio.Button value="pdf">PDF</Radio.Button>
           <Radio.Button value="print">Print</Radio.Button>

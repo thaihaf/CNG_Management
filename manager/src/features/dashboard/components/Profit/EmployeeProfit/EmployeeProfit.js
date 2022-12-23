@@ -18,13 +18,15 @@ import {
 } from "antd";
 
 import "./EmployeeProfit.css";
-
+import api from "features/dashboard/api/dashboard.api";
 import { get } from "lodash";
 
 import dayjs from "dayjs";
 import {
   getEmployeeProfit,
 } from "features/dashboard/dashboard";
+import { employeeProfitColumnsExport } from "features/dashboard/constants/dashboard.column";
+import { Excel } from "antd-table-saveas-excel";
 
 const { Title, Text } = Typography;
 
@@ -166,7 +168,7 @@ export default function EmployeeProfit() {
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
-      title: "Tên cửa hàng",
+      title: "Tên nhân viên",
       dataIndex: "employeeDTO",
       key: "employeeId",
       align: "center",
@@ -255,7 +257,65 @@ export default function EmployeeProfit() {
       }),
     });
   };
+ const handlExportExcel = async () => {
+   let query = queryString.parse(location.search);
+   if (query.page) {
+     query.page = query.page - 1;
+   }
+   query = {
+     ...query,
+     startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
+     endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
+   };
 
+   try {
+     let res = await api.getEmployeeProfit(query);
+     let dataExport = res.data.content;
+
+     const excel = new Excel();
+     excel.addSheet("Lợi nhuận theo Nhân viên");
+
+     excel.setTHeadStyle({
+       h: "center",
+       v: "center",
+       border: true,
+       fontName: "SF Mono",
+     });
+     excel.setTBodyStyle({
+       h: "center",
+       v: "center",
+       border: true,
+       fontName: "SF Mono",
+     });
+
+     excel.drawCell(0, 0, {
+       hMerge: 7,
+       vMerge: 3,
+       value: `Lợi nhuận theo Nhân viên : ${query.startDate}-${query.endDate}`,
+       style: {
+         bold: true,
+         border: true,
+         v: "center",
+         h: "center",
+         fontSize: 25,
+         fontName: "SF Mono",
+         background: "FFC000",
+       },
+     });
+
+     excel.addColumns(employeeProfitColumnsExport);
+     excel.addDataSource(dataExport);
+
+     excel.saveAs(
+       `Lợi nhuận theo Nhân viên ${query.startDate}-${query.endDate}.xlsx`
+     );
+   } catch (err) {
+     notification.error({
+       message: "Lợi nhuận theo Nhân viên",
+       description: "Xuất dữ liệu không thành công!",
+     });
+   }
+ };
   useEffect(() => {
     setIsLoading(true);
 
@@ -293,7 +353,9 @@ export default function EmployeeProfit() {
         </Title>
 
         <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
-          <Radio.Button value="excel">Excel</Radio.Button>
+          <Radio.Button value="excel" onClick={() => handlExportExcel()}>
+            Excel
+          </Radio.Button>
           <Radio.Button value="csv">CSV</Radio.Button>
           <Radio.Button value="pdf">PDF</Radio.Button>
           <Radio.Button value="print">Print</Radio.Button>

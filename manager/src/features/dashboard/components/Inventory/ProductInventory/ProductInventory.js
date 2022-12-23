@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { motion } from "framer-motion/dist/framer-motion";
+import { Excel } from "antd-table-saveas-excel";
 
 import { SearchOutlined } from "@ant-design/icons";
 import {
@@ -27,6 +28,8 @@ import {
   DashboardPaths,
   getProductInventory,
 } from "features/dashboard/dashboard";
+import api from "features/dashboard/api/dashboard.api";
+import { productInventoryColumnsExport } from "features/dashboard/constants/dashboard.column";
 
 const { Title, Text } = Typography;
 
@@ -41,6 +44,8 @@ export default function ProductInventory() {
   const params = queryString.parse(location.search);
   const [isLoading, setIsLoading] = useState(false);
   const [tabPosition, setTabPosition] = useState();
+
+  let query = queryString.parse(location.search);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -352,10 +357,94 @@ export default function ProductInventory() {
     });
   };
 
+  const handlExportExcel = async () => {
+    if (query.page) {
+      query.page = query.page - 1;
+    }
+    query = {
+      ...query,
+      month: initialValues.data.month() + 1,
+      year: initialValues.data.year(),
+      size: 999999,
+    };
+
+    try {
+      let res = await api.getProductInventory(query);
+      let dataExport = [];
+
+      res.data.content.map((item) => {
+        let list2 = item.productDetailInventoryDTOS;
+
+        if (list2) {
+          const dataTemp = {
+            productDetailInventoryStoreDTO: {
+              ...item.productInventoryStoreDTO,
+            },
+          };
+          dataExport = [...dataExport, ...list2, dataTemp];
+        } else {
+          const dataTemp = {
+            productDetailInventoryStoreDTO: {
+              ...item.productInventoryStoreDTO,
+            },
+            productDetailDTO: { productId: item.productDTO.id },
+          };
+          dataExport = [...dataExport, dataTemp];
+        }
+      });
+
+      const excel = new Excel();
+      excel.addSheet("Tồn kho theo sản phẩm");
+
+      excel.setTHeadStyle({
+        h: "center",
+        v: "center",
+        border: true,
+        fontName: "SF Mono",
+      });
+      excel.setTBodyStyle({
+        h: "center",
+        v: "center",
+        border: true,
+        fontName: "SF Mono",
+      });
+
+      excel.drawCell(0, 0, {
+        hMerge: 10,
+        vMerge: 3,
+        value: `Tồn kho theo sản phẩm : ${
+          initialValues.data.month() + 1
+        }-${initialValues.data.year()}`,
+        style: {
+          bold: true,
+          border: true,
+          v: "center",
+          h: "center",
+          fontSize: 25,
+          fontName: "SF Mono",
+          background: "FFC000",
+        },
+      });
+
+      excel.addColumns(productInventoryColumnsExport);
+      excel.addDataSource(dataExport);
+
+      excel.saveAs(
+        `Tồn kho theo sản phẩm ${
+          initialValues.data.month() + 1
+        }-${initialValues.data.year()}.xlsx`
+      );
+    } catch (err) {
+      notification.error({
+        message: "Tồn kho theo sản phẩm",
+        description: "Xuất dữ liệu không thành công!",
+      });
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
 
-    let query = queryString.parse(location.search);
     if (query.page) {
       query.page = query.page - 1;
     }
@@ -373,7 +462,7 @@ export default function ProductInventory() {
       .catch((err) => {
         setIsLoading(false);
         if (err.response.status === 400) {
-          notification.success({
+          notification.error({
             message: "Tồn kho theo sản phẩm",
             description: "Tham số không đúng, vui lòng kiểm tra lại",
           });
@@ -389,7 +478,9 @@ export default function ProductInventory() {
         </Title>
 
         <Radio.Group onChange={(e) => setTabPosition(e.target.value)}>
-          <Radio.Button value="excel">Excel</Radio.Button>
+          <Radio.Button value="excel" onClick={() => handlExportExcel()}>
+            Excel
+          </Radio.Button>
           <Radio.Button value="csv">CSV</Radio.Button>
           <Radio.Button value="pdf">PDF</Radio.Button>
           <Radio.Button value="print">Print</Radio.Button>
@@ -434,17 +525,18 @@ export default function ProductInventory() {
               : false
           }
           expandable={{
-            expandedRowRender: (record) => (
-              <Table
-                bordered
-                loading={isLoading}
-                columns={columnsProductInventory}
-                rowKey={(record) => record.productDetailDTO.id}
-                dataSource={[...record.productDetailInventoryDTOS]}
-                pagination={false}
-                className="productsExpande"
-              />
-            ),
+            expandedRowRender: (record) =>
+              record.productDetailInventoryDTOS && (
+                <Table
+                  bordered
+                  loading={isLoading}
+                  columns={columnsProductInventory}
+                  rowKey={(record) => record.productDetailDTO.id}
+                  dataSource={[...record.productDetailInventoryDTOS]}
+                  pagination={false}
+                  className="productsExpande"
+                />
+              ),
           }}
         />
       </motion.div>

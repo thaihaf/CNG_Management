@@ -46,6 +46,7 @@ import { getMessage } from "helpers/util.helper";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import queryString from "query-string";
+import api from "features/dashboard/api/dashboard.api";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -436,17 +437,30 @@ export default function CustomerDailyList() {
     setCheckDisable(true);
   };
 
-  const handleExportExcel = () => {
+  const handleExportExcel = async () => {
     const excel = new Excel();
 
     let dataExport = [];
     let totalSquareMeter = 0;
     let totalPrice = 0;
+    let totalRevenue = 0;
     let stt = 0;
     const startDate = form.getFieldValue("dates")[0]?.format("DD/MM/YYYY");
     const endDate = form.getFieldValue("dates")[1]?.format("DD/MM/YYYY");
 
-    listDailyReport.map((item, index, arr) => {
+     let query = queryString.parse(location.search);
+     if (query.page) {
+       query.page = query.page - 1;
+     }
+     query = {
+       ...query,
+       startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
+       endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
+     };
+
+    let res = await api.getDashboardCustomerDaily(query);
+
+    res.data.content.map((item, index, arr) => {
       let products = item.exportProductDetailDTOS;
       const createDate = item.createDate.split("T")[0];
       const exportId = item.id;
@@ -455,6 +469,7 @@ export default function CustomerDailyList() {
       products.map((product, index2, arr2) => {
         totalSquareMeter = totalSquareMeter + product.totalSquareMeter;
         totalPrice = totalPrice + product.totalPrice;
+        totalRevenue = totalRevenue + product.revenue;
 
         dataExport.push({
           ...item,
@@ -475,9 +490,11 @@ export default function CustomerDailyList() {
           dataExport.push({
             totalSquareMeter: totalSquareMeter,
             totalPrice: totalPrice,
+            revenue: totalRevenue,
           });
           totalSquareMeter = 0;
           totalPrice = 0;
+          totalRevenue = 0
         }
       });
     });

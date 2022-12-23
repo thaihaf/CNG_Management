@@ -7,7 +7,7 @@ import { getAccessToken } from "helpers/auth.helpers";
 import { ApiStatusCodes } from "constants/api.constants";
 
 export const api = axios.create({
-  baseURL: "http://54.71.145.163:8080/api",
+  baseURL: "http://34.206.124.151:8080/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -31,11 +31,12 @@ api.interceptors.response.use(
     return response;
   },
   function (error) {
+    console.log(error);
     if (error.message === "Network Error" && !error.response) {
-      // notification.error({
-      //   message: "Lỗi mạng",
-      //   description: "Đảm bảo API đang chạy",
-      // });
+      notification.error({
+        message: "Lỗi mạng",
+        description: "Đảm bảo API hoạt động",
+      });
       return Promise.reject(error);
     }
 
@@ -51,7 +52,7 @@ api.interceptors.response.use(
         description: "Vui lòng đăng nhập lại!",
       });
       return Promise.reject(error);
-    } 
+    }
 
     return Promise.reject(error);
   }
