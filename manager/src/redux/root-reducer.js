@@ -30,10 +30,6 @@ import {
   CUSTOMERS_FEATURE_KEY,
 } from "features/customer-manager/customerManager";
 import {
-  permissionsReducer,
-  PERMISSIONS_FEATURE_KEY,
-} from "features/permissions/permission";
-import {
   PROVINCES_FEATURE_KEY,
   provincesReducer,
 } from "features/provinces/provinces";
@@ -67,7 +63,6 @@ const rootReducer = combineReducers({
   [WAREHOUSE_FEATURE_KEY]: warehousesReducer,
   [CATEGORIES_FEATURE_KEY]: categoriesReducer,
   [CUSTOMERS_FEATURE_KEY]: customersReducer,
-  [PERMISSIONS_FEATURE_KEY]: permissionsReducer,
   [PROVINCES_FEATURE_KEY]: provincesReducer,
   [PRODUCT_FEATURE_KEY]: productReducer,
   [IMPORT_PRODUCT_FEATURE_KEY]: importProductReducer,
