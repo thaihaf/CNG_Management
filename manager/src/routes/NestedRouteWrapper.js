@@ -18,6 +18,7 @@ const NestedRouteWrapper = ({ routesWithComponents }) => {
           isAuthRoute,
           roles,
           exact,
+          routes,
         }) => {
           const Layout = isPrivateRoute ? DefaultLayout : AuthLayout;
 
@@ -27,14 +28,6 @@ const NestedRouteWrapper = ({ routesWithComponents }) => {
               key={id}
               path={path}
               render={(routeProps) => {
-                // const isLogin = getIsLogin();
-                // if (isPrivateRoute && !isLogin) {
-                //   console.log("first")
-                // }
-                //  if (isRoot && isLogin) {
-                //    console.log("path", path2);
-                //    return <Redirect key={id} to={path2} />;
-                //  }
                 const Component = component;
                 if (isAuthRoute) {
                   return (
@@ -54,7 +47,7 @@ const NestedRouteWrapper = ({ routesWithComponents }) => {
                     <Helmet>
                       <title>{pageTitle}</title>
                     </Helmet>
-                    <Layout>
+                    <Layout routes={routes}>
                       <RestrictAccess {...routeProps} roles={roles}>
                         <Component {...routeProps} />
                       </RestrictAccess>

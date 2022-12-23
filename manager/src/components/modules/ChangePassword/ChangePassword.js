@@ -13,17 +13,19 @@ import {
 } from "antd";
 import { changePassword } from "features/auth/auth";
 
-import avt_default from "assets/images/avt-default.png";
 import { BarcodeOutlined, SettingOutlined } from "@ant-design/icons";
 import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { getMessage } from "helpers/util.helper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import changePassIcon from "assets/icons/changePass.png";
+
+import "./ChangePassword.css";
 
 const { Text } = Typography;
 
-export default function SettingModal() {
+export default function ChangePassword() {
   const auth = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
@@ -61,20 +63,14 @@ export default function SettingModal() {
   };
 
   return (
-    <div className="info">
-      <Tooltip placement="topRight" title={"Chọn để hiện thị Cài đặt"}>
-        <div className="info_avt" onClick={() => setModal1Open(true)}>
-          <img
-            src={auth?.avatar ? auth?.avatar : avt_default}
-            alt=""
-            className="info_avt_img"
-          />
-        </div>
-      </Tooltip>
-
-      <div className="info_detail">
-        <div className="info_fullname">{auth?.userName}</div>
-        <div className="info_role">{auth?.role}</div>
+    <>
+      <div className="changePass" onClick={handleChangePassword}>
+        <img
+          src={changePassIcon}
+          alt=""
+          className="imgChangePass"
+        />
+        <span>Thay đổi mật khẩu</span>
       </div>
 
       <Modal
@@ -329,6 +325,6 @@ export default function SettingModal() {
           />
         </Spin>
       </Modal>
-    </div>
+    </>
   );
 }

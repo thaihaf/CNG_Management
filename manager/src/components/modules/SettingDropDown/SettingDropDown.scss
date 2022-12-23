@@ -1,0 +1,55 @@
+  .info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-gap: 2rem;
+    gap: 1.5rem;
+    padding: 2rem;
+    cursor: pointer;
+    
+    .info_avt {
+      width: 4.5rem;
+      height: 4.5rem;
+      min-width: 4.5rem;
+      min-height: 4.5rem;
+      overflow: hidden;
+      object-fit: contain;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  
+    .info_detail {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #fff;
+      gap: 0.5rem;
+    }
+  
+    .info_avt_img {
+      width: 100%;
+    }
+  
+    .info_fullname {
+      color: black;
+    }
+  
+    .info_fullname,
+    .info_role {
+      line-height: 24px;
+      text-align: center;
+    }
+  
+    .info_role {
+      background-color: #cc0000;
+      width: 100%;
+      border-radius: 1rem;
+      padding: 0 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+

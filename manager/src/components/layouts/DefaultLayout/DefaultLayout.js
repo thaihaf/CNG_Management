@@ -37,18 +37,20 @@ import {
   changePassword,
   getAccountAvatar,
 } from "features/auth/auth";
-import SettingModal from "components/modules/SettingModal/SettingModal";
+import SettingModal from "components/modules/ChangePassword/ChangePassword";
+import SettingDropDown from "components/modules/SettingDropDown/SettingDropDown";
+import { DashboardPaths } from "features/dashboard/dashboard";
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
 
-const DefaultLayout = ({ children }) => {
+const DefaultLayout = ({ children, routes }) => {
   const auth = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
 
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -57,57 +59,45 @@ const DefaultLayout = ({ children }) => {
     }
   }, [dispatch, location]);
 
-  const handleLogout = () => {
-    Modal.confirm({
-      title: "Xác nhận",
-      icon: <ExclamationCircleOutlined />,
-      content: "Bạn có chắc chắn muốn Đăng xuất không?",
-      okText: "Đăng xuất",
-      cancelText: "Huỷ bỏ",
-      onOk: () => {
-        dispatch({ type: "LOGOUT" });
-        history.push(AuthPaths.LOGIN);
-        localStorage.removeItem(LOCAL_STORAGE_AUTH_KEY);
-        localStorage.clear();
-      },
-      onCancel: () => {},
-    });
-  };
-
   return (
     <Layout className="defaultLayout">
-      {/* <div className="left-bar" onMouseMove={() => setOpen(true)}></div> */}
-      <FloatButton.BackTop />
-
       <Sider
         style={{
           overflow: "auto",
           height: "100vh",
-          // position: "fixed",
-          // left: 0,
-          // top: 0,
-          // bottom: 0,
-          // zIndex: 22,
+          flex: " 0 0 250px",
         }}
-        className="sidebar"
+        className={`${collapsed ? "sidebar-collapsed" : "sidebar"}`}
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div className="logo">
-          {collapsed ? (
-            <img src={logo} alt="logo" />
-          ) : (
-            <img src={logo} alt="logo" />
-          )}
+        <div className="wrapperSidebar">
+          <div className="logo">
+            {collapsed ? (
+              <img
+                src={logo}
+                alt="logo"
+                className="logo logo3_img"
+                onClick={() => history.push(DashboardPaths.DASHBOARD_MANAGER)}
+              />
+            ) : (
+              <img
+                src={logo}
+                alt="logo"
+                className="logo logo5_img"
+                onClick={() => history.push(DashboardPaths.DASHBOARD_MANAGER)}
+              />
+            )}
+          </div>
+          <Menu
+            mode="inline"
+            theme={"dark"}
+            defaultSelectedKeys={[location.pathname]}
+            items={siderBarItems}
+            onSelect={(item) => history.push(item.key)}
+          />
         </div>
-        <Menu
-          mode="inline"
-          theme={"dark"}
-          defaultSelectedKeys={["user-manager", location.pathname]}
-          items={siderBarItems}
-          onSelect={(item) => history.push(item.key)}
-        />
       </Sider>
 
       <Layout
@@ -117,39 +107,21 @@ const DefaultLayout = ({ children }) => {
           backgroundColor: "var(--bg-color)",
         }}
       >
+        <FloatButton.BackTop />
+
         <div className="header">
           <Breadcrumb className="breadcrumb">
-            {location.pathname.split("/").map((item, index, arr) => {
-              if (index === 0) {
-                return (
-                  <Breadcrumb.Item href={`/${item}`} key={item}>
-                    <HomeOutlined /> Home
-                  </Breadcrumb.Item>
-                );
-              }
-              if (arr[index - 1] !== "details") {
-                return (
-                  <Breadcrumb.Item href={`/${item}`} key={`/${item}`}>
-                    {item
-                      .split("-")
-                      .map((word) => {
-                        return word[0].toUpperCase() + word.substring(1);
-                      })
-                      .join(" ")}
-                  </Breadcrumb.Item>
-                );
-              }
-            })}
+            {routes?.map((route) => (
+              <Breadcrumb.Item
+                href={!route.disable && route.path}
+                key={route.path}
+              >
+                {route.icon} {route.label}
+              </Breadcrumb.Item>
+            ))}
           </Breadcrumb>
 
-          {/* <Tooltip placement="bottomRight" title={"Đăng xuất"}>
-              <div className="logout" onClick={handleLogout}>
-                <img src={logoutIcon} alt="" />
-                <span>Đăng xuất</span>
-              </div>
-            </Tooltip> */}
-
-          <SettingModal />
+          <SettingDropDown />
         </div>
 
         <Content className="content">{children}</Content>
