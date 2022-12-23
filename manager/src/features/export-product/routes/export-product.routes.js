@@ -1,5 +1,5 @@
 import React from "react";
-
+import { HomeOutlined } from "@ant-design/icons";
 import { ProductExportManagerPaths } from "../constants/export-product.paths";
 
 const DetailsProductExportScreen = React.lazy(() =>
@@ -20,6 +20,21 @@ const DETAILS_PRODUCT_EXPORT_SCREEN = {
   pageTitle: "Details Product Export",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Đơn xuất",
+      icon: null,
+      path: ProductExportManagerPaths.LIST_PRODUCT_EXPORT,
+      visible: true,
+    },
+    {
+      label: "Chi tiết Đơn xuất",
+      icon: null,
+      path: ProductExportManagerPaths.DETAILS_PRODUCT_EXPORT,
+      visible: false,
+    },
+  ],
 };
 const LIST_PRODUCT_EXPORT_SCREEN = {
   id: "list-product-export",
@@ -29,6 +44,15 @@ const LIST_PRODUCT_EXPORT_SCREEN = {
   pageTitle: "List Product Export",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Đơn xuất",
+      icon: null,
+      path: ProductExportManagerPaths.LIST_PRODUCT_EXPORT,
+      visible: false,
+    },
+  ],
 };
 const CREATE_PRODUCT_EXPORT_SCREEN = {
   id: "create-product-export",
@@ -38,11 +62,27 @@ const CREATE_PRODUCT_EXPORT_SCREEN = {
   pageTitle: "Create Product Export",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Đơn xuất",
+      icon: null,
+      path: ProductExportManagerPaths.LIST_PRODUCT_EXPORT,
+      visible: true,
+    },
+    {
+      label: "Tạo Đơn xuất",
+      icon: null,
+      path: ProductExportManagerPaths.CREATE_PRODUCT_EXPORT,
+      visible: false,
+    },
+  ],
 };
 
 const PRODUCT_MANAGER_ROUTES = [
   DETAILS_PRODUCT_EXPORT_SCREEN,
   LIST_PRODUCT_EXPORT_SCREEN,
-  CREATE_PRODUCT_EXPORT_SCREEN,];
+  CREATE_PRODUCT_EXPORT_SCREEN,
+];
 
 export default PRODUCT_MANAGER_ROUTES;

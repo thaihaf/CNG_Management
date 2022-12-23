@@ -1,6 +1,7 @@
 import React from "react";
 
 import { DashboardPaths } from "../constants/dashboard.paths";
+import { HomeOutlined } from "@ant-design/icons";
 
 const DailyReport = React.lazy(() =>
   import("../screens/DailyReport/DailyReport")
@@ -21,6 +22,15 @@ const DASHBOARD = {
   pageTitle: "Thống kê",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Thống kê",
+      icon: null,
+      path: DashboardPaths.DASHBOARD_MANAGER,
+      visible: false,
+    },
+  ],
 };
 
 // inventory
@@ -32,6 +42,15 @@ const PRODUCT_INVENTORY = {
   pageTitle: "Tồn kho",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Tồn kho theo sản phẩm",
+      icon: null,
+      path: DashboardPaths.PRODUCT_INVENTORY,
+      visible: false,
+    },
+  ],
 };
 const SUPPLIER_INVENTORY = {
   id: "inventory-supplier",
@@ -41,6 +60,15 @@ const SUPPLIER_INVENTORY = {
   pageTitle: "Tồn kho",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Tồn kho theo nhà cung cấp",
+      icon: null,
+      path: DashboardPaths.SUPPLIER_INVENTORY,
+      visible: false,
+    },
+  ],
 };
 const CATEGORY_INVENTORY = {
   id: "inventory-category",
@@ -50,6 +78,15 @@ const CATEGORY_INVENTORY = {
   pageTitle: "Tồn kho",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Tồn kho theo chức năng",
+      icon: null,
+      path: DashboardPaths.CATEGORY_INVENTORY,
+      visible: false,
+    },
+  ],
 };
 const WAREHOUSE_INVENTORY = {
   id: "inventory-warehouse",
@@ -59,6 +96,15 @@ const WAREHOUSE_INVENTORY = {
   pageTitle: "Tồn kho",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Tồn kho theo kho hàng",
+      icon: null,
+      path: DashboardPaths.WAREHOUSE_INVENTORY,
+      visible: false,
+    },
+  ],
 };
 
 // profit
@@ -70,6 +116,15 @@ const PRODUCT_PROFIT = {
   pageTitle: "Lợi nhuận",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Lợi nhuận theo sản phẩm",
+      icon: null,
+      path: DashboardPaths.WAREHOUSE_INVENTORY,
+      visible: false,
+    },
+  ],
 };
 const SUPPLIER_PROFIT = {
   id: "profit-supplier",
@@ -79,6 +134,15 @@ const SUPPLIER_PROFIT = {
   pageTitle: "Lợi nhuận",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Lợi nhuận theo nhà cung cấp",
+      icon: null,
+      path: DashboardPaths.WAREHOUSE_INVENTORY,
+      visible: false,
+    },
+  ],
 };
 const CATEGORY_PROFIT = {
   id: "profit-warehouse",
@@ -88,6 +152,15 @@ const CATEGORY_PROFIT = {
   pageTitle: "Lợi nhuận",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Lợi nhuận theo chức năng",
+      icon: null,
+      path: DashboardPaths.WAREHOUSE_INVENTORY,
+      visible: false,
+    },
+  ],
 };
 const CUSTOMER_PROFIT = {
   id: "profit-customer",
@@ -97,6 +170,15 @@ const CUSTOMER_PROFIT = {
   pageTitle: "Lợi nhuận",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Lợi nhuận theo kho hàng",
+      icon: null,
+      path: DashboardPaths.WAREHOUSE_INVENTORY,
+      visible: false,
+    },
+  ],
 };
 const EMPLOYEE_PROFIT = {
   id: "profit-employee",
@@ -106,6 +188,15 @@ const EMPLOYEE_PROFIT = {
   pageTitle: "Lợi nhuận",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Lợi nhuận theo kho hàng",
+      icon: null,
+      path: DashboardPaths.WAREHOUSE_INVENTORY,
+      visible: false,
+    },
+  ],
 };
 
 // daily report
@@ -117,6 +208,15 @@ const CUSTOMER_DAILY_LIST_SCREEN = {
   pageTitle: "Báo cáo hàng ngày",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Báo cáo hằng ngày",
+      icon: null,
+      path: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
+      visible: false,
+    },
+  ],
 };
 const DASHBOARD_CUSTOMER = {
   id: "dashboard-customer",

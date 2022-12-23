@@ -28,147 +28,147 @@ import { WarehouseManagerPaths } from "features/warehouse-manager/warehouseManag
 import { CategoryManagerPaths } from "features/category-manager/categoryManager";
 import { SupplierManagerPaths } from "features/supplier-manager/supplierManager";
 
-function getItem(roles, label, key, icon, children, type) {
-  let role = getRole().substring(1, getRole().length - 1);
-  
-  if (roles.includes(role)) {
-    return {
-      key,
-      icon,
-      children,
-      label,
-      type,
-    };
+export const getSideBarItems = (role) => {
+  function getItem(roles, label, key, icon, children, type) {
+    if (roles.includes(role)) {
+      return {
+        key,
+        icon,
+        children,
+        label,
+        type,
+      };
+    }
   }
-}
 
-export const siderBarItems = [
-  getItem(["admin"], "Thống kê", "statistical", <DashboardOutlined />, [
-    getItem(
-      ["admin"],
-      "Thống kê",
-      DashboardPaths.DASHBOARD_MANAGER,
-      <DashboardOutlined />
-    ),
-    getItem(
-      ["admin"],
-      "Báo cáo hằng ngày",
-      DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
-      <DashboardOutlined />
-    ),
-    getItem(
-      ["admin"],
-      "Tồn kho",
-      DashboardPaths.PRODUCT_INVENTORY,
-      <DashboardOutlined />
-    ),
-    getItem(
-      ["admin"],
-      "Tồn kho",
-      DashboardPaths.PRODUCT_PROFIT,
-      <DashboardOutlined />
-    ),
-  ]),
-  getItem(
-    ["admin", "employee"],
-    "Sản phẩm",
-    "product-manager",
-    <DashboardOutlined />,
-    [
+  return [
+    getItem(["admin"], "Thống kê", "statistical", <DashboardOutlined />, [
       getItem(
-        ["admin", "employee"],
-        "Danh sách sản phẩm",
-        ProductManagerPaths.PRODUCT_MANAGER,
-        <DashboardOutlined />
-      ),
-      getItem(
-        ["admin", "employee"],
-        "Nhập sản phẩm",
-        ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
-        <DashboardOutlined />
-      ),
-      getItem(
-        ["admin", "employee"],
-        "Xuất sản phẩm",
-        ProductExportManagerPaths.LIST_PRODUCT_EXPORT,
-        <DashboardOutlined />
-      ),
-    ]
-  ),
-  getItem(
-    ["admin", "employee"],
-    "Quản lý",
-    "user-manager",
-    <DashboardOutlined />,
-    [
-      getItem(
-        ["admin", "employee"],
-        "Tài khoản",
-        EmployeeManagerPaths.ACCOUNT_LIST,
-        <DashboardOutlined />
-      ),
-      getItem(
-        ["admin", "employee"],
-        "Nhân viên",
-        EmployeeManagerPaths.EMPLOYEE_MANAGER,
-        <DashboardOutlined />
-      ),
-      getItem(
-        ["admin", "employee"],
-        "Nhãn hàng",
-        BrandManagerPaths.BRAND_LIST,
-        <DashboardOutlined />
-      ),
-      getItem(
-        ["admin", "employee"],
-        "Chức năng",
-        CategoryManagerPaths.CATEGORY_LIST,
-        <DashboardOutlined />
-      ),
-      getItem(
-        ["admin", "employee"],
-        "Kho hàng",
-        WarehouseManagerPaths.WAREHOUSE_LIST,
-        <DashboardOutlined />
-      ),
-    ]
-  ),
-  getItem(
-    ["admin", "employee"],
-    "Công nợ",
-    "debt-manager",
-    <DashboardOutlined />,
-    [
-      getItem(
-        ["admin", "employee"],
-        "Nhà cung cấp",
-        SupplierManagerPaths.SUPPLIER_LIST,
-        <DashboardOutlined />
-      ),
-      getItem(
-        ["admin", "employee"],
-        "Khách hàng",
-        CustomerManagerPaths.CUSTOMER_LIST,
+        ["admin"],
+        "Thống kê",
+        DashboardPaths.DASHBOARD_MANAGER,
         <DashboardOutlined />
       ),
       getItem(
         ["admin"],
-        "Cộng nợ Nhà cung cấp",
-        SupplierDebtPaths.SUPPLIER_DEBT_MANAGER,
+        "Báo cáo hằng ngày",
+        DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
         <DashboardOutlined />
       ),
       getItem(
         ["admin"],
-        "Công nợ Khách hàng",
-        CustomerDebtPaths.CUSTOMER_DEBT_MANAGER,
+        "Tồn kho",
+        DashboardPaths.PRODUCT_INVENTORY,
         <DashboardOutlined />
       ),
-    ]
-  ),
-  getItem(
-    ["employee"],
-    "Hồ sơ",
-    EmployeeManagerPaths.EMPLOYEE_PROFILE,
-    <ReconciliationOutlined />
-  ),
-];
+      getItem(
+        ["admin"],
+        "Lợi nhuận",
+        DashboardPaths.PRODUCT_PROFIT,
+        <DashboardOutlined />
+      ),
+    ]),
+    getItem(
+      ["admin", "employee"],
+      "Sản phẩm",
+      "product-manager",
+      <DashboardOutlined />,
+      [
+        getItem(
+          ["admin", "employee"],
+          "Danh sách sản phẩm",
+          ProductManagerPaths.PRODUCT_MANAGER,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin", "employee"],
+          "Nhập sản phẩm",
+          ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin", "employee"],
+          "Xuất sản phẩm",
+          ProductExportManagerPaths.LIST_PRODUCT_EXPORT,
+          <DashboardOutlined />
+        ),
+      ]
+    ),
+    getItem(
+      ["admin", "employee"],
+      "Quản lý",
+      "user-manager",
+      <DashboardOutlined />,
+      [
+        getItem(
+          ["admin", "employee"],
+          "Tài khoản",
+          EmployeeManagerPaths.ACCOUNT_LIST,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin", "employee"],
+          "Nhân viên",
+          EmployeeManagerPaths.EMPLOYEE_MANAGER,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin", "employee"],
+          "Nhãn hàng",
+          BrandManagerPaths.BRAND_LIST,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin", "employee"],
+          "Chức năng",
+          CategoryManagerPaths.CATEGORY_LIST,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin", "employee"],
+          "Kho hàng",
+          WarehouseManagerPaths.WAREHOUSE_LIST,
+          <DashboardOutlined />
+        ),
+      ]
+    ),
+    getItem(
+      ["admin", "employee"],
+      "Công nợ",
+      "debt-manager",
+      <DashboardOutlined />,
+      [
+        getItem(
+          ["admin", "employee"],
+          "Nhà cung cấp",
+          SupplierManagerPaths.SUPPLIER_LIST,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin", "employee"],
+          "Khách hàng",
+          CustomerManagerPaths.CUSTOMER_LIST,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin"],
+          "Cộng nợ Nhà cung cấp",
+          SupplierDebtPaths.SUPPLIER_DEBT_MANAGER,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin"],
+          "Công nợ Khách hàng",
+          CustomerDebtPaths.CUSTOMER_DEBT_MANAGER,
+          <DashboardOutlined />
+        ),
+      ]
+    ),
+    getItem(
+      ["employee"],
+      "Hồ sơ",
+      EmployeeManagerPaths.EMPLOYEE_PROFILE,
+      <ReconciliationOutlined />
+    ),
+  ];
+};

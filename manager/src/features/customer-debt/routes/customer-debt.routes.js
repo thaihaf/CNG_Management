@@ -1,5 +1,6 @@
 import React from "react";
 
+import { HomeOutlined } from "@ant-design/icons";
 import { CustomerDebtPaths } from "../constants/customer-debt.paths";
 
 const CustomerDebtListScreen = React.lazy(() =>
@@ -17,6 +18,15 @@ const CUSTOMER_DEBT_SCREEN = {
   pageTitle: "Customer Debt Manager",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách công nợ Khách hàng",
+      icon: null,
+      path: CustomerDebtPaths.CUSTOMER_DEBT_MANAGER,
+      visible: false,
+    },
+  ],
 };
 const CUSTOMER_DEBT_DETAILS_SCREEN = {
   id: "customer-debt-details",
@@ -26,6 +36,21 @@ const CUSTOMER_DEBT_DETAILS_SCREEN = {
   pageTitle: "Customer Debt Details",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách công nợ Khách hàng",
+      icon: null,
+      path: CustomerDebtPaths.CUSTOMER_DEBT_MANAGER,
+      visible: true,
+    },
+    {
+      label: "Chi tiết công nợ Khách hàng",
+      icon: null,
+      path: CustomerDebtPaths.CUSTOMER_DEBT_DETAILS,
+      visible: false,
+    },
+  ],
 };
 
 const CUSTOMER_DEBT_ROUTES = [

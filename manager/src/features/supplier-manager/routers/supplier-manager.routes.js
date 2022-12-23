@@ -1,5 +1,5 @@
 import React from "react";
-
+import { HomeOutlined } from "@ant-design/icons";
 import { SupplierManagerPaths } from "../constants/supplier-manager.paths";
 
 const SupplierListScreen = React.lazy(() =>
@@ -16,6 +16,15 @@ const SUPPLIER_LIST_SCREEN = {
   pageTitle: "Supplier Manager",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Nhà cung cấp",
+      icon: null,
+      path: SupplierManagerPaths.SUPPLIER_LIST,
+      visible: false,
+    },
+  ],
 };
 
 const SUPPLIER_DETAILS_SCREEN = {
@@ -26,6 +35,21 @@ const SUPPLIER_DETAILS_SCREEN = {
   pageTitle: "Supplier Detail",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Nhà cung cấp",
+      icon: null,
+      path: SupplierManagerPaths.SUPPLIER_LIST,
+      visible: true,
+    },
+    {
+      label: "Chi tiết Nhà cung cấp",
+      icon: null,
+      path: SupplierManagerPaths.SUPPLIER_DETAIL,
+      visible: false,
+    },
+  ],
 };
 
 const SUPPLIER_MANAGER_ROUTES = [SUPPLIER_LIST_SCREEN, SUPPLIER_DETAILS_SCREEN];

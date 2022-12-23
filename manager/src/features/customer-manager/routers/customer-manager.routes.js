@@ -1,5 +1,5 @@
 import React from "react";
-
+import { HomeOutlined } from "@ant-design/icons";
 import { CustomerManagerPaths } from "../constants/customer-manager.paths";
 
 const CustomerListScreen = React.lazy(() =>
@@ -16,6 +16,15 @@ const CUSTOMER_LIST_SCREEN = {
   pageTitle: "Customer Manager",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Khách hàng",
+      icon: null,
+      path: CustomerManagerPaths.CUSTOMER_LIST,
+      visible: false,
+    },
+  ],
 };
 const CUSTOMER_DETAILS_SCREEN = {
   id: "customer_id",
@@ -25,6 +34,21 @@ const CUSTOMER_DETAILS_SCREEN = {
   pageTitle: "Customer Detail",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Khách hàng",
+      icon: null,
+      path: CustomerManagerPaths.CUSTOMER_LIST,
+      visible: true,
+    },
+    {
+      label: "Chi tiết Khách hàng",
+      icon: null,
+      path: CustomerManagerPaths.CUSTOMER_DETAIL,
+      visible: false,
+    },
+  ],
 };
 
 const CUSTOMER_MANAGER_ROUTES = [

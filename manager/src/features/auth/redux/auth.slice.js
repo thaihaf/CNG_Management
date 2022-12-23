@@ -130,7 +130,6 @@ const authenSlice = createSlice({
         .substring(1, roleAPI.length - 1)
         .split("_")[1]
         .toLowerCase();
-      console.log(state.role);
     });
     builder.addCase(postLogin.rejected, (state, action) => {
       state.errorLogin = CODE_ERROR.ERROR_LOGIN;

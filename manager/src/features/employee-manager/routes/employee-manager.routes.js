@@ -1,5 +1,5 @@
 import React from "react";
-
+import { HomeOutlined } from "@ant-design/icons";
 import { EmployeeManagerPaths } from "../constants/employee-manager.paths";
 
 const EmployeeListScreen = React.lazy(() =>
@@ -21,6 +21,15 @@ const EMPLOYEE_LIST_SCREEN = {
   pageTitle: "Employe Manager",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Nhân viên",
+      icon: null,
+      path: EmployeeManagerPaths.EMPLOYEE_MANAGER,
+      visible: false,
+    },
+  ],
 };
 const PROFILE_SCREEN = {
   id: "profile",
@@ -30,6 +39,15 @@ const PROFILE_SCREEN = {
   pageTitle: "Profile",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Hồ sơ",
+      icon: null,
+      path: EmployeeManagerPaths.EMPLOYEE_PROFILE,
+      visible: false,
+    },
+  ],
 };
 const ACCOUNT_LIST_SCREEN = {
   id: "account-list",
@@ -39,6 +57,15 @@ const ACCOUNT_LIST_SCREEN = {
   pageTitle: "Account List",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Tài khoản",
+      icon: null,
+      path: EmployeeManagerPaths.ACCOUNT_LIST,
+      visible: false,
+    },
+  ],
 };
 
 const EMPLOYEE_DETAILS_SCREEN = {
@@ -48,6 +75,21 @@ const EMPLOYEE_DETAILS_SCREEN = {
   isPrivateRoute: true,
   pageTitle: "Employee Detail",
   roles: ["admin"],
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Nhân viên",
+      icon: null,
+      path: EmployeeManagerPaths.EMPLOYEE_MANAGER,
+      visible: true,
+    },
+    {
+      label: "Chi tiết Nhân viên",
+      icon: null,
+      path: EmployeeManagerPaths.EMPLOYEE_PROFILE,
+      visible: false,
+    },
+  ],
 };
 
 const EMPLOYEE_MANAGER_ROUTES = [

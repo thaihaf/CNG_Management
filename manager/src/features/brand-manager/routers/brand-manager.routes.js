@@ -15,12 +15,12 @@ const BRAND_LIST_SCREEN = {
   roles: ["admin", "employee"],
   exact: true,
   routes: [
-    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", disable: false },
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true, },
     {
       label: "Danh sách Nhãn hàng",
       icon: null,
       path: BrandManagerPaths.BRAND_LIST,
-      disable: true,
+      visible: false,
     },
   ],
 };

@@ -13,10 +13,10 @@ export const getRole = () => {
   const auth = JSON.parse(localStorage.getItem("persist:auth"));
   let t = auth?.role;
 
-  if (t || !t.isEmpty()) {
-    return t;
+  if (!t || t == "") {
+    return null;
   }
-  return null;
+  return t;
 };
 export const checkPermission = (listRole, role) => {
   let a = listRole.find((i) => i.includes(role));

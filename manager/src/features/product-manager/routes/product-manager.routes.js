@@ -1,5 +1,5 @@
 import React from "react";
-
+import { HomeOutlined } from "@ant-design/icons";
 import { ProductManagerPaths } from "../constants/product-manager.paths";
 
 const ProductListScreen = React.lazy(() =>
@@ -20,6 +20,15 @@ const PRODUCT_LIST_SCREEN = {
   pageTitle: "Product Manager",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Sản phẩm",
+      icon: null,
+      path: ProductManagerPaths.PRODUCT_MANAGER,
+      visible: false,
+    },
+  ],
 };
 const CREATE_PRODUCT_SCREEN = {
   id: "create-product",
@@ -29,6 +38,21 @@ const CREATE_PRODUCT_SCREEN = {
   pageTitle: "Create Product",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Sản phẩm",
+      icon: null,
+      path: ProductManagerPaths.PRODUCT_MANAGER,
+      visible: true,
+    },
+    {
+      label: "Tạo mới Sản phẩm",
+      icon: null,
+      path: ProductManagerPaths.CREATE_PRODUCT,
+      visible: false,
+    },
+  ],
 };
 const PRODUCT_DETAILS_SCREEN = {
   id: "product-details",
@@ -38,6 +62,21 @@ const PRODUCT_DETAILS_SCREEN = {
   pageTitle: "Product Details",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Sản phẩm",
+      icon: null,
+      path: ProductManagerPaths.PRODUCT_MANAGER,
+      visible: true,
+    },
+    {
+      label: "Chi tiết Sản phẩm",
+      icon: null,
+      path: ProductManagerPaths.PRODUCT_DETAILS,
+      visible: false,
+    },
+  ],
 };
 
 const PRODUCT_MANAGER_ROUTES = [

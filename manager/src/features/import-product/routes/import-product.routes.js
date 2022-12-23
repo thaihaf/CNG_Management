@@ -1,5 +1,5 @@
 import React from "react";
-
+import { HomeOutlined } from "@ant-design/icons";
 import { ImportProductManagerPaths } from "../constants/import-product.paths";
 
 const DetailsProductImportScreen = React.lazy(() =>
@@ -20,6 +20,21 @@ const DETAILS_PRODUCT_IMPORT_SCREEN = {
   pageTitle: "Details Product Import",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Đơn xuất",
+      icon: null,
+      path: ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
+      visible: true,
+    },
+    {
+      label: "Chi tiết Đơn xuất",
+      icon: null,
+      path: ImportProductManagerPaths.DETAILS_PRODUCT_IMPORT,
+      visible: false,
+    },
+  ],
 };
 const LIST_PRODUCT_IMPORT_SCREEN = {
   id: "list-product-import",
@@ -29,6 +44,15 @@ const LIST_PRODUCT_IMPORT_SCREEN = {
   pageTitle: "List Product Import",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Đơn xuất",
+      icon: null,
+      path: ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
+      visible: false,
+    },
+  ],
 };
 const CREATE_PRODUCT_IMPORT_SCREEN = {
   id: "create-product-import",
@@ -38,6 +62,21 @@ const CREATE_PRODUCT_IMPORT_SCREEN = {
   pageTitle: "Create Product Import",
   roles: ["admin", "employee"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Đơn xuất",
+      icon: null,
+      path: ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
+      visible: true,
+    },
+    {
+      label: "Chi tiết Đơn xuất",
+      icon: null,
+      path: ImportProductManagerPaths.CREATE_PRODUCT_IMPORT,
+      visible: false,
+    },
+  ],
 };
 
 const PRODUCT_MANAGER_ROUTES = [

@@ -1,5 +1,5 @@
 import React from "react";
-
+import { HomeOutlined } from "@ant-design/icons";
 import { SupplierDebtPaths } from "../constants/supplier-debt.paths";
 
 const SupplierDebtListScreen = React.lazy(() =>
@@ -17,6 +17,15 @@ const SUPPLIER_DEBT_SCREEN = {
   pageTitle: "Supplier Debt Manager",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách công nợ của Nhà cung cấp",
+      icon: null,
+      path: SupplierDebtPaths.SUPPLIER_DEBT_MANAGER,
+      visible: false,
+    },
+  ],
 };
 const SUPPLIER_DEBT_DETAILS_SCREEN = {
   id: "supplier-debt-details",
@@ -26,6 +35,21 @@ const SUPPLIER_DEBT_DETAILS_SCREEN = {
   pageTitle: "Supplier Debt Details",
   roles: ["admin"],
   exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách công nợ của Nhà cung cấp",
+      icon: null,
+      path: SupplierDebtPaths.SUPPLIER_DEBT_MANAGER,
+      visible: true,
+    },
+    {
+      label: "Chi tiết công nợ của Nhà cung cấp",
+      icon: null,
+      path: SupplierDebtPaths.SUPPLIER_DEBT_DETAILS,
+      visible: false,
+    },
+  ],
 };
 
 const SUPPLIER_DEBT_ROUTES = [
