@@ -1,6 +1,7 @@
 export const DashboardPaths = {
-  DASHBOARD_MANAGER: "/dashboard",
-  DASHBOARD_CUSTOMER_DAILY: "/daily-report",
+  DASHBOARD: "/dashboard",
+  DASHBOARD_MANAGER: "/dashboard/statistic",
+  DASHBOARD_CUSTOMER_DAILY: "/dashboard/daily-report",
   //inventory
   PRODUCT_INVENTORY: "/dashboard/inventory/product",
   CATEGORY_INVENTORY: "/dashboard/inventory/category",

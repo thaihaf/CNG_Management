@@ -1,6 +1,6 @@
-export { default as DashboardByDay } from "./Dashboard/DashboardByDay/DashboardByDay";
-export { default as DashboardByMonth } from "./Dashboard/DashboardByMonth/DashboardByMonth";
-export { default as DashboardByYear } from "./Dashboard/DashboarByYear/DashboardByYear";
+export { default as DashboardByDay } from "./Statistical/DashboardByDay/DashboardByDay";
+export { default as DashboardByMonth } from "./Statistical/DashboardByMonth/DashboardByMonth";
+export { default as DashboardByYear } from "./Statistical/DashboarByYear/DashboardByYear";
 
 export { default as CategoryInventory } from "./Inventory/CategoryInventory/CategoryInventory";
 export { default as ProductInventory } from "./Inventory/ProductInventory/ProductInventory";
@@ -12,3 +12,6 @@ export { default as EmployeeProfit } from "./Profit/EmployeeProfit/EmployeeProfi
 export { default as ProductProfit } from "./Profit/ProductProfit/ProductProfit";
 export { default as SupplierProfit } from "./Profit/SupplierProfit/SupplierProfit";
 export { default as CategoryProfit } from "./Profit/CategoryProfit/CategoryProfit";
+
+export { default as ProfitDashboard } from "./Dashboard/ProfitDashboard/ProfitDashboard";
+export { default as TotalDashboard } from "./Dashboard/TotalDashboard/TotalDashboard";

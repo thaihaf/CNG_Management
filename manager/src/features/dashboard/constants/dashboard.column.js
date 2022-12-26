@@ -122,7 +122,7 @@ export const dailyReportColumnsExport = [
         __numFmt__: "#,##0",
         render: (value, row, index) => {
           if (row.exportId) {
-            return {
+            return { 
               children: value,
             };
           }

@@ -45,6 +45,12 @@ export const getSideBarItems = (role) => {
     getItem(["admin"], "Thống kê", "statistical", <DashboardOutlined />, [
       getItem(
         ["admin"],
+        "Dashboard",
+        DashboardPaths.DASHBOARD,
+        <DashboardOutlined />
+      ),
+      getItem(
+        ["admin"],
         "Thống kê",
         DashboardPaths.DASHBOARD_MANAGER,
         <DashboardOutlined />
@@ -172,3 +178,10 @@ export const getSideBarItems = (role) => {
     ),
   ];
 };
+
+export const listKeySideBar = [
+  "statistical",
+  "product-manager",
+  "user-manager",
+  "debt-manager",
+];

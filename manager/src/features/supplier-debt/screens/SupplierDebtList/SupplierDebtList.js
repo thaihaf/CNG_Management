@@ -321,7 +321,7 @@ export default function SupplierDebtList() {
         console.log(err);
         setIsLoading(false);
         if (err.response.status === 400) {
-          notification.success({
+          notification.error({
             message: "Công nợ Nhà cung cấp",
             description: "Tham số không đúng, vui lòng kiểm tra lại",
           });

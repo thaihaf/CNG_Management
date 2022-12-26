@@ -1,0 +1,29 @@
+.supplier-debt-list {
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  border-radius: 2rem;
+  padding: 2rem 1.5rem;
+  width: 100%;
+  align-self: stretch;
+}
+.supplier-debt-list .top {
+  margin: 0 0 2rem 1rem;
+}
+.supplier-debt-list .ant-pagination-total-text {
+  margin-right: auto;
+  padding-left: 1.5rem;
+}
+.supplier-debt-list .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.supplier-debt-list .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.supplier-debt-list .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.supplier-debt-list .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.supplier-debt-list td.ant-table-cell {
+  border: unset !important;
+}
+.supplier-debt-list .table-row-even {
+  background: #fff;
+}
+.supplier-debt-list .table-row-odd {
+  background: #f9fafe;
+}

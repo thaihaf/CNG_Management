@@ -6,7 +6,7 @@ import { Footer } from "components";
 
 import "./DefaultLayout.css";
 
-import { getSideBarItems } from "constants/items.constants";
+import { getSideBarItems, listKeySideBar } from "constants/items.constants";
 
 import logo from "assets/images/logo.png";
 
@@ -78,6 +78,7 @@ const DefaultLayout = ({ children, routes }) => {
               defaultSelectedKeys={[location.pathname]}
               items={getSideBarItems(auth.role)}
               onSelect={(item) => history.push(item.key)}
+              defaultOpenKeys={listKeySideBar}
             />
           </div>
         </Sider>

@@ -1,3 +1,4 @@
+.export-product{
   .actions-group {
     display: flex;
     gap: 2rem;
@@ -6,7 +7,7 @@
     background-color: #fafafa;
     margin-top: 2rem;
     // box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-
+  
     .details__item {
       margin-bottom: 0;
     }
@@ -115,7 +116,7 @@
       .ant-tabs-nav-list {
         width: 100%;
         border-top: 0.5px solid #efefef;
-            width: 100% !important;
+        width: 100% !important;
         // border-top: 0.5px solid #efefef !important;
         display: grid !important;
         grid-template-columns: repeat(auto-fit, minmax(50%, 1fr)) !important;
@@ -132,4 +133,4 @@
       }
     }
   }
-
+}

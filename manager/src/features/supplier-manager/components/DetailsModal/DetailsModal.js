@@ -125,7 +125,7 @@ export default function DetailsModal({ record, updateMode }) {
             alt=""
             style={{ height: "2.2rem", width: "2.2rem" }}
           />
-          Tạo mới Công nợ
+          Tạo thanh toán
         </Button>
       )}
 

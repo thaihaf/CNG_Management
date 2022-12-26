@@ -1,0 +1,31 @@
+.area-chart {
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  border-radius: 2rem;
+  padding: 2rem 1.5rem;
+  margin: 2rem 0;
+}
+.area-chart .apexcharts-canvas,
+.area-chart .apexcharts-canvas > svg {
+  width: 100% !important;
+}
+.area-chart .apexcharts-subtitle-text {
+  margin-bottom: 2rem !important;
+}
+.area-chart .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.area-chart .options,
+.area-chart .options-left {
+  display: flex;
+  align-items: flex-start;
+}
+.area-chart .options {
+  justify-content: space-between;
+  margin: 2rem 0;
+  margin: 1.8rem;
+}
+.area-chart .options-left {
+  gap: 1rem;
+}

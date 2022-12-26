@@ -7,7 +7,7 @@ export const DASHBOARD_FEATURE_KEY = DASHBOARD_KEY;
 
 // daily report
 export const getDashboardCustomerDaily = createAsyncThunk(
-  "product/getDashboardCustomerDaily",
+  "dashboard/getDashboardCustomerDaily",
   async (params, { rejectWithValue }) => {
     try {
       const response = await api.getDashboardCustomerDaily(params);
@@ -20,7 +20,7 @@ export const getDashboardCustomerDaily = createAsyncThunk(
 
 // dashboard
 export const getDashBoardByDay = createAsyncThunk(
-  "product/getDashBoardByDay",
+  "dashboard/getDashBoardByDay",
   async ({ month, year }, { rejectWithValue }) => {
     try {
       const response = await api.getDashBoardByDay(month, year);
@@ -31,7 +31,7 @@ export const getDashBoardByDay = createAsyncThunk(
   }
 );
 export const getDashBoardByMonth = createAsyncThunk(
-  "product/getDashBoardByMonth",
+  "dashboard/getDashBoardByMonth",
   async (year, { rejectWithValue }) => {
     try {
       const response = await api.getDashBoardByMonth(year);
@@ -42,7 +42,7 @@ export const getDashBoardByMonth = createAsyncThunk(
   }
 );
 export const getDashBoardByYear = createAsyncThunk(
-  "product/getDashBoardByYear",
+  "dashboard/getDashBoardByYear",
   async ({ startYear, endYear }, { rejectWithValue }) => {
     try {
       const response = await api.getDashBoardByYear(startYear, endYear);
@@ -55,7 +55,7 @@ export const getDashBoardByYear = createAsyncThunk(
 
 //inventory
 export const getProductInventory = createAsyncThunk(
-  "product/getProductInventory",
+  "dashboard/getProductInventory",
   async (params, { rejectWithValue }) => {
     try {
       const response = await api.getProductInventory(params);
@@ -66,7 +66,7 @@ export const getProductInventory = createAsyncThunk(
   }
 );
 export const getCategoryInventory = createAsyncThunk(
-  "product/getCategoryInventory",
+  "dashboard/getCategoryInventory",
   async (params, { rejectWithValue }) => {
     try {
       const response = await api.getCategoryInventory(params);
@@ -77,7 +77,7 @@ export const getCategoryInventory = createAsyncThunk(
   }
 );
 export const getSupplierInventory = createAsyncThunk(
-  "product/getSupplierInventory",
+  "dashboard/getSupplierInventory",
   async (params, { rejectWithValue }) => {
     try {
       const response = await api.getSupplierInventory(params);
@@ -88,7 +88,7 @@ export const getSupplierInventory = createAsyncThunk(
   }
 );
 export const getWarehouseInventory = createAsyncThunk(
-  "product/getWarehouseInventory",
+  "dashboard/getWarehouseInventory",
   async (params, { rejectWithValue }) => {
     try {
       const response = await api.getWarehouseInventory(params);
@@ -100,7 +100,7 @@ export const getWarehouseInventory = createAsyncThunk(
 );
 //profit
 export const getProductProfit = createAsyncThunk(
-  "product/getProductProfit",
+  "dashboard/getProductProfit",
   async (params, { rejectWithValue }) => {
     try {
       const response = await api.getProductProfit(params);
@@ -111,7 +111,7 @@ export const getProductProfit = createAsyncThunk(
   }
 );
 export const getCustomerProfit = createAsyncThunk(
-  "product/getCustomerProfit",
+  "dashboard/getCustomerProfit",
   async (params, { rejectWithValue }) => {
     try {
       const response = await api.getCustomerProfit(params);
@@ -122,7 +122,7 @@ export const getCustomerProfit = createAsyncThunk(
   }
 );
 export const getEmployeeProfit = createAsyncThunk(
-  "product/getEmployeeProfit",
+  "dashboard/getEmployeeProfit",
   async (params, { rejectWithValue }) => {
     try {
       const response = await api.getEmployeeProfit(params);
@@ -133,7 +133,7 @@ export const getEmployeeProfit = createAsyncThunk(
   }
 );
 export const getSupplierProfit = createAsyncThunk(
-  "product/getSupplierProfit",
+  "dashboard/getSupplierProfit",
   async (params, { rejectWithValue }) => {
     try {
       const response = await api.getSupplierProfit(params);
@@ -144,10 +144,78 @@ export const getSupplierProfit = createAsyncThunk(
   }
 );
 export const getCategoryProfit = createAsyncThunk(
-  "product/getCategoryProfit",
+  "dashboard/getCategoryProfit",
   async (params, { rejectWithValue }) => {
     try {
       const response = await api.getCategoryProfit(params);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+
+// dashboard real
+export const getProfitDashBoardByDay = createAsyncThunk(
+  "dashboard/getProfitDashBoardByDay",
+  async ({ month, year }, { rejectWithValue }) => {
+    try {
+      const response = await api.getDashBoardByDay(month, year);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const getProfitDashBoardByMonth = createAsyncThunk(
+  "dashboard/getProfitDashBoardByMonth",
+  async (year, { rejectWithValue }) => {
+    try {
+      const response = await api.getDashBoardByMonth(year);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const getProfitDashBoardByYear = createAsyncThunk(
+  "dashboard/getProfitDashBoardByYear",
+  async ({ startYear, endYear }, { rejectWithValue }) => {
+    try {
+      const response = await api.getDashBoardByYear(startYear, endYear);
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const getCustomerDebtDashboard = createAsyncThunk(
+  "dashboard/getCustomerDebtDashboard",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.getCustomerDebtDashboard();
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const getSupplierDebtDashboard = createAsyncThunk(
+  "dashboard/getSupplierDebtDashboard",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.getSupplierDebtDashboard();
+      return response.data;
+    } catch (error) {
+      throw rejectWithValue(error);
+    }
+  }
+);
+export const getDashboardTotal = createAsyncThunk(
+  "dashboard/getDashboardTotal",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.getDashboardTotal();
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);
@@ -242,6 +310,73 @@ const initialState = {
     page: 0,
     size: 0,
   },
+  dashboard: {
+    profit: {
+      series: [
+        {
+          name: "Profit",
+          data: [],
+        },
+      ],
+      options: {
+        chart: {
+          type: "area",
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: "smooth",
+        },
+        yaxis: {
+          tickAmount: 3,
+          floating: false,
+
+          labels: {
+            style: {
+              colors: "#8e8da4",
+            },
+            offsetY: -7,
+            offsetX: 0,
+          },
+          axisBorder: {
+            show: false,
+          },
+          axisTicks: {
+            show: false,
+          },
+        },
+        fill: {
+          opacity: 0.6,
+        },
+        tooltip: {
+          x: {
+            format: "yyyy",
+          },
+          fixed: {
+            enabled: false,
+            position: "topRight",
+          },
+        },
+        legend: {
+          position: "top",
+          horizontalAlign: "right",
+          offsetX: -10,
+        },
+      },
+    },
+    customerDebt: {
+      data: { totalDebt: 0, totalPayment: 0 },
+      series: [0],
+      listTable: [],
+    },
+    supplierDebt: {
+      data: { totalDebt: 0, totalPayment: 0 },
+      series: [0],
+      listTable: [],
+    },
+    total: [],
+  },
 };
 
 const dashboardSlice = createSlice({
@@ -249,6 +384,50 @@ const dashboardSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
+    //dashboard real
+    [getSupplierDebtDashboard.fulfilled]: (state, action) => {
+      const values = action.payload;
+      let num = (values.totalPayment / values.totalDebt) * 100;
+
+      state.dashboard.supplierDebt.data = action.payload;
+      state.dashboard.supplierDebt.series = [Math.ceil(num * 100) / 100];
+    },
+    [getCustomerDebtDashboard.fulfilled]: (state, action) => {
+      const values = action.payload;
+      let num = (values.totalPayment / values.totalDebt) * 100;
+
+      state.dashboard.customerDebt.data = action.payload;
+      state.dashboard.customerDebt.series = [Math.ceil(num * 100) / 100];
+    },
+    [getDashboardTotal.fulfilled]: (state, action) => {
+      let value = action.payload;
+      let arrTemp = [];
+      for (const key in value) {
+        arrTemp.push({ key: key, value: value[key] });
+      }
+
+      state.dashboard.total = [...arrTemp];
+    },
+    [getProfitDashBoardByDay.fulfilled]: (state, action) => {
+      const arr = action.payload.content;
+      state.dashboard.profit.series[0].data = arr.map((item) => {
+        return { x: `${item.day}`, y: item.revenue };
+      });
+    },
+    [getProfitDashBoardByMonth.fulfilled]: (state, action) => {
+      const arr = action.payload.content;
+      state.dashboard.profit.series[0].data = arr.map((item) => {
+        return { x: item.month, y: item.revenue };
+      });
+    },
+    [getProfitDashBoardByYear.fulfilled]: (state, action) => {
+      const arr = action.payload.content;
+      state.dashboard.profit.series[0].data = arr.map((item) => {
+        return { x: item.year, y: item.revenue };
+      });
+    },
+
+    // daily
     [getDashboardCustomerDaily.fulfilled]: (state, action) => {
       state.dailyReport.listDailyReport = action.payload.content;
       state.dailyReport.totalElements = action.payload.totalElements;

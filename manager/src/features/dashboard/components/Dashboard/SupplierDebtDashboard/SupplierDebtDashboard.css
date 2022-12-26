@@ -1,0 +1,6 @@
+.supplier-debt-dashboard {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+  justify-content: center;
+}

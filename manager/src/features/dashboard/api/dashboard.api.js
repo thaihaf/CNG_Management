@@ -22,6 +22,18 @@ const getDashBoardByYear = (startYear, endYear) => {
   const url = DashboardEndPoints.DASHBOARD_MANAGER.concat(subString);
   return api.get(url);
 };
+const getCustomerDebtDashboard = () => {
+  const url = DashboardEndPoints.DASHBOARD_DEBT_CUSTOMER;
+  return api.get(url);
+};
+const getSupplierDebtDashboard = () => {
+  const url = DashboardEndPoints.DASHBOARD_DEBT_SUPPLIER;
+  return api.get(url);
+};
+const getDashboardTotal = () => {
+  const url = DashboardEndPoints.DASHBOARD_TOTAL;
+  return api.get(url);
+};
 
 // inventory
 const getProductInventory = (params) => {
@@ -63,7 +75,14 @@ const getCategoryProfit = (params) => {
   return api.get(url, { params });
 };
 
+
 const dashboardApi = {
+  //dashboard
+  getDashboardTotal,
+  getCustomerDebtDashboard,
+  getSupplierDebtDashboard,
+
+  //daily
   getDashboardCustomerDaily,
 
   // dashboard

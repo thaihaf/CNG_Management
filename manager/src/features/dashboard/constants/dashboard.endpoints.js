@@ -1,7 +1,6 @@
 export const DashboardEndPoints = {
-  DASHBOARD_CUSTOMER_DAILY:
-    "/dashboard/customer/daily",
   DASHBOARD_MANAGER: "/dashboard",
+  DASHBOARD_CUSTOMER_DAILY: "/dashboard/customer/daily",
   //inventory
   PRODUCT_INVENTORY: "/dashboard/product/inventory",
   CATEGORY_INVENTORY: "/dashboard/category/inventory",
@@ -13,4 +12,9 @@ export const DashboardEndPoints = {
   SUPPLIER_PROFIT: "/dashboard/supplier/revenue",
   CUSTOMER_PROFIT: "/dashboard/customer/revenue",
   EMPLOYEE_PROFIT: "/dashboard/employee/revenue",
+
+  //dashboard
+  DASHBOARD_TOTAL: "/dashboard/total",
+  DASHBOARD_DEBT_CUSTOMER: "/dashboard/debt-customer",
+  DASHBOARD_DEBT_SUPPLIER: "/dashboard/debt-supplier",
 };

@@ -9,6 +9,9 @@ const DailyReport = React.lazy(() =>
 const DashboardScreen = React.lazy(() =>
   import("../screens/Dashboard/Dashboard")
 );
+const StatisticalScreen = React.lazy(() =>
+  import("../screens/Statistical/Statistical")
+);
 const InventoryScreen = React.lazy(() =>
   import("../screens/Inventory/Inventory")
 );
@@ -16,14 +19,38 @@ const ProfitScreen = React.lazy(() => import("../screens/Profit/Profit"));
 
 const DASHBOARD = {
   id: "dashboard",
-  path: DashboardPaths.DASHBOARD_MANAGER,
+  path: DashboardPaths.DASHBOARD,
   component: DashboardScreen,
+  isPrivateRoute: true,
+  pageTitle: "Dashboard",
+  roles: ["admin"],
+  exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: false,
+    },
+  ],
+};
+const DASHBOARD_STATISTICAL = {
+  id: "dashboard-statistical",
+  path: DashboardPaths.DASHBOARD_MANAGER,
+  component: StatisticalScreen,
   isPrivateRoute: true,
   pageTitle: "Thống kê",
   roles: ["admin"],
   exact: true,
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
     {
       label: "Thống kê",
       icon: null,
@@ -45,6 +72,12 @@ const PRODUCT_INVENTORY = {
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
     {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
+    {
       label: "Tồn kho theo sản phẩm",
       icon: null,
       path: DashboardPaths.PRODUCT_INVENTORY,
@@ -62,6 +95,12 @@ const SUPPLIER_INVENTORY = {
   exact: true,
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
     {
       label: "Tồn kho theo nhà cung cấp",
       icon: null,
@@ -81,6 +120,12 @@ const CATEGORY_INVENTORY = {
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
     {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
+    {
       label: "Tồn kho theo chức năng",
       icon: null,
       path: DashboardPaths.CATEGORY_INVENTORY,
@@ -98,6 +143,12 @@ const WAREHOUSE_INVENTORY = {
   exact: true,
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
     {
       label: "Tồn kho theo kho hàng",
       icon: null,
@@ -119,6 +170,12 @@ const PRODUCT_PROFIT = {
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
     {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
+    {
       label: "Lợi nhuận theo sản phẩm",
       icon: null,
       path: DashboardPaths.WAREHOUSE_INVENTORY,
@@ -136,6 +193,12 @@ const SUPPLIER_PROFIT = {
   exact: true,
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
     {
       label: "Lợi nhuận theo nhà cung cấp",
       icon: null,
@@ -155,6 +218,12 @@ const CATEGORY_PROFIT = {
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
     {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
+    {
       label: "Lợi nhuận theo chức năng",
       icon: null,
       path: DashboardPaths.WAREHOUSE_INVENTORY,
@@ -173,6 +242,12 @@ const CUSTOMER_PROFIT = {
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
     {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
+    {
       label: "Lợi nhuận theo kho hàng",
       icon: null,
       path: DashboardPaths.WAREHOUSE_INVENTORY,
@@ -190,6 +265,12 @@ const EMPLOYEE_PROFIT = {
   exact: true,
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
     {
       label: "Lợi nhuận theo kho hàng",
       icon: null,
@@ -211,6 +292,12 @@ const CUSTOMER_DAILY_LIST_SCREEN = {
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
     {
+      label: "Dashboard",
+      icon: null,
+      path: DashboardPaths.DASHBOARD,
+      visible: true,
+    },
+    {
       label: "Báo cáo hằng ngày",
       icon: null,
       path: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
@@ -218,17 +305,11 @@ const CUSTOMER_DAILY_LIST_SCREEN = {
     },
   ],
 };
-const DASHBOARD_CUSTOMER = {
-  id: "dashboard-customer",
-  isRoot: true,
-  path2: DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
-  roles: ["admin"],
-  exact: true,
-};
 
 const DASHBOARD_ROUTES = [
   CUSTOMER_DAILY_LIST_SCREEN,
   DASHBOARD,
+  DASHBOARD_STATISTICAL,
   WAREHOUSE_INVENTORY,
   CATEGORY_INVENTORY,
   SUPPLIER_INVENTORY,

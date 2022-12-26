@@ -1,64 +1,47 @@
 import { Button, Tabs, Typography } from "antd";
-import {
-  DashboardByDay,
-  DashboardByMonth,
-  DashboardByYear,
-} from "features/dashboard/components";
+
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Excel } from "antd-table-saveas-excel";
-
+import helloImg from "assets/icons/hello.png";
 import "./Dashboard.css";
 import { useSelector } from "react-redux";
-import {
-  dashboardColumnsExport,
-  dayDashboardColumnsExport,
-  dayExport,
-  monthDashboardColumnsExport,
-  monthExport,
-  yearDashboardColumnsExport,
-  yearExport,
-} from "features/dashboard/constants/dashboard.column";
+
 import { ContainerOutlined } from "@ant-design/icons";
+import { ProfitDashboard, TotalDashboard } from "features/dashboard/components";
+import CustomerDebtDashboard from "features/dashboard/components/Dashboard/CustomerDebtDashboard/CustomerDebtDashboard";
+import SupplierDebtDashboard from "features/dashboard/components/Dashboard/SupplierDebtDashboard/SupplierDebtDashboard";
 const { Title } = Typography;
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState();
-
   return (
     <div className="dashboard">
       <div className="top">
-        <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-          Thống kê
-        </Title>
+        <div>
+          <Title
+            level={3}
+            style={{
+              marginBottom: "1rem",
+              marginRight: "auto",
+              display: "flex",
+              alignItems: "flex-end",
+            }}
+          >
+            Xin chào
+            <img
+              src={helloImg}
+              alt="hello"
+              style={{ width: "3.5rem", heigh: "3.5rem", marginLeft: "1rem" }}
+            />
+          </Title>
+          <div style={{ color: "gray" }}>Kiểm tra xem có gì mới nào!</div>
+        </div>
       </div>
 
-      <Tabs
-        activeKey={activeTab}
-        onTabClick={(key) => setActiveTab(key)}
-        style={{
-          boxShadow: "rgba(0, 0, 0, 0.15) 0px 2px 8px",
-          borderRadius: "2rem",
-          marginTop: "2rem",
-        }}
-        items={[
-          {
-            label: `Thống kê theo ngày`,
-            key: `dashboardByDay`,
-            children: <DashboardByDay />,
-          },
-          {
-            label: `Thống kê theo tháng`,
-            key: `dashboardByMonth`,
-            children: <DashboardByMonth />,
-          },
-          {
-            label: `Thống kê theo năm`,
-            key: `dashboardByYear`,
-            children: <DashboardByYear />,
-          },
-        ]}
-      />
+      <ProfitDashboard />
+      <CustomerDebtDashboard />
+      <SupplierDebtDashboard />
+      <TotalDashboard />
     </div>
   );
 }

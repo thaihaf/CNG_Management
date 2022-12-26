@@ -578,7 +578,7 @@ const ExportWrapper = ({ updateMode }) => {
   return (
     <Spin spinning={isLoading}>
       <Form
-        className="product"
+        className="export-product"
         form={form}
         name="dynamic_form_nest_item"
         autoComplete="off"
