@@ -64,12 +64,8 @@ export default function ChangePassword() {
 
   return (
     <>
-      <div className="changePass" onClick={handleChangePassword}>
-        <img
-          src={changePassIcon}
-          alt=""
-          className="imgChangePass"
-        />
+      <div className="changePass" onClick={() => setModal1Open(true)}>
+        <img src={changePassIcon} alt="" className="imgChangePass" />
         <span>Thay đổi mật khẩu</span>
       </div>
 
@@ -311,16 +307,16 @@ export default function ChangePassword() {
                   </Form>
                 ),
               },
-              {
-                label: (
-                  <span>
-                    <SettingOutlined />
-                    Hệ thống
-                  </span>
-                ),
-                key: "setting",
-                children: `Content of Tab Pane 2`,
-              },
+              // {
+              //   label: (
+              //     <span>
+              //       <SettingOutlined />
+              //       Hệ thống
+              //     </span>
+              //   ),
+              //   key: "setting",
+              //   children: `Content of Tab Pane 2`,
+              // },
             ]}
           />
         </Spin>

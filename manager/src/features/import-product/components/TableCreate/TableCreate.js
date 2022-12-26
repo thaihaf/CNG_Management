@@ -321,7 +321,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
 
   const productColumns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
       align: "center",

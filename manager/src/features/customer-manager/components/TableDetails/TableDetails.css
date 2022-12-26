@@ -1,0 +1,16 @@
+.customer-table-details .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.customer-table-details .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.customer-table-details .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.customer-table-details .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.customer-table-details td.ant-table-cell {
+  border: unset !important;
+  cursor: pointer;
+}
+.customer-table-details .table-row-even {
+  background: #fff;
+}
+.customer-table-details .table-row-odd {
+  background: #f9fafe;
+}

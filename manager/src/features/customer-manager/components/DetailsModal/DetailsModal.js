@@ -96,14 +96,25 @@ export default function DetailsModal({ record, updateMode }) {
   return (
     <>
       {updateMode ? (
-        <img
-          src={editImg}
-          alt=""
-          style={{ width: "2.3rem", height: "2.3rem", cursor: "pointer" }}
-          onClick={() => {
-            setModal1Open(true);
+        <div
+          style={{
+            width: "4rem",
+            height: "4rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            borderRadius: "50%",
+            background: "#eaf0f6",
           }}
-        />
+          onClick={() => setModal1Open(true)}
+        >
+          <img
+            src={editImg}
+            alt="Edit"
+            style={{ width: "2.2rem", height: "2.2rem", margin: "auto" }}
+          />
+        </div>
       ) : (
         <Button
           type="primary"
@@ -124,12 +135,12 @@ export default function DetailsModal({ record, updateMode }) {
             alt=""
             style={{ height: "2.2rem", width: "2.2rem" }}
           />
-          Tạo mới Công nợ
+          Tạo thanh toán
         </Button>
       )}
 
       <Modal
-        title={`${updateMode ? "Cập nhật" : "Tạo mới"} Công nợ`}
+        title={`${updateMode ? "Cập nhật" : "Tạo mới"} thanh toán`}
         style={{ top: 20 }}
         open={modal1Open}
         onOk={() => setModal1Open(false)}

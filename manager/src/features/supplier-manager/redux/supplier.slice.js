@@ -84,9 +84,9 @@ export const createDetails = createAsyncThunk(
 // debt
 export const getDebtSuppliers = createAsyncThunk(
   "supplier/getDebtSuppliers",
-  async (params, { rejectWithValue }) => {
+  async ({ id, params }, { rejectWithValue }) => {
     try {
-      const response = await api.getDebtSuppliers(params);
+      const response = await api.getDebtSuppliers(id, params);
       return response.data;
     } catch (error) {
       throw rejectWithValue(error);

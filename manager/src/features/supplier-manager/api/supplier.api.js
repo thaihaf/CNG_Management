@@ -36,8 +36,8 @@ const deleteSupplier = (id) => {
 };
 
 // debt
-const getDebtSuppliers = (params) => {
-  const url = SupplierEndPoints.DEBT_MANAGER;
+const getDebtSuppliers = (id, params) => {
+  const url = SupplierEndPoints.DEBT_MANAGER.replace(":id", id);
   return api.get(url, { params });
 };
 const getDeptSupplierDetails = (id) => {

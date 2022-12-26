@@ -59,7 +59,6 @@ export default function TableDetails({ form }) {
   const history = useHistory();
   const location = useLocation();
   const dispatch = useDispatch();
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchText, setSearchText] = useState("");
@@ -87,9 +86,9 @@ export default function TableDetails({ form }) {
   };
   const handleDelete = (record) => {
     Modal.confirm({
-      title: "Xoá Công nợ",
+      title: "Xoá Khoản thanh toán",
       icon: <ExclamationCircleOutlined />,
-      content: `Bạn có chắc chắn muốn xoá Công nợ không?`,
+      content: `Bạn có chắc chắn muốn xoá Khoản thanh toán không?`,
       okText: "Xoá bỏ",
       cancelText: "Huỷ bỏ",
       onOk: () => {
@@ -101,15 +100,15 @@ export default function TableDetails({ form }) {
             dispatch(updateDebtCustomers(ab));
             setIsLoading(false);
             notification.success({
-              message: "Công nợ",
-              description: "Xoá Công nợ thành công!",
+              message: "Khoản thanh toán",
+              description: "Xoá Khoản thanh toán thành công!",
             });
           })
           .catch((error) => {
             setIsLoading(false);
             notification.error({
-              message: "Công nợ",
-              description: "Xoá Công nợ thất bại",
+              message: "Khoản thanh toán",
+              description: "Xoá Khoản thanh toán thất bại",
             });
           });
       },
@@ -294,12 +293,30 @@ export default function TableDetails({ form }) {
           }}
         >
           <DetailsModal record={record} updateMode={true} />
-          <img
-            src={deleteImg}
-            alt=""
-            style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+          <div
+            style={{
+              width: "4rem",
+              height: "4rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              borderRadius: "50%",
+              background: "#eaf0f6",
+            }}
             onClick={() => handleDelete(record)}
-          />
+          >
+            <img
+              src={deleteImg}
+              alt="delete"
+              style={{
+                width: " 1.4rem",
+                height: " 1.5rem",
+                margin: "auto",
+                cursor: "pointer",
+              }}
+            />
+          </div>
         </div>
       ),
     },
@@ -311,7 +328,7 @@ export default function TableDetails({ form }) {
       query.page = query.page - 1;
     }
 
-    dispatch(getDebtCustomers(query))
+    dispatch(getDebtCustomers({ id: paramsDetails.customerId, params: query }))
       .then(unwrapResult)
       .then(() => {
         setIsLoading(false);
@@ -321,7 +338,10 @@ export default function TableDetails({ form }) {
   return (
     <Table
       bordered
-      className="listProductDetails"
+      rowClassName={(record, index) =>
+        index % 2 === 0 ? "table-row table-row-even" : "table-row table-row-odd"
+      }
+      className="customer-table-details"
       columns={columns}
       dataSource={[...listDebtCustomer]}
       rowKey={(record) => record.id}

@@ -97,14 +97,25 @@ export default function DetailsModal({ record, updateMode }) {
   return (
     <>
       {updateMode ? (
-        <img
-          src={editImg}
-          alt=""
-          style={{ width: "2.3rem", height: "2.3rem", cursor: "pointer" }}
-          onClick={() => {
-            setModal1Open(true);
+        <div
+          style={{
+            width: "4rem",
+            height: "4rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            borderRadius: "50%",
+            background: "#eaf0f6",
           }}
-        />
+          onClick={() => setModal1Open(true)}
+        >
+          <img
+            src={editImg}
+            alt="Edit"
+            style={{ width: "2.2rem", height: "2.2rem", margin: "auto" }}
+          />
+        </div>
       ) : (
         <Button
           type="primary"
@@ -130,7 +141,7 @@ export default function DetailsModal({ record, updateMode }) {
       )}
 
       <Modal
-        title={`${updateMode ? "Cập nhật" : "Tạo mới"} Công nợ`}
+        title={`${updateMode ? "Cập nhật" : "Tạo mới"} thanh toán`}
         style={{ top: 20 }}
         open={modal1Open}
         onOk={() => setModal1Open(false)}
@@ -151,7 +162,7 @@ export default function DetailsModal({ record, updateMode }) {
             <div className="details__group">
               <Form.Item
                 name="supplierId"
-                label={<Text>Mã Khách hàng</Text>}
+                label={<Text>Mã Nhà cung cấp</Text>}
                 className="details__item"
                 rules={[
                   {
@@ -159,7 +170,7 @@ export default function DetailsModal({ record, updateMode }) {
                     message: getMessage(
                       CODE_ERROR.ERROR_REQUIRED,
                       MESSAGE_ERROR,
-                      "Mã Khách hàng"
+                      "Mã Nhà cung cấp"
                     ),
                   },
                 ]}

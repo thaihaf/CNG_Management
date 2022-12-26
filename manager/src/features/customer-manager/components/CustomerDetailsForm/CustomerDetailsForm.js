@@ -722,7 +722,7 @@ function CustomerDetailsForm() {
                       width: "100%",
                     }}
                   >
-                    <div>Công nợ Khách hàng</div>
+                    <div>Các khoản đã trả</div>
                     <DetailsModal updateMode={false} record={initialValues} />
                   </div>
                 }

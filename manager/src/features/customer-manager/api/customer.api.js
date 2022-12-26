@@ -32,8 +32,8 @@ const deleteCustomer = (id) => {
 };
 
 // debt
-const getDebtCustomers = (params) => {
-  const url = CustomerEndPoints.DEBT_MANAGER;
+const getDebtCustomers = (id, params) => {
+  const url = CustomerEndPoints.DEBT_MANAGER.replace(":id", id);
   return api.get(url, { params });
 };
 const getDeptCustomerDetails = (id) => {
