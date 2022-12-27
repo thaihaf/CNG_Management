@@ -39,6 +39,9 @@ import {
 } from "features/export-product/exportProduct";
 import "./TableCreate.css";
 import SearchProduct from "../SearchProduct/SearchProduct";
+import { CODE_ERROR } from "constants/errors.constants";
+import { MESSAGE_ERROR } from "constants/messages.constants";
+import { getMessage } from "helpers/util.helper";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -543,6 +546,14 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             {
               required: true,
               message: "Giá mỗi mét vuông bị thiếu",
+            },
+            {
+              pattern: /^[0-9]/,
+              message: getMessage(
+                CODE_ERROR.ERROR_FORMAT,
+                MESSAGE_ERROR,
+                "Giá phải là số dương"
+              ),
             },
           ]}
           onChange={(value) => onHandleChangeCost(record, value)}

@@ -1,7 +1,6 @@
 import React from "react";
 import { AuthPaths } from "../constants/auth.paths";
 
-const HomeScreen = React.lazy(() => import("../screens/Home/Home"));
 const LoginScreen = React.lazy(() =>
   import("../screens/LoginScreen/LoginScreen")
 );
@@ -18,14 +17,14 @@ const NotFound = React.lazy(() =>
   import("components/modules/NotFound/NotFound")
 );
 
-const HOME_SCREEN = {
-  id: "home",
-  path: AuthPaths.HOME,
-  component: HomeScreen,
-  isAuthRoute: true,
-  pageTitle: "CNG Home",
-  exact: true,
-};
+// const HOME_SCREEN = {
+//   id: "home",
+//   path: AuthPaths.HOME,
+//   component: HomeScreen,
+//   isAuthRoute: true,
+//   pageTitle: "CNG Home",
+//   exact: true,
+// };
 const LOGIN_SCREEN = {
   id: "login",
   path: AuthPaths.LOGIN,
@@ -68,7 +67,7 @@ const NOT_FOUND_SCREEN = {
 };
 
 const AUTH_ROUTES = [
-  HOME_SCREEN,
+  // HOME_SCREEN,
   LOGIN_SCREEN,
   FORGOT_SCREEN,
   VERIFY_CODE_SCREEN,

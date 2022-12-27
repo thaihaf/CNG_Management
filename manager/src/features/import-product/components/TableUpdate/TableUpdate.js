@@ -40,6 +40,9 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import NewProductDetailsModal from "../NewProductDetailsModal/NewProductDetailsModal";
 import { getDetailsProduct } from "features/product-manager/productManager";
 import SearchProduct from "../SearchProduct/SearchProduct";
+import { getMessage } from "helpers/util.helper";
+import { CODE_ERROR } from "constants/errors.constants";
+import { MESSAGE_ERROR } from "constants/messages.constants";
 
 const { Option } = Select;
 
@@ -810,6 +813,14 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               {
                 required: true,
                 message: "Missing Cost Per Square Meter",
+              },
+              {
+                pattern: /^[0-9]/,
+                message: getMessage(
+                  CODE_ERROR.ERROR_FORMAT,
+                  MESSAGE_ERROR,
+                  "Giá phải là số dương"
+                ),
               },
             ]}
             onChange={(value) => onHandleChangeCost(record, value)}

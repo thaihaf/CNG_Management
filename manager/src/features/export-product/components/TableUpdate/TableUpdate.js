@@ -49,6 +49,9 @@ import {
   updateProductExport,
 } from "features/export-product/exportProduct";
 import SearchProduct from "../SearchProduct/SearchProduct";
+import { CODE_ERROR } from "constants/errors.constants";
+import { getMessage } from "helpers/util.helper";
+import { MESSAGE_ERROR } from "constants/messages.constants";
 
 const { Option } = Select;
 const { Text, Title } = Typography;
@@ -815,6 +818,14 @@ export default function TableUpdate({ form, updateMode }) {
               {
                 required: true,
                 message: "Giá trên mỗi mét vuông bị thiếu",
+              },
+              {
+                pattern: /^[0-9]/,
+                message: getMessage(
+                  CODE_ERROR.ERROR_FORMAT,
+                  MESSAGE_ERROR,
+                  "Giá phải là số dương"
+                ),
               },
             ]}
             onChange={(value) => onHandleChangeCost(record, value)}

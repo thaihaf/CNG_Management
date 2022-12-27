@@ -96,7 +96,10 @@ export default function HeaderTable({ form, updateMode }) {
         ]}
         initialValue={
           updateMode
-            ? dayjs(productImportDetails?.createDate, "YYYY-MM-DD")
+            ? dayjs(productImportDetails?.createDate, "YYYY-MM-DD").add(
+                1,
+                "day"
+              )
             : dayjs()
         }
       >

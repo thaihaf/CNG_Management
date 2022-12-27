@@ -718,7 +718,7 @@ const ExportWrapper = ({ updateMode }) => {
         </div>
 
         <Tabs
-          defaultActiveKey={`details`}
+          defaultActiveKey={`table`}
           activeKey={activeTab}
           onTabClick={(key) => setActiveTab(key)}
           items={[

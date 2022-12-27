@@ -135,7 +135,6 @@ export default function DetailsModal({ record, type }) {
         <Spin spinning={isLoadingModal}>
           <Form
             form={newProductDetailsForm}
-            layout="horizontal"
             name="newProductDetailsForm"
             id="newProductDetailsForm"
             colon={false}

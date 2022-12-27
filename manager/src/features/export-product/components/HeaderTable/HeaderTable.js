@@ -212,7 +212,7 @@ export default function HeaderTable({ form, updateMode }) {
         ]}
         initialValue={
           updateMode
-            ? dayjs(productExportDetails?.createDate, "YYYY-MM-DD")
+            ? dayjs(productExportDetails?.createDate, "YYYY-MM-DD").add(1, 'day')
             : dayjs()
         }
       >
