@@ -12,6 +12,24 @@ const ProductDetailsScreen = React.lazy(() =>
   import("../screens/ProductDetails/ProductDetails")
 );
 
+const HOME = {
+  id: "home",
+  path: "/",
+  component: ProductListScreen,
+  isPrivateRoute: true,
+  pageTitle: "Product Manager",
+  roles: ["admin", "employee"],
+  exact: true,
+  routes: [
+    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
+    {
+      label: "Danh sách Sản phẩm",
+      icon: null,
+      path: ProductManagerPaths.PRODUCT_MANAGER,
+      visible: false,
+    },
+  ],
+};
 const PRODUCT_LIST_SCREEN = {
   id: "product-list",
   path: ProductManagerPaths.PRODUCT_MANAGER,
@@ -80,6 +98,7 @@ const PRODUCT_DETAILS_SCREEN = {
 };
 
 const PRODUCT_MANAGER_ROUTES = [
+  HOME,
   CREATE_PRODUCT_SCREEN,
   PRODUCT_DETAILS_SCREEN,
   PRODUCT_LIST_SCREEN,

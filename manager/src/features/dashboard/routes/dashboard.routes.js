@@ -17,24 +17,6 @@ const InventoryScreen = React.lazy(() =>
 );
 const ProfitScreen = React.lazy(() => import("../screens/Profit/Profit"));
 
-const HOME = {
-  id: "home",
-  path: DashboardPaths.HOME,
-  component: DashboardScreen,
-  isPrivateRoute: true,
-  pageTitle: "Dashboard",
-  roles: ["admin"],
-  exact: true,
-  routes: [
-    { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
-    {
-      label: "Dashboard",
-      icon: null,
-      path: DashboardPaths.DASHBOARD,
-      visible: false,
-    },
-  ],
-};
 const DASHBOARD = {
   id: "dashboard",
   path: DashboardPaths.DASHBOARD,
@@ -326,7 +308,6 @@ const CUSTOMER_DAILY_LIST_SCREEN = {
 
 const DASHBOARD_ROUTES = [
   CUSTOMER_DAILY_LIST_SCREEN,
-  HOME,
   DASHBOARD,
   DASHBOARD_STATISTICAL,
   WAREHOUSE_INVENTORY,

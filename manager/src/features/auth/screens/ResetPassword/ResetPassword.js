@@ -35,7 +35,7 @@ export default function ResetPassword() {
           message: "Mật khẩu mới",
           description: "Thay đổi mật khẩu thành công",
         });
-        // history.push(AuthPaths.LOGIN);
+        history.push(AuthPaths.LOGIN);
       })
       .catch((error) => {
         notification.error({

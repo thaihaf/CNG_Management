@@ -1,5 +1,4 @@
 export const DashboardPaths = {
-  HOME: "/",
   DASHBOARD: "/dashboard",
   DASHBOARD_MANAGER: "/dashboard/statistic",
   DASHBOARD_CUSTOMER_DAILY: "/dashboard/daily-report",
