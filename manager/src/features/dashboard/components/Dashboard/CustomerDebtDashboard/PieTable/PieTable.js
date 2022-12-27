@@ -34,7 +34,7 @@ export default function PieTable() {
               },
             },
           },
-          labels: ["Công nợ Khách hàng"],
+          labels: [`Tỷ lệ thanh toán / Doanh số`],
         }}
         series={series}
         type="radialBar"
@@ -43,7 +43,7 @@ export default function PieTable() {
 
       <div className="left">
         <div className="totalDebt">
-          <div className="title">Tổng:</div>
+          <div className="title">Tổng tiền bán:</div>
           <Statistic precision={0} value={data.totalDebt} suffix={"vnđ"} />
         </div>
         <div className="totalPayment">

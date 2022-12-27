@@ -8,6 +8,11 @@
   align-items: center;
   grid-template-columns: repeat(auto-fit, minmax(50px, 300px));
 }
+.headerHidden .ant-select-selection-item,
+.headerHidden .ant-input-disabled,
+.headerHidden .ant-picker-disabled .ant-picker-input input {
+  color: black;
+}
 .headerHidden .details__item .ant-picker {
   border-radius: 2rem !important;
   width: 100% !important;

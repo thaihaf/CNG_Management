@@ -28,14 +28,14 @@ export default function ResetPassword() {
   const onFinish = (values) => {
     setLoading(true);
 
-    dispatch(resetPassword({ data: { id: query.id, ...values } }))
+    dispatch(resetPassword({ data: { id: parseInt(query.id), ...values } }))
       .then(unwrapResult)
       .then((res) => {
         notification.success({
           message: "Mật khẩu mới",
           description: "Thay đổi mật khẩu thành công",
         });
-        history.push(AuthPaths.LOGIN);
+        // history.push(AuthPaths.LOGIN);
       })
       .catch((error) => {
         notification.error({
@@ -113,7 +113,7 @@ export default function ResetPassword() {
           />
         </Form.Item>
         <Form.Item
-          name="confirmPassword"
+          name="confirmNewPassword"
           label="Xác nhận mật khẩu"
           rules={[
             {

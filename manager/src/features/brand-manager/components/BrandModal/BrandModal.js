@@ -172,11 +172,14 @@ export default function BrandModal({ data }) {
                     option.children.toLowerCase().includes(input.toLowerCase())
                   }
                 >
-                  {listActiveSuppliers.map((s) => (
-                    <Select.Option value={s.id} key={s.id} id={s.id}>
-                      {s.supplierName}
-                    </Select.Option>
-                  ))}
+                  {listActiveSuppliers.map(
+                    (s) =>
+                      s.status === 1 && (
+                        <Select.Option value={s.id} key={s.id} id={s.id}>
+                          {s.supplierName}
+                        </Select.Option>
+                      )
+                  )}
                 </Select>
               </Form.Item>
 

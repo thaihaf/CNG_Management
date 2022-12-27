@@ -7,7 +7,7 @@ import { getAccessToken } from "helpers/auth.helpers";
 import { ApiStatusCodes } from "constants/api.constants";
 
 export const api = axios.create({
-  baseURL: "http://34.206.124.151:8080/api",
+  baseURL: "http://localhost:8080/api",
   headers: {
     "Content-Type": "application/json",
   },

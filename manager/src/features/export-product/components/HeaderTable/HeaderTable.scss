@@ -7,6 +7,12 @@
   align-items: center;
   grid-template-columns: repeat(auto-fit, minmax(50px, 300px));
 
+  .ant-select-selection-item, 
+  .ant-input-disabled, 
+  .ant-picker-disabled .ant-picker-input input{
+    color : black;
+  }
+
   .details__item {
     .ant-picker {
       border-radius: 2rem !important;

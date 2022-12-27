@@ -13,8 +13,6 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 
-import "./ExportWrapper.css";
-
 import deleteFileImg from "assets/icons/deleteFile.png";
 import uploadFileImg from "assets/icons/uploadFile.png";
 import excelImg from "assets/icons/excel.png";
@@ -39,6 +37,8 @@ import {
 } from "features/export-product/constants/export-product.constants";
 import { Excel } from "antd-table-saveas-excel";
 import dayjs from "dayjs";
+
+import "./ExportWrapper.css";
 
 const { Title } = Typography;
 
@@ -132,6 +132,7 @@ const ExportWrapper = ({ updateMode }) => {
         message: "Đơn xuất",
         description: "Vui lòng chọn ít nhất một sản phẩm!",
       });
+      setActiveTab("table");
       return;
     }
 
@@ -142,13 +143,26 @@ const ExportWrapper = ({ updateMode }) => {
         (!warehouse || warehouse.length === 0)
       );
     });
-
     if (pLostWarehouse) {
       notification.warning({
         message: "Đơn xuất",
-        description: `Sản phẩm có Mã ${pLostWarehouse.id}, với vị trí tại ${pLostWarehouse.index} cần chọn ít nhất một Kho`,
+        description: `Sản phẩm có Mã ${pLostWarehouse.id}, với STT tại ${pLostWarehouse.index} cần chọn ít nhất một Kho`,
       });
+      setActiveTab("table");
       return;
+    }
+
+    // thời gian tương lai
+    if (value.status === 2 || value.status === 4) {
+      if (value.exportDate.isAfter(dayjs())) {
+        notification.warning({
+          message: "Đơn xuất",
+          description: "Ngày xuất không thể sau ngày hiện tại!",
+        });
+
+        setActiveTab("details");
+        return;
+      }
     }
 
     let exportProductDetailDTOS = listProduct.map((p) => {
@@ -569,6 +583,8 @@ const ExportWrapper = ({ updateMode }) => {
         "statusExport",
         getStatusString(initialValues.status, arr)
       );
+    } else {
+      form.setFieldValue("type", "EXPORT");
     }
   }, [dispatch, updateMode, initialValues]);
 
@@ -591,7 +607,7 @@ const ExportWrapper = ({ updateMode }) => {
 
         <div className="actions-group">
           <Title level={3} style={{ marginBottom: 0, marginRight: "auto" }}>
-            Chi tiết Đơn xuất
+            {updateMode ? "Chi tiết đơn xuất" : "Tạo Đơn xuất"}
           </Title>
 
           {updateMode &&
@@ -702,7 +718,7 @@ const ExportWrapper = ({ updateMode }) => {
         </div>
 
         <Tabs
-          defaultActiveKey={`table`}
+          defaultActiveKey={`details`}
           activeKey={activeTab}
           onTabClick={(key) => setActiveTab(key)}
           items={[

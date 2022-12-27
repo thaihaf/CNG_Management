@@ -152,7 +152,7 @@ const ImportWrapper = ({ updateMode }) => {
     if (value.importDate.isAfter(dayjs()) && value.status === 2) {
       notification.warning({
         message: "Đơn nhập",
-        description: "Ngày duyệt đơn không thể sau ngày hiện tại!",
+        description: "Ngày nhập không thể sau ngày hiện tại!",
       });
 
       setActiveTab("details");
@@ -242,7 +242,7 @@ const ImportWrapper = ({ updateMode }) => {
   return (
     <Spin spinning={isLoading}>
       <Form
-        className="product"
+        className="import-product"
         form={form}
         name="dynamic_form_nest_item"
         autoComplete="off"

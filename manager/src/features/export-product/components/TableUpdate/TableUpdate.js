@@ -981,7 +981,6 @@ export default function TableUpdate({ form, updateMode }) {
             <Input.TextArea
               showCount
               maxLength={300}
-              placeholder="Ghi chú"
               disabled={!isEditing(record)}
               style={{
                 height: "100%",
@@ -995,7 +994,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Actions",
+      title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       align: "center",
@@ -1140,12 +1139,12 @@ export default function TableUpdate({ form, updateMode }) {
                           >
                             <Form.Item
                               {...restField}
-                              label="Warehouse"
+                              label="Kho hàng"
                               name={[name, "productWarehouseId"]}
                               rules={[
                                 {
                                   required: true,
-                                  message: "Missing warehouse",
+                                  message: "Kho hàng bị thiếu!",
                                 },
                                 ({ getFieldValue }) => ({
                                   validator(_, value) {
@@ -1161,7 +1160,7 @@ export default function TableUpdate({ form, updateMode }) {
                                       return Promise.resolve();
                                     }
                                     return Promise.reject(
-                                      new Error("The Warehouse be duplicated!")
+                                      new Error("Kho hàng đã được chọn!")
                                     );
                                   },
                                 }),
@@ -1189,12 +1188,12 @@ export default function TableUpdate({ form, updateMode }) {
 
                             <Form.Item
                               {...restField}
-                              label="Quantity"
+                              label="Số lượng"
                               name={[name, "quantityBox"]}
                               rules={[
                                 {
                                   required: true,
-                                  message: "Missing quantity",
+                                  message: "Số lượng bị thiếu!",
                                 },
                                 ({ getFieldValue }) => ({
                                   validator(_, value) {
@@ -1211,16 +1210,25 @@ export default function TableUpdate({ form, updateMode }) {
 
                                     if (!wId) {
                                       return Promise.reject(
-                                        new Error(
-                                          "Must be choose Warehouse first"
-                                        )
+                                        new Error("Vui lòng chọn Kho trước")
                                       );
                                     }
 
-                                    if (value > warehouse?.quantityBox) {
+                                    let oldWarehouse =
+                                      record.exportProductDetailWarehouseList[
+                                        name
+                                      ]?.quantityBox || 0;
+
+                                    if (
+                                      value >
+                                      warehouse?.quantityBox + oldWarehouse
+                                    ) {
                                       return Promise.reject(
                                         new Error(
-                                          `The maximum Quantity is ${warehouse?.quantityBox}`
+                                          `Số lượng tối đa là ${
+                                            warehouse?.quantityBox +
+                                            oldWarehouse
+                                          }`
                                         )
                                       );
                                     }
@@ -1273,7 +1281,7 @@ export default function TableUpdate({ form, updateMode }) {
                             fields.length === maxLength
                           }
                         >
-                          Add new select Warehouse
+                          Thêm mới Kho xuất
                         </Button>
                       </Form.Item>
                     )}
@@ -1284,7 +1292,7 @@ export default function TableUpdate({ form, updateMode }) {
           );
         },
         expandIcon: ({ expanded, onExpand, record }) => (
-          <Tooltip placement="topRight" title={"Show warehouse select"}>
+          <Tooltip placement="topRight" title={"Hiển thị Kho hàng"}>
             {expanded ? (
               <CaretUpFilled
                 style={{

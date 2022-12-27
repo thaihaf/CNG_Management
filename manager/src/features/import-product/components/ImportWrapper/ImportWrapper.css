@@ -1,4 +1,4 @@
-.actions-group {
+.import-product .actions-group {
   display: flex;
   gap: 2rem;
   padding: 1.7rem 2.5rem;
@@ -6,39 +6,37 @@
   background-color: #fafafa;
   margin-top: 2rem;
 }
-.actions-group .details__item {
+.import-product .actions-group .details__item {
   margin-bottom: 0;
 }
-
-.ant-select-dropdown {
+.import-product .ant-select-dropdown {
   width: -webkit-max-content !important;
   width: -moz-max-content !important;
   width: max-content !important;
 }
-.ant-select-dropdown .searchProduct {
+.import-product .ant-select-dropdown .searchProduct {
   width: 100%;
 }
-.ant-select-dropdown .searchProduct .ant-select-item-option-content {
+.import-product .ant-select-dropdown .searchProduct .ant-select-item-option-content {
   display: flex;
   gap: 2rem;
   align-items: center;
   padding: 1rem;
   width: 100%;
 }
-.ant-select-dropdown .searchProduct .ant-select-item-option-content .search-img {
+.import-product .ant-select-dropdown .searchProduct .ant-select-item-option-content .search-img {
   width: 5rem;
   min-width: 5rem;
   height: 5rem;
   border-radius: 50%;
   overflow: hidden;
 }
-
-.ant-table-wrapper button.ant-pagination-item-link {
+.import-product .ant-table-wrapper button.ant-pagination-item-link {
   height: 4.5rem;
   width: 4.5rem;
   border-radius: 2rem !important;
 }
-.ant-table-wrapper .ant-pagination-item {
+.import-product .ant-table-wrapper .ant-pagination-item {
   height: 4.5rem;
   width: 5.5rem;
   border-radius: 2rem !important;
@@ -46,7 +44,7 @@
   align-items: center;
   justify-content: center;
 }
-.ant-table-wrapper .ant-pagination-item a {
+.import-product .ant-table-wrapper .ant-pagination-item a {
   height: 4.5rem;
   width: 5.5rem;
   border-radius: 2rem !important;
@@ -54,60 +52,55 @@
   align-items: center;
   justify-content: center;
 }
-
-.ant-table-row .ant-table-cell .ant-form-item {
+.import-product .ant-table-row .ant-table-cell .ant-form-item {
   margin-bottom: 0 !important;
 }
-.ant-table-row .ant-table-cell .caculator .ant-input-group-addon {
+.import-product .ant-table-row .ant-table-cell .caculator .ant-input-group-addon {
   background-color: none !important;
   border: 1px solid none !important;
 }
-.ant-table-row .ant-table-cell .caculator .ant-input-disabled {
+.import-product .ant-table-row .ant-table-cell .caculator .ant-input-disabled {
   color: black !important;
 }
-
-.ant-select-selector {
+.import-product .ant-select-selector {
   height: 4.5rem !important;
   border-radius: 2rem !important;
 }
-.ant-select-selector .ant-select-selection-search,
-.ant-select-selector .ant-select-selection-item,
-.ant-select-selector .ant-select-selection-placeholder {
+.import-product .ant-select-selector .ant-select-selection-search,
+.import-product .ant-select-selector .ant-select-selection-item,
+.import-product .ant-select-selector .ant-select-selection-placeholder {
   display: flex;
   padding: 0 1.5rem !important;
   align-items: center;
 }
-
-.ant-input-number {
+.import-product .ant-input-number {
   border-radius: 2rem !important;
   padding: 0.5rem 0.7rem;
 }
-.ant-input-number .ant-input-number-handler-wrap {
+.import-product .ant-input-number .ant-input-number-handler-wrap {
   right: 9px;
   border-radius: 2rem;
 }
-
-.ant-input {
+.import-product .ant-input {
   border-radius: 2rem !important;
   padding: 1rem 2rem;
 }
-
-.ant-tabs .ant-tabs-nav {
+.import-product .ant-tabs .ant-tabs-nav {
   background-color: #fafafa;
   margin: 0;
 }
-.ant-tabs .ant-tabs-nav .ant-tabs-nav-list {
+.import-product .ant-tabs .ant-tabs-nav .ant-tabs-nav-list {
   width: 100%;
   border-top: 0.5px solid #efefef;
   width: 100% !important;
   display: grid !important;
   grid-template-columns: repeat(auto-fit, minmax(50%, 1fr)) !important;
 }
-.ant-tabs .ant-tabs-nav .ant-tabs-nav-list .ant-tabs-tab {
+.import-product .ant-tabs .ant-tabs-nav .ant-tabs-nav-list .ant-tabs-tab {
   display: flex;
   justify-content: center;
 }
-.ant-tabs .ant-tabs-nav .ant-tabs-nav-operations {
+.import-product .ant-tabs .ant-tabs-nav .ant-tabs-nav-operations {
   display: none !important;
   visibility: hidden !important;
 }

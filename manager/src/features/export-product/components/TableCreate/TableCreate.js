@@ -787,7 +787,14 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                                     );
                                   }
 
-                                  if (value > warehouse?.quantityBox) {
+                                  let type = form.getFieldValue("type");
+
+                                  console.log(type);
+                                  if (
+                                    type &&
+                                    type === "EXPORT" &&
+                                    value > warehouse?.quantityBox
+                                  ) {
                                     return Promise.reject(
                                       new Error(
                                         `Số lượng tối đa của kho là ${warehouse?.quantityBox}`

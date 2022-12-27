@@ -1,3 +1,20 @@
+.export-product .searchProduct {
+  width: 100%;
+}
+.export-product .searchProduct .search-img {
+  width: 5rem;
+  min-width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.export-product .searchProduct .ant-select-item-option {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  padding: 1rem;
+  width: 100%;
+}
 .export-product .actions-group {
   display: flex;
   gap: 2rem;
@@ -13,23 +30,6 @@
   width: -webkit-max-content !important;
   width: -moz-max-content !important;
   width: max-content !important;
-}
-.export-product .ant-select-dropdown .searchProduct {
-  width: 100%;
-}
-.export-product .ant-select-dropdown .searchProduct .ant-select-item-option-content {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  padding: 1rem;
-  width: 100%;
-}
-.export-product .ant-select-dropdown .searchProduct .ant-select-item-option-content .search-img {
-  width: 5rem;
-  min-width: 5rem;
-  height: 5rem;
-  border-radius: 50%;
-  overflow: hidden;
 }
 .export-product .ant-table-wrapper button.ant-pagination-item-link {
   height: 4.5rem;

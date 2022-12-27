@@ -1,3 +1,4 @@
+.import-product {
   .actions-group {
     display: flex;
     gap: 2rem;
@@ -11,20 +12,20 @@
       margin-bottom: 0;
     }
   }
-  
+
   .ant-select-dropdown {
     width: max-content !important;
-  
+
     .searchProduct {
       width: 100%;
-  
+
       .ant-select-item-option-content {
         display: flex;
         gap: 2rem;
         align-items: center;
         padding: 1rem;
         width: 100%;
-  
+
         .search-img {
           width: 5rem;
           min-width: 5rem;
@@ -35,14 +36,14 @@
       }
     }
   }
-  
+
   .ant-table-wrapper {
     button.ant-pagination-item-link {
       height: 4.5rem;
       width: 4.5rem;
       border-radius: 2rem !important;
     }
-  
+
     .ant-pagination-item {
       height: 4.5rem;
       width: 5.5rem;
@@ -60,13 +61,13 @@
       justify-content: center;
     }
   }
-  
+
   .ant-table-row {
     .ant-table-cell {
       .ant-form-item {
         margin-bottom: 0 !important;
       }
-  
+
       .caculator {
         .ant-input-group-addon {
           background-color: none !important;
@@ -78,11 +79,11 @@
       }
     }
   }
-  
+
   .ant-select-selector {
     height: 4.5rem !important;
     border-radius: 2rem !important;
-  
+
     .ant-select-selection-search,
     .ant-select-selection-item,
     .ant-select-selection-placeholder {
@@ -92,11 +93,11 @@
       align-items: center;
     }
   }
-  
+
   .ant-input-number {
     border-radius: 2rem !important;
     padding: 0.5rem 0.7rem;
-  
+
     .ant-input-number-handler-wrap {
       right: 9px;
       border-radius: 2rem;
@@ -106,19 +107,19 @@
     border-radius: 2rem !important;
     padding: 1rem 2rem;
   }
-  
+
   .ant-tabs {
     .ant-tabs-nav {
       background-color: #fafafa;
       margin: 0;
-  
+
       .ant-tabs-nav-list {
         width: 100%;
         border-top: 0.5px solid #efefef;
         width: 100% !important;
         display: grid !important;
         grid-template-columns: repeat(auto-fit, minmax(50%, 1fr)) !important;
-  
+
         .ant-tabs-tab {
           // width: 50%;
           display: flex;
@@ -131,4 +132,4 @@
       }
     }
   }
-
+}

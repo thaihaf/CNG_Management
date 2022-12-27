@@ -165,7 +165,6 @@ const ProductDetailsForm = ({ updateMode }) => {
           squareMeterPerBox: squareMeterPerBox,
         };
 
-        console.log(data);
         dispatch(
           createProduct({
             data: data,
@@ -249,31 +248,6 @@ const ProductDetailsForm = ({ updateMode }) => {
             </Button>
 
             {updateMode && (
-              <>
-                <Button
-                  danger
-                  type="primary"
-                  shape="round"
-                  size={"large"}
-                  style={{
-                    width: "fitContent",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "1rem",
-                    paddingTop: "2.1rem",
-                    paddingBottom: "2.1rem",
-                    paddingLeft: "2.8rem",
-                    paddingRight: "2.8rem",
-                  }}
-                  //    onClick={() => onDeleteProductExport()}
-                >
-                  <img
-                    src={deleteFileImg}
-                    alt=""
-                    style={{ height: "2.5rem", width: "2.5rem" }}
-                  />
-                  Xoá bỏ
-                </Button>
                 <Button
                   type="primary"
                   shape="round"
@@ -297,7 +271,6 @@ const ProductDetailsForm = ({ updateMode }) => {
                   />
                   Cập nhật
                 </Button>
-              </>
             )}
 
             {!updateMode && (

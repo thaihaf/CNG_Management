@@ -84,7 +84,7 @@ function SupplierDetailsForm() {
   };
 
   const onFinishUpdate = async (values) => {
-    console.log(values);
+    setIsLoading(true);
     dispatch(
       updateDetails({
         id: dataDetails.id,
@@ -112,15 +112,14 @@ function SupplierDetailsForm() {
     )
       .then(unwrapResult)
       .then((res) => {
-        console.log(res);
+        setIsLoading(false);
         notification.success({
           message: "Chi tiết Nhà cung cấp",
           description: "Cập nhật thông tin thành công",
         });
       })
       .catch((error) => {
-        console.log(error);
-        console.log(dataDetails.id);
+         setIsLoading(false);
         notification.error({
           message: "Chi tiết Nhà cung cấp",
           description: "Cập nhật thông tin thất bại",
@@ -180,55 +179,29 @@ function SupplierDetailsForm() {
             </Button>
 
             {!createMode && (
-              <>
-                <Button
-                  danger
-                  type="primary"
-                  shape="round"
-                  size={"large"}
-                  style={{
-                    width: "fitContent",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "1rem",
-                    paddingTop: "2.1rem",
-                    paddingBottom: "2.1rem",
-                    paddingLeft: "2.8rem",
-                    paddingRight: "2.8rem",
-                  }}
-                  //    onClick={() => onDeleteProductExport()}
-                >
-                  <img
-                    src={deleteFileImg}
-                    alt=""
-                    style={{ height: "2.5rem", width: "2.5rem" }}
-                  />
-                  Xoá bỏ
-                </Button>
-                <Button
-                  type="primary"
-                  shape="round"
-                  size={"large"}
-                  htmlType="submit"
-                  style={{
-                    width: "fitContent",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "1rem",
-                    paddingTop: "2.1rem",
-                    paddingBottom: "2.1rem",
-                    paddingLeft: "2.8rem",
-                    paddingRight: "2.8rem",
-                  }}
-                >
-                  <img
-                    src={uploadFileImg}
-                    alt=""
-                    style={{ height: "2.5rem", width: "2.5rem" }}
-                  />
-                  Cập nhật
-                </Button>
-              </>
+              <Button
+                type="primary"
+                shape="round"
+                size={"large"}
+                htmlType="submit"
+                style={{
+                  width: "fitContent",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1rem",
+                  paddingTop: "2.1rem",
+                  paddingBottom: "2.1rem",
+                  paddingLeft: "2.8rem",
+                  paddingRight: "2.8rem",
+                }}
+              >
+                <img
+                  src={uploadFileImg}
+                  alt=""
+                  style={{ height: "2.5rem", width: "2.5rem" }}
+                />
+                Cập nhật
+              </Button>
             )}
 
             {createMode && (

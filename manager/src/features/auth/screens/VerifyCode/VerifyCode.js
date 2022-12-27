@@ -46,7 +46,10 @@ export default function VerifyCode() {
           message: "Tìm lại mật khẩu",
           description: "Mã Code hợp lệ",
         });
-        history.push(AuthPaths.RESET_PASSWORD, { id: query.accountId });
+        history.push({
+          pathname: AuthPaths.RESET_PASSWORD,
+          search: queryString.stringify({ id: query.accountId }),
+        });
       })
       .catch((error) => {
         setLoading(false);

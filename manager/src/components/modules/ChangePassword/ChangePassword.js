@@ -94,7 +94,6 @@ export default function ChangePassword() {
                 children: (
                   <Form
                     form={changePassForm}
-                    layout="horizontal"
                     name="changePassForm"
                     id="changePassForm"
                     colon={false}

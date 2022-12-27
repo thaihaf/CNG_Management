@@ -31,12 +31,12 @@ import { getDistrict, getProvince } from "features/provinces/provinces";
 
 import { CameraOutlined } from "@ant-design/icons";
 import ImgCrop from "antd-img-crop";
-import {
-  createDetails,
-  getCustomers,
-} from "features/customer-manager/customerManager";
 
 import "./SupplierModal.css";
+import {
+  createDetails,
+  getSuppliers,
+} from "features/supplier-manager/supplierManager";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -67,19 +67,25 @@ export default function SupplierModal() {
     });
   };
 
-  const onFinish = async ({ addressDTO, noteWarehouse, status, ...args }) => {
+  const onFinish = async ({ address, noteWarehouse, status, ...args }) => {
+    if (!imgURL) {
+      notification.warning({
+        message: "Tạo mới Nhà cung cấp",
+        description: "Vui lòng chọn ảnh Nhà cung cấp",
+      });
+      return;
+    }
+
     const dataRender = {
-      addressDTO: {
-        city: addressDTO.city.value,
-        district: addressDTO.district.value,
-        ward: addressDTO.ward.value,
-        apartmentNumber: addressDTO.apartmentNumber,
+      address: {
+        city: address.city.value,
+        district: address.district.value,
+        ward: address.ward.value,
+        apartmentNumber: address.apartmentNumber,
       },
       ...args,
       status: 1,
-      fileAttachDTO: {
-        filePath: imgURL === null ? "" : imgURL,
-      },
+      avatarSupplier: imgURL === null ? "" : imgURL,
     };
     setIsLoading(true);
     dispatch(createDetails(dataRender))
@@ -89,7 +95,7 @@ export default function SupplierModal() {
         if (query.page) {
           query.page = query.page - 1;
         }
-        dispatch(getCustomers({ ...query, sort: "createAt,desc" }))
+        dispatch(getSuppliers({ ...query, sort: "createAt,desc" }))
           .then(unwrapResult)
           .then(() => {
             setIsLoading(false);
@@ -482,7 +488,7 @@ export default function SupplierModal() {
               </Form.Item>
 
               <Form.Item
-                name="apartmentNumber"
+                name={["address", "apartmentNumber"]}
                 label={<Text>Tên đường, số nhà</Text>}
                 className="details__item"
                 rules={[
@@ -499,7 +505,7 @@ export default function SupplierModal() {
                 <Input />
               </Form.Item>
               <Form.Item
-                name="city"
+                name={["address", "city"]}
                 label={<Text>Tỉnh, Thành phố</Text>}
                 className="details__item"
                 rules={[
@@ -544,7 +550,7 @@ export default function SupplierModal() {
                 </Select>
               </Form.Item>
               <Form.Item
-                name="district"
+                name={["address", "district"]}
                 label={<Text>Quận, Huyện</Text>}
                 className="details__item"
                 rules={[
@@ -589,7 +595,7 @@ export default function SupplierModal() {
               </Form.Item>
 
               <Form.Item
-                name="ward"
+                name={["address", "ward"]}
                 label={<Text>Xã, Phường</Text>}
                 className="details__item"
                 rules={[

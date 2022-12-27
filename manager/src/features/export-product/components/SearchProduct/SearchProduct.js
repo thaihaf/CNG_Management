@@ -1,4 +1,4 @@
-import { message, notification, Select } from "antd";
+import { Form, message, notification, Select } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -62,50 +62,52 @@ const SearchProduct = () => {
   };
 
   return (
-    <Select
-      placeholder="Tìm kiếm sản phẩm"
-      style={{
-        minWidth: 200,
-        width: 350,
-        overflow: "visible",
-        marginRight: "auto",
-      }}
-      showSearch
-      optionLabelProp="label"
-      filterOption={false}
-      showArrow={false}
-      defaultActiveFirstOption={false}
-      value={searchProductVal}
-      onSearch={handleSearch}
-      onChange={handleSelectChange}
-    >
-      {dataSearch?.map((d) => {
-        // let isDisabled = productsExport.find((p) => p.id === d.id);
-        return (
-          <Option
-            className="searchProduct"
-            value={`${d.id} - ${d.productName} - ${d.titleSize}`}
-            lable={`${d.id} - ${d.productName} - ${d.titleSize}`}
-            key={d.id}
-            item={d}
-            // disabled={isDisabled}
-          >
-            <div className="search-img">
-              <img src={d.listImage[0].filePath} alt="" />
-            </div>
-            <div className="search-details">
-              <div className="search-name">
-                Tên : {d.productName.toUpperCase()}
+    <Form.Item name="searhcData" className="details__item">
+      <Select
+        placeholder="Tìm kiếm sản phẩm"
+        style={{
+          minWidth: 200,
+          width: 350,
+          overflow: "visible",
+          marginRight: "auto",
+        }}
+        showSearch
+        optionLabelProp="label"
+        filterOption={false}
+        showArrow={false}
+        defaultActiveFirstOption={false}
+        value={searchProductVal}
+        onSearch={handleSearch}
+        onChange={handleSelectChange}
+      >
+        {dataSearch?.map((d) => {
+          // let isDisabled = productsExport.find((p) => p.id === d.id);
+          return (
+            <Option
+              className="searchProduct"
+              value={`${d.id} - ${d.productName} - ${d.titleSize}`}
+              lable={`${d.id} - ${d.productName} - ${d.titleSize}`}
+              key={d.id}
+              item={d}
+              // disabled={isDisabled}
+            >
+              <div className="search-img">
+                <img src={d.listImage[0].filePath} alt="" />
               </div>
-              <div className="search-code">
-                {d.id} - {d.titleSize}
+              <div className="search-details">
+                <div className="search-name">
+                  Tên : {d.productName.toUpperCase()}
+                </div>
+                <div className="search-code">
+                  {d.id} - {d.titleSize}
+                </div>
+                <div className="search-origin">Suất xứ : {d.origin}</div>
               </div>
-              <div className="search-origin">Suất xứ : {d.origin}</div>
-            </div>
-          </Option>
-        );
-      })}
-    </Select>
+            </Option>
+          );
+        })}
+      </Select>
+    </Form.Item>
   );
 };
 

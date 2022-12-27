@@ -20,7 +20,9 @@ const { Title, Text } = Typography;
 export default function HeaderTable({ form, updateMode }) {
   const { listEmployees } = useSelector((state) => state.employee);
   const { listCustomers } = useSelector((state) => state.customer);
-  const { productExportDetails } = useSelector((state) => state.productExport);
+  const { productExportDetails, listProductLv2 } = useSelector(
+    (state) => state.productExport
+  );
 
   const dispatch = useDispatch();
 
@@ -61,7 +63,12 @@ export default function HeaderTable({ form, updateMode }) {
               .toLowerCase()
               .localeCompare((optionB?.children ?? "").toLowerCase())
           }
-          disabled={productExportDetails?.status === 4 ? true : false}
+          disabled={
+            productExportDetails?.status === 2 ||
+            productExportDetails?.status === 4
+              ? true
+              : false
+          }
         >
           {listCustomers.map((item) => (
             <Select.Option value={item.id} key={item.id}>
@@ -98,7 +105,12 @@ export default function HeaderTable({ form, updateMode }) {
               .localeCompare((optionB?.children ?? "").toLowerCase())
           }
           placeholder="Chọn người bán"
-          disabled={productExportDetails?.status === 4 ? true : false}
+          disabled={
+            productExportDetails?.status === 2 ||
+            productExportDetails?.status === 4
+              ? true
+              : false
+          }
         >
           {listEmployees.map((item) => (
             <Select.Option value={item.id} key={item.id}>
@@ -140,9 +152,22 @@ export default function HeaderTable({ form, updateMode }) {
             if (value === "EXPORT") {
               setStatusByType(value);
             }
+
+            if (!productExportDetails) {
+              listProductLv2.map((record) => {
+                form.setFieldValue([
+                  `${record.id}_${record.index}`,
+                  "warehouse",
+                ]);
+              });
+            }
           }}
           disabled={
-            updateMode || productExportDetails?.status === 4 ? true : false
+            updateMode ||
+            productExportDetails?.status === 2 ||
+            productExportDetails?.status === 4
+              ? true
+              : false
           }
         />
       </Form.Item>
@@ -163,7 +188,12 @@ export default function HeaderTable({ form, updateMode }) {
       >
         <Input
           placeholder="Vd : 29v3-41065"
-          disabled={productExportDetails?.status === 4 ? true : false}
+          disabled={
+            productExportDetails?.status === 2 ||
+            productExportDetails?.status === 4
+              ? true
+              : false
+          }
         />
       </Form.Item>
       <Form.Item
@@ -188,7 +218,12 @@ export default function HeaderTable({ form, updateMode }) {
       >
         <DatePicker
           format="YYYY-MM-DD"
-          disabled={productExportDetails?.status === 4 ? true : false}
+          disabled={
+            productExportDetails?.status === 2 ||
+            productExportDetails?.status === 4
+              ? true
+              : false
+          }
         />
       </Form.Item>
       {updateMode && (
@@ -226,7 +261,12 @@ export default function HeaderTable({ form, updateMode }) {
                 )
               )
             }
-            disabled={productExportDetails?.status === 4 ? true : false}
+            disabled={
+              productExportDetails?.status === 2 ||
+              productExportDetails?.status === 4
+                ? true
+                : false
+            }
           />
         </Form.Item>
       )}

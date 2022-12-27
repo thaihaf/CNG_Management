@@ -27,6 +27,7 @@ import {
   SupplierManagerPaths,
   getSuppliers,
   deleteSupplier,
+  updateListSuppliers,
 } from "features/supplier-manager/supplierManager";
 import { SupplierModal } from "features/supplier-manager/components";
 
@@ -83,19 +84,24 @@ export default function SupplierList() {
         dispatch(deleteSupplier(record.id))
           .then(unwrapResult)
           .then((res) => {
-            console.log(res);
-            dispatch(getProvinces())
-              .then(unwrapResult)
-              .then(() => {
-                notification.success({
-                  message: "Xoá Nhà cung cấp",
-                  description: "Xoá Nhà cung cấp thành công",
-                });
-                setIsLoading(false);
-              });
+            const newList = listSuppliers.map((c) => {
+              if (c.id === record.id) {
+                return { ...record, status: 0 };
+              } else {
+                return c;
+              }
+            });
+
+            dispatch(updateListSuppliers(newList));
+
+            notification.success({
+              message: "Xoá Nhà cung cấp",
+              description: "Xoá Nhà cung cấp thành công",
+            });
+            setIsLoading(false);
           })
           .catch((error) => {
-            console.log(error);
+            setIsLoading(false);
             notification.error({
               message: "Xoá Nhà cung cấp",
               description: "Xoá Nhà cung cấp thất bại",

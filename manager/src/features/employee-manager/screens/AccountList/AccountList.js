@@ -287,6 +287,7 @@ export default function AccountList() {
               setIsLoadingModal(false);
             });
         } else {
+          setIsLoadingModal(false);
           notification.success({
             message: "Tài khoản",
             description: data.Error.message,
@@ -294,6 +295,7 @@ export default function AccountList() {
         }
       })
       .catch((error) => {
+        setIsLoadingModal(false);
         notification.error({
           message: "Đăng nhập",
           description: error?.Error?.message || "Lỗi rồi!!!",
