@@ -1,18 +1,22 @@
 import React from "react";
 import {
   TeamOutlined,
-  FileDoneOutlined,
   ReconciliationOutlined,
   AppstoreOutlined,
   ContactsOutlined,
-  DatabaseOutlined,
   TagOutlined,
   UserOutlined,
-  UserAddOutlined,
+  BankOutlined,
   InboxOutlined,
+  UsergroupDeleteOutlined,
   ImportOutlined,
   DashboardOutlined,
+  IdcardOutlined,
+  LineChartOutlined,
   ExportOutlined,
+  ShopOutlined,
+  FundViewOutlined,
+  SolutionOutlined,
 } from "@ant-design/icons/";
 import { ProductManagerPaths } from "features/product-manager/productManager";
 import { ImportProductManagerPaths } from "features/import-product/importProduct";
@@ -42,7 +46,7 @@ export const getSideBarItems = (role) => {
   }
 
   return [
-    getItem(["admin"], "Thống kê", "statistical", <DashboardOutlined />, [
+    getItem(["admin"], "Thống kê", "statistical", <FundViewOutlined />, [
       getItem(
         ["admin"],
         "Tổng quát",
@@ -65,38 +69,38 @@ export const getSideBarItems = (role) => {
         ["admin"],
         "Tồn kho",
         DashboardPaths.PRODUCT_INVENTORY,
-        <DashboardOutlined />
+        <ReconciliationOutlined />
       ),
       getItem(
         ["admin"],
         "Lợi nhuận",
         DashboardPaths.PRODUCT_PROFIT,
-        <DashboardOutlined />
+        <LineChartOutlined />
       ),
     ]),
     getItem(
       ["admin", "employee"],
       "Sản phẩm",
       "product-manager",
-      <DashboardOutlined />,
+      <ShopOutlined />,
       [
         getItem(
           ["admin", "employee"],
           "Danh sách sản phẩm",
           ProductManagerPaths.PRODUCT_MANAGER,
-          <DashboardOutlined />
+          <InboxOutlined />
         ),
         getItem(
           ["admin", "employee"],
           "Nhập sản phẩm",
           ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
-          <DashboardOutlined />
+          <ImportOutlined />
         ),
         getItem(
           ["admin", "employee"],
           "Xuất sản phẩm",
           ProductExportManagerPaths.LIST_PRODUCT_EXPORT,
-          <DashboardOutlined />
+          <ExportOutlined />
         ),
       ]
     ),
@@ -104,31 +108,31 @@ export const getSideBarItems = (role) => {
       ["admin", "employee"],
       "Công nợ",
       "debt-manager",
-      <DashboardOutlined />,
+      <SolutionOutlined />,
       [
         getItem(
           ["admin", "employee"],
           "Nhà cung cấp",
           SupplierManagerPaths.SUPPLIER_LIST,
-          <DashboardOutlined />
+          <ContactsOutlined />
         ),
         getItem(
           ["admin", "employee"],
           "Khách hàng",
           CustomerManagerPaths.CUSTOMER_LIST,
-          <DashboardOutlined />
+          <IdcardOutlined />
         ),
         getItem(
           ["admin"],
           "Công nợ Nhà cung cấp",
           SupplierDebtPaths.SUPPLIER_DEBT_MANAGER,
-          <DashboardOutlined />
+          <ContactsOutlined />
         ),
         getItem(
           ["admin", "employee"],
           "Công nợ Khách hàng",
           CustomerDebtPaths.CUSTOMER_DEBT_MANAGER,
-          <DashboardOutlined />
+          <IdcardOutlined />
         ),
       ]
     ),
@@ -136,37 +140,37 @@ export const getSideBarItems = (role) => {
       ["admin", "employee"],
       "Quản lý",
       "user-manager",
-      <DashboardOutlined />,
+      <ShopOutlined />,
       [
         getItem(
           ["admin"],
           "Tài khoản",
           EmployeeManagerPaths.ACCOUNT_LIST,
-          <DashboardOutlined />
+          <UserOutlined />
         ),
         getItem(
           ["admin"],
           "Nhân viên",
           EmployeeManagerPaths.EMPLOYEE_MANAGER,
-          <DashboardOutlined />
+          <UsergroupDeleteOutlined />
         ),
         getItem(
           ["admin", "employee"],
           "Nhãn hàng",
           BrandManagerPaths.BRAND_LIST,
-          <DashboardOutlined />
+          <TagOutlined />
         ),
         getItem(
           ["admin", "employee"],
           "Chức năng",
           CategoryManagerPaths.CATEGORY_LIST,
-          <DashboardOutlined />
+          <AppstoreOutlined />
         ),
         getItem(
           ["admin", "employee"],
           "Kho hàng",
           WarehouseManagerPaths.WAREHOUSE_LIST,
-          <DashboardOutlined />
+          <BankOutlined />
         ),
       ]
     ),
@@ -174,7 +178,7 @@ export const getSideBarItems = (role) => {
       ["employee"],
       "Hồ sơ",
       EmployeeManagerPaths.EMPLOYEE_PROFILE,
-      <ReconciliationOutlined />
+      <TeamOutlined />
     ),
   ];
 };
