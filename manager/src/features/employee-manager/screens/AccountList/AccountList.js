@@ -262,51 +262,6 @@ export default function AccountList() {
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend", "ascend"],
     },
-    {
-      title: "Hành động",
-      dataIndex: "operation",
-      key: "operation",
-      align: "center",
-      render: (_, record) => (
-        <div
-          style={{
-            display: "flex",
-            alignItem: "center",
-            justifyContent: "center",
-            gap: "2rem",
-          }}
-        >
-          {record.status ? (
-            <div
-              style={{
-                width: "4rem",
-                height: "4rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                borderRadius: "50%",
-                background: "#eaf0f6",
-              }}
-              // onClick={() => onRowDelete(record)}
-            >
-              <img
-                src={deleteImg}
-                alt="delete"
-                style={{
-                  width: " 1.4rem",
-                  height: " 1.5rem",
-                  margin: "auto",
-                  cursor: "pointer",
-                }}
-              />
-            </div>
-          ) : (
-            ""
-          )}
-        </div>
-      ),
-    },
   ];
 
   const onSubmitCreate = ({ rePassword, ...params }) => {

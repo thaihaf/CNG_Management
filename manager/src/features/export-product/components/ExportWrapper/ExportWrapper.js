@@ -17,6 +17,7 @@ import "./ExportWrapper.css";
 
 import deleteFileImg from "assets/icons/deleteFile.png";
 import uploadFileImg from "assets/icons/uploadFile.png";
+import excelImg from "assets/icons/excel.png";
 
 import { getStatusString } from "helpers/util.helper";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
@@ -595,6 +596,7 @@ const ExportWrapper = ({ updateMode }) => {
 
           {updateMode &&
             typeof productExportDetails?.status === "number" &&
+            productExportDetails?.status !== 2 &&
             productExportDetails?.status !== 4 && (
               <>
                 <Button
@@ -672,28 +674,31 @@ const ExportWrapper = ({ updateMode }) => {
             </Button>
           )}
 
-          <Button
-            type="primary"
-            shape="round"
-            style={{
-              width: "fitContent",
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              paddingTop: "2.1rem",
-              paddingBottom: "2.1rem",
-              paddingLeft: "2.8rem",
-              paddingRight: "2.8rem",
-            }}
-            onClick={() => handleExportExcel()}
-          >
-            <img
-              src={uploadFileImg}
-              alt=""
-              style={{ height: "2.5rem", width: "2.5rem" }}
-            />
-            Xuất hoá đơn
-          </Button>
+          {updateMode && (
+            <Button
+              type="primary"
+              shape="round"
+              style={{
+                width: "fitContent",
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                paddingTop: "2.1rem",
+                paddingBottom: "2.1rem",
+                paddingLeft: "2.8rem",
+                paddingRight: "2.8rem",
+                background: "darkcyan",
+              }}
+              onClick={() => handleExportExcel()}
+            >
+              <img
+                src={excelImg}
+                alt=""
+                style={{ height: "2.5rem", width: "2.5rem" }}
+              />
+              Xuất hoá đơn
+            </Button>
+          )}
         </div>
 
         <Tabs

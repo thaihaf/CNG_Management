@@ -1,45 +1,32 @@
 import {
   Button,
   Form,
-  message,
   Modal,
   notification,
   Select,
   Spin,
   Tabs,
-  Tooltip,
   Typography,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getWarehouses } from "features/warehouse-manager/warehouseManager";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { searchProductBySupplier } from "features/product-manager/productManager";
-
+import queryString from "query-string";
 import {
   clearProductImport,
   createProductImport,
   deleteProductImport,
   ImportProductManagerPaths,
-  updateProductImport,
   updateProductImports,
 } from "features/import-product/importProduct";
 import "./ImportWrapper.css";
-import { getSuppliers } from "features/supplier-manager/supplierManager";
 
-import totalCostImg from "assets/gif/purse.gif";
 import deleteFileImg from "assets/icons/deleteFile.png";
 import uploadFileImg from "assets/icons/uploadFile.png";
 
-import { getMessage, getStatusString } from "helpers/util.helper";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import {
-  CaretDownFilled,
-  CaretUpFilled,
-  ExclamationCircleOutlined,
-} from "@ant-design/icons";
+import { getStatusString } from "helpers/util.helper";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import StatisticGroups from "../StatisticGroups/StatisticGroups";
 import InsertProductTable from "../TableCreate/TableCreate";
@@ -59,6 +46,7 @@ const ImportWrapper = ({ updateMode }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [form] = Form.useForm();
+  const location = useLocation();
 
   const [activeTab, setActiveTab] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -132,14 +120,17 @@ const ImportWrapper = ({ updateMode }) => {
       }
     }
 
+    // ko có sản phẩm
     if (listProduct.length === 0) {
       notification.warning({
         message: "Đơn nhập",
         description: "Vui lòng nhập ít nhất một sản phẩm!",
       });
+      setActiveTab("table");
       return;
     }
 
+    // ko có warehouse
     const pLostWarehouse = listProduct.find((p) => {
       let warehouse = form.getFieldValue([`${p.id}_${p.index}`, "warehouse"]);
       return (
@@ -147,12 +138,24 @@ const ImportWrapper = ({ updateMode }) => {
         (!warehouse || warehouse.length === 0)
       );
     });
-
     if (pLostWarehouse) {
       notification.warning({
         message: "Đơn nhập",
-        description: `Sản phẩm có Mã ${pLostWarehouse.id}, với vị trí tại ${pLostWarehouse.index} cần chọn ít nhất một Kho`,
+        description: `Sản phẩm có Mã ${pLostWarehouse.id}, với STT tại ${pLostWarehouse.index} cần chọn ít nhất một Kho`,
       });
+
+      setActiveTab("table");
+      return;
+    }
+
+    // thời gian tương lai
+    if (value.importDate.isAfter(dayjs()) && value.status === 2) {
+      notification.warning({
+        message: "Đơn nhập",
+        description: "Ngày duyệt đơn không thể sau ngày hiện tại!",
+      });
+
+      setActiveTab("details");
       return;
     }
 
@@ -179,8 +182,6 @@ const ImportWrapper = ({ updateMode }) => {
       importProductDetailDTOS: importProductDetailDTOS,
     };
 
-    console.log(exportData);
-
     setIsLoading(true);
     dispatch(
       updateMode
@@ -199,7 +200,15 @@ const ImportWrapper = ({ updateMode }) => {
             updateMode ? "Cập nhật" : "Tạo mới"
           } Đơn nhập thành công!`,
         });
-        history.push(ImportProductManagerPaths.LIST_PRODUCT_IMPORT);
+
+        const params = queryString.parse(location.search);
+        history.push({
+          pathname: ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
+          search: queryString.stringify({
+            ...params,
+            sort: "createAt,desc",
+          }),
+        });
       })
       .catch((err) => {
         setIsLoading(false);

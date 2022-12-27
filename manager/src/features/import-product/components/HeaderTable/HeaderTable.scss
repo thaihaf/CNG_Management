@@ -7,6 +7,11 @@
   align-items: center;
   grid-template-columns: repeat(auto-fit, minmax(50px, 300px));
 
+  .ant-picker-disabled input,
+  .ant-input-disabled,
+  .ant-select-disabled .ant-select-selection-item {
+    color: black !important;
+  }
   .details__item {
     .ant-picker {
       border-radius: 2rem !important;
@@ -16,7 +21,6 @@
         min-height: 32px;
         padding-left: 1rem;
         padding-right: 1rem;
-
       }
     }
   }

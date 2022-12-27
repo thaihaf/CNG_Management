@@ -34,7 +34,7 @@ export default function StatisticGroups({ updateMode }) {
           <img src={squareMeterImg} alt="" />
         </div>
         <Form.Item name={"totalSquareMeterExport"} initialValue={0}>
-          <Statistic title="Tổng số mét vuông (m2)" precision={2} />
+          <Statistic title="Tổng mét vuông (m2)" precision={2} />
         </Form.Item>
       </div>
 

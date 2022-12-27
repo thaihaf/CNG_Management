@@ -1,56 +1,36 @@
 import {
-  AppstoreOutlined,
   CaretDownFilled,
-  CaretDownOutlined,
   CaretUpFilled,
-  CaretUpOutlined,
-  CloseOutlined,
-  DeleteFilled,
-  DeleteTwoTone,
-  DownCircleTwoTone,
   DownOutlined,
   ExclamationCircleOutlined,
   MinusCircleOutlined,
-  MinusOutlined,
   PlusOutlined,
-  RestTwoTone,
   SearchOutlined,
-  UpCircleTwoTone,
 } from "@ant-design/icons";
 import {
   Avatar,
   Button,
-  Col,
-  DatePicker,
-  Divider,
   Dropdown,
   Form,
   Input,
   InputNumber,
   Menu,
-  message,
   Modal,
   notification,
-  Row,
   Select,
   Space,
-  Spin,
   Statistic,
   Table,
-  Tag,
   Tooltip,
   Typography,
 } from "antd";
-import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation, useParams } from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
 import avt_default from "assets/images/avt-default.png";
 import {
   updateListProductLv2,
-  updateListProductLv3,
   updateProductImport,
   deleteProductImportDetail,
   deleteProductImportDetailWarehouse,
@@ -58,30 +38,22 @@ import {
 import "./TableUpdate.css";
 import { unwrapResult } from "@reduxjs/toolkit";
 import NewProductDetailsModal from "../NewProductDetailsModal/NewProductDetailsModal";
-import { getMessage } from "helpers/util.helper";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import { getEmployees } from "features/employee-manager/employeeManager";
-import HeaderTable from "../HeaderTable/HeaderTable";
 import { getDetailsProduct } from "features/product-manager/productManager";
 import SearchProduct from "../SearchProduct/SearchProduct";
 
 const { Option } = Select;
-const { Text, Title } = Typography;
 
 export default function TableUpdate({ form, updateMode, openHeader }) {
   const { listWarehouses } = useSelector((state) => state.warehouse);
-  const { productDetails } = useSelector((state) => state.product);
   const { productsImport, listProductLv2, productImportDetails } = useSelector(
     (state) => state.productImport
   );
 
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(10);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -197,9 +169,9 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
     const index = record.index;
 
     Modal.confirm({
-      title: `Xác nhận xoá ${type}`,
+      title: `Xác nhận xoá`,
       icon: <ExclamationCircleOutlined />,
-      content: `Bạn có chắc chắn muốn xoá ${type} không?`,
+      content: `Bạn có chắc chắn muốn xoá không?`,
       okText: "Xoá bỏ",
       cancelText: "Huỷ bỏ",
       onOk: () => {
@@ -524,7 +496,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
       sorter: (a, b) => a.index > b.index,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("index", "index"),
-      render: (_, record) => <Title level={4}>{record.index}</Title>,
+      render: (_, record) => record.index,
     },
     {
       title: "Sản phẩm",
@@ -549,11 +521,11 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               alignItems: "center",
               justifyContent: "center",
               gap: "1.5rem",
-              padding: "0 1.5rem",
+              padding: "0 0.5rem",
             }}
           >
             <Avatar
-              size={70}
+              size={50}
               src={
                 record.listImage || !record.productDetailDTO?.fileAttachDTOList
                   ? record.listImage[0].filePath
@@ -573,7 +545,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
             >
               <div
                 style={{
-                  fontSize: "17px",
+                  fontSize: "14px",
                   fontWeight: "600",
                 }}
               >
@@ -608,7 +580,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               flexDirection: "column",
               justifyContent: "center",
               gap: "1rem",
-              padding: "0 1.5rem",
+              padding: "0 0.5rem",
             }}
           >
             <Form.Item
@@ -728,69 +700,80 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                 width: "100%",
               }}
             >
-              <Select
-                placeholder="Loại sản phẩm"
-                notFoundContent={null}
-                onChange={(value, option) => {
-                  listProductLv2.map((product) => {
-                    const pid =
-                      typeof product.id === "string"
-                        ? product.id
-                        : product.productDetailDTO?.productId ??
-                          product.productDetailDTO[0].productId;
+              {record.productDetailDTO ? (
+                <Select
+                  placeholder="Loại sản phẩm"
+                  notFoundContent={null}
+                  onChange={(value, option) => {
+                    listProductLv2.map((product) => {
+                      const pid =
+                        typeof product.id === "string"
+                          ? product.id
+                          : product.productDetailDTO?.productId ??
+                            product.productDetailDTO[0].productId;
 
-                    if (product.index === index && pid === id) {
-                      const a = product.productDetailDTO?.find(
-                        (item) => item.id === option.id
-                      );
-                    }
-                  });
-                }}
-                disabled={!isEditing(record)}
-              >
-                {record.productDetailDTO?.length && isEditing(record) ? (
-                  listProductLv2.map((product) => {
-                    const pid =
-                      typeof product.id === "string"
-                        ? product.id
-                        : product.productDetailDTO?.productId ??
-                          product.productDetailDTO[0].productId;
+                      if (product.index === index && pid === id) {
+                        const a = product.productDetailDTO?.find(
+                          (item) => item.id === option.id
+                        );
+                      }
+                    });
+                  }}
+                  disabled={!isEditing(record)}
+                >
+                  {record.productDetailDTO?.length && isEditing(record) ? (
+                    listProductLv2.map((product) => {
+                      const pid =
+                        typeof product.id === "string"
+                          ? product.id
+                          : product.productDetailDTO?.productId ??
+                            product.productDetailDTO[0].productId;
 
-                    if (product.index === index && pid === id) {
-                      return product.productDetailDTO?.map(
-                        (item, index, arr) => {
-                          let listItem = arr.filter(
-                            (i) => i.type === item.type
-                          );
-                          if (listItem[0].id === item.id) {
-                            return (
-                              <Option
-                                value={`${item.id}_${item.type}`}
-                                key={`${item.id}_${item.type}`}
-                                id={item.id}
-                                disabled={item.status === 0 ? true : false}
-                              >
-                                {item.type}
-                              </Option>
+                      if (product.index === index && pid === id) {
+                        return product.productDetailDTO?.map(
+                          (item, index, arr) => {
+                            let listItem = arr.filter(
+                              (i) => i.type === item.type
                             );
+                            if (listItem[0].id === item.id) {
+                              return (
+                                <Option
+                                  value={`${item.id}_${item.type}`}
+                                  key={`${item.id}_${item.type}`}
+                                  id={item.id}
+                                  disabled={item.status === 0 ? true : false}
+                                >
+                                  {item.type}
+                                </Option>
+                              );
+                            }
                           }
-                        }
-                      );
-                    }
-                  })
-                ) : (
-                  <Option value={typeOfInitialValues || ""}>
-                    {typeOfInitialValues?.split("_")[1]}
-                  </Option>
-                )}
-              </Select>
+                        );
+                      }
+                    })
+                  ) : (
+                    <Option value={typeOfInitialValues || ""}>
+                      {typeOfInitialValues?.split("_")[1]}
+                    </Option>
+                  )}
+                </Select>
+              ) : (
+                <Input
+                  type="text"
+                  disabled
+                  placeholder="Loại"
+                  style={{
+                    color: "black",
+                  }}
+                />
+              )}
             </Form.Item>
           </div>
         );
       },
     },
     {
-      title: "Chi phí trên mỗi mét vuông (vnđ)",
+      title: "Giá nhập/m2 (vnđ)",
       dataIndex: "costPerSquareMeter",
       key: "costPerSquareMeter",
       align: "center",
@@ -831,17 +814,15 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
             ]}
             onChange={(value) => onHandleChangeCost(record, value)}
             initialValue={1000}
-            style={{
-              minWidth: 170,
-            }}
+            style={{ padding: "0 0.5rem", minWidth: "100px" }}
           >
             {isEditing(record) ? (
               <InputNumber
                 min={1}
                 onStep={(value) => onHandleChangeCost(record, value)}
                 style={{
-                  minWidth: 120,
-                  width: 120,
+                  minWidth: 150,
+                  width: 150,
                 }}
               />
             ) : (
@@ -850,9 +831,8 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                 disabled
                 style={{
                   color: "black",
-
-                  minWidth: 120,
-                  width: 120,
+                  minWidth: 150,
+                  width: 150,
                 }}
               />
             )}
@@ -861,7 +841,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
       },
     },
     {
-      title: "Hộp số lượng",
+      title: "Số hộp",
       dataIndex: "totalQuantityBox",
       key: "totalQuantityBox",
       align: "center",
@@ -887,13 +867,15 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         <Form.Item
           name={[
             `${
-              record.productDetailDTO?.productId ??
-              record.productDetailDTO[0].productId
+              typeof record.id === "string"
+                ? record.id
+                : record.productDetailDTO?.productId ??
+                  record.productDetailDTO[0].productId
             }_${record.index}`,
             "totalQuantityBox",
           ]}
           initialValue={0}
-          style={{ minWidth: "150px" }}
+          style={{ padding: "0 0.5rem", minWidth: "100px" }}
         >
           <Statistic />
         </Form.Item>
@@ -925,20 +907,22 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         <Form.Item
           name={[
             `${
-              record.productDetailDTO?.productId ??
-              record.productDetailDTO[0].productId
+              typeof record.id === "string"
+                ? record.id
+                : record.productDetailDTO?.productId ??
+                  record.productDetailDTO[0].productId
             }_${record.index}`,
             "totalSquareMeter",
           ]}
           initialValue={0}
-          style={{ padding: "0 1.5rem" }}
+          style={{ padding: "0 0.5rem", minWidth: "100px" }}
         >
           <Statistic precision={2} />
         </Form.Item>
       ),
     },
     {
-      title: "Chi phí (vnđ)",
+      title: "Thành tiền (vnđ)",
       dataIndex: "totalCost",
       key: "totalCost",
       align: "center",
@@ -956,21 +940,23 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
         );
       },
       sortDirections: ["descend", "ascend"],
-      render: (_, record) => (
-        <Form.Item
-          name={[
-            `${
-              record.productDetailDTO?.productId ??
-              record.productDetailDTO[0].productId
-            }_${record.index}`,
-            "totalCost",
-          ]}
-          initialValue={0}
-          style={{ padding: "0 1.5rem" }}
-        >
-          <Statistic style={{ minWidth: "150px" }} precision={0} />
-        </Form.Item>
-      ),
+      render: (_, record) => {
+        const id =
+          typeof record.id === "string"
+            ? record.id
+            : record.productDetailDTO?.productId ??
+              record.productDetailDTO[0].productId;
+        const index = record.index;
+        return (
+          <Form.Item
+            name={[`${id}_${index}`, "totalCost"]}
+            initialValue={0}
+            style={{ padding: "0 0.5rem", minWidth: "100px" }}
+          >
+            <Statistic precision={0} />
+          </Form.Item>
+        );
+      },
     },
     {
       title: "Ghi chú",
@@ -978,46 +964,45 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
       key: "noteImport",
       align: "center",
       editable: false,
-      render: (_, record) => (
-        <Form.Item
-          name={[
-            `${
-              record.productDetailDTO?.productId ??
-              record.productDetailDTO[0].productId
-            }_${record.index}`,
-            "noteImport",
-          ]}
-        >
-          <Input.TextArea
-            showCount
-            maxLength={300}
-            placeholder="Product note"
-            disabled={!isEditing(record)}
-            style={{
-              height: "100%",
-              resize: "none",
-              minWidth: "200px",
-              color: "black",
-            }}
-          />
-        </Form.Item>
-      ),
+      render: (_, record) => {
+        const id =
+          typeof record.id === "string"
+            ? record.id
+            : record.productDetailDTO?.productId ??
+              record.productDetailDTO[0].productId;
+        const index = record.index;
+
+        return (
+          <Form.Item name={[`${id}_${index}`, "noteImport"]}>
+            <Input.TextArea
+              showCount
+              maxLength={300}
+              disabled={!isEditing(record)}
+              style={{
+                height: "100%",
+                resize: "none",
+                minWidth: "200px",
+                color: "black",
+              }}
+            />
+          </Form.Item>
+        );
+      },
     },
     {
       title: "Hành động",
       dataIndex: "operation",
       key: "operation",
       align: "center",
-      width: 120,
-      render: (_, record) => (
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item>
-                <NewProductDetailsModal record={record} />
-              </Menu.Item>
-              {productImportDetails?.status !== 2 && (
-                <>
+      render: (_, record) => {
+        let isCreate =
+          !record.productDetailDTO || record.productDetailDTO?.length;
+
+        return (
+          productImportDetails?.status !== 2 && (
+            <Dropdown
+              overlay={
+                <Menu>
                   {typeof record.id === "number" && (
                     <Menu.Item
                       onClick={() => onRowEdit(record)}
@@ -1026,21 +1011,27 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                       Chỉnh sửa sản phẩm
                     </Menu.Item>
                   )}
+                  {isCreate && (
+                    <Menu.Item>
+                      <NewProductDetailsModal record={record} />
+                    </Menu.Item>
+                  )}
+
                   <Menu.Item
                     onClick={() => onRowDelete("deleteProduct", record)}
                   >
                     Xoá sản phẩm
                   </Menu.Item>
-                </>
-              )}
-            </Menu>
-          }
-        >
-          <a>
-            Xem thêm <DownOutlined />
-          </a>
-        </Dropdown>
-      ),
+                </Menu>
+              }
+            >
+              <a>
+                Xem thêm <DownOutlined />
+              </a>
+            </Dropdown>
+          )
+        );
+      },
     },
   ];
 
@@ -1087,9 +1078,11 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
 
   return (
     <Table
-      size="middle"
       className={
         openHeader ? "listProductImport tranform" : "listProductImport"
+      }
+      rowClassName={(record, index) =>
+        index % 2 === 0 ? "table-row table-row-even" : "table-row table-row-odd"
       }
       columns={productColumns}
       dataSource={[...productsImport]}
@@ -1131,12 +1124,12 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                           >
                             <Form.Item
                               {...restField}
-                              label="Warehouse"
+                              label="Kho hàng"
                               name={[name, "warehouseId"]}
                               rules={[
                                 {
                                   required: true,
-                                  message: "Missing warehouse",
+                                  message: "Kho hàng bị thiếu",
                                 },
                                 ({ getFieldValue }) => ({
                                   validator(_, value) {
@@ -1151,7 +1144,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                                       return Promise.resolve();
                                     }
                                     return Promise.reject(
-                                      new Error("The Warehouse be duplicated!")
+                                      new Error("Kho hàng đã được chọn!")
                                     );
                                   },
                                 }),
@@ -1173,12 +1166,12 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
 
                             <Form.Item
                               {...restField}
-                              label="Quantity"
+                              label="Số lượng"
                               name={[name, "quantityBox"]}
                               rules={[
                                 {
                                   required: true,
-                                  message: "Missing quantity",
+                                  message: "Số lượng bị thiếu",
                                 },
                               ]}
                               onChange={() => onHandleChangeQuantity(record)}
@@ -1208,23 +1201,25 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
                       })}
                     </div>
 
-                    <Form.Item>
-                      <Button
-                        type="dashed"
-                        onClick={() => {
-                          add();
-                          onHandleChangeQuantity(record);
-                        }}
-                        block
-                        icon={<PlusOutlined />}
-                        disabled={
-                          !isEditing(record) ||
-                          fields.length === listWarehouses.length
-                        }
-                      >
-                        Add new select Warehouse
-                      </Button>
-                    </Form.Item>
+                    {productImportDetails?.status !== 2 && (
+                      <Form.Item>
+                        <Button
+                          type="dashed"
+                          onClick={() => {
+                            add();
+                            onHandleChangeQuantity(record);
+                          }}
+                          block
+                          icon={<PlusOutlined />}
+                          disabled={
+                            !isEditing(record) ||
+                            fields.length === listWarehouses.length
+                          }
+                        >
+                          Thêm mới Kho hàng
+                        </Button>
+                      </Form.Item>
+                    )}
                   </>
                 );
               }}
@@ -1232,7 +1227,7 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
           );
         },
         expandIcon: ({ expanded, onExpand, record }) => (
-          <Tooltip placement="topRight" title={"Show warehouse select"}>
+          <Tooltip placement="topRight" title={"Hiển thị Kho hàng"}>
             {expanded ? (
               <CaretUpFilled
                 style={{
@@ -1263,11 +1258,15 @@ export default function TableUpdate({ form, updateMode, openHeader }) {
               current: currentPage,
               total: productsImport.length,
               onChange: (page, size) => onHandlePagination(page, size),
-              pageSizeOptions: ["2", "5", "10"],
+              pageSizeOptions: ["10", "15", "20"],
             }
           : false
       }
-      title={() => productImportDetails?.status !== 2 && <SearchProduct updateMode={updateMode}/>}
+      title={() =>
+        productImportDetails?.status !== 2 && (
+          <SearchProduct updateMode={updateMode} form={form} />
+        )
+      }
     />
   );
 }

@@ -17,6 +17,7 @@ import { getStatusString } from "helpers/util.helper";
 import {
   statusProductExport,
   statusProductReExport,
+  typeExport,
 } from "features/export-product/constants/export-product.constants";
 import {
   getAllProductExport,
@@ -179,7 +180,7 @@ export default function ListProductExport() {
       ...getColumnSearchProps("type"),
       render: (_, { type }) => (
         <Tag color="darkseagreen" key={type}>
-          {type}
+          {getStatusString(type, typeExport)}
         </Tag>
       ),
     },
@@ -203,7 +204,7 @@ export default function ListProductExport() {
       ...getColumnSearchProps("licensePlates"),
     },
     {
-      title: "Tổng số lượng nhập",
+      title: "Tổng số lượng",
       dataIndex: "totalQuantityExport",
       key: "totalQuantityExport",
       align: "center",
@@ -214,7 +215,7 @@ export default function ListProductExport() {
       },
     },
     {
-      title: "Tổng số mét vuông nhập",
+      title: "Tổng mét vuông",
       dataIndex: "totalSquareMeterExport",
       key: "totalSquareMeterExport",
       align: "center",
@@ -227,7 +228,7 @@ export default function ListProductExport() {
       },
     },
     {
-      title: "Tổng giá nhập",
+      title: "Tổng giá",
       dataIndex: "totalExportOrderPrice",
       key: "totalExportOrderPrice",
       align: "center",

@@ -207,7 +207,7 @@ export default function DashboardByMonth() {
       },
     },
     {
-      title: "Số M2 trả hàng (m2)",
+      title: "Số M2 nhập lại (m2)",
       dataIndex: "totalSquareMeterReExport",
       key: "totalSquareMeterReExport",
       align: "center",
@@ -216,7 +216,7 @@ export default function DashboardByMonth() {
       },
     },
     {
-      title: "Tiền trả hàng (vnđ)",
+      title: "Tiền nhập lại (vnđ)",
       dataIndex: "totalPriceReExport",
       key: "totalPriceReExport",
       align: "center",

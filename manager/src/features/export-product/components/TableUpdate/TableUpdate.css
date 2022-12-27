@@ -16,6 +16,24 @@
 .listProductImport {
   border-radius: 0px 0px 2rem 2rem;
 }
+.listProductImport .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.listProductImport .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.listProductImport .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.listProductImport .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background: unset;
+}
+.listProductImport td.ant-table-cell {
+  border: unset !important;
+}
+.listProductImport .table-row-even {
+  background: #fff;
+}
+.listProductImport .table-row-odd {
+  background: #f1f9ff;
+}
+.listProductImport .ant-input-disabled {
+  color: black !important;
+}
 .listProductImport .ant-table-container {
   transition: all 0.3s ease;
   background-color: #fff;

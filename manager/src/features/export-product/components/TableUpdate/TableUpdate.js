@@ -494,7 +494,7 @@ export default function TableUpdate({ form, updateMode }) {
       sorter: (a, b) => a.index > b.index,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("index", "index"),
-      render: (_, record) => <Title level={4}>{record.index}</Title>,
+      render: (_, record) => record.index,
     },
     {
       title: "Sản phẩm",
@@ -520,11 +520,11 @@ export default function TableUpdate({ form, updateMode }) {
               alignItems: "center",
               justifyContent: "center",
               gap: "1.5rem",
-              padding: "0 1.5rem",
+              padding: "0 0.5rem",
             }}
           >
             <Avatar
-              size={70}
+              size={50}
               src={
                 record.listImage || !record.productDetailDTO?.fileAttachDTOList
                   ? record.listImage[0].filePath
@@ -544,7 +544,7 @@ export default function TableUpdate({ form, updateMode }) {
             >
               <div
                 style={{
-                  fontSize: "17px",
+                  fontSize: "14px",
                   fontWeight: "600",
                 }}
               >
@@ -579,7 +579,7 @@ export default function TableUpdate({ form, updateMode }) {
               flexDirection: "column",
               justifyContent: "center",
               gap: "1rem",
-              padding: "0 1.5rem",
+              padding: "0 0.5rem",
             }}
           >
             <Form.Item
@@ -700,74 +700,85 @@ export default function TableUpdate({ form, updateMode }) {
                 }),
               ]}
             >
-              <Select
-                placeholder="Loại sản phẩm"
-                notFoundContent={null}
-                onChange={(value, option) => {
-                  form.setFieldValue([
-                    `${record.id}_${record.index}`,
-                    "warehouse",
-                  ]);
+              {record.productDetailDTO ? (
+                <Select
+                  placeholder="Loại sản phẩm"
+                  notFoundContent={null}
+                  onChange={(value, option) => {
+                    form.setFieldValue([
+                      `${record.id}_${record.index}`,
+                      "warehouse",
+                    ]);
 
-                  listProductLv2.map((product) => {
-                    const pid =
-                      typeof product.id === "string"
-                        ? product.id
-                        : product.productDetailDTO?.productId ??
-                          product.productDetailDTO[0].productId;
+                    listProductLv2.map((product) => {
+                      const pid =
+                        typeof product.id === "string"
+                          ? product.id
+                          : product.productDetailDTO?.productId ??
+                            product.productDetailDTO[0].productId;
 
-                    if (product.index === index && pid === id) {
-                      const a = product.productDetailDTO?.find(
-                        (item) => item.id === option.id
-                      );
-                    }
-                  });
-                }}
-                disabled={!isEditing(record)}
-              >
-                {record.productDetailDTO?.length && isEditing(record) ? (
-                  listProductLv2.map((product) => {
-                    const pid =
-                      typeof product.id === "string"
-                        ? product.id
-                        : product.productDetailDTO?.productId ??
-                          product.productDetailDTO[0].productId;
+                      if (product.index === index && pid === id) {
+                        const a = product.productDetailDTO?.find(
+                          (item) => item.id === option.id
+                        );
+                      }
+                    });
+                  }}
+                  disabled={!isEditing(record)}
+                >
+                  {record.productDetailDTO?.length && isEditing(record) ? (
+                    listProductLv2.map((product) => {
+                      const pid =
+                        typeof product.id === "string"
+                          ? product.id
+                          : product.productDetailDTO?.productId ??
+                            product.productDetailDTO[0].productId;
 
-                    if (product.index === index && pid === id) {
-                      return product.productDetailDTO?.map(
-                        (item, index, arr) => {
-                          let listItem = arr.filter(
-                            (i) => i.type === item.type
-                          );
-                          if (listItem[0].id === item.id) {
-                            return (
-                              <Option
-                                value={`${item.id}_${item.type}`}
-                                key={`${item.id}_${item.type}`}
-                                id={item.id}
-                                disabled={item.status === 0 ? true : false}
-                              >
-                                {item.type}
-                              </Option>
+                      if (product.index === index && pid === id) {
+                        return product.productDetailDTO?.map(
+                          (item, index, arr) => {
+                            let listItem = arr.filter(
+                              (i) => i.type === item.type
                             );
+                            if (listItem[0].id === item.id) {
+                              return (
+                                <Option
+                                  value={`${item.id}_${item.type}`}
+                                  key={`${item.id}_${item.type}`}
+                                  id={item.id}
+                                  disabled={item.status === 0 ? true : false}
+                                >
+                                  {item.type}
+                                </Option>
+                              );
+                            }
                           }
-                        }
-                      );
-                    }
-                  })
-                ) : (
-                  <Option value={typeOfInitialValues || ""}>
-                    {typeOfInitialValues?.split("_")[1]}
-                  </Option>
-                )}
-              </Select>
+                        );
+                      }
+                    })
+                  ) : (
+                    <Option value={typeOfInitialValues || ""}>
+                      {typeOfInitialValues?.split("_")[1]}
+                    </Option>
+                  )}
+                </Select>
+              ) : (
+                <Input
+                  type="text"
+                  disabled
+                  placeholder="Loại"
+                  style={{
+                    color: "black",
+                  }}
+                />
+              )}
             </Form.Item>
           </div>
         );
       },
     },
     {
-      title: "Giá trên mỗi mét vuông (vnđ)",
+      title: "Giá xuất/m2 (vnđ)",
       dataIndex: "pricePerSquareMeter",
       key: "pricePerSquareMeter",
       align: "center",
@@ -808,17 +819,15 @@ export default function TableUpdate({ form, updateMode }) {
             ]}
             onChange={(value) => onHandleChangeCost(record, value)}
             initialValue={1000}
-            style={{
-              minWidth: 170,
-            }}
+            style={{ padding: "0 0.5rem", minWidth: "100px" }}
           >
             {isEditing(record) ? (
               <InputNumber
                 min={1}
                 onStep={(value) => onHandleChangeCost(record, value)}
                 style={{
-                  minWidth: 120,
-                  width: 120,
+                  minWidth: 150,
+                  width: 150,
                 }}
               />
             ) : (
@@ -827,8 +836,8 @@ export default function TableUpdate({ form, updateMode }) {
                 disabled
                 style={{
                   color: "black",
-                  minWidth: 120,
-                  width: 120,
+                  minWidth: 150,
+                  width: 150,
                 }}
               />
             )}
@@ -837,7 +846,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Hộp số lượng",
+      title: "Số hộp",
       dataIndex: "quantityBox",
       key: "quantityBox",
       align: "center",
@@ -867,7 +876,7 @@ export default function TableUpdate({ form, updateMode }) {
           <Form.Item
             name={[`${id}_${index}`, "quantityBox"]}
             initialValue={0}
-            style={{ minWidth: "150px" }}
+            style={{ padding: "0 0.5rem", minWidth: "100px" }}
           >
             <Statistic />
           </Form.Item>
@@ -908,7 +917,7 @@ export default function TableUpdate({ form, updateMode }) {
           <Form.Item
             name={[`${id}_${index}`, "totalSquareMeter"]}
             initialValue={0}
-            style={{ padding: "0 1.5rem" }}
+            style={{ padding: "0 0.5rem", minWidth: "100px" }}
           >
             <Statistic precision={2} />
           </Form.Item>
@@ -916,7 +925,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Giá (vnđ)",
+      title: "Thành tiền (vnđ)",
       dataIndex: "totalPrice",
       key: "totalPrice",
       align: "center",
@@ -946,7 +955,7 @@ export default function TableUpdate({ form, updateMode }) {
           <Form.Item
             name={[`${id}_${index}`, "totalPrice"]}
             initialValue={0}
-            style={{ padding: "0 1.5rem" }}
+            style={{ padding: "0 0.5rem", minWidth: "100px" }}
           >
             <Statistic style={{ minWidth: "150px" }} precision={0} />
           </Form.Item>
@@ -1070,6 +1079,9 @@ export default function TableUpdate({ form, updateMode }) {
     <Table
       size="middle"
       className="listProductImport"
+      rowClassName={(record, index) =>
+        index % 2 === 0 ? "table-row table-row-even" : "table-row table-row-odd"
+      }
       columns={productColumns}
       dataSource={[...productsExport]}
       rowKey={(record) => {
@@ -1109,6 +1121,10 @@ export default function TableUpdate({ form, updateMode }) {
                   productDetailDTO?.productWarehouseDTOList?.filter(
                     (item) => item.quantityBox > 0
                   )?.length;
+
+                let addWarehouse =
+                  productExportDetails?.status !== 2 ||
+                  productExportDetails?.status !== 4;
 
                 return (
                   <>
@@ -1240,25 +1256,27 @@ export default function TableUpdate({ form, updateMode }) {
                       })}
                     </div>
 
-                    <Form.Item>
-                      <Button
-                        type="dashed"
-                        onClick={() => {
-                          add();
-                          onHandleChangeQuantity(record);
-                        }}
-                        block
-                        icon={<PlusOutlined />}
-                        disabled={
-                          !isEditing(record) ||
-                          !detailID ||
-                          !maxLength ||
-                          fields.length === maxLength
-                        }
-                      >
-                        Add new select Warehouse
-                      </Button>
-                    </Form.Item>
+                    {addWarehouse && (
+                      <Form.Item>
+                        <Button
+                          type="dashed"
+                          onClick={() => {
+                            add();
+                            onHandleChangeQuantity(record);
+                          }}
+                          block
+                          icon={<PlusOutlined />}
+                          disabled={
+                            !isEditing(record) ||
+                            !detailID ||
+                            !maxLength ||
+                            fields.length === maxLength
+                          }
+                        >
+                          Add new select Warehouse
+                        </Button>
+                      </Form.Item>
+                    )}
                   </>
                 );
               }}

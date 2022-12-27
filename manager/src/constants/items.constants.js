@@ -45,19 +45,19 @@ export const getSideBarItems = (role) => {
     getItem(["admin"], "Thống kê", "statistical", <DashboardOutlined />, [
       getItem(
         ["admin"],
-        "Dashboard",
+        "Tổng quát",
         DashboardPaths.DASHBOARD,
         <DashboardOutlined />
       ),
       getItem(
         ["admin"],
-        "Thống kê",
+        "Theo thời gian",
         DashboardPaths.DASHBOARD_MANAGER,
         <DashboardOutlined />
       ),
       getItem(
         ["admin"],
-        "Báo cáo hằng ngày",
+        "Hằng ngày",
         DashboardPaths.DASHBOARD_CUSTOMER_DAILY,
         <DashboardOutlined />
       ),
@@ -102,18 +102,50 @@ export const getSideBarItems = (role) => {
     ),
     getItem(
       ["admin", "employee"],
+      "Công nợ",
+      "debt-manager",
+      <DashboardOutlined />,
+      [
+        getItem(
+          ["admin", "employee"],
+          "Nhà cung cấp",
+          SupplierManagerPaths.SUPPLIER_LIST,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin", "employee"],
+          "Khách hàng",
+          CustomerManagerPaths.CUSTOMER_LIST,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin"],
+          "Công nợ Nhà cung cấp",
+          SupplierDebtPaths.SUPPLIER_DEBT_MANAGER,
+          <DashboardOutlined />
+        ),
+        getItem(
+          ["admin", "employee"],
+          "Công nợ Khách hàng",
+          CustomerDebtPaths.CUSTOMER_DEBT_MANAGER,
+          <DashboardOutlined />
+        ),
+      ]
+    ),
+    getItem(
+      ["admin", "employee"],
       "Quản lý",
       "user-manager",
       <DashboardOutlined />,
       [
         getItem(
-          ["admin", "employee"],
+          ["admin"],
           "Tài khoản",
           EmployeeManagerPaths.ACCOUNT_LIST,
           <DashboardOutlined />
         ),
         getItem(
-          ["admin", "employee"],
+          ["admin"],
           "Nhân viên",
           EmployeeManagerPaths.EMPLOYEE_MANAGER,
           <DashboardOutlined />
@@ -134,38 +166,6 @@ export const getSideBarItems = (role) => {
           ["admin", "employee"],
           "Kho hàng",
           WarehouseManagerPaths.WAREHOUSE_LIST,
-          <DashboardOutlined />
-        ),
-      ]
-    ),
-    getItem(
-      ["admin", "employee"],
-      "Công nợ",
-      "debt-manager",
-      <DashboardOutlined />,
-      [
-        getItem(
-          ["admin", "employee"],
-          "Nhà cung cấp",
-          SupplierManagerPaths.SUPPLIER_LIST,
-          <DashboardOutlined />
-        ),
-        getItem(
-          ["admin", "employee"],
-          "Khách hàng",
-          CustomerManagerPaths.CUSTOMER_LIST,
-          <DashboardOutlined />
-        ),
-        getItem(
-          ["admin"],
-          "Cộng nợ Nhà cung cấp",
-          SupplierDebtPaths.SUPPLIER_DEBT_MANAGER,
-          <DashboardOutlined />
-        ),
-        getItem(
-          ["admin"],
-          "Công nợ Khách hàng",
-          CustomerDebtPaths.CUSTOMER_DEBT_MANAGER,
           <DashboardOutlined />
         ),
       ]

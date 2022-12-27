@@ -88,6 +88,7 @@ const initialState = {
   listAllProductImport: [],
   productsImport: [],
   listProductLv2: [],
+  dataSearch : [],
   totalElements: 0,
   page: 0,
   size: 0,
@@ -104,10 +105,14 @@ const importProductSlice = createSlice({
     updateListProductLv2: (state, action) => {
       state.listProductLv2 = action.payload;
     },
+    updateDataSearch: (state, action) => {
+      state.dataSearch = action.payload;
+    },
     clearProductImport: (state, action) => {
       state.productsImport = [];
       state.listProductLv2 = [];
       state.productImportDetails = null;
+      state.dataSearch = [];
     },
   },
   extraReducers: {
@@ -120,7 +125,7 @@ const importProductSlice = createSlice({
     [getProductImportDetails.fulfilled]: (state, action) => {
       let newProductImport = action.payload.importProductDetailDTOS.map(
         (item, index) => {
-          return { ...item, index: index+1 };
+          return { ...item, index: index + 1 };
         }
       );
       state.productImportDetails = action.payload;
@@ -132,7 +137,11 @@ const importProductSlice = createSlice({
   },
 });
 
-export const { updateProductImport, updateListProductLv2, clearProductImport } =
-  importProductSlice.actions;
+export const {
+  updateProductImport,
+  updateListProductLv2,
+  clearProductImport,
+  updateDataSearch,
+} = importProductSlice.actions;
 
 export const importProductReducer = importProductSlice.reducer;

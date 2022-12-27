@@ -13,6 +13,6 @@ export const statusProductReExport = [
   { label: "Đã Duyệt đơn", value: 4, key: "Đã Duyệt đơn", color: "green" },
 ];
 export const typeExport = [
-  { label: "EXPORT", value: "EXPORT", key: "EXPORT", color: "darkseagreen" },
-  { label: "RE-EXPORT", value: "RE-EXPORT", key: "RE-EXPORT", color: "green" },
+  { label: "XUẤT HÀNG", value: "EXPORT", key: "EXPORT", color: "darkseagreen" },
+  { label: "NHẬP LẠI", value: "RE-EXPORT", key: "RE-EXPORT", color: "green" },
 ];

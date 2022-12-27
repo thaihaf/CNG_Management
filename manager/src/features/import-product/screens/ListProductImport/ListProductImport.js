@@ -213,7 +213,7 @@ export default function ListProductImport() {
       ...getColumnSearchProps("licensePlates"),
     },
     {
-      title: "Tổng số lượng nhập",
+      title: "Tổng số hộp",
       dataIndex: "totalQuantityImport",
       key: "totalQuantityImport",
       align: "center",
@@ -224,7 +224,7 @@ export default function ListProductImport() {
       },
     },
     {
-      title: "Tổng số mét vuông nhập",
+      title: "Tổng số m2 nhập",
       dataIndex: "totalSquareMeterImport",
       key: "totalSquareMeterImport",
       align: "center",
@@ -237,7 +237,7 @@ export default function ListProductImport() {
       },
     },
     {
-      title: "Tổng chi phí nhập",
+      title: "Tổng giá nhập",
       dataIndex: "totalCostImport",
       key: "totalCostImport",
       align: "center",
@@ -254,7 +254,7 @@ export default function ListProductImport() {
       align: "center",
       ...getColumnSearchProps("supplierDTO", "supplierName"),
       render: (_, { supplierDTO }) => (
-        <Tag color="blue" key={supplierDTO?.id}>
+        <Tag color="teal" key={supplierDTO?.id}>
           {supplierDTO?.supplierName.toUpperCase()}
         </Tag>
       ),
@@ -266,7 +266,7 @@ export default function ListProductImport() {
       align: "center",
       ...getColumnSearchProps("employeeDTO", ["firstName", "lastName"]),
       render: (_, { employeeDTO }) => (
-        <Tag color="blue" key={employeeDTO.id}>
+        <Tag color="darkturquoise" key={employeeDTO.id}>
           {`${employeeDTO.firstName.toUpperCase()} ${employeeDTO.lastName.toUpperCase()}`}
         </Tag>
       ),
@@ -282,10 +282,10 @@ export default function ListProductImport() {
       onFilter: (value, record) => record.status === value,
       filterSearch: true,
       render: (s) => {
-        // let color = s == 1 ? "green" : "volcano";
+        let color = s == 2 ? "green" : "volcano";
 
         return (
-          <Tag color="green" key={s}>
+          <Tag color={color} key={s}>
             {getStatusString(s, statusProductImport)}
           </Tag>
         );

@@ -16,6 +16,7 @@ import { CODE_ERROR } from "constants/errors.constants";
 import { MESSAGE_ERROR } from "constants/messages.constants";
 import { typeDetails } from "features/import-product/constants/import-product.constants";
 import {
+  updateDataSearch,
   updateListProductLv2,
   updateProductImport,
 } from "features/import-product/importProduct";
@@ -29,7 +30,9 @@ const { Text } = Typography;
 
 export default function NewProductDetailsModal({ record }) {
   const [newProductDetailsForm] = Form.useForm();
-  const { productsImport } = useSelector((state) => state.productImport);
+  const { productsImport, dataSearch, listProductLv2 } = useSelector(
+    (state) => state.productImport
+  );
 
   const dispatch = useDispatch();
 
@@ -37,7 +40,7 @@ export default function NewProductDetailsModal({ record }) {
   const [isLoadingModal, setIsLoadingModal] = useState(false);
 
   const hanleSubmit = (value) => {
-    console.log(value);
+    console.log(record.productDetailDTO);
     let checkExist = record.productDetailDTO?.find(
       (item) => item.shipment === value.shipment && item.type === value.type
     );
@@ -48,18 +51,40 @@ export default function NewProductDetailsModal({ record }) {
       dispatch(createDetailsProduct(value))
         .then(unwrapResult)
         .then((res) => {
-          let newproductDetailDTO = record.productDetailDTO
-            ? [...record.productDetailDTO, res]
-            : [res];
+          const getDetails = (product) => {
+            let newproductDetailDTO = product.productDetailDTO
+              ? [...product.productDetailDTO, res]
+              : [res];
+
+            return newproductDetailDTO;
+          };
 
           let ab = productsImport.map((product) => {
-            if (product.index === record.index) {
-              return { ...record, productDetailDTO: newproductDetailDTO };
+            if (product.id === record.id) {
+              return { ...product, productDetailDTO: getDetails(product) };
             } else {
               return product;
             }
           });
           dispatch(updateProductImport(ab));
+          
+          let abd = listProductLv2.map((product) => {
+            if (product.id === record.id || product.id === res.productId) {
+              return { ...product, productDetailDTO: getDetails(product) };
+            } else {
+              return product;
+            }
+          });
+          dispatch(updateListProductLv2(abd));
+
+          let abc = dataSearch.map((product) => {
+            if (product.id === record.id) {
+              return { ...record, productDetailDTO: getDetails(product) };
+            } else {
+              return product;
+            }
+          });
+          dispatch(updateDataSearch(abc));
 
           setIsLoadingModal(false);
           setModal1Open(false);
@@ -77,7 +102,11 @@ export default function NewProductDetailsModal({ record }) {
           });
         });
     } else {
-      message.error("Số lô và loại sản phẩm đã tồn tại!");
+      setIsLoadingModal(false);
+      notification.error({
+        message: "Số lô và loại sản phẩm",
+        description: "Số lô và loại sản phẩm đã tồn tại!",
+      });
     }
   };
 
@@ -99,7 +128,7 @@ export default function NewProductDetailsModal({ record }) {
         <Spin spinning={isLoadingModal}>
           <Form
             form={newProductDetailsForm}
-            layout="horizontal"
+            layout="vertical"
             name="newProductDetailsForm"
             id="newProductDetailsForm"
             colon={false}
@@ -175,20 +204,7 @@ export default function NewProductDetailsModal({ record }) {
               >
                 <Select
                   placeholder="Chọn Loại sản phẩm"
-                  style={{
-                    width: 200,
-                  }}
                   options={typeDetails}
-                  showSearch
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "").includes(input)
-                  }
-                  filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? "")
-                      .toLowerCase()
-                      .localeCompare((optionB?.label ?? "").toLowerCase())
-                  }
                 />
               </Form.Item>
             </div>

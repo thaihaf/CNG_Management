@@ -14,4 +14,3 @@ export { default as SupplierProfit } from "./Profit/SupplierProfit/SupplierProfi
 export { default as CategoryProfit } from "./Profit/CategoryProfit/CategoryProfit";
 
 export { default as ProfitDashboard } from "./Dashboard/ProfitDashboard/ProfitDashboard";
-export { default as TotalDashboard } from "./Dashboard/TotalDashboard/TotalDashboard";

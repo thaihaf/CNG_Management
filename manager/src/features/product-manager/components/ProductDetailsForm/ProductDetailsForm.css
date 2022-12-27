@@ -1,23 +1,23 @@
-.product .title {
+.product-details-form .title {
   margin-bottom: 2rem;
 }
-.product-details {
+.product-details-form .product-details {
   width: 100%;
 }
-.product-details .details {
+.product-details-form .product-details .details {
   display: flex;
   gap: 3rem;
 }
-.product-details .details .list-images {
+.product-details-form .product-details .details .list-images {
   width: 250px;
   padding: 1rem 1rem 0 0;
   margin: 0 2rem 0 7rem;
 }
-.product-details .details .list-images .image-product {
+.product-details-form .product-details .details .list-images .image-product {
   position: relative;
   margin-bottom: 1rem;
 }
-.product-details .details .list-images .image-product .ant-image {
+.product-details-form .product-details .details .list-images .image-product .ant-image {
   width: 230px;
   height: 230px;
   -o-object-fit: contain;
@@ -26,13 +26,13 @@
   border-radius: 2rem;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
-.product-details .details .list-images .image-product .ant-image .ant-image-img {
+.product-details-form .product-details .details .list-images .image-product .ant-image .ant-image-img {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
-.product-details .details .list-images .image-product .ant-image .ant-image-mask {
+.product-details-form .product-details .details .list-images .image-product .ant-image .ant-image-mask {
   border-radius: 2rem;
 }
-.product-details .details .list-images .image-product .minusImg {
+.product-details-form .product-details .details .list-images .image-product .minusImg {
   position: absolute;
   right: 1rem;
   top: 1rem;
@@ -45,7 +45,7 @@
   justify-content: center;
   text-align: center;
 }
-.product-details .details .list-images .ant-upload.ant-upload-select {
+.product-details-form .product-details .details .list-images .ant-upload.ant-upload-select {
   width: 230px;
   height: 230px;
   border-radius: 2rem;
@@ -53,46 +53,46 @@
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   margin: 0;
 }
-.product-details .details .list-data {
+.product-details-form .product-details .details .list-data {
   width: 100%;
 }
-.product-details .details .list-data .ant-steps-item-title {
+.product-details-form .product-details .details .list-data .ant-steps-item-title {
   font-weight: bold;
   margin-bottom: 1rem;
 }
-.product-details .details .list-data .group-data {
+.product-details-form .product-details .details .list-data .group-data {
   display: grid;
   grid-column-gap: 3rem;
   align-items: center;
-  grid-template-columns: repeat(auto-fit, minmax(50px, 50px));
+  grid-template-columns: repeat(auto-fit, minmax(50px, 280px));
 }
-.product-details .details .list-data .group-data .ant-col {
+.product-details-form .product-details .details .list-data .group-data .ant-col {
   max-width: 100% !important;
   flex: none !important;
 }
-.product-details .details .list-data .group-data .ant-row {
+.product-details-form .product-details .details .list-data .group-data .ant-row {
   display: block;
 }
-.product-details .details .list-data .group-data .ant-select.ant-select-in-form-item {
+.product-details-form .product-details .details .list-data .group-data .ant-select.ant-select-in-form-item {
   width: 100% !important;
 }
-.product-details .details .list-data .group-data .ant-input,
-.product-details .details .list-data .group-data .ant-select-selector,
-.product-details .details .list-data .group-data .ant-picker {
+.product-details-form .product-details .details .list-data .group-data .ant-input,
+.product-details-form .product-details .details .list-data .group-data .ant-select-selector,
+.product-details-form .product-details .details .list-data .group-data .ant-picker {
   border-radius: 2rem !important;
   width: 100% !important;
 }
-.product-details .details .list-data .group-data .ant-select-selector {
+.product-details-form .product-details .details .list-data .group-data .ant-select-selector {
   height: 4.2rem;
 }
-.product-details .details .list-data .group-data .ant-select-selector .ant-select-selection-item {
+.product-details-form .product-details .details .list-data .group-data .ant-select-selector .ant-select-selection-item {
   padding: 0.5rem 0.7rem;
 }
-.product-details .details .list-data .group-data .ant-select-multiple .ant-select-selector {
+.product-details-form .product-details .details .list-data .group-data .ant-select-multiple .ant-select-selector {
   height: 4.2rem;
   padding-left: 1rem;
 }
-.product-details .details .list-data .group-data .ant-select-multiple .ant-select-selector .ant-select-selection-item {
+.product-details-form .product-details .details .list-data .group-data .ant-select-multiple .ant-select-selector .ant-select-selection-item {
   height: 100%;
   border: none;
   margin: 0;
@@ -100,31 +100,31 @@
   border-radius: 1rem;
   padding: 5px 1rem;
 }
-.product-details .details .list-data .group-data .ant-input-number {
+.product-details-form .product-details .details .list-data .group-data .ant-input-number {
   width: 100%;
   border-radius: 2rem;
   padding: 0.5rem 0.7rem;
 }
-.product-details .details .list-data .group-data .ant-input-number .ant-input-number-handler-wrap {
+.product-details-form .product-details .details .list-data .group-data .ant-input-number .ant-input-number-handler-wrap {
   right: 9px;
   border-radius: 2rem;
 }
-.product-details .details .list-data .group-data .ant-input {
+.product-details-form .product-details .details .list-data .group-data .ant-input {
   border-radius: 2rem !important;
   padding: 1rem 2rem;
 }
-.product-descriptions {
+.product-details-form .product-descriptions {
   width: 100%;
 }
-.product-descriptions .minus-icon {
+.product-details-form .product-descriptions .minus-icon {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
 }
-.product-descriptions .ant-space-item:not:first-child {
+.product-details-form .product-descriptions .ant-space-item:not:first-child {
   width: 100%;
 }
-.product-btn-groups {
+.product-details-form .product-btn-groups {
   display: flex;
   align-items: center;
   gap: 3rem;

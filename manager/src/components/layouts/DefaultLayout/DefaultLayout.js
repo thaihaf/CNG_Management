@@ -26,7 +26,7 @@ const DefaultLayout = ({ children, routes }) => {
   const history = useHistory();
   const location = useLocation();
 
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -40,7 +40,7 @@ const DefaultLayout = ({ children, routes }) => {
       <motion.div
         animate={{ opacity: [0, 1], x: [-150, 0] }}
         exit={{ opacity: [1, 0] }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.2 }}
         className={`${collapsed ? "sidebar-collapsed" : "sidebar"}`}
         style={{
           overflow: "auto",
@@ -60,7 +60,7 @@ const DefaultLayout = ({ children, routes }) => {
                   src={logo}
                   alt="logo"
                   className="logo logo3_img"
-                  onClick={() => history.push(DashboardPaths.DASHBOARD_MANAGER)}
+                  onClick={() => history.push(DashboardPaths.DASHBOARD)}
                 />
               ) : (
                 <img
@@ -78,7 +78,7 @@ const DefaultLayout = ({ children, routes }) => {
               defaultSelectedKeys={[location.pathname]}
               items={getSideBarItems(auth.role)}
               onSelect={(item) => history.push(item.key)}
-              defaultOpenKeys={listKeySideBar}
+              // defaultOpenKeys={listKeySideBar}
             />
           </div>
         </Sider>
@@ -97,7 +97,7 @@ const DefaultLayout = ({ children, routes }) => {
           className="header"
           animate={{ opacity: [0, 1], x: [150, 0] }}
           exit={{ opacity: [1, 0] }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.2 }}
         >
           <Breadcrumb className="breadcrumb">
             {routes?.map((route) => (
@@ -116,7 +116,7 @@ const DefaultLayout = ({ children, routes }) => {
         <motion.div
           animate={{ opacity: [0, 1], x: [150, 0] }}
           exit={{ opacity: [1, 0] }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.2 }}
         >
           <Content className="content">{children}</Content>
 

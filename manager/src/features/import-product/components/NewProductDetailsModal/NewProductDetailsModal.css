@@ -1,27 +1,30 @@
-.ant-modal-content {
+.modalSetting .ant-input.ant-input-disabled {
+  color: black;
+}
+.modalSetting .ant-modal-content {
   border-radius: 2rem !important;
 }
-.ant-modal-content .ant-modal-header {
+.modalSetting .ant-modal-content .ant-modal-header {
   border-radius: 2rem 2rem 0 0 !important;
 }
-.ant-modal-content .ant-modal-body {
+.modalSetting .ant-modal-content .ant-modal-body {
   padding: 20px 35px !important;
 }
-.ant-modal-content .ant-modal-body .ant-spin-nested-loading {
+.modalSetting .ant-modal-content .ant-modal-body .ant-spin-nested-loading {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border-radius: 2rem;
   padding: 1.5rem 0;
 }
-.ant-modal-content .ant-modal-body .ant-tabs-tabpane {
+.modalSetting .ant-modal-content .ant-modal-body .ant-tabs-tabpane {
   padding-right: 2rem;
 }
-.ant-modal-content .img-crop-modal .img-crop-container {
+.modalSetting .ant-modal-content .img-crop-modal .img-crop-container {
   border-radius: 2rem !important;
 }
-.ant-modal-content .ant-modal-footer {
+.modalSetting .ant-modal-content .ant-modal-footer {
   padding: 20px 35px !important;
 }
-.ant-modal-content .ant-modal-footer .ant-btn {
+.modalSetting .ant-modal-content .ant-modal-footer .ant-btn {
   border-radius: 2rem !important;
   padding: 0.5rem 4rem !important;
   width: -webkit-fit-content !important;
@@ -31,11 +34,16 @@
   height: -moz-fit-content !important;
   height: fit-content !important;
 }
-
-.modalSetting .details__group .details__item {
+.modalSetting .modalSetting .details__group .details__item {
   width: 100% !important;
 }
-.modalSetting .details__group .details__item .ant-form-item-explain-error {
+.modalSetting .modalSetting .details__group .details__item .ant-form-item-explain-error {
   font-size: 1.2rem;
   padding-left: 1rem;
+}
+.modalSetting .btns {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
 }

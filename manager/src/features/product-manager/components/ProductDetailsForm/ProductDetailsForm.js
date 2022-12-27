@@ -214,7 +214,7 @@ const ProductDetailsForm = ({ updateMode }) => {
         name="dynamic_form_nest_item"
         onFinish={onFinish}
         autoComplete="off"
-        className="product"
+        className="product-details-form"   
         layout="vertical"
         initialValues={initialValues}
       >

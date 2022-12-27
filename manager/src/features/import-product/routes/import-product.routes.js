@@ -23,13 +23,13 @@ const DETAILS_PRODUCT_IMPORT_SCREEN = {
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
     {
-      label: "Danh sách Đơn xuất",
+      label: "Danh sách Đơn nhập",
       icon: null,
       path: ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
       visible: true,
     },
     {
-      label: "Chi tiết Đơn xuất",
+      label: "Chi tiết Đơn nhập",
       icon: null,
       path: ImportProductManagerPaths.DETAILS_PRODUCT_IMPORT,
       visible: false,
@@ -47,7 +47,7 @@ const LIST_PRODUCT_IMPORT_SCREEN = {
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
     {
-      label: "Danh sách Đơn xuất",
+      label: "Danh sách Đơn nhập",
       icon: null,
       path: ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
       visible: false,
@@ -65,13 +65,13 @@ const CREATE_PRODUCT_IMPORT_SCREEN = {
   routes: [
     { label: "Trang chủ", icon: <HomeOutlined />, path: "/", visible: true },
     {
-      label: "Danh sách Đơn xuất",
+      label: "Danh sách Đơn nhập",
       icon: null,
       path: ImportProductManagerPaths.LIST_PRODUCT_IMPORT,
       visible: true,
     },
     {
-      label: "Chi tiết Đơn xuất",
+      label: "Chi tiết Đơn nhập",
       icon: null,
       path: ImportProductManagerPaths.CREATE_PRODUCT_IMPORT,
       visible: false,

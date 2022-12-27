@@ -203,7 +203,7 @@ export default function DashboardByDay() {
       },
     },
     {
-      title: "Số M2 trả hàng (m2)",
+      title: "Số M2 nhập lại (m2)",
       dataIndex: "totalSquareMeterReExport",
       key: "totalSquareMeterReExport",
       align: "center",
@@ -212,7 +212,7 @@ export default function DashboardByDay() {
       },
     },
     {
-      title: "Tiền trả hàng (vnđ)",
+      title: "Tiền nhập lại (vnđ)",
       dataIndex: "totalPriceReExport",
       key: "totalPriceReExport",
       align: "center",
@@ -292,7 +292,10 @@ export default function DashboardByDay() {
     dispatch(
       getDashBoardByYear(
         defaultValues
-          ? defaultValues
+          ? {
+              startYear: defaultValues[0].year(),
+              endYear: defaultValues[1].year(),
+            }
           : { startYear: dayjs().year() - 9, endYear: dayjs().year() }
       )
     )

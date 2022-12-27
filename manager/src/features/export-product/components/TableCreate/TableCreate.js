@@ -309,7 +309,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       sorter: (a, b) => a.index > b.index,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("index"),
-      render: (_, record) => <Title level={4}>{record.index}</Title>,
+      render: (_, record) => record.index,
     },
     {
       title: "Sản phẩm",
@@ -327,11 +327,11 @@ export default function TableCreate({ form, updateMode, openHeader }) {
               alignItems: "center",
               justifyContent: "center",
               gap: "1.5rem",
-              padding: "0 1.5rem",
+              padding: "0 0.5rem",
             }}
           >
             <Avatar
-              size={70}
+              size={50}
               src={
                 record.listImage[0].filePath === ""
                   ? avt_default
@@ -350,7 +350,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             >
               <div
                 style={{
-                  fontSize: "17px",
+                  fontSize: "14px",
                   fontWeight: "600",
                 }}
               >
@@ -384,7 +384,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
               },
             ]}
             style={{
-              minWidth: 200,
+              minWidth: 150,
             }}
           >
             <Select
@@ -431,7 +431,8 @@ export default function TableCreate({ form, updateMode, openHeader }) {
                   .localeCompare((optionB?.value ?? "").toLowerCase())
               }
               style={{
-                minWidth: 150,
+                minWidth: 100,
+                width: "100%",
               }}
             >
               {record.productDetailDTO?.map((item, index, arr) => {
@@ -484,6 +485,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             ]}
             style={{
               minWidth: 100,
+              width: "100%",
             }}
           >
             <Select
@@ -522,7 +524,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Giá mỗi mét vuông (vnđ)",
+      title: "Giá xuất/m2 (vnđ)",
       dataIndex: "pricePerSquareMeter",
       key: "pricePerSquareMeter",
       align: "center",
@@ -545,19 +547,21 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           ]}
           onChange={(value) => onHandleChangeCost(record, value)}
           initialValue={1000}
-          style={{
-            minWidth: 150,
-          }}
+          style={{ padding: "0 0.5rem", minWidth: "100px" }}
         >
           <InputNumber
             min={1}
             onStep={(value) => onHandleChangeCost(record, value)}
+            style={{
+              minWidth: 150,
+              width: 150,
+            }}
           />
         </Form.Item>
       ),
     },
     {
-      title: "Hộp số lượng",
+      title: "Số hộp",
       dataIndex: "totalQuantityBox",
       key: "totalQuantityBox",
       align: "center",
@@ -605,7 +609,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Chi phí(vnđ)",
+      title: "Thành tiền (vnđ)",
       dataIndex: "totalCost",
       key: "totalCost",
       align: "center",
@@ -618,6 +622,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           name={[`${record.id}_${record.index}`, "totalCost"]}
           onChange={(value) => console.log(value)}
           initialValue={0}
+          style={{ padding: "0 0.5rem", minWidth: "100px" }}
         >
           <Statistic style={{ minWidth: "150px" }} precision={0} />
         </Form.Item>
@@ -633,7 +638,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           <Input.TextArea
             showCount
             maxLength={300}
-            style={{ height: "100%", resize: "none", minWidth: "150px" }}
+            style={{ height: "100%", resize: "none", minWidth: "200px" }}
             placeholder="Ghi chú"
           />
         </Form.Item>
@@ -676,6 +681,9 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       rowKey={(record) => `${record.id}-${record.index}`}
       loading={isLoading}
       scroll={{ x: "maxContent" }}
+      rowClassName={(record, index) =>
+        index % 2 === 0 ? "table-row table-row-even" : "table-row table-row-odd"
+      }
       expandable={{
         expandedRowRender: (record) => (
           <>

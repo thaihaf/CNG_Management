@@ -41,7 +41,6 @@ export default function Dashboard() {
       <ProfitDashboard />
       <CustomerDebtDashboard />
       <SupplierDebtDashboard />
-      <TotalDashboard />
     </div>
   );
 }

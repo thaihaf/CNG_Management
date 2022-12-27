@@ -53,11 +53,14 @@ export default function HeaderTable({ form, updateMode }) {
           }
           disabled={productImportDetails?.status === 2 ? true : false}
         >
-          {listEmployees.map((item) => (
-            <Select.Option value={item.id} key={item.id}>
-              {`${item.firstName} ${item.lastName}`}
-            </Select.Option>
-          ))}
+          {listEmployees.map(
+            (item) =>
+              item.status && (
+                <Select.Option value={item.id} key={item.id}>
+                  {`${item.firstName} ${item.lastName}`}
+                </Select.Option>
+              )
+          )}
         </Select>
       </Form.Item>
       <Form.Item

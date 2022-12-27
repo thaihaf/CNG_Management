@@ -1,67 +1,44 @@
 import {
   CaretDownFilled,
-  CaretDownOutlined,
   CaretUpFilled,
-  CaretUpOutlined,
-  CloseOutlined,
-  DeleteFilled,
-  DeleteTwoTone,
-  DownCircleTwoTone,
   DownOutlined,
   ExclamationCircleOutlined,
   MinusCircleOutlined,
-  MinusOutlined,
   PlusOutlined,
   RestTwoTone,
   SearchOutlined,
-  UpCircleTwoTone,
 } from "@ant-design/icons";
 import {
   Avatar,
   Button,
-  Col,
-  DatePicker,
-  Divider,
   Dropdown,
   Form,
   Input,
   InputNumber,
   Menu,
   Modal,
-  Row,
   Select,
   Space,
-  Spin,
   Statistic,
   Table,
-  Tag,
   Tooltip,
   Typography,
 } from "antd";
-import dayjs from "dayjs";
-import React, { useEffect, useRef, useState } from "react";
+import React, {  useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory,} from "react-router-dom";
 import { get } from "lodash";
 import Highlighter from "react-highlight-words";
 import avt_default from "assets/images/avt-default.png";
 import {
   updateListProductLv2,
-  updateListProductLv3,
   updateProductImport,
 } from "features/import-product/importProduct";
 import "./TableCreate.css";
-import { unwrapResult } from "@reduxjs/toolkit";
 import NewProductDetailsModal from "../NewProductDetailsModal/NewProductDetailsModal";
-import { getMessage } from "helpers/util.helper";
-import { CODE_ERROR } from "constants/errors.constants";
-import { MESSAGE_ERROR } from "constants/messages.constants";
-import { getEmployees } from "features/employee-manager/employeeManager";
-import HeaderTable from "../HeaderTable/HeaderTable";
 import SearchProduct from "../SearchProduct/SearchProduct";
 
 const { Option } = Select;
-const { Text, Title } = Typography;
 
 export default function TableCreate({ form, updateMode, openHeader }) {
   const { listWarehouses } = useSelector((state) => state.warehouse);
@@ -69,12 +46,11 @@ export default function TableCreate({ form, updateMode, openHeader }) {
     (state) => state.productImport
   );
 
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(10);
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -86,9 +62,9 @@ export default function TableCreate({ form, updateMode, openHeader }) {
   };
   const onRowDelete = (type, record) => {
     Modal.confirm({
-      title: `Xác nhận xoá ${type}`,
+      title: `Xác nhận xoá`,
       icon: <ExclamationCircleOutlined />,
-      content: `Bạn có chắc chắn muốn xoá ${type} không?`,
+      content: `Bạn có chắc chắn muốn xoá không?`,
       okText: "Xoá bỏ",
       cancelText: "Huỷ bỏ",
       onOk: () => {
@@ -328,7 +304,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       sorter: (a, b) => a.index > b.index,
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("index"),
-      render: (_, record) => <Title level={4}>{record.index}</Title>,
+      render: (_, record) => record.index,
     },
     {
       title: "Sản phẩm",
@@ -346,11 +322,11 @@ export default function TableCreate({ form, updateMode, openHeader }) {
               alignItems: "center",
               justifyContent: "center",
               gap: "1.5rem",
-              padding: "0 1.5rem",
+              padding: "0 0.5rem",
             }}
           >
             <Avatar
-              size={70}
+              size={50}
               src={
                 record.listImage[0].filePath === ""
                   ? avt_default
@@ -369,7 +345,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
             >
               <div
                 style={{
-                  fontSize: "17px",
+                  fontSize: "14px",
                   fontWeight: "600",
                 }}
               >
@@ -403,7 +379,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
               },
             ]}
             style={{
-              minWidth: 200,
+              minWidth: 150,
             }}
           >
             <Select
@@ -526,7 +502,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Chi phí trên mỗi mét vuông (vnđ)",
+      title: "Giá nhập/m2 (vnđ)",
       dataIndex: "costPerSquareMeter",
       key: "costPerSquareMeter",
       align: "center",
@@ -549,19 +525,21 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           ]}
           onChange={(value) => onHandleChangeCost(record, value)}
           initialValue={1000}
-          style={{
-            minWidth: 150,
-          }}
+          style={{ padding: "0 0.5rem", minWidth: "100px" }}
         >
           <InputNumber
             min={1}
             onStep={(value) => onHandleChangeCost(record, value)}
+            style={{
+              minWidth: 150,
+              width: 150,
+            }}
           />
         </Form.Item>
       ),
     },
     {
-      title: "Hộp số lượng",
+      title: "Số hộp",
       dataIndex: "totalQuantityBox",
       key: "totalQuantityBox",
       align: "center",
@@ -578,7 +556,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           name={[`${record.id}_${record.index}`, "totalQuantityBox"]}
           onChange={(value) => console.log(value)}
           initialValue={0}
-          style={{ minWidth: "150px" }}
+          style={{ padding: "0 0.5rem", minWidth: "100px" }}
         >
           <Statistic />
         </Form.Item>
@@ -609,7 +587,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Chi phí (vnđ)",
+      title: "Thành tiền (vnđ)",
       dataIndex: "totalCost",
       key: "totalCost",
       align: "center",
@@ -622,6 +600,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           name={[`${record.id}_${record.index}`, "totalCost"]}
           onChange={(value) => console.log(value)}
           initialValue={0}
+          style={{ padding: "0 0.5rem", minWidth: "100px" }}
         >
           <Statistic style={{ minWidth: "150px" }} precision={0} />
         </Form.Item>
@@ -637,7 +616,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
           <Input.TextArea
             showCount
             maxLength={300}
-            style={{ height: "100%", resize: "none", minWidth: "150px" }}
+            style={{ height: "100%", resize: "none", minWidth: "200px" }}
             placeholder="Ghi chú"
           />
         </Form.Item>
@@ -648,7 +627,6 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       dataIndex: "operation",
       key: "operation",
       align: "center",
-      width: 120,
       render: (_, record) => (
         <Dropdown
           overlay={
@@ -680,6 +658,9 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       size="middle"
       className={
         openHeader ? "listProductImport tranform" : "listProductImport"
+      }
+      rowClassName={(record, index) =>
+        index % 2 === 0 ? "table-row table-row-even" : "table-row table-row-odd"
       }
       columns={productColumns}
       dataSource={productImportDetails ? null : [...productsImport]}
@@ -836,11 +817,11 @@ export default function TableCreate({ form, updateMode, openHeader }) {
               current: currentPage,
               total: productsImport.length,
               onChange: (page, size) => onHandlePagination(page, size),
-              pageSizeOptions: ["2", "5", "10"],
+              pageSizeOptions: ["10", "15", "20"],
             }
           : false
       }
-      title={() => <SearchProduct updateMode={updateMode} />}
+      title={() => <SearchProduct updateMode={updateMode} form={form} />}
     />
   );
 }
