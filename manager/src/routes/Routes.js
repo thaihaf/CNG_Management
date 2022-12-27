@@ -17,6 +17,8 @@ const Routes = () => {
   return (
     <AnimatePresence>
       <Switch location={location} key={location.pathname}>
+        {/* <Redirect key="AUTH_ROUTE" to={AuthPaths.LOGIN} /> */}
+
         <NestedRouteWrapper routesWithComponents={ROUTE_LIST} />
 
         <Route component={NotFound} />
