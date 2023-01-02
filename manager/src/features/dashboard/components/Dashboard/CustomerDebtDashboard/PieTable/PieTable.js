@@ -44,11 +44,11 @@ export default function PieTable() {
       <div className="left">
         <div className="totalDebt">
           <div className="title">Tổng tiền bán:</div>
-          <Statistic precision={0} value={data.totalDebt} suffix={"vnđ"} />
+          <Statistic precision={0} value={data.totalDebt} suffix={"VND"} />
         </div>
         <div className="totalPayment">
           <div className="title">Đã thanh toán:</div>
-          <Statistic precision={0} value={data.totalPayment} suffix={"vnđ"} />
+          <Statistic precision={0} value={data.totalPayment} suffix={"VND"} />
         </div>
       </div>
     </div>

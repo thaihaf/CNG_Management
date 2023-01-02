@@ -263,7 +263,7 @@ export default function CustomerDailyList() {
     },
     {
       title: () =>
-        renderTitle("Thành tiền (vnđ)", "totalExportOrderPrice", "vnd"),
+        renderTitle("Thành tiền (VND)", "totalExportOrderPrice", "vnd"),
       dataIndex: "totalExportOrderPrice",
       key: "totalExportOrderPrice",
       align: "center",
@@ -273,7 +273,7 @@ export default function CustomerDailyList() {
     },
     {
       title: () =>
-        renderTitle("Tổng lợi nhuận (vnđ)", "exportProductRevenue", "vnd"),
+        renderTitle("Tổng lợi nhuận (VND)", "exportProductRevenue", "vnd"),
       dataIndex: "exportProductRevenue",
       key: "exportProductRevenue",
       align: "center",
@@ -331,7 +331,7 @@ export default function CustomerDailyList() {
       // ...getColumnSearchProps("id"),
     },
     {
-      title: "Đơn giá nhập (vnđ)",
+      title: "Đơn giá nhập (VND)",
       dataIndex: "costPerSquareMeter",
       key: "costPerSquareMeter",
       align: "center",
@@ -341,7 +341,7 @@ export default function CustomerDailyList() {
       // ...getColumnSearchProps("id"),
     },
     {
-      title: "Đơn giá bán (vnđ)",
+      title: "Đơn giá bán (VND)",
       dataIndex: "pricePerSquareMeter",
       key: "pricePerSquareMeter",
       align: "center",
@@ -351,7 +351,7 @@ export default function CustomerDailyList() {
       // ...getColumnSearchProps("id"),
     },
     {
-      title: "Thành tiền (vnđ)",
+      title: "Thành tiền (VND)",
       dataIndex: "totalPrice",
       key: "totalPrice",
       align: "center",
@@ -360,7 +360,7 @@ export default function CustomerDailyList() {
       },
     },
     {
-      title: "Lợi nhuận (vnđ)",
+      title: "Lợi nhuận (VND)",
       dataIndex: "revenue",
       key: "revenue",
       align: "center",
@@ -395,7 +395,6 @@ export default function CustomerDailyList() {
         style={{
           display: "flex",
           flexDirection: "column",
-          // alignItems: "flex-end",
         }}
       >
         <div>{title}</div>
@@ -448,15 +447,15 @@ export default function CustomerDailyList() {
     const startDate = form.getFieldValue("dates")[0]?.format("DD/MM/YYYY");
     const endDate = form.getFieldValue("dates")[1]?.format("DD/MM/YYYY");
 
-     let query = queryString.parse(location.search);
-     if (query.page) {
-       query.page = query.page - 1;
-     }
-     query = {
-       ...query,
-       startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
-       endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
-     };
+    let query = queryString.parse(location.search);
+    if (query.page) {
+      query.page = query.page - 1;
+    }
+    query = {
+      ...query,
+      startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
+      endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
+    };
 
     let res = await api.getDashboardCustomerDaily(query);
 
@@ -494,7 +493,7 @@ export default function CustomerDailyList() {
           });
           totalSquareMeter = 0;
           totalPrice = 0;
-          totalRevenue = 0
+          totalRevenue = 0;
         }
       });
     });

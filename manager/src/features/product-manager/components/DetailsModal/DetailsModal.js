@@ -34,17 +34,12 @@ import newFileImg from "assets/icons/newFile.png";
 const { Text } = Typography;
 
 export default function DetailsModal({ record, type }) {
-  const [newProductDetailsForm] = Form.useForm();
-  const { productsImport } = useSelector((state) => state.productImport);
+  const [shipmentAndTypeForm] = Form.useForm();
 
   const dispatch = useDispatch();
 
   const [modal1Open, setModal1Open] = useState(false);
   const [isLoadingModal, setIsLoadingModal] = useState(false);
-
-  const handleEdit = (record) => {
-    console.log(record);
-  };
 
   const hanleSubmit = (value) => {
     setIsLoadingModal(true);
@@ -59,7 +54,7 @@ export default function DetailsModal({ record, type }) {
         setIsLoadingModal(false);
         setModal1Open(false);
 
-        newProductDetailsForm.resetFields();
+        shipmentAndTypeForm.resetFields();
 
         notification.success({
           message: "Lô hàng và loại sản phẩm",
@@ -91,16 +86,7 @@ export default function DetailsModal({ record, type }) {
           type="primary"
           shape="round"
           size={"large"}
-          style={{
-            width: "fitContent",
-            display: "flex",
-            alignItems: "center",
-            gap: "1rem",
-            paddingTop: "2.1rem",
-            paddingBottom: "2.1rem",
-            paddingLeft: "2.8rem",
-            paddingRight: "2.8rem",
-          }}
+          style={{ width: "15rem", height: "3.8rem" }}
           onClick={() => {
             setModal1Open(true);
           }}
@@ -113,14 +99,25 @@ export default function DetailsModal({ record, type }) {
           Tạo mới
         </Button>
       ) : (
-        <img
-          src={editImg}
-          alt=""
-          style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
-          onClick={() => {
-            setModal1Open(true);
+        <div
+          style={{
+            width: "4rem",
+            height: "4rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            borderRadius: "50%",
+            background: "#eaf0f6",
           }}
-        />
+          onClick={() => setModal1Open(true)}
+        >
+          <img
+            src={editImg}
+            alt="Edit"
+            style={{ width: "2.2rem", height: "2.2rem", margin: "auto" }}
+          />
+        </div>
       )}
 
       <Modal
@@ -130,13 +127,13 @@ export default function DetailsModal({ record, type }) {
         onOk={() => setModal1Open(false)}
         onCancel={() => setModal1Open(false)}
         footer={[]}
-        className="modalSetting"
+        className="shipmentAndTypeModal"
       >
         <Spin spinning={isLoadingModal}>
           <Form
-            form={newProductDetailsForm}
-            name="newProductDetailsForm"
-            id="newProductDetailsForm"
+            form={shipmentAndTypeForm}
+            name="shipmentAndTypeForm"
+            id="shipmentAndTypeForm"
             colon={false}
             onFinish={hanleSubmit}
             initialValues={initialValues}
@@ -153,12 +150,10 @@ export default function DetailsModal({ record, type }) {
                   disabled={true}
                 />
               </Form.Item>
-            </div>
-            {type === "edit" && (
-              <div className="details__group">
+              {type === "edit" && (
                 <Form.Item
                   name="costPerSquareMeter"
-                  label={<Text>Chi phí trên mỗi mét vuông</Text>}
+                  label={<Text>Giá/M2</Text>}
                   className="details__item"
                 >
                   <Input
@@ -167,9 +162,7 @@ export default function DetailsModal({ record, type }) {
                     disabled={true}
                   />
                 </Form.Item>
-              </div>
-            )}
-            <div className="details__group">
+              )}
               <Form.Item
                 name="shipment"
                 label={<Text>Số lô</Text>}
@@ -200,8 +193,6 @@ export default function DetailsModal({ record, type }) {
                   placeholder="Nhập số lô"
                 />
               </Form.Item>
-            </div>
-            <div className="details__group">
               <Form.Item
                 name="type"
                 label={<Text>Loại sản phẩm</Text>}
@@ -235,9 +226,7 @@ export default function DetailsModal({ record, type }) {
                   }
                 />
               </Form.Item>
-            </div>
-            {type === "edit" && (
-              <div className="details__group">
+              {type === "edit" && (
                 <Form.Item
                   name="status"
                   label={<Text>Trạng thái</Text>}
@@ -264,16 +253,16 @@ export default function DetailsModal({ record, type }) {
                     ]}
                   />
                 </Form.Item>
-              </div>
-            )}
+              )}
+            </div>
+
             <div className="btns">
               <Button
                 key="back"
-                shape={"round"}
-                htmlType="reset"
+                shape="round"
                 onClick={() => {
                   setModal1Open(false);
-                  newProductDetailsForm.resetFields();
+                  shipmentAndTypeForm.resetFields();
                 }}
               >
                 Huỷ bỏ

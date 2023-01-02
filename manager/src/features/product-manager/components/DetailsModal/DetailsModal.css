@@ -1,41 +1,59 @@
-.ant-modal-content {
+.shipmentAndTypeModal .btns {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.shipmentAndTypeModal .details__group {
+  width: 100%;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 200px));
+}
+.shipmentAndTypeModal .details__group.align-start {
+  align-items: flex-start;
+}
+.shipmentAndTypeModal .details__group .details__item {
+  min-width: 200px;
+}
+.shipmentAndTypeModal .details__group .details__item.w-full {
+  width: 100%;
+}
+.shipmentAndTypeModal .details__group .details__item .ant-col {
+  max-width: 100% !important;
+  flex: none !important;
+}
+.shipmentAndTypeModal .details__group .details__item .ant-row {
+  display: block;
+}
+.shipmentAndTypeModal .details__group .details__item .ant-input {
   border-radius: 2rem !important;
+  padding: 1rem 2rem;
+  margin-top: 0.7rem;
 }
-.ant-modal-content .ant-modal-header {
-  border-radius: 2rem 2rem 0 0 !important;
+.shipmentAndTypeModal .details__group .details__item textarea.ant-input {
+  margin: 0;
 }
-.ant-modal-content .ant-modal-body {
-  padding: 20px 35px !important;
-}
-.ant-modal-content .ant-modal-body .ant-spin-nested-loading {
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  border-radius: 2rem;
-  padding: 1.5rem 0;
-}
-.ant-modal-content .ant-modal-body .ant-tabs-tabpane {
-  padding-right: 2rem;
-}
-.ant-modal-content .img-crop-modal .img-crop-container {
-  border-radius: 2rem !important;
-}
-.ant-modal-content .ant-modal-footer {
-  padding: 20px 35px !important;
-}
-.ant-modal-content .ant-modal-footer .ant-btn {
-  border-radius: 2rem !important;
-  padding: 0.5rem 4rem !important;
-  width: -webkit-fit-content !important;
-  width: -moz-fit-content !important;
-  width: fit-content !important;
-  height: -webkit-fit-content !important;
-  height: -moz-fit-content !important;
-  height: fit-content !important;
-}
-
-.modalSetting .details__group .details__item {
+.shipmentAndTypeModal .details__group .details__item .ant-select.ant-select-in-form-item {
   width: 100% !important;
 }
-.modalSetting .details__group .details__item .ant-form-item-explain-error {
-  font-size: 1.2rem;
-  padding-left: 1rem;
+.shipmentAndTypeModal .details__group .details__item .ant-input,
+.shipmentAndTypeModal .details__group .details__item .ant-select-selector,
+.shipmentAndTypeModal .details__group .details__item .ant-picker {
+  border-radius: 2rem !important;
+  width: 100% !important;
+  color: black;
+}
+.shipmentAndTypeModal .details__group .details__item .ant-select-selector {
+  height: 4.2rem;
+  padding: 0.35rem 2rem;
+}
+.shipmentAndTypeModal .details__group .details__item .ant-select-selector .ant-select-selection-search {
+  padding: 0.3rem 0.9rem;
+}
+.shipmentAndTypeModal .details__group .details__item .ant-select-selector .ant-select-selection-item {
+  padding: 0.1rem 0;
 }

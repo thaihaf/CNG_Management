@@ -163,7 +163,38 @@ export default function ProductInventory() {
         text
       ),
   });
+  const renderTitle = (title, value, format) => {
+    let total = listProductInventory.reduce((accumulator, currentValue) => {
+      const temp = currentValue[value[0]];
+      return accumulator + temp[value[1]];
+    }, 0);
 
+    if (format === "vnd") {
+      if (typeof Intl === "undefined" || !Intl.NumberFormat) {
+        total = total.toLocaleString("vi-VN", {
+          // style: "currency",
+          currency: "VND",
+        });
+      } else {
+        const nf = Intl.NumberFormat();
+        total = nf.format(total);
+      }
+    } else {
+      total = total !== 0 ? total.toFixed(2) : 0;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div>{title}</div>
+        <div style={{ color: "hotpink" }}> Total: {total}</div>
+      </div>
+    );
+  };
   const columns = [
     {
       title: "STT",
@@ -179,8 +210,16 @@ export default function ProductInventory() {
       align: "center",
     },
     {
-      title: "Tồn đầu kỳ (m2)",
-      dataIndex: ["productInventoryStoreDTO", "squareMeterPerBoxAtBeginPeriod"],
+      title: () =>
+        renderTitle(
+          "Tồn đầu kỳ (m2)",
+          ["productInventoryStoreDTO", "squareMeterPerBoxAtBeginPeriod"],
+          "vnd"
+        ),
+      dataIndex: [
+        "productInventoryStoreDTO",
+        "squareMeterPerBoxAtBeginPeriod",
+      ],
       key: "squareMeterPerBoxAtBeginPeriod",
       align: "center",
       render: (value) => {
@@ -188,7 +227,12 @@ export default function ProductInventory() {
       },
     },
     {
-      title: "Số lượng nhập (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng nhập (m2)",
+          ["productInventoryStoreDTO", "squareMeterPerBoxImport"],
+          "vnd"
+        ),
       dataIndex: ["productInventoryStoreDTO", "squareMeterPerBoxImport"],
       key: "squareMeterPerBoxImport",
       align: "center",
@@ -197,7 +241,12 @@ export default function ProductInventory() {
       },
     },
     {
-      title: "Số lượng xuất (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng xuất (m2)",
+          ["productInventoryStoreDTO", "squareMeterPerBoxExport"],
+          "vnd"
+        ),
       dataIndex: ["productInventoryStoreDTO", "squareMeterPerBoxExport"],
       key: "squareMeterPerBoxExport",
       align: "center",
@@ -206,7 +255,12 @@ export default function ProductInventory() {
       },
     },
     {
-      title: "Số lượng nhập lại (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng nhập lại (m2)",
+          ["productInventoryStoreDTO", "squareMeterPerBoxReExport"],
+          "vnd"
+        ),
       dataIndex: ["productInventoryStoreDTO", "squareMeterPerBoxReExport"],
       key: "squareMeterPerBoxReExport",
       align: "center",
@@ -215,7 +269,12 @@ export default function ProductInventory() {
       },
     },
     {
-      title: "Tồn cuối kỳ (m2)",
+      title: () =>
+        renderTitle(
+          "Tồn cuối kỳ (m2)",
+          ["productInventoryStoreDTO", "squareMeterPerBoxAtEndPeriod"],
+          "vnd"
+        ),
       dataIndex: ["productInventoryStoreDTO", "squareMeterPerBoxAtEndPeriod"],
       key: "squareMeterPerBoxAtEndPeriod",
       align: "center",
@@ -224,7 +283,12 @@ export default function ProductInventory() {
       },
     },
     {
-      title: "Giá trị tồn (vnđ)",
+      title: () =>
+        renderTitle(
+          "Giá trị tồn (VND)",
+          ["productInventoryStoreDTO", "inventoryCost"],
+          "vnd"
+        ),
       dataIndex: ["productInventoryStoreDTO", "inventoryCost"],
       key: "inventoryCost",
       align: "center",
@@ -254,7 +318,7 @@ export default function ProductInventory() {
       align: "center",
     },
     {
-      title: "Giá nhập (vnđ)",
+      title: "Giá nhập (VND)",
       dataIndex: ["productDetailDTO", "costPerSquareMeter"],
       key: "costPerSquareMeter",
       align: "center",
@@ -317,7 +381,7 @@ export default function ProductInventory() {
       },
     },
     {
-      title: "Giá trị tồn (vnđ)",
+      title: "Giá trị tồn (VND)",
       dataIndex: ["productDetailInventoryStoreDTO", "inventoryCost"],
       key: "inventoryCost",
       align: "center",

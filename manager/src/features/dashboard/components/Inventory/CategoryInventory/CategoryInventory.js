@@ -160,7 +160,38 @@ export default function CategoryInventory() {
         text
       ),
   });
+  const renderTitle = (title, value, format) => {
+    let total = listCategoryInventory.reduce((accumulator, currentValue) => {
+      const temp = currentValue[value[0]];
+      return accumulator + temp[value[1]];
+    }, 0);
 
+    if (format === "vnd") {
+      if (typeof Intl === "undefined" || !Intl.NumberFormat) {
+        total = total.toLocaleString("vi-VN", {
+          // style: "currency",
+          currency: "VND",
+        });
+      } else {
+        const nf = Intl.NumberFormat();
+        total = nf.format(total);
+      }
+    } else {
+      total = total !== 0 ? total.toFixed(2) : 0;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div>{title}</div>
+        <div style={{ color: "hotpink" }}> Total: {total}</div>
+      </div>
+    );
+  };
   const columns = [
     {
       title: "STT",
@@ -176,7 +207,12 @@ export default function CategoryInventory() {
       align: "center",
     },
     {
-      title: "Tồn đầu kỳ (m2)",
+      title: () =>
+        renderTitle(
+          "Tồn đầu kỳ (m2)",
+          ["categoryInventoryStoreDTO", "squareMeterPerBoxAtBeginPeriod"],
+          "vnd"
+        ),
       dataIndex: [
         "categoryInventoryStoreDTO",
         "squareMeterPerBoxAtBeginPeriod",
@@ -188,7 +224,12 @@ export default function CategoryInventory() {
       },
     },
     {
-      title: "Số lượng nhập (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng nhập (m2)",
+          ["categoryInventoryStoreDTO", "squareMeterPerBoxImport"],
+          "vnd"
+        ),
       dataIndex: ["categoryInventoryStoreDTO", "squareMeterPerBoxImport"],
       key: "squareMeterPerBoxImport",
       align: "center",
@@ -197,7 +238,12 @@ export default function CategoryInventory() {
       },
     },
     {
-      title: "Số lượng xuất (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng xuất (m2)",
+          ["categoryInventoryStoreDTO", "squareMeterPerBoxExport"],
+          "vnd"
+        ),
       dataIndex: ["categoryInventoryStoreDTO", "squareMeterPerBoxExport"],
       key: "squareMeterPerBoxExport",
       align: "center",
@@ -206,7 +252,12 @@ export default function CategoryInventory() {
       },
     },
     {
-      title: "Số lượng nhập lại (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng nhập lại (m2)",
+          ["categoryInventoryStoreDTO", "squareMeterPerBoxReExport"],
+          "vnd"
+        ),
       dataIndex: ["categoryInventoryStoreDTO", "squareMeterPerBoxReExport"],
       key: "squareMeterPerBoxReExport",
       align: "center",
@@ -215,7 +266,12 @@ export default function CategoryInventory() {
       },
     },
     {
-      title: "Tồn cuối kỳ (m2)",
+      title: () =>
+        renderTitle(
+          "Tồn cuối kỳ (m2)",
+          ["categoryInventoryStoreDTO", "squareMeterPerBoxAtEndPeriod"],
+          "vnd"
+        ),
       dataIndex: ["categoryInventoryStoreDTO", "squareMeterPerBoxAtEndPeriod"],
       key: "squareMeterPerBoxAtEndPeriod",
       align: "center",
@@ -224,7 +280,12 @@ export default function CategoryInventory() {
       },
     },
     {
-      title: "Giá trị tồn (vnđ)",
+      title: () =>
+        renderTitle(
+          "Giá trị tồn (VND)",
+          ["categoryInventoryStoreDTO", "inventoryCost"],
+          "vnd"
+        ),
       dataIndex: ["categoryInventoryStoreDTO", "inventoryCost"],
       key: "inventoryCost",
       align: "center",

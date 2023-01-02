@@ -505,7 +505,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Giá nhập/m2 (vnđ)",
+      title: "Giá nhập/m2 (VND)",
       dataIndex: "costPerSquareMeter",
       key: "costPerSquareMeter",
       align: "center",
@@ -598,7 +598,7 @@ export default function TableCreate({ form, updateMode, openHeader }) {
       ),
     },
     {
-      title: "Thành tiền (vnđ)",
+      title: "Thành tiền (VND)",
       dataIndex: "totalCost",
       key: "totalCost",
       align: "center",

@@ -161,7 +161,42 @@ export default function SupplierDebtList() {
         text
       ),
   });
+  const renderTitle = (title, value, format) => {
+    let total = listSupplierDebt.reduce((accumulator, currentValue) => {
+      if (typeof value === "string") {
+        return accumulator + currentValue[value];
+      } else {
+        const temp = currentValue[value[0]];
+        return accumulator + temp[value[1]];
+      }
+    }, 0);
 
+    if (format === "vnd") {
+      if (typeof Intl === "undefined" || !Intl.NumberFormat) {
+        total = total.toLocaleString("vi-VN", {
+          // style: "currency",
+          currency: "VND",
+        });
+      } else {
+        const nf = Intl.NumberFormat();
+        total = nf.format(total);
+      }
+    } else {
+      total = total !== 0 ? total.toFixed(2) : 0;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div>{title}</div>
+        <div style={{ color: "hotpink" }}> Total: {total}</div>
+      </div>
+    );
+  };
   const columns = [
     {
       title: "STT",
@@ -219,7 +254,8 @@ export default function SupplierDebtList() {
       },
     },
     {
-      title: "Dư nợ đầu kỳ",
+      title: () =>
+        renderTitle("Dư nợ đầu kỳ (VND)", "debtAtBeginningPeriod", "vnd"),
       dataIndex: "debtAtBeginningPeriod",
       key: "debtAtBeginningPeriod",
       align: "center",
@@ -228,25 +264,38 @@ export default function SupplierDebtList() {
       },
     },
     {
-      title: "Phát sinh nợ",
-      dataIndex: "debtMoneyDTO",
+      title: "Phát sinh nợ (VND)",
+      title: () =>
+        renderTitle(
+          "Phát sinh nợ (VND)",
+          ["debtMoneyDTO", "incurredIncrease"],
+          "vnd"
+        ),
+      dataIndex: ["debtMoneyDTO", "incurredIncrease"],
       key: "debtIncurredIncrease",
       align: "center",
       render: (value) => {
-        return <Statistic value={value.incurredIncrease} precision={0} />;
+        return <Statistic value={value} precision={0} />;
       },
     },
     {
-      title: "Phát sinh có",
-      dataIndex: "debtMoneyDTO",
+      title: "Phát sinh có (VND)",
+      title: () =>
+        renderTitle(
+          "Phát sinh có (VND)",
+          ["debtMoneyDTO", "incurredDecrease"],
+          "vnd"
+        ),
+      dataIndex: ["debtMoneyDTO", "incurredDecrease"],
       key: "debtIncurredDecrease",
       align: "center",
       render: (value) => {
-        return <Statistic value={value.incurredDecrease} precision={0} />;
+        return <Statistic value={value} precision={0} />;
       },
     },
     {
-      title: "Dư nợ cuối kỳ",
+      title: "Dư nợ cuối kỳ (VND)",
+      title: () => renderTitle("Dư nợ cuối kỳ (VND)", "debtAtEndPeriod", "vnd"),
       dataIndex: "debtAtEndPeriod",
       key: "debtAtEndPeriod",
       align: "center",

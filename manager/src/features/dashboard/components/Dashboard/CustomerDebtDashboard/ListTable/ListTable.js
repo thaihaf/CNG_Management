@@ -34,17 +34,17 @@ export default function ListTable() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
-      align: "center",
+      align: "right",
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
       title: "Mã đơn nhập",
       dataIndex: "id",
       key: "id",
-      align: "center",
+      align: "right",
       render: (value) => (
         <Tag
           color="seagreen"
@@ -77,16 +77,16 @@ export default function ListTable() {
       title: "Số lượng nhập (m2)",
       dataIndex: "totalSquareMeterImport",
       key: "totalSquareMeterImport",
-      align: "center",
+      align: "right",
       render: (a, { totalSquareMeterImport }) => {
         return <Statistic precision={2} value={totalSquareMeterImport} />;
       },
     },
     {
-      title: "Chi phí nhập (vnđ)",
+      title: "Chi phí nhập (VND)",
       dataIndex: "totalCostImport",
       key: "totalCostImport",
-      align: "center",
+      align: "right",
       render: (a, { totalCostImport }) => {
         return <Statistic precision={0} value={totalCostImport} />;
       },
@@ -95,7 +95,7 @@ export default function ListTable() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      align: "center",
+      align: "left",
       render: (s) => {
         let color = s == 2 ? "green" : "volcano";
 

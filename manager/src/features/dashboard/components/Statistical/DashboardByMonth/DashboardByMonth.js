@@ -167,6 +167,39 @@ export default function DashboardByMonth() {
       ),
   });
 
+  const renderTitle = (title, value, format) => {
+    let total = listDashboardByMonth.reduce(
+      (accumulator, currentValue) => accumulator + currentValue[value],
+      0
+    );
+
+    if (format === "vnd") {
+      if (typeof Intl === "undefined" || !Intl.NumberFormat) {
+        total = total.toLocaleString("vi-VN", {
+          // style: "currency",
+          currency: "VND",
+        });
+      } else {
+        const nf = Intl.NumberFormat();
+        total = nf.format(total);
+      }
+    } else {
+      total = total !== 0 ? total.toFixed(2) : 0;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div>{title}</div>
+        <div style={{ color: "hotpink" }}> Total: {total}</div>
+      </div>
+    );
+  };
+
   const colunns = [
     {
       title: "STT",
@@ -186,10 +219,10 @@ export default function DashboardByMonth() {
           </Text>
         );
       },
-      // ...getColumnSearchProps("id"),
     },
     {
-      title: "Số M2 nhập hàng (m2)",
+      title: () =>
+        renderTitle("Số M2 nhập hàng (m2)", "totalSquareMeterImport", "m2"),
       dataIndex: "totalSquareMeterImport",
       key: "totalSquareMeterImport",
       align: "center",
@@ -198,7 +231,8 @@ export default function DashboardByMonth() {
       },
     },
     {
-      title: "Tiền nhập hàng (vnđ)",
+      title: () =>
+        renderTitle("Tiền nhập hàng (VND)", "totalCostImport", "vnd"),
       dataIndex: "totalCostImport",
       key: "totalCostImport",
       align: "center",
@@ -207,7 +241,8 @@ export default function DashboardByMonth() {
       },
     },
     {
-      title: "Số M2 nhập lại (m2)",
+      title: () =>
+        renderTitle("Số M2 nhập lại (m2)", "totalSquareMeterReExport", "m2"),
       dataIndex: "totalSquareMeterReExport",
       key: "totalSquareMeterReExport",
       align: "center",
@@ -216,7 +251,8 @@ export default function DashboardByMonth() {
       },
     },
     {
-      title: "Tiền nhập lại (vnđ)",
+      title: () =>
+        renderTitle("Tiền nhập lại (VND)", "totalPriceReExport", "vnd"),
       dataIndex: "totalPriceReExport",
       key: "totalPriceReExport",
       align: "center",
@@ -225,7 +261,8 @@ export default function DashboardByMonth() {
       },
     },
     {
-      title: "Số M2 xuất hàng (m2)",
+      title: () =>
+        renderTitle("Số M2 xuất hàng (m2)", "totalSquareMeterExport", "m2"),
       dataIndex: "totalSquareMeterExport",
       key: "totalSquareMeterExport",
       align: "center",
@@ -234,7 +271,8 @@ export default function DashboardByMonth() {
       },
     },
     {
-      title: "Tiền xuất hàng (vnđ)",
+      title: () =>
+        renderTitle("Tiền xuất hàng (VND)", "totalPriceExport", "vnd"),
       dataIndex: "totalPriceExport",
       key: "totalPriceExport",
       align: "center",
@@ -243,7 +281,7 @@ export default function DashboardByMonth() {
       },
     },
     {
-      title: "Lợi nhuận (vnđ)",
+      title: () => renderTitle("Lợi nhuận (VND)", "revenue", "vnd"),
       dataIndex: "revenue",
       key: "revenue",
       align: "center",

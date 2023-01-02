@@ -539,7 +539,7 @@ const ProductDetailsForm = ({ updateMode }) => {
                     <Form.Item
                       valuePropName="checked"
                       name="status"
-                      label="Trạng thái hoạt động"
+                      label="Hoạt động"
                     >
                       <Switch />
                     </Form.Item>
@@ -548,7 +548,7 @@ const ProductDetailsForm = ({ updateMode }) => {
               />
 
               <Step
-                title="Thống kê sản phẩm"
+                title="Thông số sản phẩm"
                 status="finish"
                 description={
                   <div className="group-data">

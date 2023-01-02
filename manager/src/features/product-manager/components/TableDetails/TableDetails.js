@@ -236,51 +236,34 @@ export default function TableDetails({ form }) {
 
   const columns = [
     {
-      title: "STT",
-      dataIndex: "index",
-      key: "index",
-      align: "center",
-      render: (a, b, index) => <Text>{index + 1}</Text>,
-    },
-    {
-      title: "Số lô hàng",
+      title: "Số lô",
       dataIndex: "shipment",
       key: "shipment",
       align: "center",
     },
     {
-      title: "Loại sản phẩm",
+      title: "Loại",
       dataIndex: "type",
       key: "type",
       align: "center",
     },
     {
-      title: "Chi phí trên mỗi mét vuông (vnđ)",
+      title: "Giá/M2 (VND)",
       dataIndex: "costPerSquareMeter",
       key: "costPerSquareMeter",
       align: "center",
-      sorter: (a, b) =>
-        parseFloat(a.costPerSquareMeter) < parseFloat(b.costPerSquareMeter),
-      sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Tổng số lượng hộp",
+      title: "Số hộp",
       dataIndex: "totalQuantityBox",
       key: "totalQuantityBox",
       align: "center",
-      sorter: (a, b) => a.totalQuantityBox - b.totalQuantityBox,
-      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       align: "center",
-      //   filters: statusProductExport.map((item) => {
-      //     return { key: item.key, value: item.value, text: item.label };
-      //   }),
-      onFilter: (value, record) => record.status === value,
-      filterSearch: true,
       render: (s) => {
         let color = s == 1 ? "green" : "volcano";
         let text = s == 1 ? "Hoạt động" : "Không hoạt động";
@@ -291,8 +274,6 @@ export default function TableDetails({ form }) {
           </Tag>
         );
       },
-      sorter: (a, b) => a.status - b.status,
-      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Hành động",
@@ -309,12 +290,30 @@ export default function TableDetails({ form }) {
           }}
         >
           <DetailsModal record={record} type="edit" />
-          <img
-            src={deleteImg}
-            alt=""
-            style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+          <div
+            style={{
+              width: "4rem",
+              height: "4rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              borderRadius: "50%",
+              background: "#eaf0f6",
+            }}
             onClick={() => handleDelete(record)}
-          />
+          >
+            <img
+              src={deleteImg}
+              alt="delete"
+              style={{
+                width: " 1.4rem",
+                height: " 1.5rem",
+                margin: "auto",
+                cursor: "pointer",
+              }}
+            />
+          </div>
         </div>
       ),
     },
@@ -324,8 +323,11 @@ export default function TableDetails({ form }) {
     <Table
       size="middle"
       bordered
-      className="listProductDetails"
+      className="table-shipment-types"
       columns={columns}
+      rowClassName={(record, index) =>
+        index % 2 === 0 ? "table-row table-row-even" : "table-row table-row-odd"
+      }
       dataSource={[...detailDTOList]}
       rowKey={(record) => record.id}
       loading={isLoading}
@@ -337,18 +339,16 @@ export default function TableDetails({ form }) {
               {(fields, { add, remove }) => {
                 if (fields.length > 0) {
                   return (
-                    <div className="space-container">
+                    <div className="warehouse-list">
                       {fields.map(({ key, name, ...restField }) => (
                         <Space
                           key={`${key}${name}`}
-                          style={{
-                            display: "flex",
-                          }}
                           align="center"
+                          className="wapper"
                         >
                           <Form.Item
                             {...restField}
-                            label="Kho hàng"
+                            label={`Kho hàng ${name + 1}`}
                             name={[name, "wareHouseName"]}
                           >
                             <Input disabled />

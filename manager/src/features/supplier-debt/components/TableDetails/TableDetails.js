@@ -228,7 +228,7 @@ export default function TableDetails({ form }) {
         ),
     },
     {
-      title: "Phát sinh nợ (vnđ)",
+      title: "Phát sinh nợ (VND)",
       dataIndex: "debtMoneyDTO",
       key: "incurredIncrease",
       align: "center",
@@ -240,7 +240,7 @@ export default function TableDetails({ form }) {
       ),
     },
     {
-      title: "Phát sinh có (vnđ)",
+      title: "Phát sinh có (VND)",
       dataIndex: "debtMoneyDTO",
       key: "incurredDecrease",
       align: "center",

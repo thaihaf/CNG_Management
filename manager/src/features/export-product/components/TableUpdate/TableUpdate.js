@@ -781,7 +781,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Giá xuất/m2 (vnđ)",
+      title: "Giá xuất/m2 (VND)",
       dataIndex: "pricePerSquareMeter",
       key: "pricePerSquareMeter",
       align: "center",
@@ -936,7 +936,7 @@ export default function TableUpdate({ form, updateMode }) {
       },
     },
     {
-      title: "Thành tiền (vnđ)",
+      title: "Thành tiền (VND)",
       dataIndex: "totalPrice",
       key: "totalPrice",
       align: "center",

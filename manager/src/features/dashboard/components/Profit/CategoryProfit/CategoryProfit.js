@@ -22,9 +22,7 @@ import api from "features/dashboard/api/dashboard.api";
 import { get } from "lodash";
 
 import dayjs from "dayjs";
-import {
-  getCategoryProfit,
-} from "features/dashboard/dashboard";
+import { getCategoryProfit } from "features/dashboard/dashboard";
 import { Excel } from "antd-table-saveas-excel";
 import { categoryProfitColumnsExport } from "features/dashboard/constants/dashboard.column";
 
@@ -159,6 +157,38 @@ export default function CategoryProfit() {
       ),
   });
 
+  const renderTitle = (title, value, format) => {
+    let total = listCategoryProfit.reduce((accumulator, currentValue) => {
+      const temp = currentValue[value[0]];
+      return accumulator + temp[value[1]];
+    }, 0);
+
+    if (format === "vnd") {
+      if (typeof Intl === "undefined" || !Intl.NumberFormat) {
+        total = total.toLocaleString("vi-VN", {
+          // style: "currency",
+          currency: "VND",
+        });
+      } else {
+        const nf = Intl.NumberFormat();
+        total = nf.format(total);
+      }
+    } else {
+      total = total !== 0 ? total.toFixed(2) : 0;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div>{title}</div>
+        <div style={{ color: "hotpink" }}> Total: {total}</div>
+      </div>
+    );
+  };
   const columns = [
     {
       title: "STT",
@@ -174,7 +204,12 @@ export default function CategoryProfit() {
       align: "center",
     },
     {
-      title: "Số lượng xuất (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng xuất (m2)",
+          ["categoryRevenueDTO", "squareMeterExport"],
+          "vnd"
+        ),
       dataIndex: ["categoryRevenueDTO", "squareMeterExport"],
       key: "squareMeterExport",
       align: "center",
@@ -183,7 +218,12 @@ export default function CategoryProfit() {
       },
     },
     {
-      title: "Số lượng nhập lại (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng nhập lại (m2)",
+          ["categoryRevenueDTO", "squareMeterReExport"],
+          "m2"
+        ),
       dataIndex: ["categoryRevenueDTO", "squareMeterReExport"],
       key: "squareMeterReExport",
       align: "center",
@@ -192,7 +232,12 @@ export default function CategoryProfit() {
       },
     },
     {
-      title: "Tiền nhập (vnđ)",
+      title: () =>
+        renderTitle(
+          "Tiền nhập (VND)",
+          ["categoryRevenueDTO", "totalCostImport"],
+          "vnd"
+        ),
       dataIndex: ["categoryRevenueDTO", "totalCostImport"],
       key: "totalCostImport",
       align: "center",
@@ -201,7 +246,12 @@ export default function CategoryProfit() {
       },
     },
     {
-      title: "Tiền nhập lại (vnđ)",
+      title: () =>
+        renderTitle(
+          "Tiền nhập lại (VND)",
+          ["categoryRevenueDTO", "totalPriceReExport"],
+          "vnd"
+        ),
       dataIndex: ["categoryRevenueDTO", "totalPriceReExport"],
       key: "totalPriceReExport",
       align: "center",
@@ -210,7 +260,12 @@ export default function CategoryProfit() {
       },
     },
     {
-      title: "Doanh số (vnđ)",
+      title: () =>
+        renderTitle(
+          "Doanh số (VND)",
+          ["categoryRevenueDTO", "totalPriceExport"],
+          "vnd"
+        ),
       dataIndex: ["categoryRevenueDTO", "totalPriceExport"],
       key: "totalPriceExport",
       align: "center",
@@ -219,7 +274,8 @@ export default function CategoryProfit() {
       },
     },
     {
-      title: "Lợi nhuận (vnđ)",
+      title: () =>
+        renderTitle("Lợi nhuận (VND)", ["categoryRevenueDTO", "profit"], "vnd"),
       dataIndex: ["categoryRevenueDTO", "profit"],
       key: "profit",
       align: "center",
@@ -257,65 +313,65 @@ export default function CategoryProfit() {
     });
   };
 
-   const handlExportExcel = async () => {
-     let query = queryString.parse(location.search);
-     if (query.page) {
-       query.page = query.page - 1;
-     }
-     query = {
-       ...query,
-       startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
-       endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
-     };
+  const handlExportExcel = async () => {
+    let query = queryString.parse(location.search);
+    if (query.page) {
+      query.page = query.page - 1;
+    }
+    query = {
+      ...query,
+      startDate: `${initialValues.data[0].format("DD/MM/YYYY")}`,
+      endDate: `${initialValues.data[1].format("DD/MM/YYYY")}`,
+    };
 
-     try {
-       let res = await api.getCategoryProfit(query);
-       let dataExport = res.data.content;
+    try {
+      let res = await api.getCategoryProfit(query);
+      let dataExport = res.data.content;
 
-       const excel = new Excel();
-       excel.addSheet("Lợi nhuận theo Chức năng");
+      const excel = new Excel();
+      excel.addSheet("Lợi nhuận theo Chức năng");
 
-       excel.setTHeadStyle({
-         h: "center",
-         v: "center",
-         border: true,
-         fontName: "SF Mono",
-       });
-       excel.setTBodyStyle({
-         h: "center",
-         v: "center",
-         border: true,
-         fontName: "SF Mono",
-       });
+      excel.setTHeadStyle({
+        h: "center",
+        v: "center",
+        border: true,
+        fontName: "SF Mono",
+      });
+      excel.setTBodyStyle({
+        h: "center",
+        v: "center",
+        border: true,
+        fontName: "SF Mono",
+      });
 
-       excel.drawCell(0, 0, {
-         hMerge: 7,
-         vMerge: 3,
-         value: `Lợi nhuận theo Chức năng : ${query.startDate}-${query.endDate}`,
-         style: {
-           bold: true,
-           border: true,
-           v: "center",
-           h: "center",
-           fontSize: 25,
-           fontName: "SF Mono",
-           background: "FFC000",
-         },
-       });
+      excel.drawCell(0, 0, {
+        hMerge: 7,
+        vMerge: 3,
+        value: `Lợi nhuận theo Chức năng : ${query.startDate}-${query.endDate}`,
+        style: {
+          bold: true,
+          border: true,
+          v: "center",
+          h: "center",
+          fontSize: 25,
+          fontName: "SF Mono",
+          background: "FFC000",
+        },
+      });
 
-       excel.addColumns(categoryProfitColumnsExport);
-       excel.addDataSource(dataExport);
+      excel.addColumns(categoryProfitColumnsExport);
+      excel.addDataSource(dataExport);
 
-       excel.saveAs(
-         `Lợi nhuận theo Chức năng ${query.startDate}-${query.endDate}.xlsx`
-       );
-     } catch (err) {
-       notification.error({
-         message: "Lợi nhuận theo Chức năng",
-         description: "Xuất dữ liệu không thành công!",
-       });
-     }
-   };
+      excel.saveAs(
+        `Lợi nhuận theo Chức năng ${query.startDate}-${query.endDate}.xlsx`
+      );
+    } catch (err) {
+      notification.error({
+        message: "Lợi nhuận theo Chức năng",
+        description: "Xuất dữ liệu không thành công!",
+      });
+    }
+  };
 
   useEffect(() => {
     setIsLoading(true);

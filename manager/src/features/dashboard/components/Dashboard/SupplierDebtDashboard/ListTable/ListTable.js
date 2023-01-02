@@ -33,17 +33,17 @@ export default function ListTable() {
 
   const columns = [
     {
-      title: "Vị trí",
+      title: "STT",
       dataIndex: "index",
       key: "index",
-      align: "center",
+      align: "right",
       render: (a, b, index) => <Text>{index + 1}</Text>,
     },
     {
       title: "Loại đơn",
       dataIndex: "type",
       key: "type",
-      align: "center",
+      align: "left",
       render: (_, { type }) => (
         <Tag
           color={type === "EXPORT" ? "green" : "red"}
@@ -57,7 +57,7 @@ export default function ListTable() {
       title: "Mã đơn xuất",
       dataIndex: "id",
       key: "id",
-      align: "center",
+      align: "right",
       render: (value) => (
         <Tag
           color="darksalmon"
@@ -90,16 +90,16 @@ export default function ListTable() {
       title: "Số lượng nhập (m2)",
       dataIndex: "totalSquareMeterExport",
       key: "totalSquareMeterExport",
-      align: "center",
+      align: "right",
       render: (a, { totalSquareMeterExport }) => {
         return <Statistic precision={2} value={totalSquareMeterExport} />;
       },
     },
     {
-      title: "Giá bán (vnđ)",
+      title: "Giá bán (VND)",
       dataIndex: "totalExportOrderPrice",
       key: "totalExportOrderPrice",
-      align: "center",
+      align: "right",
       render: (a, { totalExportOrderPrice }) => {
         return <Statistic precision={0} value={totalExportOrderPrice} />;
       },
@@ -108,7 +108,7 @@ export default function ListTable() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      align: "center",
+      align: "left",
       render: (s, record) => {
         let color = "";
         switch (s) {

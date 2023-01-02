@@ -156,7 +156,38 @@ export default function ProductProfit() {
         text
       ),
   });
+  const renderTitle = (title, value, format) => {
+    let total = listProductProfit.reduce((accumulator, currentValue) => {
+      const temp = currentValue[value[0]];
+      return accumulator + temp[value[1]];
+    }, 0);
 
+    if (format === "vnd") {
+      if (typeof Intl === "undefined" || !Intl.NumberFormat) {
+        total = total.toLocaleString("vi-VN", {
+          // style: "currency",
+          currency: "VND",
+        });
+      } else {
+        const nf = Intl.NumberFormat();
+        total = nf.format(total);
+      }
+    } else {
+      total = total !== 0 ? total.toFixed(2) : 0;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div>{title}</div>
+        <div style={{ color: "hotpink" }}> Total: {total}</div>
+      </div>
+    );
+  };
   const columns = [
     {
       title: "STT",
@@ -172,7 +203,12 @@ export default function ProductProfit() {
       align: "center",
     },
     {
-      title: "Số lượng xuất (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng xuất (m2)",
+          ["productRevenueDTO", "squareMeterExport"],
+          "vnd"
+        ),
       dataIndex: ["productRevenueDTO", "squareMeterExport"],
       key: "squareMeterExport",
       align: "center",
@@ -181,7 +217,12 @@ export default function ProductProfit() {
       },
     },
     {
-      title: "Số lượng nhập lại (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng nhập lại (m2)",
+          ["productRevenueDTO", "squareMeterReExport"],
+          "m2"
+        ),
       dataIndex: ["productRevenueDTO", "squareMeterReExport"],
       key: "squareMeterReExport",
       align: "center",
@@ -190,7 +231,12 @@ export default function ProductProfit() {
       },
     },
     {
-      title: "Tiền nhập (vnđ)",
+      title: () =>
+        renderTitle(
+          "Tiền nhập (VND)",
+          ["productRevenueDTO", "totalCostImport"],
+          "vnd"
+        ),
       dataIndex: ["productRevenueDTO", "totalCostImport"],
       key: "totalCostImport",
       align: "center",
@@ -199,7 +245,12 @@ export default function ProductProfit() {
       },
     },
     {
-      title: "Tiền nhập lại (vnđ)",
+      title: () =>
+        renderTitle(
+          "Tiền nhập lại (VND)",
+          ["productRevenueDTO", "totalPriceReExport"],
+          "vnd"
+        ),
       dataIndex: ["productRevenueDTO", "totalPriceReExport"],
       key: "totalPriceReExport",
       align: "center",
@@ -208,7 +259,12 @@ export default function ProductProfit() {
       },
     },
     {
-      title: "Doanh số (vnđ)",
+      title: () =>
+        renderTitle(
+          "Doanh số (VND)",
+          ["productRevenueDTO", "totalPriceExport"],
+          "vnd"
+        ),
       dataIndex: ["productRevenueDTO", "totalPriceExport"],
       key: "totalPriceExport",
       align: "center",
@@ -217,7 +273,8 @@ export default function ProductProfit() {
       },
     },
     {
-      title: "Lợi nhuận (vnđ)",
+      title: () =>
+        renderTitle("Lợi nhuận (VND)", ["productRevenueDTO", "profit"], "vnd"),
       dataIndex: ["productRevenueDTO", "profit"],
       key: "profit",
       align: "center",
@@ -265,7 +322,7 @@ export default function ProductProfit() {
       },
     },
     {
-      title: "Tiền nhập (vnđ)",
+      title: "Tiền nhập (VND)",
       dataIndex: ["productDetailRevenueDTO", "totalCostImport"],
       key: "totalCostImport",
       align: "center",
@@ -274,7 +331,7 @@ export default function ProductProfit() {
       },
     },
     {
-      title: "Tiền nhập lại (vnđ)",
+      title: "Tiền nhập lại (VND)",
       dataIndex: ["productDetailRevenueDTO", "totalPriceReExport"],
       key: "totalPriceReExport",
       align: "center",
@@ -283,7 +340,7 @@ export default function ProductProfit() {
       },
     },
     {
-      title: "Doanh số (vnđ)",
+      title: "Doanh số (VND)",
       dataIndex: ["productDetailRevenueDTO", "totalPriceExport"],
       key: "totalPriceExport",
       align: "center",
@@ -292,7 +349,7 @@ export default function ProductProfit() {
       },
     },
     {
-      title: "Lợi nhuận (vnđ)",
+      title: "Lợi nhuận (VND)",
       dataIndex: ["productDetailRevenueDTO", "profit"],
       key: "profit",
       align: "center",

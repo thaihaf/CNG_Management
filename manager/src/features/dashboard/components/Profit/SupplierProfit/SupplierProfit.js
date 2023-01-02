@@ -159,7 +159,38 @@ export default function SupplierProfit() {
         text
       ),
   });
+  const renderTitle = (title, value, format) => {
+    let total = listSupplierProfit.reduce((accumulator, currentValue) => {
+      const temp = currentValue[value[0]];
+      return accumulator + temp[value[1]];
+    }, 0);
 
+    if (format === "vnd") {
+      if (typeof Intl === "undefined" || !Intl.NumberFormat) {
+        total = total.toLocaleString("vi-VN", {
+          // style: "currency",
+          currency: "VND",
+        });
+      } else {
+        const nf = Intl.NumberFormat();
+        total = nf.format(total);
+      }
+    } else {
+      total = total !== 0 ? total.toFixed(2) : 0;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div>{title}</div>
+        <div style={{ color: "hotpink" }}> Total: {total}</div>
+      </div>
+    );
+  };
   const columns = [
     {
       title: "STT",
@@ -175,7 +206,12 @@ export default function SupplierProfit() {
       align: "center",
     },
     {
-      title: "Số lượng xuất (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng xuất (m2)",
+          ["supplierRevenueDTO", "squareMeterExport"],
+          "vnd"
+        ),
       dataIndex: ["supplierRevenueDTO", "squareMeterExport"],
       key: "squareMeterExport",
       align: "center",
@@ -184,7 +220,12 @@ export default function SupplierProfit() {
       },
     },
     {
-      title: "Số lượng nhập lại (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng nhập lại (m2)",
+          ["supplierRevenueDTO", "squareMeterReExport"],
+          "m2"
+        ),
       dataIndex: ["supplierRevenueDTO", "squareMeterReExport"],
       key: "squareMeterReExport",
       align: "center",
@@ -193,7 +234,12 @@ export default function SupplierProfit() {
       },
     },
     {
-      title: "Tiền nhập (vnđ)",
+      title: () =>
+        renderTitle(
+          "Tiền nhập (VND)",
+          ["supplierRevenueDTO", "totalCostImport"],
+          "vnd"
+        ),
       dataIndex: ["supplierRevenueDTO", "totalCostImport"],
       key: "totalCostImport",
       align: "center",
@@ -202,7 +248,12 @@ export default function SupplierProfit() {
       },
     },
     {
-      title: "Tiền nhập lại (vnđ)",
+      title: () =>
+        renderTitle(
+          "Tiền nhập lại (VND)",
+          ["supplierRevenueDTO", "totalPriceReExport"],
+          "vnd"
+        ),
       dataIndex: ["supplierRevenueDTO", "totalPriceReExport"],
       key: "totalPriceReExport",
       align: "center",
@@ -211,7 +262,12 @@ export default function SupplierProfit() {
       },
     },
     {
-      title: "Doanh số (vnđ)",
+      title: () =>
+        renderTitle(
+          "Doanh số (VND)",
+          ["supplierRevenueDTO", "totalPriceExport"],
+          "vnd"
+        ),
       dataIndex: ["supplierRevenueDTO", "totalPriceExport"],
       key: "totalPriceExport",
       align: "center",
@@ -220,10 +276,14 @@ export default function SupplierProfit() {
       },
     },
     {
-      title: "Lợi nhuận (vnđ)",
+      title: () =>
+        renderTitle("Lợi nhuận (VND)", ["supplierRevenueDTO", "profit"], "vnd"),
       dataIndex: ["supplierRevenueDTO", "profit"],
       key: "profit",
       align: "center",
+      render: (value) => {
+        return <Statistic value={value} precision={0} />;
+      },
     },
   ];
   const columnsSupplierProfit = [

@@ -158,7 +158,38 @@ export default function EmployeeProfit() {
         text
       ),
   });
+  const renderTitle = (title, value, format) => {
+    let total = listEmployeeProfit.reduce((accumulator, currentValue) => {
+      const temp = currentValue[value[0]];
+      return accumulator + temp[value[1]];
+    }, 0);
 
+    if (format === "vnd") {
+      if (typeof Intl === "undefined" || !Intl.NumberFormat) {
+        total = total.toLocaleString("vi-VN", {
+          // style: "currency",
+          currency: "VND",
+        });
+      } else {
+        const nf = Intl.NumberFormat();
+        total = nf.format(total);
+      }
+    } else {
+      total = total !== 0 ? total.toFixed(2) : 0;
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div>{title}</div>
+        <div style={{ color: "hotpink" }}> Total: {total}</div>
+      </div>
+    );
+  };
   const columns = [
     {
       title: "STT",
@@ -175,7 +206,12 @@ export default function EmployeeProfit() {
       render: (value) => `${value.firstName} ${value.lastName}`,
     },
     {
-      title: "Số lượng xuất (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng xuất (m2)",
+          ["employeeRevenueDTO", "squareMeterExport"],
+          "vnd"
+        ),
       dataIndex: ["employeeRevenueDTO", "squareMeterExport"],
       key: "squareMeterExport",
       align: "center",
@@ -184,7 +220,12 @@ export default function EmployeeProfit() {
       },
     },
     {
-      title: "Số lượng nhập lại (m2)",
+      title: () =>
+        renderTitle(
+          "Số lượng nhập lại (m2)",
+          ["employeeRevenueDTO", "squareMeterReExport"],
+          "m2"
+        ),
       dataIndex: ["employeeRevenueDTO", "squareMeterReExport"],
       key: "squareMeterReExport",
       align: "center",
@@ -193,7 +234,12 @@ export default function EmployeeProfit() {
       },
     },
     {
-      title: "Tiền nhập (vnđ)",
+      title: () =>
+        renderTitle(
+          "Tiền nhập (VND)",
+          ["employeeRevenueDTO", "totalCostImport"],
+          "vnd"
+        ),
       dataIndex: ["employeeRevenueDTO", "totalCostImport"],
       key: "totalCostImport",
       align: "center",
@@ -202,7 +248,12 @@ export default function EmployeeProfit() {
       },
     },
     {
-      title: "Tiền nhập lại (vnđ)",
+      title: () =>
+        renderTitle(
+          "Tiền nhập lại (VND)",
+          ["employeeRevenueDTO", "totalPriceReExport"],
+          "vnd"
+        ),
       dataIndex: ["employeeRevenueDTO", "totalPriceReExport"],
       key: "totalPriceReExport",
       align: "center",
@@ -211,7 +262,12 @@ export default function EmployeeProfit() {
       },
     },
     {
-      title: "Doanh số (vnđ)",
+      title: () =>
+        renderTitle(
+          "Doanh số (VND)",
+          ["employeeRevenueDTO", "totalPriceExport"],
+          "vnd"
+        ),
       dataIndex: ["employeeRevenueDTO", "totalPriceExport"],
       key: "totalPriceExport",
       align: "center",
@@ -220,7 +276,8 @@ export default function EmployeeProfit() {
       },
     },
     {
-      title: "Lợi nhuận (vnđ)",
+      title: () =>
+        renderTitle("Lợi nhuận (VND)", ["employeeRevenueDTO", "profit"], "vnd"),
       dataIndex: ["employeeRevenueDTO", "profit"],
       key: "profit",
       align: "center",

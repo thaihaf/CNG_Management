@@ -140,7 +140,11 @@ const productSlice = createSlice({
       state.detailDTOList = action.payload.productDetailDTO;
     },
     [createDetailsProduct.fulfilled]: (state, action) => {
-      state.detailDTOList = [...state.detailDTOList, action.payload];
+      console.log(action.payload);
+      state.detailDTOList = [
+        ...state.detailDTOList,
+        { ...action.payload, totalQuantityBox: 0 },
+      ];
     },
     [updateDetailsProduct.fulfilled]: (state, action) => {
       state.detailDTOList = state.detailDTOList.map((item) => {

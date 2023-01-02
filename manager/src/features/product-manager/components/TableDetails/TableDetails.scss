@@ -1,32 +1,50 @@
-.ant-table-container {
-  transition: all 0.3s ease;
-  background-color: $white-color;
-
-  .ant-input-disabled{
-    color : black;
+.table-shipment-types {
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
   }
-}
+  .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+  .ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+  .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+    background: unset; //Change the existing color to `unset`
+  }
 
-.ant-table-title {
-  padding: 0 !important;
-}
-.ant-table-row {
-  // .ant-form-item{
-  //   min-width: 200px;
+  td.ant-table-cell {
+    border: unset !important;
+  }
   // }
-}
-.ant-select-selector {
-  color: $black-color !important;
-  border: 1px solid rgb(211, 211, 211) !important;
-  border-radius: 2rem !important;
-}
+  // .table-row:hover {
+  //   border-left: 2px solid black;
+  // }
+  .table-row-even {
+    background: #fff;
+  }
+  .table-row-odd {
+    background: #f9fafe;
+  }
 
-.ant-table-title {
-  background-color: #fafafa;
-  display: flex;
-  justify-content: flex-end;
+  .warehouse-list {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
+    padding: 0.5rem 3rem;
 
-  .ant-select {
-    margin: 1rem 2rem !important;
+    .ant-input,
+    .ant-select-selector,
+    .ant-picker {
+      border-radius: 2rem !important;
+      width: 100% !important;
+      color: black;
+    }
+
+    .wapper {
+      gap: 8px;
+      display: flex;
+      flex-direction: column;
+      width: fit-content;
+    }
   }
 }

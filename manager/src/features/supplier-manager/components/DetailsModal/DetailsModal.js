@@ -185,7 +185,7 @@ export default function DetailsModal({ record, updateMode }) {
             <div className="details__group">
               <Form.Item
                 name="paymentAmount"
-                label={<Text>Số tiền thanh toán (vnđ)</Text>}
+                label={<Text>Số tiền thanh toán (VND)</Text>}
                 className="details__item"
                 rules={[
                   {
