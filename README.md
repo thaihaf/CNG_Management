@@ -1,6 +1,7 @@
 # Getting Started : http://cng-management.surge.sh
 
 1. Product Background : 
+    
     Management has never been an easy job, especially with the management of a brick
     warehouse. With normal management on paper or excel, it will be difficult to manage all of them
     because Managers will have to design a template for export orders, and statistical tables with excel
@@ -16,7 +17,8 @@
     her and allowed to do the project and she will hold the position of the customer who sets the
     requirements for the group.
 
-2. Business Opportunity
+2. Business Opportunity :
+    
     With this brick warehouse management project, we focus on developing deep into the brick
     product. That will help increase business opportunities in brick management networks with brick
     dealers than in multi-product management with no product code.
@@ -30,7 +32,8 @@
     It is important to be able to help users (here Ms. Nang) save more time in managing her husband's
     brick warehouse.
 
-3. Software Product Vision
+3. Software Product Vision : 
+    
     With the application of creating an easy-to-use user interface, Ms. Nang will be able to manage
     the brick warehouse more easily.
     With the features of automatic calculation, statistics, daily reports and can be exported to files
@@ -38,7 +41,8 @@
     review past profit statistics from which they can evaluate and compare, thereby providing business
     strategies for the coming future.
 
-4. Project Scope & Limitations
+4. Project Scope & Limitations :  
+    
     The scope is applicable to brick distributors, not to stores that sell many products other than bricks.
     Management of basic objects related to brick warehouses are: brick warehouse, employees,
     customers, import and export orders of bricks, brick products and include income sales statistics,
